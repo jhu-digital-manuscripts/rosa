@@ -1,0 +1,17 @@
+<!DOCTYPE web-app PUBLIC
+	  "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+	  "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+  <display-name>Rose M3 server</display-name>	
+  
+  <servlet>
+    <servlet-name>M3Servlet</servlet-name>
+    <servlet-class>rose.m3.M3Servlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>M3Servlet</servlet-name>
+    <url-pattern>/*</url-pattern>
+  </servlet-mapping>
+</web-app>

@@ -1,0 +1,14 @@
+Resource map endpoints:
+
+ * Repository aggregating Manifests references:     /
+ * Manifest aggregating references:                 /BOOK_ID
+ * Reading sequence aggregating Shared Canvases:    /BOOK_ID/seq
+ * Aggregated image annotations:                    /BOOK_ID/images
+ * Aggregated transcription annotations:            /BOOK_ID/trans
+ * Aggregated illustration description annotations: /BOOK_ID/illus
+
+The service uses content negotiation. For jsonp output simply
+add a 'callback' parameter. Otherwise set an 'Accept' header to
+'application/xml', 'application/json', 'text/javascript', or 'application/n3'.
+The default is xml output. The json output is a hack.
+

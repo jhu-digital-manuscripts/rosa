@@ -18,5 +18,6 @@
     <module>rosa-search</module>
     <module>rosa-tool</module>
     <module>rosa-iiif-webapp</module>
+    <module>rosa-sharedcanvas-webapp</module>
   </modules>
 </project>
