@@ -17,5 +17,6 @@
     <module>rosa-core</module>
     <module>rosa-search</module>
     <module>rosa-tool</module>
+    <module>rosa-iiif-webapp</module>
   </modules>
 </project>

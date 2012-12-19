@@ -1,0 +1,155 @@
+package iiif;
+
+import java.io.IOException;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.json.JSONException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+public class IIIFServlet extends HttpServlet {
+    private ImageServer server;
+    private IIIFParser parser;
+    private IIIFSerializer serializer;
+
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+
+        String fsi_url = config.getInitParameter("fsi.url");
+
+        if (fsi_url == null) {
+            throw new ServletException(
+                    "Required init parameter 'fsi.url' not set");
+        }
+
+        parser = new IIIFParser();
+        serializer = new IIIFSerializer();
+        server = new FSIServer(fsi_url);
+    }
+
+    private void report_error(HttpServletResponse resp, int code,
+            String message, String param) throws ServletException, IOException {
+        resp.setStatus(code);
+
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory
+                .newInstance();
+        try {
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+
+            String ns = "http://library.stanford.edu/iiif/image-api/ns/";
+            Document doc = docBuilder.newDocument();
+            Element root = doc.createElementNS(ns, "error");
+            doc.appendChild(root);
+
+            Element param_el = doc.createElementNS(ns, "param");
+            root.appendChild(param_el);
+            param_el.setTextContent(param);
+
+            Element text_el = doc.createElementNS(ns, "text");
+            root.appendChild(text_el);
+            text_el.setTextContent(message);
+
+            TransformerFactory transformerFactory = TransformerFactory
+                    .newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource source = new DOMSource(doc);
+
+            StreamResult result = new StreamResult(resp.getOutputStream());
+            transformer.transform(source, result);
+        } catch (TransformerException e) {
+            throw new ServletException(e);
+        } catch (ParserConfigurationException e) {
+            throw new ServletException(e);
+        }
+    }
+
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        resp.addHeader(
+                "Link",
+                "<http://library.stanford.edu/iiif/image-api/compliance.html#level0>;rel=\"compliesTo\"");
+
+        // Hack to get undecoded path;
+
+        String context = req.getContextPath();
+        StringBuffer sb = req.getRequestURL();
+        int i = sb.indexOf(context);
+
+        if (i == -1) {
+            throw new ServletException("Cannot find " + context + " in " + sb);
+        }
+
+        String path = sb.substring(i + context.length());
+
+        IIIFRequestType type = parser.determineRequestType(path);
+
+        try {
+            if (type == IIIFRequestType.INFO) {
+                IIIFInfoRequest inforeq = parser.parseImageInfoRequest(path);
+                ImageInfo info = server.lookupImage(inforeq.getImage());
+
+                if (info == null) {
+                    report_error(resp, 404, "not found", "identifier");
+                } else {
+                    try {
+                        if (inforeq.getFormat() == InfoFormat.XML) {
+                            serializer.toXML(info, resp.getOutputStream());
+                        } else if (inforeq.getFormat() == InfoFormat.JSON) {
+                            serializer.toJSON(info, resp.getOutputStream());
+                        } else {
+                            report_error(resp, 415, "no such info format",
+                                    "format");
+                        }
+                    } catch (TransformerException e) {
+                        throw new ServletException(e);
+                    } catch (ParserConfigurationException e) {
+                        throw new ServletException(e);
+                    } catch (JSONException e) {
+                        throw new ServletException(e);
+                    }
+                }
+
+            } else if (type == IIIFRequestType.IMAGE) {
+                IIIFImageRequest imgreq = parser.parseImageRequest(path);
+
+                String imgurl = server.constructURL(imgreq);
+
+                if (imgurl == null) {
+                    report_error(resp, 404, "not found", "identifier");
+                } else {
+                    resp.sendRedirect(imgurl);
+                }
+            } else {
+                report_error(resp, 400, "malformed request", "unknown");
+            }
+        } catch (IIIFException e) {
+            String param = e.getParameter() == null ? "unknown" : e
+                    .getParameter();
+            int code = 400;
+
+            if (param.equals("identifier")) {
+                code = 404;
+            } else if (param.equals("format")) {
+                code = 415;
+            }
+
+            report_error(resp, code, e.getMessage(), param);
+        }
+
+        resp.flushBuffer();
+    }
+}

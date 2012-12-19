@@ -1,0 +1,3 @@
+IIIF adapter for an FSI server.
+
+Point this at an fsi server instance by editing web.xml. (This should be a java property set by maven.)
