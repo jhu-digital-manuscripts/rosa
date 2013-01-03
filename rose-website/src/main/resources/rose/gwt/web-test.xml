@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  <servlet>
+    <servlet-name>searchServlet</servlet-name>
+    <servlet-class>rose.server.SearchServiceImpl</servlet-class>
+   <init-param>
+      <param-name>index</param-name> 
+      <param-value>/searchindex</param-value> 
+    </init-param>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>searchServlet</servlet-name>
+    <url-pattern>/app/search</url-pattern>
+  </servlet-mapping>
+
+  <welcome-file-list>
+    <welcome-file>App.html</welcome-file>
+  </welcome-file-list>
+
+  <filter>
+    <filter-name>CacheFilter</filter-name>
+    <filter-class>rose.server.CacheFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>CacheFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>
+        Rose
+      </web-resource-name>
+
+      <url-pattern> /* </url-pattern>
+      <http-method> GET </http-method>
+      <http-method> POST </http-method>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>rose</role-name>
+    </auth-constraint>
+  </security-constraint>
+
+   <login-config>
+    <auth-method> BASIC </auth-method>
+    <realm-name>  Basic Authentication </realm-name>
+  </login-config>
+
+  <security-role>
+    <description>Rose user</description>
+    <role-name>rose</role-name>
+  </security-role>
+</web-app>
