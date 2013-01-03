@@ -19,5 +19,7 @@
     <module>rosa-tool</module>
     <module>rosa-iiif-webapp</module>
     <module>rosa-sharedcanvas-webapp</module>
+    <module>rosa-website-common</module>
+    <module>rose-website</module>
   </modules>
 </project>

@@ -61,6 +61,10 @@ public class Tool {
         this.site = new Config(propfilename);
     }
 
+    private Tool() throws IOException {
+        this.site = new Config();
+    }
+
     private Derivative getDerivative(BookCollection col, PrintStream report,
             String name) throws IOException {
         if (name.equals(WebsiteFSIDerivative.NAME)) {
@@ -793,7 +797,8 @@ public class Tool {
 
         String cmd = args[0];
 
-        Tool tool = new Tool("/rose/config.properties");
+        //Tool tool = new Tool("/rosa/tool/config.properties");
+	Tool tool = new Tool();
 
         if (cmd.equals("update")) {
             boolean force = false;

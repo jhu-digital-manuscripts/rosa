@@ -13,15 +13,11 @@ import rosa.core.BookCollection;
  */
 public class Config {
 	private final File collectionpath;
-	private final URL sitedataurl;
 	private final String fsiservershare;
 	private final File datapath;
 	private final File searchindexpath;
-	private final File fedoraobjectpath;
 	private final File resourcespath;
 	private final File cropscript;
-
-	private final String fedoracollectionpid;
 
 	private static String getProperty(Properties p, String name)
 			throws IOException {
@@ -51,22 +47,24 @@ public class Config {
 		return p;
 	}
 
+    
+
 	public Config(String propfilename) throws IOException {
 		this(findProperties(propfilename));
 	}
 
+    public Config() throws IOException {
+	this(System.getProperties());
+    }
+
 	public Config(Properties p) throws IOException {
-		this.collectionpath = new File(getProperty(p, "rose.collection.path"));
-		this.sitedataurl = new URL(getProperty(p, "rose.site.data.url"));
-		this.fsiservershare = getProperty(p, "rose.fsiserver.share");
-		this.datapath = new File(getProperty(p, "rose.data.path"));
-		this.searchindexpath = new File(getProperty(p, "rose.searchindex.path"));
-		this.fedoracollectionpid = getProperty(p, "rose.fedora.collection.pid");
-		this.fedoraobjectpath = new File(
-				getProperty(p, "rose.fedora.object.path"));
+		this.collectionpath = new File(getProperty(p, "rosa.collection.path"));
+		this.fsiservershare = getProperty(p, "rosa.website.fsi.share");
+		this.datapath = new File(getProperty(p, "rosa.website.resources.path"));
+		this.searchindexpath = new File(getProperty(p, "rosa.website.luceneindex.path"));
 		this.resourcespath = new File(getProperty(p,
-				"rose.resources.path"));
-		this.cropscript = new File(getProperty(p, "rose.crop.script"));
+				"rosa.website.gwt.resources.path"));
+		this.cropscript = null; // TODO new File(getProperty(p, "rose.crop.script"));
 	}
 
 	public BookCollection loadBookCollection() throws IOException {
@@ -89,14 +87,6 @@ public class Config {
 		return new File(dataPath(bookid), filename);
 	}
 
-	public URL siteDataURL() {
-		return sitedataurl;
-	}
-
-	public File fedoraObjectDir() {
-		return fedoraobjectpath;
-	}
-
 	public File resourcesPath() {
 		return resourcespath;
 	}
@@ -107,9 +97,5 @@ public class Config {
 
 	public File cropScript() {
 		return cropscript;
-	}
-
-	public String fedoraCollectionPid() {
-		return fedoracollectionpid;
 	}
 }

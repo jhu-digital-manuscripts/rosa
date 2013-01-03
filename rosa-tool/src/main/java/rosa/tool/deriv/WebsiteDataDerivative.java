@@ -116,7 +116,7 @@ public class WebsiteDataDerivative extends Derivative {
 		File src = new File(archive.dir(), name);
 
 		File datadir = new File(site.dataPath(), archive.id());
-		datadir.mkdir();
+		datadir.mkdirs();
 
 		File dest = new File(datadir, name);
 

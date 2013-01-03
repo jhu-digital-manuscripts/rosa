@@ -6,7 +6,7 @@
 <web-app>
   <servlet>
     <servlet-name>searchServlet</servlet-name>
-    <servlet-class>rose.server.SearchServiceImpl</servlet-class>
+    <servlet-class>rosa.gwt.common.server.SearchServiceImpl</servlet-class>
    <init-param>
       <param-name>index</param-name> 
       <param-value>/searchindex</param-value> 
@@ -24,7 +24,7 @@
 
  <filter>
     <filter-name>CacheFilter</filter-name>
-    <filter-class>rose.server.CacheFilter</filter-class>
+    <filter-class>rosa.gwt.common.server.CacheFilter</filter-class>
   </filter>
 
   <filter-mapping>

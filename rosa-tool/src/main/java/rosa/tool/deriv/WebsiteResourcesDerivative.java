@@ -75,23 +75,36 @@ public class WebsiteResourcesDerivative extends Derivative {
     public boolean update(boolean force) {
         boolean success = true;
 
+	site.resourcesPath().mkdirs();
+	site.dataPath().mkdirs();
+
         try {
             for (String lc : col.languages()) {
                 writeBooksFile(new File(site.resourcesPath(),
                         browseDataSpreadsheetName(lc)), lc);
+		FileUtil.copy(new File(site.resourcesPath(), browseDataSpreadsheetName(lc)),
+                    site.dataPath());
 
                 writeCollectionDataFileAsCSV(new File(site.resourcesPath(),
                         collectionDataSpreadsheetName(lc)), lc);
+		FileUtil.copy(new File(site.resourcesPath(), collectionDataSpreadsheetName(lc)),
+                    site.dataPath());
             }
 
             FileUtil.copy(new File(col.dir(), CharacterNames.NAME),
                     site.resourcesPath());
+            FileUtil.copy(new File(col.dir(), CharacterNames.NAME),
+			  site.dataPath());
 
             writeIllustrationTitles(col.loadIllustrationTitles(null), new File(
                     site.resourcesPath(), IllustrationTitles.NAME));
+            FileUtil.copy(new File(site.resourcesPath(), IllustrationTitles.NAME),
+                    site.dataPath());
 
             FileUtil.copy(new File(col.dir(), NarrativeSections.NAME),
                     site.resourcesPath());
+            FileUtil.copy(new File(col.dir(), NarrativeSections.NAME),
+                    site.dataPath());
 
         } catch (IOException e) {
             reportError("Failed updating metadata", e);

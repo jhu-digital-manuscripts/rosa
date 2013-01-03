@@ -1,6 +1,7 @@
 <module rename-to='app'>
   <inherits name='rosa.gwt.RosaWebsiteCommon'/>
   <inherits name="rosa.RosaSearchResult" />
+  <inherits name='com.google.gwt.user.theme.chrome.Chrome'/>
 
   <entry-point class='rose.gwt.client.App'/>
 </module>
