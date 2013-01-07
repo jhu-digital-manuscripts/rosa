@@ -16,7 +16,7 @@
   <properties>
     <rosa.collection.path>/mnt/rosecollection</rosa.collection.path>
     <rosa.website.gwt.resources.path>${project.build.outputDirectory}/rose/gwt/client</rosa.website.gwt.resources.path>
-    <rosa.website.resources.path>${project.build.directory}/${project.build.finalName}/data</rosa.website.resources.path>
+    <rosa.website.data.path>${project.build.directory}/${project.build.finalName}/data</rosa.website.data.path>
     <rosa.website.luceneindex.path>${project.build.directory}/${project.build.finalName}/searchindex</rosa.website.luceneindex.path>
     <rosa.website.fsi.share>rose</rosa.website.fsi.share> 
     <rosa.website.fsi.url>http://fsiserver.library.jhu.edu</rosa.website.fsi.url>
@@ -71,8 +71,8 @@
               <value>${rosa.collection.path}</value>
 	    </systemProperty>
 	    <systemProperty>
-              <key>rosa.website.resources.path</key>
-              <value>${rosa.website.resources.path}</value>
+              <key>rosa.website.data.path</key>
+              <value>${rosa.website.data.path}</value>
 	    </systemProperty>
 	      <systemProperty>
               <key>rosa.website.gwt.resources.path</key>

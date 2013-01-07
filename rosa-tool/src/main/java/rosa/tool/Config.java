@@ -60,7 +60,7 @@ public class Config {
 	public Config(Properties p) throws IOException {
 		this.collectionpath = new File(getProperty(p, "rosa.collection.path"));
 		this.fsiservershare = getProperty(p, "rosa.website.fsi.share");
-		this.datapath = new File(getProperty(p, "rosa.website.resources.path"));
+		this.datapath = new File(getProperty(p, "rosa.website.data.path"));
 		this.searchindexpath = new File(getProperty(p, "rosa.website.luceneindex.path"));
 		this.resourcespath = new File(getProperty(p,
 				"rosa.website.gwt.resources.path"));
