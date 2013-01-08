@@ -375,12 +375,18 @@ public class WebsiteResourcesDerivative extends Derivative {
 
             if (desc == null) {
                 desc = archive.description(BookCollection.DEFAULT_LC);
+
+		if (desc == null) {
+		    report.println("No description for " + bookid);
+		    continue;
+		}
             }
 
+            // TODO
             BookDescription.Text rosetext = null;
 
             for (BookDescription.Text text : desc.texts()) {
-                if (text.id().equals(BookDescription.ROSE_TEXT_ID)) {
+                if (text.id() != null && text.id().equals(BookDescription.ROSE_TEXT_ID)) {
                     rosetext = text;
                     break;
                 }
