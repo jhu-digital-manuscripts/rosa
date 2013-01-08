@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  <servlet>
+    <servlet-name>searchServlet</servlet-name>
+    <servlet-class>rosa.gwt.common.server.SearchServiceImpl</servlet-class>
+   <init-param>
+      <param-name>index</param-name> 
+      <param-value>/searchindex</param-value> 
+    </init-param>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>searchServlet</servlet-name>
+    <url-pattern>/app/search</url-pattern>
+  </servlet-mapping>
+
+  <welcome-file-list>
+    <welcome-file>App.html</welcome-file>
+  </welcome-file-list>
+
+ <filter>
+    <filter-name>CacheFilter</filter-name>
+    <filter-class>rosa.gwt.common.server.CacheFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>CacheFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+</web-app>
