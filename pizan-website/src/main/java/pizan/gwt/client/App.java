@@ -1,13 +1,18 @@
 package pizan.gwt.client;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 
-import rosa.search.SearchResult;
-import rosa.search.SearchResult.SearchMatch;
+import rosa.gwt.common.client.Action;
+import rosa.gwt.common.client.Analytics;
+import rosa.gwt.common.client.EmbeddedObjectViewer;
+import rosa.gwt.common.client.FSIService;
+import rosa.gwt.common.client.HttpGet;
+import rosa.gwt.common.client.Searcher;
 import rosa.gwt.common.client.Searcher.UserField;
+import rosa.gwt.common.client.TranscriptionViewer;
+import rosa.gwt.common.client.Util;
 import rosa.gwt.common.client.codexview.CodexController;
 import rosa.gwt.common.client.codexview.CodexImage;
 import rosa.gwt.common.client.codexview.CodexModel;
@@ -21,12 +26,12 @@ import rosa.gwt.common.client.data.CharacterNamesTable;
 import rosa.gwt.common.client.data.CollectionDataTable;
 import rosa.gwt.common.client.data.IllustrationTitlesTable;
 import rosa.gwt.common.client.data.ImageTagging;
-import rosa.gwt.common.client.data.NarrativeSectionsTable;
-import rosa.gwt.common.client.data.NarrativeTagging;
 import rosa.gwt.common.client.data.Repository;
 import rosa.gwt.common.client.dynimg.FsiImageServer;
 import rosa.gwt.common.client.dynimg.ImageServer;
 import rosa.gwt.common.client.resource.Labels;
+import rosa.search.SearchResult;
+import rosa.search.SearchResult.SearchMatch;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;
@@ -86,8 +91,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 
-import rosa.gwt.common.client.*;
-
 
 public class App implements EntryPoint {
     public static final String LC;
@@ -114,7 +117,6 @@ public class App implements EntryPoint {
     private static final int VIEWPORT_RESIZE_INCREMENT = 100;
 
     private static final String VIEW_CORPUS_URL = "http://spreadsheets.google.com/ccc?key=pqpY1IVVBy-A3ALgAzePRSA";
-    private static final String VIEW_NARRATIVE_SECTIONS_URL = "http://spreadsheets.google.com/ccc?key=pqpY1IVVBy-CInMHM4LDKBw&pub=1";
     private static final String BUG_SUBMIT_EMAIL = "contactus@romandelarose.org";
 
     private static final String SEARCH_BOOK_RESTRICT_KEY = "BOOK";
@@ -134,7 +136,6 @@ public class App implements EntryPoint {
     private CollectionDataTable coldata = null;
     private IllustrationTitlesTable illustitles = null;
     private CharacterNamesTable charnames = null;
-    private NarrativeSectionsTable narsecs = null;
     private String[][] charnames_variants = null;
 
     private LoadingDialog loadingdialog = new LoadingDialog();
@@ -659,8 +660,6 @@ public class App implements EntryPoint {
 
         if (state == Action.HOME) {
             viewHome();
-        } else if (state == Action.VIEW_NARRATIVE_SECTIONS) {
-            viewNarrativeSections();
         } else if (state == Action.VIEW_PARTNERS) {
             viewPage(Labels.INSTANCE.partners(),
                     Resources.INSTANCE.partnersHtml());
@@ -927,9 +926,7 @@ public class App implements EntryPoint {
 
         FlowPanel header = new FlowPanel();
 
-        header.add(getImage("banner_image1.gif", "banner"));
-        header.add(getImage("banner_text.jpg",
-                "Roman de la Rose Digital Library"));
+        header.add(getImage("header-5.jpg", "Christine de Pizan Digital Scriptorium"));
         header.add(createSearchWidget());
 
         content = new FlowPanel();
@@ -940,8 +937,8 @@ public class App implements EntryPoint {
         sidebar.setStylePrimaryName("Sidebar");
         dock.setStylePrimaryName("Main");
 
-        dock.addNorth(header, 96);
-        dock.addWest(new ScrollPanel(sidebar), 181);
+        dock.addNorth(header, 150);
+        dock.addEast(new ScrollPanel(sidebar), 181);
         dock.add(new ScrollPanel(content));
 
         RootLayoutPanel.get().add(dock);
@@ -1151,14 +1148,6 @@ public class App implements EntryPoint {
 
                     Analytics.trackEvent("Book", "display-illus-tags",
                             book.id());
-                } else if (choice.equals(Labels.INSTANCE.narrativeSections())) {
-                    page_turner_annotation.setText(Labels.INSTANCE
-                            .narrativeSections());
-                    page_turner_annotation.clear();
-                    displayNarrativeSectionsOnRight(page_turner_annotation);
-                    page_turner_annotation.show();
-
-                    Analytics.trackEvent("Book", "display-nar-secs", book.id());
                 } else {
                     page_turner_annotation.hide();
                 }
@@ -1310,9 +1299,6 @@ public class App implements EntryPoint {
                     displayIllustrationKeywordsOnRight(display);
                     Analytics.trackEvent("Book", "display-illus-tags",
                             book.id());
-                } else if (choice.equals(Labels.INSTANCE.narrativeSections())) {
-                    displayNarrativeSectionsOnRight(display);
-                    Analytics.trackEvent("Book", "display-nar-secs", book.id());
                 }
             }
         };
@@ -1509,116 +1495,6 @@ public class App implements EntryPoint {
             String name = Book.shortImageName(book.imageName(image))
                     + (indexes.size() > 1 ? " " + count++ : "");
             tabpanel.add(new ScrollPanel(illus.displayImage(i)), name);
-        }
-    }
-
-    private void displayNarrativeSections(TabLayoutPanel tabpanel, int image) {
-        NarrativeTagging narmap = book.narrativeMap();
-
-        List<Integer> indexes = narmap.findImageIndexes(book, image);
-
-        // Tab name -> panel, one for each column
-        HashMap<String, Panel> newtabs = new HashMap<String, Panel>(2);
-
-        String imagename = Book.shortImageName(book.imageName(image));
-
-        for (int section : indexes) {
-            String tabname = imagename + "." + narmap.startColumn(section);
-            Panel p = newtabs.get(tabname);
-
-            if (p == null) {
-                p = new FlowPanel();
-                newtabs.put(tabname, p);
-                tabpanel.add(new ScrollPanel(p), tabname);
-            }
-
-            p.add(narmap.displaySection(section, narsecs));
-        }
-    }
-
-    private void displayNarrativeSectionsOnRight(final Panel container) {
-        int recto = -1;
-        int verso = -1;
-
-        // Load narrative sections if needed
-        if (narsecs == null) {
-            loadingdialog.display();
-
-            try {
-                Resources.INSTANCE.narrativeSectionsTable().getText(
-                        new ResourceCallback<TextResource>() {
-                            public void onSuccess(TextResource resource) {
-                                loadingdialog.hide();
-
-                                narsecs = new NarrativeSectionsTable(resource
-                                        .getText());
-                                displayNarrativeSectionsOnRight(container);
-                            }
-
-                            public void onError(ResourceException e) {
-                                loadingdialog.hide();
-                                reportInternalError(
-                                        "Failed to load external resource", e);
-                            }
-                        });
-            } catch (ResourceException e) {
-                loadingdialog.hide();
-                reportInternalError("Failed to load external resource", e);
-            }
-        } else {
-            NarrativeTagging narmap = book.narrativeMap();
-
-            if (narmap == null) {
-                loadingdialog.display();
-                String narmapurl = GWT.getHostPageBaseURL() + DATA_PATH
-                        + book.narrativeMapPath();
-
-                HttpGet.request(narmapurl, new HttpGet.Callback<String>() {
-                    public void failure(String error) {
-                        loadingdialog.error(error);
-                    }
-
-                    public void success(String result) {
-                        loadingdialog.hide();
-                        book.setNarrativeMap(result);
-
-                        if (book.narrativeMap() != null) {
-                            displayNarrativeSectionsOnRight(container);
-                        }
-                    }
-                });
-            } else {
-                if (Book.isRectoImage(selectedImageIndex)) {
-                    recto = selectedImageIndex;
-
-                    if (recto > 0) {
-                        verso = selectedImageIndex - 1;
-                    }
-                } else {
-                    if (selectedImageIndex + 1 < book.numImages()) {
-                        recto = selectedImageIndex + 1;
-                    }
-
-                    verso = selectedImageIndex;
-                }
-
-                TabLayoutPanel tabpanel = new TabLayoutPanel(1.5, Unit.EM);
-
-                tabpanel.addStyleName("ImageDescription");
-
-                if (verso != -1) {
-                    displayNarrativeSections(tabpanel, verso);
-                }
-
-                if (recto != -1) {
-                    displayNarrativeSections(tabpanel, recto);
-                }
-
-                if (tabpanel.getWidgetCount() > 0) {
-                    tabpanel.selectTab(0);
-                    container.add(tabpanel);
-                }
-            }
         }
     }
 
@@ -2013,40 +1889,6 @@ public class App implements EntryPoint {
         w.setStylePrimaryName("Home");
         w.setWordWrap(true);
         content.add(w);
-    }
-
-    private void viewNarrativeSections() {
-        book = null;
-        initDisplay(Labels.INSTANCE.narrativeSections(), true);
-
-        if (narsecs == null) {
-            loadingdialog.display();
-
-            try {
-                Resources.INSTANCE.narrativeSectionsTable().getText(
-                        new ResourceCallback<TextResource>() {
-                            public void onSuccess(TextResource resource) {
-                                loadingdialog.hide();
-                                narsecs = new NarrativeSectionsTable(resource
-                                        .getText());
-                                viewNarrativeSections();
-                            }
-
-                            public void onError(ResourceException e) {
-                                loadingdialog.hide();
-                                reportInternalError(
-                                        "Failed to load external resource", e);
-                            }
-                        });
-            } catch (ResourceException e) {
-                loadingdialog.hide();
-                reportInternalError("Failed to load external resource", e);
-            }
-        } else {
-            addHtml(content, Resources.INSTANCE.narrativeSectionsHtml(),
-                    new Anchor(Labels.INSTANCE.viewInGoogleDocs(),
-                            VIEW_NARRATIVE_SECTIONS_URL), narsecs);
-        }
     }
 
     private void viewCorpus() {
