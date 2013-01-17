@@ -21,5 +21,6 @@
     <module>rosa-sharedcanvas-webapp</module>
     <module>rosa-website-common</module>
     <module>rose-website</module>
+    <module>pizan-website</module>
   </modules>
 </project>

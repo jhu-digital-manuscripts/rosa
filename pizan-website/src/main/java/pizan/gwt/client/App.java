@@ -81,6 +81,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InsertPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -109,7 +110,6 @@ public class App implements EntryPoint {
 
     private static final int MAX_SEARCH_RESULTS = 20;
     private static final String DATA_PATH = "data/";
-    private static final String HELP_PATH = "/help/help_";
     private static final int MIN_BOOK_READER_WIDTH = 600;
     private static final int MAX_BOOK_READER_WIDTH = 800;
     private static final int MIN_BOOK_BROWSER_WIDTH = 400;
@@ -128,6 +128,7 @@ public class App implements EntryPoint {
     private Repository col;
     private Book book; // currently viewed Book
 
+    private MenuBar headermenu;
     private Panel content;
     private Panel sidebar;
     private int selectedImageIndex = -1; // currently selected image of book
@@ -925,14 +926,110 @@ public class App implements EntryPoint {
         DockLayoutPanel dock = new DockLayoutPanel(Unit.PX);
 
         FlowPanel header = new FlowPanel();
-
+        
+        headermenu = new MenuBar();
+        headermenu.setAutoOpen(true);
+        headermenu.setAnimationEnabled(true);
+        
         header.add(getImage("header-5.jpg", "Christine de Pizan Digital Scriptorium"));
-        header.add(createSearchWidget());
-
+        header.add(headermenu);        
+                
+        // TODO labels
+        
+        headermenu.addItem("Home", new ScheduledCommand() {
+            public void execute() {
+                History.newItem(Action.HOME.toToken());
+            }
+        });
+        
+        headermenu.addItem("Who is Christine de Pizan?", new ScheduledCommand() {
+            public void execute() {
+                History.newItem(Action.HOME.toToken());
+            }
+        });
+        
+        headermenu.addItem("Collection", new ScheduledCommand() {
+            public void execute() {
+                History.newItem(Action.HOME.toToken());
+            }
+        });
+        
+        headermenu.addItem("List of Works", new ScheduledCommand() {
+            public void execute() {
+                History.newItem(Action.HOME.toToken());
+            }
+        });
+        
+        headermenu.addItem("Illustration Titles", new ScheduledCommand() {
+            public void execute() {
+                History.newItem(Action.HOME.toToken());
+            }
+        });
+        
+        headermenu.addItem("Proper Names", new ScheduledCommand() {
+            public void execute() {
+                History.newItem(Action.HOME.toToken());
+            }
+        });
+        
+        MenuBar projectmenu = new MenuBar(true);
+        
+        projectmenu.addItem("Partners", new ScheduledCommand() {
+            public void execute() {
+                History.newItem(Action.HOME.toToken());
+            }
+        });
+        
+        projectmenu.addItem("Project history", new ScheduledCommand() {
+            public void execute() {
+                History.newItem(Action.HOME.toToken());
+            }
+        });
+        
+        projectmenu.addItem("Partners", new ScheduledCommand() {
+            public void execute() {
+                History.newItem(Action.HOME.toToken());
+            }
+        });
+        
+        projectmenu.addItem("Terms & Conditions", new ScheduledCommand() {
+            public void execute() {
+                History.newItem(Action.HOME.toToken());
+            }
+        });
+        
+        projectmenu.addItem("Blog", new ScheduledCommand() {
+            public void execute() {
+                History.newItem(Action.HOME.toToken());
+            }
+        });
+        
+        projectmenu.addItem("Donations", new ScheduledCommand() {
+            public void execute() {
+                History.newItem(Action.HOME.toToken());
+            }
+        });
+        
+        projectmenu.addItem("Contact us", new ScheduledCommand() {
+            public void execute() {
+                History.newItem(Action.HOME.toToken());
+            }
+        });
+        
+        headermenu.addItem("Project", projectmenu);
+        
+        headermenu.addItem("Help", new ScheduledCommand() {
+            public void execute() {
+                History.newItem(Action.HOME.toToken());
+            }
+        });
+                        
         content = new FlowPanel();
         sidebar = new FlowPanel();
 
         header.setStylePrimaryName("Header");
+        headermenu.setStylePrimaryName("HeaderMenu");
+        projectmenu.setStylePrimaryName("HeaderProjectMenu");
         content.setStylePrimaryName("Content");
         sidebar.setStylePrimaryName("Sidebar");
         dock.setStylePrimaryName("Main");
@@ -941,6 +1038,8 @@ public class App implements EntryPoint {
         dock.addEast(new ScrollPanel(sidebar), 181);
         dock.add(new ScrollPanel(content));
 
+        dock.addSouth(createSearchWidget(), 40);
+        
         RootLayoutPanel.get().add(dock);
 
         History.addValueChangeHandler(new ValueChangeHandler<String>() {
@@ -1660,25 +1759,6 @@ public class App implements EntryPoint {
     private void setupSidebar() {
         sidebar.clear();
 
-        sidebar.add(createSidebarHyperlink(Labels.INSTANCE.mainPage(),
-                Action.HOME.toToken()));
-        sidebar.add(createSidebarHyperlink(Labels.INSTANCE.roseHistory(),
-                Action.VIEW_ROSE_HISTORY.toToken()));
-        sidebar.add(createSidebarHyperlink(Labels.INSTANCE.roseCorpus(),
-                Action.VIEW_CORPUS.toToken()));
-        sidebar.add(createSidebarHyperlink(Labels.INSTANCE.collectionData(),
-                Action.VIEW_COLLECTION_DATA.toToken()));
-        sidebar.add(createSidebarHyperlink(Labels.INSTANCE.narrativeSections(),
-                Action.VIEW_NARRATIVE_SECTIONS.toToken()));
-        sidebar.add(createSidebarHyperlink(
-                Labels.INSTANCE.illustrationTitles(),
-                Action.VIEW_ILLUSTRATION_TITLES.toToken()));
-        sidebar.add(createSidebarHyperlink(Labels.INSTANCE.characterNames(),
-                Action.VIEW_CHARACTER_NAMES.toToken()));
-
-        Anchor help = new Anchor(Labels.INSTANCE.help());
-        sidebar.add(help);
-
         if (book != null) {
             addSidebarHeader(Labels.INSTANCE.book());
             addSidebarItem(Labels.INSTANCE.description(),
@@ -1724,14 +1804,6 @@ public class App implements EntryPoint {
 
         addSidebarHeader(Labels.INSTANCE.language());
         addSidebarLocaleSelector();
-
-        help.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                Util.popupWindowURL("help", 700, 600, HELP_PATH + LC + ".html",
-                        "toolbar=yes,menubar=no,scrollbars=yes,resizable=yes");
-                Analytics.trackEvent("Page", "view", "help");
-            }
-        });
 
         // TODO translate
         addSidebarHeader("Features");

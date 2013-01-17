@@ -1,13 +1,12 @@
 /* TODO: Take advantage of class support */
-@external SidebarItem, Search, ContentHeader, LoadingDialog, ImageDescriptionHeader, SidebarSelected, gwt-TabLayoutPanelTabs, ContentTitle, BookDescriptionTextData, TranscriptionUnavailableError,SidebarLastUpdated, ResultSnippet, BookDescriptionDataName, TranscriptionRubric, ImageDescriptionLabel, BookPicker-header, DataTable, BookPicker-list, Tooltip, Main, TranscriptionInitial, Header, NarrativeSectionsHeader, TranscriptionExtraHeader, ResultField, BookDescription, BookPicker, Content, GoTextBox, TranscriptionDel, BookDescriptionHeader, Home, BookDescriptionData, Transcription, NarrativeSections, TranscriptionExpan, Sidebar, Toolbar, ResultsNav, TranscriptionAdd, Bibliography, ImageDescription, SidebarHeader, TranscriptionLecoy, TranscriptionExtra, ImageViewportThumbSelection, ImageViewportThumb, CodexBrowserView-Thumb, CodexBrowserView-Toolbar, WebImage, WebImage-Loading;
+@external SidebarItem, Search, ContentHeader, LoadingDialog, ImageDescriptionHeader, SidebarSelected, ContentTitle, BookDescriptionTextData, TranscriptionUnavailableError,SidebarLastUpdated, ResultSnippet, BookDescriptionDataName, TranscriptionRubric, ImageDescriptionLabel, BookPicker-header, DataTable, BookPicker-list, Tooltip, Main, TranscriptionInitial, Header, NarrativeSectionsHeader, TranscriptionExtraHeader, ResultField, BookDescription, BookPicker, Content, GoTextBox, TranscriptionDel, BookDescriptionHeader, Home, BookDescriptionData, Transcription, NarrativeSections, TranscriptionExpan, Sidebar, Toolbar, ResultsNav, TranscriptionAdd, Bibliography, ImageDescription, SidebarHeader, TranscriptionLecoy, TranscriptionExtra, ImageViewportThumbSelection, ImageViewportThumb, CodexBrowserView-Thumb, CodexBrowserView-Toolbar, WebImage, WebImage-Loading, HeaderMenu, HeaderProjectMenu;
 
 a:link {
-  color: #FFFFFF;
+  color: #000000;
   font-weight: normal;
 }
 
 a:visited {
-  color: #FFFFFF;
   font-weight: normal;
 }
 
@@ -21,11 +20,11 @@ a:active {
 }
 
 .Main {
-  background-color: #3b6280;
+  background-color: #c6c285;
 }
 
 .Header	{
-  background-color: #234774;
+  color: #000000;
   border-bottom: 2px solid #000000;
 }
 
@@ -33,26 +32,61 @@ a:active {
   float: left;
 }
 
+.HeaderMenu {
+  color: #000000;
+  background-color: #c6c285;
+}
+
+.HeaderMenu td {
+  font-size: larger;
+  font-weight: bold;
+  padding-left: 1em;
+}
+
+.HeaderMenu td:active {
+  background-color: #FFFFFF;
+}
+
+.HeaderMenu td:hover {
+  background-color: #FFFFFF;
+}
+
+.HeaderMenu td {
+  font-size: larger;
+}
+
+.HeaderProjectMenu {
+  color: #000000;
+  background-color: #FFFFFF;
+}
+
+.HeaderProjectMenu td:active {
+  background-color: #FFFFFF;
+}
+
+.HeaderProjectMenu td:hover {
+  background-color: #FFFFFF;
+}
+
 .Sidebar {
-  color: #FFFFFF;
+  color: #000000;
+  background-color: #f7f7f7;
   padding: 5px;
   text-align: left;
-  background-color: #234774;
-  border-right: 2px solid #000000;
+  border-left: 2px solid #000000;
   border-bottom: 2px solid #000000;
   vertical-align: top;
 }
 
 .Content {
-  color: #FFFFFF;
+  color: #000000;
+  background-color: #FFFFFF;
   vertical-align: top;
   padding: 5px;
 }
 
 .Search {
-  float: left;
   margin-left: 1em;
-  margin-top: 1em;
 }
 
 .Search input {
@@ -73,18 +107,18 @@ a:active {
 }
 
 .SidebarHeader {
-  color: #FFFFFF;
+  color: #000000;
   font-weight: bold;
   margin-top: 1em;
 }
 
 .SidebarItem {
-   color: #FFFFFF;
+   color: #000000;
    margin-left: 1em;
 }
 
 .SidebarLastUpdated {
-   color: #FFFFFF;
+   color: #000000;
    font-size: smaller;
    margin-top: 2em;
 }
@@ -96,17 +130,17 @@ a:active {
 }
 
 .ContentHeader {
-  color: #FFFFFF;
+  color: #000000;
   font-weight: bold;
 }
 
 .ResultField {
-  color: #FFFFFF;
+  color: #000000;
   font-weight: bold;
 }
 
 .ResultSnippet {
-  color: #FFFFFF;
+  color: #000000;
 }
 
 .ResultsNav {
@@ -114,7 +148,7 @@ a:active {
 }
 
 .ContentTitle {
-  color: #FFFFFF;
+  color: #000000;
   text-align: left;
   font-weight: bold;
   font-size: 1.2em;
@@ -122,15 +156,10 @@ a:active {
 }
 
 .Home {
-  background-image: url(/app/home_bkgd_flowers.jpg);
-  background-repeat: no-repeat;
-  width: 657px;
-  height: 642px;
   font-size: 12px;
   font-style: normal;
   line-height: 16px;
   font-variant: normal;
-  color: #000000;
 }
 
 .Home div {
@@ -158,7 +187,7 @@ a:active {
  }
 
 .BookDescription table {
-  color: #FFFFFF;
+  color: #000000;
 }
 
 .BookDescriptionData {

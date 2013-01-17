@@ -15,7 +15,7 @@
 
   <properties>
     <rosa.collection.path>/mnt/pizancollection</rosa.collection.path>
-    <rosa.website.gwt.resources.path>${project.build.outputDirectory}/rose/gwt/client</rosa.website.gwt.resources.path>
+    <rosa.website.gwt.resources.path>${project.build.outputDirectory}/pizan/gwt/client</rosa.website.gwt.resources.path>
     <rosa.website.data.path>${project.build.directory}/${project.build.finalName}/data</rosa.website.data.path>
     <rosa.website.luceneindex.path>${project.build.directory}/${project.build.finalName}/searchindex</rosa.website.luceneindex.path>
     <rosa.website.fsi.share>pizan</rosa.website.fsi.share> 
@@ -26,7 +26,7 @@
     <profile>
       <id>test</id>
       <properties>
-        <webxml.path>src/main/resources/rose/gwt/web-test.xml</webxml.path>
+        <webxml.path>src/main/resources/pizan/gwt/web-test.xml</webxml.path>
       </properties>
 
       <activation>
@@ -37,7 +37,7 @@
     <profile>
       <id>production</id>
       <properties>
-        <webxml.path>src/main/resources/rose/gwt/web-production.xml</webxml.path>
+        <webxml.path>src/main/resources/pizan/gwt/web-production.xml</webxml.path>
       </properties>
     </profile>
   </profiles>
