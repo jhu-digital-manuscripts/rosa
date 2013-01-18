@@ -973,7 +973,7 @@ public class App implements EntryPoint {
         });
         
         MenuBar projectmenu = new MenuBar(true);
-        
+
         projectmenu.addItem("Partners", new ScheduledCommand() {
             public void execute() {
                 History.newItem(Action.HOME.toToken());
@@ -1036,9 +1036,18 @@ public class App implements EntryPoint {
 
         dock.addNorth(header, 150);
         dock.addEast(new ScrollPanel(sidebar), 181);
-        dock.add(new ScrollPanel(content));
+        
+        ScrollPanel contentscroll = new ScrollPanel(content);
+        contentscroll.setStylePrimaryName("MainContentScroll");
+        
+        dock.add(contentscroll);
 
-        dock.addSouth(createSearchWidget(), 40);
+        
+        FlowPanel footer = new FlowPanel();
+        footer.setStylePrimaryName("Footer");
+        footer.add(createSearchWidget());
+        
+        dock.addSouth(footer, 40);
         
         RootLayoutPanel.get().add(dock);
 
