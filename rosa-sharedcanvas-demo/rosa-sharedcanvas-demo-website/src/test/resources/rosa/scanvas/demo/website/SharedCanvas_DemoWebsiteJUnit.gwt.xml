@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<module>
-  <!-- Inherit our applications main module.                      -->
-  <inherits name='rosa.scanvas.demo.website.SharedCanvas_DemoWebsite' />
-
-  <!-- Specify the path to any remote services.                   -->
-
-</module>
