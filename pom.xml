@@ -17,8 +17,8 @@
     <module>rosa-core</module>
     <module>rosa-search</module>
     <module>rosa-tool</module>
-    <module>rosa-iiif-webapp</module>
-    <module>rosa-sharedcanvas-webapp</module>
+    <module>rosa-iiif-endpoint</module>
+    <module>rosa-sharedcanvas-endpoint</module>
     <module>rosa-website-common</module>
     <module>rose-website</module>
     <module>pizan-website</module>
