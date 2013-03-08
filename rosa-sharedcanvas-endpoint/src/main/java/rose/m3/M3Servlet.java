@@ -13,178 +13,192 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.RDFWriter;
+
+import de.dfki.km.json.JSONUtils;
+import de.dfki.km.json.jsonld.JSONLD;
+import de.dfki.km.json.jsonld.JSONLDProcessingError;
+import de.dfki.km.json.jsonld.impl.JenaJSONLDSerializer;
 
 // TODO enum for endpoints...
 
 public class M3Servlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	// TODO auth issues
-	// private static final String ROSE_DATA_URL =
-	// "http://rosetest.library.jhu.edu/data/";
-	private static final String ROSE_DATA_URL = "http://romandelarose.org/data/";
-	private static final String BOOKS_EN_CSV = "books.csv";
+    // TODO auth issues
+    // private static final String ROSE_DATA_URL =
+    // "http://rosetest.library.jhu.edu/data/";
+    private static final String ROSE_DATA_URL = "http://romandelarose.org/data/";
+    private static final String BOOKS_EN_CSV = "books.csv";
 
-	private RoseCollection col;
+    private RoseCollection col;
 
-	public enum ResultFormat {
-		XML("application/xml"), JSON("application/json"), JAVASCRIPT(
-				"text/javascript"), N3("application/n3");
+    public enum ResultFormat {
+        XML("application/xml"), JSON("application/json"), JAVASCRIPT(
+                "text/javascript"), N3("application/n3");
 
-		private final String mimetype;
+        private final String mimetype;
 
-		ResultFormat(String format) {
-			this.mimetype = format;
-		}
+        ResultFormat(String format) {
+            this.mimetype = format;
+        }
 
-		public String mimeType() {
-			return mimetype;
-		}
+        public String mimeType() {
+            return mimetype;
+        }
 
-		public static ResultFormat find(HttpServletRequest req) {
-			String type = req.getHeader("Accept");
+        public static ResultFormat find(HttpServletRequest req) {
+            String type = req.getHeader("Accept");
 
-			if (type == null || type.isEmpty() || type.startsWith("*/")) {
-				// Handle case of <script src> not being able to set headers
-				String jsoncallback = req.getParameter("callback");
+            if (type == null || type.isEmpty() || type.startsWith("*/")) {
+                // Handle case of <script src> not being able to set headers
+                String jsoncallback = req.getParameter("callback");
 
-				if (jsoncallback != null) {
-					return JAVASCRIPT;
-				}
+                if (jsoncallback != null) {
+                    return JAVASCRIPT;
+                }
 
-				return XML;
-			}
+                return XML;
+            }
 
-			// TODO correctly parse Accept header
+            // TODO correctly parse Accept header
 
-			for (ResultFormat fmt : values()) {
-				if (type.contains(fmt.mimetype)) {
-					return fmt;
-				}
-			}
+            for (ResultFormat fmt : values()) {
+                if (type.contains(fmt.mimetype)) {
+                    return fmt;
+                }
+            }
 
-			return null;
-		}
+            return null;
+        }
+    }
 
-		public RDFWriter writer(Model model) {
-			if (this == XML) {
-				return model.getWriter("RDF/XML-ABBREV");
-			} else if (this == JAVASCRIPT || this == JSON) {
-				return new JsonJenaWriter();
-			} else if (this == N3) {
-				return model.getWriter("N3");
-			} else {
-				return null;
-			}
-		}
-	}
+    private void write(Model model, ResultFormat fmt, OutputStream os)
+            throws IOException {
+        if (fmt == ResultFormat.XML) {
+            model.getWriter("RDF/XML-ABBREV").write(model, os, null);
+        } else if (fmt == ResultFormat.JAVASCRIPT || fmt == ResultFormat.JSON) {
+            JenaJSONLDSerializer serializer = new JenaJSONLDSerializer();
+            try {
+                Object json = JSONLD.fromRDF(model, serializer);
 
-	/**
-	 * Obtain the requested resource from the HttpServletRequest. The resource
-	 * is encoded in the path of the request URL.
-	 * 
-	 * @param req
-	 *            the HttpServletRequest
-	 * @return resource specified by request
-	 */
-	private static String getResource(HttpServletRequest req) {
-		String path = req.getPathInfo();
+                String output = JSONUtils.toPrettyString(json);
 
-		if (path == null || path.length() < 2 || path.charAt(0) != '/') {
-			return null;
-		}
+                os.write(output.getBytes("UTF-8"));
+            } catch (JSONLDProcessingError e) {
+                throw new RuntimeException("JSON LD error", e);
+            }
+        } else if (fmt == ResultFormat.N3) {
+            model.getWriter("N3").write(model, os, null);
+        } else {
+            throw new RuntimeException("Unknown format: " + fmt);
+        }
+    }
 
-		return path.substring(1);	
-	}
+    /**
+     * Obtain the requested resource from the HttpServletRequest. The resource
+     * is encoded in the path of the request URL.
+     * 
+     * @param req
+     *            the HttpServletRequest
+     * @return resource specified by request
+     */
+    private static String getResource(HttpServletRequest req) {
+        String path = req.getPathInfo();
 
-	public void init(ServletConfig config) throws ServletException {
-		try {
-			InputStream is = new URL(ROSE_DATA_URL + BOOKS_EN_CSV).openStream();
-			col = new RoseCollection(new CSVSpreadSheet(new InputStreamReader(
-					is, "UTF-8")), ROSE_DATA_URL);
-			is.close();
-		} catch (IOException e) {
-			throw new ServletException(e);
-		}
-	}
+        if (path == null || path.length() < 2 || path.charAt(0) != '/') {
+            return null;
+        }
 
-	public void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+        return path.substring(1);
+    }
 
-		ResultFormat fmt = ResultFormat.find(req);
+    public void init(ServletConfig config) throws ServletException {
+        try {
+            InputStream is = new URL(ROSE_DATA_URL + BOOKS_EN_CSV).openStream();
+            col = new RoseCollection(new CSVSpreadSheet(new InputStreamReader(
+                    is, "UTF-8")), ROSE_DATA_URL);
+            is.close();
+        } catch (IOException e) {
+            throw new ServletException(e);
+        }
+    }
 
-		if (fmt == null) {
-			resp.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE,
-					"Unknown response format requested");
-			return;
-		}
+    public void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
 
-		resp.setContentType(fmt.mimeType());
-		resp.setCharacterEncoding("UTF-8");
+        ResultFormat fmt = ResultFormat.find(req);
 
-		String bookid = getResource(req);
-		String type = null;
+        if (fmt == null) {
+            resp.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE,
+                    "Unknown response format requested");
+            return;
+        }
 
-		ResourceMap resmap = new ResourceMap();
-		OutputStream os = resp.getOutputStream();
-		Model model;
+        resp.setContentType(fmt.mimeType());
+        resp.setCharacterEncoding("UTF-8");
 
-		if (bookid == null) {
-			model = resmap.model(req.getRequestURL().toString(), col);
-		} else {
-			int i = bookid.indexOf('/');
+        String bookid = getResource(req);
+        String type = null;
 
-			if (i != -1) {
-				type = bookid.substring(i + 1);
-				bookid = bookid.substring(0, i);
-			}
+        ResourceMap resmap = new ResourceMap();
+        OutputStream os = resp.getOutputStream();
+        Model model;
 
-			RoseCollection.Book book = col.findBook(bookid);
+        if (bookid == null) {
+            model = resmap.model(req.getRequestURL().toString(), col);
+        } else {
+            int i = bookid.indexOf('/');
 
-			if (book == null) {
-				resp.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE,
-						"Unknown book requested: " + bookid);
-				return;
-			} else {
-				if (type == null) {
-					model = resmap.modelManifest(
-							req.getRequestURL().toString(), book);
-				} else if (type.equals("seq")) {
-					model = resmap.modelReadingSequence(req.getRequestURL()
-							.toString(), book);
-				} else if (type.equals("trans")) {
-					model = resmap.modelTranscriptionAnnotations(req
-							.getRequestURL().toString(), book);
-				} else if (type.equals("illus")) {
-					model = resmap.modelIllustrationDescriptionAnnotations(req
-							.getRequestURL().toString(), book);
-				} else if (type.equals("images")) {
-					model = resmap.modelImageAnnotations(req.getRequestURL()
-							.toString(), book);
-				} else {
-					resp.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE,
-							"Unknown resource map type requested: " + type);
-					return;
-				}
-			}
-		}
+            if (i != -1) {
+                type = bookid.substring(i + 1);
+                bookid = bookid.substring(0, i);
+            }
 
-		String jsoncallback = req.getParameter("callback");
+            RoseCollection.Book book = col.findBook(bookid);
 
-		if ((fmt == ResultFormat.JSON || fmt == ResultFormat.JAVASCRIPT)
-				&& jsoncallback != null) {
-			os.write(jsoncallback.getBytes("UTF-8"));
-			os.write('(');
-		}
+            if (book == null) {
+                resp.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE,
+                        "Unknown book requested: " + bookid);
+                return;
+            } else {
+                if (type == null) {
+                    model = resmap.modelManifest(
+                            req.getRequestURL().toString(), book);
+                } else if (type.equals("seq")) {
+                    model = resmap.modelReadingSequence(req.getRequestURL()
+                            .toString(), book);
+                } else if (type.equals("trans")) {
+                    model = resmap.modelTranscriptionAnnotations(req
+                            .getRequestURL().toString(), book);
+                } else if (type.equals("illus")) {
+                    model = resmap.modelIllustrationDescriptionAnnotations(req
+                            .getRequestURL().toString(), book);
+                } else if (type.equals("images")) {
+                    model = resmap.modelImageAnnotations(req.getRequestURL()
+                            .toString(), book);
+                } else {
+                    resp.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE,
+                            "Unknown resource map type requested: " + type);
+                    return;
+                }
+            }
+        }
 
-		fmt.writer(model).write(model, os, null);
+        String jsoncallback = req.getParameter("callback");
 
-		if ((fmt == ResultFormat.JSON || fmt == ResultFormat.JAVASCRIPT)
-				&& jsoncallback != null) {
-			os.write(')');
-		}
+        if ((fmt == ResultFormat.JSON || fmt == ResultFormat.JAVASCRIPT)
+                && jsoncallback != null) {
+            os.write(jsoncallback.getBytes("UTF-8"));
+            os.write('(');
+        }
 
-		resp.flushBuffer();
-	}
+        write(model, fmt, os);
+
+        if ((fmt == ResultFormat.JSON || fmt == ResultFormat.JAVASCRIPT)
+                && jsoncallback != null) {
+            os.write(')');
+        }
+
+        resp.flushBuffer();
+    }
 }
