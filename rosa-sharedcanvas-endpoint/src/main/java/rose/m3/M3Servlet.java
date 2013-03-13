@@ -145,7 +145,7 @@ public class M3Servlet extends HttpServlet {
         Model model;
 
         if (bookid == null) {
-            model = resmap.model(req.getRequestURL().toString(), col);
+            model = resmap.modelCollection(req.getRequestURL().toString(), col);
         } else {
             int i = bookid.indexOf('/');
 
@@ -164,21 +164,24 @@ public class M3Servlet extends HttpServlet {
                 if (type == null) {
                     model = resmap.modelManifest(
                             req.getRequestURL().toString(), book);
-                } else if (type.equals("seq")) {
+                } else if (type.equals("sequence")) {
                     model = resmap.modelReadingSequence(req.getRequestURL()
                             .toString(), book);
-                } else if (type.equals("trans")) {
+                } else if (type.equals("annotations")) {
+                    model = resmap.modelAllAnnotations(req.getRequestURL()
+                            .toString(), book);
+                } else if (type.equals("annotations/transcription")) {
                     model = resmap.modelTranscriptionAnnotations(req
                             .getRequestURL().toString(), book);
-                } else if (type.equals("illus")) {
+                } else if (type.equals("annotations/illustration")) {
                     model = resmap.modelIllustrationDescriptionAnnotations(req
                             .getRequestURL().toString(), book);
-                } else if (type.equals("images")) {
+                } else if (type.equals("annotations/image")) {
                     model = resmap.modelImageAnnotations(req.getRequestURL()
                             .toString(), book);
                 } else {
                     resp.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE,
-                            "Unknown resource map type requested: " + type);
+                            "Unknown resource map requested: " + type);
                     return;
                 }
             }
