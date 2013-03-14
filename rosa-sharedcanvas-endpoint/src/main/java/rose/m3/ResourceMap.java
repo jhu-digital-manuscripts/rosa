@@ -2,6 +2,7 @@ package rose.m3;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.GregorianCalendar;
 
@@ -308,7 +309,9 @@ public class ResourceMap {
 
         text_annotation.addProperty(RDF.type, annotation_type);
         text_annotation.addProperty(motivated_by, describing_motivation);
-        text_annotation.addProperty(has_target, target_uri);
+                
+        Resource target = model.createResource(target_uri);        
+        text_annotation.addProperty(has_target, target);
 
         Resource text_annotation_body = model.createResource();
         text_annotation_body.addProperty(RDF.type, DCTypes.Text);
@@ -358,14 +361,24 @@ public class ResourceMap {
             String canvas_uri = get_canvas_uri(book, image_id);
 
             String uri = get_transcription_annotation_uri(book, image_id);
-
             ByteArray data = new ByteArray(4 * 1024);
-            InputStream is = new URL(images.transcriptionUrl(i)).openStream();
-            data.append(is);
-            is.close();
 
-            String text = new String(data.array, 0, data.length, "UTF-8");
-            add_text_annotation(annotations, uri, canvas_uri, text, "text/xml");
+            URL url = new URL(images.transcriptionUrl(i));
+
+            HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+            huc.setRequestMethod("GET");
+            huc.connect();
+
+            if (huc.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                InputStream is = huc.getInputStream();
+                data.append(is);
+                is.close();
+                huc.disconnect();
+
+                String text = new String(data.array, 0, data.length, "UTF-8");
+                add_text_annotation(annotations, uri, canvas_uri, text,
+                        "text/xml");
+            }
         }
     }
 
