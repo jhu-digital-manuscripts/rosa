@@ -232,6 +232,9 @@ public class ResourceMap {
                 canvas.addLiteral(image_height, images.height(i));
             }
 
+            String annotation_url = service_url.replace("/sequence", "/canvas/" + RoseCollection.shortImageName(image_id) + "/annotations");
+            canvas.addProperty(has_annotations, model.createResource(annotation_url));
+            
             add_to_aggregation_list(sequence, canvas);
         }
 
@@ -458,7 +461,7 @@ public class ResourceMap {
 
         ImageList images = book.retrieveImageList();
 
-        int image = images.find(book.id() + "." + image_frag + ".tif");
+        int image = images.guess(image_frag);
 
         if (image == -1) {
             return model;
