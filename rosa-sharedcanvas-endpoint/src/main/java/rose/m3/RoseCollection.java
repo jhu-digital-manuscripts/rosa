@@ -15,6 +15,12 @@ import java.util.List;
  * */
 
 public class RoseCollection {
+    // TODO auth issues
+    // private static final String ROSE_DATA_URL =
+    // "http://rosetest.library.jhu.edu/data/";
+    private static final String ROSE_DATA_URL = "http://romandelarose.org/data/";
+    private static final String BOOKS_EN_CSV = "books.csv";
+
     private final CSVSpreadSheet table;
     private final String data_url;
 
@@ -357,6 +363,13 @@ public class RoseCollection {
     public RoseCollection(CSVSpreadSheet table, String data_url) {
         this.table = table;
         this.data_url = data_url;
+    }
+
+    public RoseCollection() throws IOException {
+        InputStream is = new URL(ROSE_DATA_URL + BOOKS_EN_CSV).openStream();
+        this.table = new CSVSpreadSheet(new InputStreamReader(is, "UTF-8"));
+        this.data_url = ROSE_DATA_URL;
+        is.close();
     }
 
     public Book findBook(String id) {

@@ -1,10 +1,7 @@
 package rose.m3;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.URL;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -23,12 +20,6 @@ import de.dfki.km.json.jsonld.impl.JenaJSONLDSerializer;
 
 public class M3Servlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-
-    // TODO auth issues
-    // private static final String ROSE_DATA_URL =
-    // "http://rosetest.library.jhu.edu/data/";
-    private static final String ROSE_DATA_URL = "http://romandelarose.org/data/";
-    private static final String BOOKS_EN_CSV = "books.csv";
 
     private RoseCollection col;
 
@@ -114,10 +105,7 @@ public class M3Servlet extends HttpServlet {
 
     public void init(ServletConfig config) throws ServletException {
         try {
-            InputStream is = new URL(ROSE_DATA_URL + BOOKS_EN_CSV).openStream();
-            col = new RoseCollection(new CSVSpreadSheet(new InputStreamReader(
-                    is, "UTF-8")), ROSE_DATA_URL);
-            is.close();
+            col = new RoseCollection();
         } catch (IOException e) {
             throw new ServletException(e);
         }
