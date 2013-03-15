@@ -1,0 +1,90 @@
+# J. Paul Getty Museum - Ludwig XV7: 15v transcriptions
+
+@prefix sc:			<http://www.shared-canvas.org/ns/> .
+@prefix dc: 		<http://purl.org/dc/elements/1.1/> .
+@prefix dcterms: 	<http://purl.org/dc/terms/> .
+#		@prefix foaf: 		<http://xmlns.clm/foaf/0.1/> .
+@prefix oa: 		<http://www.openannotation.org/ns/> .
+@prefix cnt: 		<http://www.w3.org/2008/content#> .
+@prefix rdf: 		<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix exif: 		<http://www.w3.org/2003/12/exif/ns#> .
+@prefix ore: 		<http://www.openarchives.org/ore/terms/> .
+@prefix dctypes:	<http://purl.org/dc/dcmitype/> .
+@prefix rdfs:		<http://www.w3.org/2000/01/rdf-schema#> .
+
+<${baseUrl}f15v-Transcriptions> dc:format "text/n3" ;
+				dcterms:creator <${prefix}john.abrahams> ;
+				dcterms:modified "timestamp" ;			# ex: "2011-07-21T16:10:19Z"
+				ore:describes <${prefix}f15v-Transcriptions> ;
+				a ore:ResourceMap .
+<${prefix}f15v-Transcriptions> sc:forCanvas <${prefix}Canv-f15v> ;
+			ore:aggregates <${prefix}TxtAnno-f15v-c-ln1> ,
+				<${prefix}TxtAnno-f15v-c-ln2> ,
+				<${prefix}TxtAnno-f15v-d-ln1> ,
+				<${prefix}TxtAnno-f15v-d-ln2> ;
+				a sc:AnnotationList, ore:Aggregation, rdf:List .
+				
+<${prefix}Canv-f15v>		a sc:Canvas ;
+				rdfs:label "f15v" ;
+				exif:height 0000 ;
+				exif:width 1111 .
+				
+<${prefix}TxtAnno-f15v-c-ln1>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				oa:hasTarget <${prefix}SubCanv-f15v-c-ln1> ;
+				oa:hasBody <${prefix}Txt-f15v-c-ln1> .
+<${prefix}TxtAnno-f15v-c-ln2>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				oa:hasTarget <${prefix}SubCanv-f15v-c-ln2> ;
+				oa:hasBody <${prefix}Txt-f15v-c-ln2> .
+<${prefix}TxtAnno-f15v-d-ln1>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				oa:hasTarget <${prefix}SubCanv-f15v-d-ln1> ;
+				oa:hasBody <${prefix}Txt-f15v-d-ln1> .
+<${prefix}TxtAnno-f15v-d-ln2>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				oa:hasTarget <${prefix}SubCanv-f15v-d-ln2> ;
+				oa:hasBody <${prefix}Txt-f15v-d-ln2> .
+				
+<${prefix}SubCanv-f15v-c-ln1> a oa:SpecificResource ;
+				oa:hasSource <${prefix}Canv-f15v> ;
+				oa:hasSelector <${prefix}SvgSel-f15v-c-ln1> .
+<${prefix}SubCanv-f15v-c-ln2> a oa:SpecificResource ;
+				oa:hasSource <${prefix}Canv-f15v> ;
+				oa:hasSelector <${prefix}SvgSel-f15v-c-ln2> .
+<${prefix}SubCanv-f15v-d-ln1> a oa:SpecificResource ;
+				oa:hasSource <${prefix}Canv-f15v> ;
+				oa:hasSelector <${prefix}SvgSel-f15v-d-ln1> .
+<${prefix}SubCanv-f15v-d-ln2> a oa:SpecificResource ;
+				oa:hasSource <${prefix}Canv-f15v> ;
+				oa:hasSelector <${prefix}SvgSel-f15v-d-ln2> .
+				
+<${prefix}SvgSel-f15v-c-ln1>	a oa:SvgSelector ;
+				cnt:chars "<Svg:poly points='x1,y1 x2,y2 x3,y3 x4,y4'/>" .
+<${prefix}SvgSel-f15v-c-ln2>	a oa:SvgSelector ;
+				cnt:chars "<Svg:poly points='x1,y1 x2,y2 x3,y3 x4,y4'/>" .
+<${prefix}SvgSel-f15v-d-ln1>	a oa:SvgSelector ;
+				cnt:chars "<Svg:poly points='x1,y1 x2,y2 x3,y3 x4,y4'/>" .
+<${prefix}SvgSel-f15v-d-ln2>	a oa:SvgSelector ;
+				cnt:chars "<Svg:poly points='x1,y1 x2,y2 x3,y3 x4,y4'/>" .
+				
+<${prefix}Txt-f15v-c-ln1>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Et les manches vestans et jointes." .
+<${prefix}Txt-f15v-c-ln2>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Souliers a las ou estuvaux " .
+<${prefix}Txt-f15v-d-ln1>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Ce qu'il sceit que mieux lui avient, " .
+<${prefix}Txt-f15v-d-ln2>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Car los et pris et grace en vient." .

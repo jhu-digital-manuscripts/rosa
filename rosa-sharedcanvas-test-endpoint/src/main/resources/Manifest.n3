@@ -1,0 +1,77 @@
+# J. Paul Getty Museum - Ludwig XV7 - 13v-16r - Manifest
+
+@prefix sc: <http://www.shared-canvas.org/ns/>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix dms: <http://dms.stanford.edu/ns/>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix ore: <http://www.openarchives.org/ore/terms/>.
+@prefix dc: <http://purl.org/dc/elements/1.1/>.
+@prefix dcterms: <http://purl.org/dc/terms/>.
+@prefix rdfs:		<http://www.w3.org/2000/01/rdf-schema#> .
+				
+<${baseUrl}Manifest> dc:format "text/n3" ;
+				dcterms:creator <${prefix}john.abrahams> ;
+				dcterms:modified "timestamp" ;
+				rdfs:label "Ludwig XV7" ;
+				ore:describes <${prefix}Manifest> ;
+				a ore:ResourceMap .
+
+<${prefix}john.abrahams> a dcterms:Agent ;
+				foaf:name "John Abrahams" .
+				
+<${prefix}Manifest> ore:aggregates <${prefix}ImageAnnotations> ,
+	<${prefix}NormalSequence> ,
+	<${prefix}f13v-Transcriptions> ,
+	<${prefix}f14r-Transcriptions> ,
+	<${prefix}f14v-Transcriptions> ,
+	<${prefix}f15r-Transcriptions> ,
+	<${prefix}f15v-Transcriptions> ,
+	<${prefix}f16r-Transcriptions> ,
+	<${prefix}IllustrationDescription> ;
+				a sc:Manifest, ore:Aggregation .
+				
+<${baseUrl}NormalSequence> dc:format "text/n3" ;
+				a ore:ResourceMap .
+<${prefix}NormalSequence> ore:isDescribedBy <${baseUrl}NormalSequence> ;
+				a sc:Sequence, ore:Aggregation, rdf:List .
+				
+<${baseUrl}ImageAnnotations> dc:format "text/n3" ;
+				a ore:ResourceMap .
+<${prefix}ImageAnnotations> ore:isDescribedBy <${baseUrl}ImageAnnotations> ;
+				a sc:AnnotationList, ore:Aggregation, rdf:List .
+				
+<${baseUrl}IllustrationDescription> dc:format "text/n3" ;
+				a ore:ResourceMap .
+<${prefix}IllustrationDescription> ore:isDescribedBy <${baseUrl}IllustrationDescription> ;
+				a sc:AnnotationList, ore:Aggregation, rdf:List .
+				
+<${baseUrl}f13v-Transcriptions> dc:format "text/n3" ;
+				a ore:ResourceMap .
+<${prefix}f13v-Transcriptions> sc:forCanvas <${prefix}Canv-f13v> ;
+				ore:isDescribedBy <${baseUrl}f13v-Transcriptions> ;
+				a sc:AnnotationList, ore:Aggregation, rdf:List .
+<${baseUrl}f14r-Transcriptions> dc:format "text/n3" ;
+				a ore:ResourceMap .
+<${prefix}f14r-Transcriptions> sc:forCanvas <${prefix}Canv-f14r> ;
+				ore:isDescribedBy <${baseUrl}f14r-Transcriptions> ;
+				a sc:AnnotationList, ore:Aggregation, rdf:List .
+<${baseUrl}f14v-Transcriptions> dc:format "text/n3" ;
+				a ore:ResourceMap .
+<${prefix}f14v-Transcriptions> sc:forCanvas <${prefix}Canv-f14v> ;
+				ore:isDescribedBy <${baseUrl}f14v-Transcriptions> ;
+				a sc:AnnotationList, ore:Aggregation, rdf:List .
+<${baseUrl}f15r-Transcriptions> dc:format "text/n3" ;
+				a ore:ResourceMap .
+<${prefix}f15r-Transcriptions> sc:forCanvas <${prefix}Canv-f15r> ;
+				ore:isDescribedBy <${baseUrl}f15r-Transcriptions> ;
+				a sc:AnnotationList, ore:Aggregation, rdf:List .
+<${baseUrl}f15v-Transcriptions> dc:format "text/n3" ;
+				a ore:ResourceMap .
+<${prefix}f15v-Transcriptions> sc:forCanvas <${prefix}Canv-f15v> ;
+				ore:isDescribedBy <${baseUrl}f15v-Transcriptions> ;
+				a sc:AnnotationList, ore:Aggregation, rdf:List .
+<${baseUrl}f16r-Transcriptions> dc:format "text/n3" ;
+				a ore:ResourceMap .
+<${prefix}f16r-Transcriptions> sc:forCanvas <${prefix}Canv-f16r> ;
+				ore:isDescribedBy <${baseUrl}f16r-Transcriptions> ;
+				a sc:AnnotationList, ore:Aggregation, rdf:List .

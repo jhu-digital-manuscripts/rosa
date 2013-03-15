@@ -1,0 +1,49 @@
+# J. Paul Getty Museum - Ludwig XV7 - 13v-16r - NormalSequence
+
+@prefix sc:			<http://www.shared-canvas.org/ns/> .
+@prefix exif: 		<http://www.w3.org/2003/12/exif/ns#>.
+#		@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix dc: 		<http://purl.org/dc/elements/1.1/>.
+@prefix ore: 		<http://www.openarchives.org/ore/terms/>.
+@prefix rdf: 		<http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: 		<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: 	<http://purl.org/dc/terms/>.
+
+<${prefix}Canv-f13v>		a sc:Canvas ;
+				exif:height 0000 ;
+				exif:width 1111 ;
+				rdfs:label "f13v" .
+<${prefix}Canv-f14r>		a sc:Canvas ;
+				exif:height 0000 ;
+				exif:width 1111 ;
+				rdfs:label "f14r" .
+<${prefix}Canv-f14v>		a sc:Canvas ;
+				exif:height 0000 ;
+				exif:width 1111 ;
+				rdfs:label "f14v" .
+<${prefix}Canv-f15r>		a sc:Canvas ;
+				exif:height 0000 ;
+				exif:width 1111 ;
+				rdfs:label "f15r" .
+<${prefix}Canv-f15v>		a sc:Canvas ;
+				exif:height 0000 ;
+				exif:width 1111 ;
+				rdfs:label "f15v" .
+<${prefix}Canv-f16r>		a sc:Canvas ;
+				exif:height 0000 ;
+				exif:width 1111 ;
+				rdfs:label "f16r" .
+
+<${baseUrl}NormalSequence_ResourceMap>	dc:format "text/n3" ;
+				dcterms:creator <${prefix}john.abrahams> ;
+				dcterms:modified "timestamp" ;			# ex: "2011-07-21T16:09:58Z"
+				ore:describes <${prefix}NormalSequence> ;
+				rdfs:label "Sequence of single page canvases in normal order" ;
+				a ore:ResourceMap .
+<${prefix}NormalSequence> ore:aggregates <${prefix}Canv-f13v> ,
+				<${prefix}Canv-f14r> ,
+				<${prefix}Canv-f14v> ,
+				<${prefix}Canv-f15r> ,
+				<${prefix}Canv-f15v> ,
+				<${prefix}Canv-f16r> ;
+				a sc:Sequence, ore:Aggregation, rdf:List .
