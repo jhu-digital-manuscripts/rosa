@@ -7,7 +7,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Collection of rose books */
+/**
+ * Access data from the Roman de la Rose website data directory.
+ * 
+ * This code is derived from data loading code in rosa-website-common and is a
+ * bit of a mess.
+ * */
 
 public class RoseCollection {
     private final CSVSpreadSheet table;
@@ -212,6 +217,43 @@ public class RoseCollection {
             }
 
             return -1;
+        }
+
+        /**
+         * Return name of image matching fragment or -1.
+         * 
+         * @return
+         */
+        public int guessImage(String frag) {
+            frag = frag.trim();
+
+            // try to guess whether or not the book is paginated
+            boolean paginated = isPaginatedImage(image(size() / 2));
+
+            if (!paginated) {
+                if (frag.matches("\\d+")) {
+                    frag += "r";
+                } else if (frag.matches("[a-zA-Z]\\d+")) {
+                    // Deals with printed books: A1
+                    frag = frag.toUpperCase() + "r";
+                }
+            }
+
+            if (frag.matches("\\d[rRvV]?")) {
+                frag = "00" + frag;
+            } else if (frag.matches("\\d\\d[rRvV]?")) {
+                frag = "0" + frag;
+            }
+
+            if (!frag.endsWith(".tif")) {
+                frag += ".tif";
+            }
+
+            if (!frag.startsWith(bookid)) {
+                frag = bookid + "." + frag;
+            }
+
+            return find(frag);
         }
 
         public int guess(String frag) {

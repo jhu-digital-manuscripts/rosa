@@ -60,6 +60,7 @@ public class ResourceMap {
     private final Property has_body;
     private final Property motivated_by;
     private final Property for_canvas;
+    private final Property for_motivation;
     private final Property character_content;
 
     private final Property name;
@@ -102,6 +103,8 @@ public class ResourceMap {
         this.motivated_by = model.createProperty(OA_NS_URI + "motivatedBy");
         this.for_canvas = model.createProperty(SHARED_CANVAS_NS_URI
                 + "forCanvas");
+        this.for_motivation = model.createProperty(SHARED_CANVAS_NS_URI
+                + "forMotivation");
         this.character_content = model.createProperty(CNT_NS_URI + "chars");
 
         this.name = model.createProperty(FOAF_NS_URI + "name");
@@ -209,6 +212,7 @@ public class ResourceMap {
         RDFList sequence = add_resource_map_and_list_aggregation(service_url);
 
         sequence.addProperty(RDF.type, sequence_type);
+        sequence.addProperty(RDFS.label, "Read");
         sequence.addProperty(reading_dir, READING_DIR_LEFT_TO_RIGHT);
 
         ImageList images = book.retrieveImageList();
@@ -246,22 +250,6 @@ public class ResourceMap {
         manifest.addProperty(DC.source, book.repository());
         manifest.addProperty(DC.date, book.date());
 
-        if (book.hasIllustrationTagging()) {
-            Resource r = model.createResource(service_url + "/"
-                    + "annotations/illustration");
-            r.addProperty(RDF.type, annotation_list_type);
-
-            model.add(manifest, aggregates, r);
-        }
-
-        if (book.hasTranscription()) {
-            Resource r = model.createResource(service_url + "/"
-                    + "annotations/transcription");
-            r.addProperty(RDF.type, annotation_list_type);
-
-            model.add(manifest, aggregates, r);
-        }
-
         {
             Resource r = model.createResource(service_url + "/" + "sequence");
             r.addProperty(RDF.type, sequence_type);
@@ -269,20 +257,20 @@ public class ResourceMap {
         }
 
         {
-            Resource r = model.createResource(service_url + "/"
-                    + "annotations/images");
+            Resource r = model
+                    .createResource(service_url + "/" + "annotations");
             r.addProperty(RDF.type, annotation_list_type);
             model.add(manifest, aggregates, r);
         }
 
         return model;
-
     }
 
     public Model modelTranscriptionAnnotations(String service_url, Book book)
             throws IOException {
         RDFList annotations = add_resource_map_and_list_aggregation(service_url);
         annotations.addProperty(RDF.type, annotation_list_type);
+        annotations.addProperty(for_motivation, describing_motivation);
 
         add_transcription_annotations(book, annotations);
 
@@ -309,8 +297,8 @@ public class ResourceMap {
 
         text_annotation.addProperty(RDF.type, annotation_type);
         text_annotation.addProperty(motivated_by, describing_motivation);
-                
-        Resource target = model.createResource(target_uri);        
+
+        Resource target = model.createResource(target_uri);
         text_annotation.addProperty(has_target, target);
 
         Resource text_annotation_body = model.createResource();
@@ -335,16 +323,21 @@ public class ResourceMap {
 
         for (int i = 0; i < images.size(); i++) {
             String image_id = images.image(i);
-            String canvas_uri = get_canvas_uri(book, image_id);
 
-            for (int illus : tagging.findIllusIndexes(i)) {
-                String uri = get_illustration_annotation_uri(book, image_id,
-                        illus);
-                String text = tagging.descriptions(illus);
+            add_illustration_annotation(book, tagging, i, image_id, annotations);
+        }
+    }
 
-                add_text_annotation(annotations, uri, canvas_uri, text,
-                        "text/plain");
-            }
+    private void add_illustration_annotation(Book book, ImageTagging tagging,
+            int image, String image_id, RDFList annotations) throws IOException {
+        String canvas_uri = get_canvas_uri(book, image_id);
+
+        for (int illus : tagging.findIllusIndexes(image)) {
+            String uri = get_illustration_annotation_uri(book, image_id, illus);
+            String text = tagging.descriptions(illus);
+
+            add_text_annotation(annotations, uri, canvas_uri, text,
+                    "text/plain");
         }
     }
 
@@ -357,28 +350,32 @@ public class ResourceMap {
         ImageList images = book.retrieveImageList();
 
         for (int i = 0; i < images.size(); i++) {
-            String image_id = images.image(i);
-            String canvas_uri = get_canvas_uri(book, image_id);
+            add_transcription_annotation(book, images, i, annotations);
+        }
+    }
 
-            String uri = get_transcription_annotation_uri(book, image_id);
-            ByteArray data = new ByteArray(4 * 1024);
+    private void add_transcription_annotation(Book book, ImageList images,
+            int image, RDFList annotations) throws IOException {
+        String image_id = images.image(image);
+        String canvas_uri = get_canvas_uri(book, image_id);
 
-            URL url = new URL(images.transcriptionUrl(i));
+        String uri = get_transcription_annotation_uri(book, image_id);
+        ByteArray data = new ByteArray(4 * 1024);
 
-            HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-            huc.setRequestMethod("GET");
-            huc.connect();
+        URL url = new URL(images.transcriptionUrl(image));
 
-            if (huc.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                InputStream is = huc.getInputStream();
-                data.append(is);
-                is.close();
-                huc.disconnect();
+        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        huc.setRequestMethod("GET");
+        huc.connect();
 
-                String text = new String(data.array, 0, data.length, "UTF-8");
-                add_text_annotation(annotations, uri, canvas_uri, text,
-                        "text/xml");
-            }
+        if (huc.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            InputStream is = huc.getInputStream();
+            data.append(is);
+            is.close();
+            huc.disconnect();
+
+            String text = new String(data.array, 0, data.length, "UTF-8");
+            add_text_annotation(annotations, uri, canvas_uri, text, "text/xml");
         }
     }
 
@@ -386,42 +383,48 @@ public class ResourceMap {
             Book book) throws IOException {
         RDFList annotations = add_resource_map_and_list_aggregation(service_url);
         annotations.addProperty(RDF.type, annotation_list_type);
+        annotations.addProperty(for_motivation, describing_motivation);
 
         add_illustration_annotations(book, annotations);
 
         return model;
     }
 
-    private void addImageAnnotations(Book book, RDFList annotations)
+    private void add_image_annotations(Book book, RDFList annotations)
             throws IOException {
         ImageList images = book.retrieveImageList();
 
         for (int i = 0; i < images.size(); i++) {
-            String image_id = images.image(i);
-            String image_uri = get_image_annotation_uri(book, image_id);
-            String iiif_service_url = images.iiifServiceUrl(i);
-            String canvas_uri = get_canvas_uri(book, image_id);
+            add_image_annotation(book, images, i, annotations);
+        }
+    }
 
-            if (!images.missing(i)) {
-                Resource image_annotation = model.createResource(image_uri);
-                image_annotation.addProperty(RDF.type, annotation_type);
-                image_annotation.addProperty(motivated_by, painting_motivation);
+    private void add_image_annotation(Book book, ImageList images, int image,
+            RDFList annotations) throws IOException {
+        String image_id = images.image(image);
+        String image_uri = get_image_annotation_uri(book, image_id);
+        String iiif_service_url = images.iiifServiceUrl(image);
+        String canvas_uri = get_canvas_uri(book, image_id);
 
-                Resource canvas = model.createResource(canvas_uri);
-                canvas.addProperty(RDF.type, canvas_type);
+        if (!images.missing(image)) {
+            Resource image_annotation = model.createResource(image_uri);
+            image_annotation.addProperty(RDF.type, annotation_type);
+            image_annotation.addProperty(motivated_by, painting_motivation);
 
-                Resource image_annotation_body = model
-                        .createResource(iiif_service_url);
+            Resource canvas = model.createResource(canvas_uri);
+            canvas.addProperty(RDF.type, canvas_type);
 
-                image_annotation.addProperty(has_body, image_annotation_body);
-                image_annotation.addProperty(has_target, canvas);
+            Resource image_annotation_body = model
+                    .createResource(iiif_service_url);
 
-                image_annotation_body.addProperty(DC.format, "image/jpg");
-                image_annotation_body.addProperty(DCTerms.conformsTo, "IIIF");
-                image_annotation_body.addProperty(RDF.type, image_type);
+            image_annotation.addProperty(has_body, image_annotation_body);
+            image_annotation.addProperty(has_target, canvas);
 
-                add_to_aggregation_list(annotations, image_annotation);
-            }
+            image_annotation_body.addProperty(DC.format, "image/jpg");
+            image_annotation_body.addProperty(DCTerms.conformsTo, "IIIF");
+            image_annotation_body.addProperty(RDF.type, image_type);
+
+            add_to_aggregation_list(annotations, image_annotation);
         }
     }
 
@@ -429,8 +432,9 @@ public class ResourceMap {
             throws IOException {
         RDFList annotations = add_resource_map_and_list_aggregation(service_url);
         annotations.addProperty(RDF.type, annotation_list_type);
+        annotations.addProperty(for_motivation, painting_motivation);
 
-        addImageAnnotations(book, annotations);
+        add_image_annotations(book, annotations);
 
         return model;
     }
@@ -440,9 +444,44 @@ public class ResourceMap {
         RDFList annotations = add_resource_map_and_list_aggregation(service_url);
         annotations.addProperty(RDF.type, annotation_list_type);
 
-        addImageAnnotations(book, annotations);
+        add_image_annotations(book, annotations);
         add_illustration_annotations(book, annotations);
         add_transcription_annotations(book, annotations);
+
+        return model;
+    }
+
+    public Model modelAllAnnotationsOfCanvas(String service_url, Book book,
+            String image_frag) throws IOException {
+        RDFList annotations = add_resource_map_and_list_aggregation(service_url);
+        annotations.addProperty(RDF.type, annotation_list_type);
+
+        ImageList images = book.retrieveImageList();
+
+        int image = images.find(book.id() + "." + image_frag + ".tif");
+
+        if (image == -1) {
+            return model;
+        }
+
+        String image_id = images.image(image);
+        String canvas_uri = get_canvas_uri(book, image_id);
+        Resource canvas = model.createResource(canvas_uri);
+
+        annotations.addProperty(for_canvas, canvas);
+
+        add_image_annotation(book, images, image, annotations);
+
+        if (book.hasIllustrationTagging()) {
+            ImageTagging tagging = book.retrieveIllustrationTagging(images);
+
+            add_illustration_annotation(book, tagging, image, image_id,
+                    annotations);
+        }
+
+        if (book.hasTranscription()) {
+            add_transcription_annotation(book, images, image, annotations);
+        }
 
         return model;
     }

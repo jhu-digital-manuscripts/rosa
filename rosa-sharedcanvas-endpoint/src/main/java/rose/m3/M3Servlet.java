@@ -161,24 +161,35 @@ public class M3Servlet extends HttpServlet {
                         "Unknown book requested: " + bookid);
                 return;
             } else {
+                String url = req.getRequestURL().toString();
+
                 if (type == null) {
-                    model = resmap.modelManifest(
-                            req.getRequestURL().toString(), book);
+                    model = resmap.modelManifest(url, book);
                 } else if (type.equals("sequence")) {
-                    model = resmap.modelReadingSequence(req.getRequestURL()
-                            .toString(), book);
+                    model = resmap.modelReadingSequence(url, book);
                 } else if (type.equals("annotations")) {
-                    model = resmap.modelAllAnnotations(req.getRequestURL()
-                            .toString(), book);
+                    model = resmap.modelAllAnnotations(url, book);
                 } else if (type.equals("annotations/transcription")) {
-                    model = resmap.modelTranscriptionAnnotations(req
-                            .getRequestURL().toString(), book);
+                    model = resmap.modelTranscriptionAnnotations(url, book);
                 } else if (type.equals("annotations/illustration")) {
-                    model = resmap.modelIllustrationDescriptionAnnotations(req
-                            .getRequestURL().toString(), book);
+                    model = resmap.modelIllustrationDescriptionAnnotations(url,
+                            book);
                 } else if (type.equals("annotations/image")) {
-                    model = resmap.modelImageAnnotations(req.getRequestURL()
-                            .toString(), book);
+                    model = resmap.modelImageAnnotations(url, book);
+                } else if (type.startsWith("canvas/")
+                        && type.endsWith("/annotations")) {
+                    int start = type.indexOf("canvas/") + "canvas/".length();
+                    int end = type.indexOf("/annotations");
+
+                    if (start >= end) {
+                        resp.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE,
+                                "Unknown resource map requested: " + type);
+                        return;
+                    }
+
+                    String image_frag = type.substring(start, end);
+                    model = resmap.modelAllAnnotationsOfCanvas(url, book,
+                            image_frag);
                 } else {
                     resp.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE,
                             "Unknown resource map requested: " + type);
