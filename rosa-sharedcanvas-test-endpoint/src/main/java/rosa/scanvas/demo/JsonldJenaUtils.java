@@ -78,7 +78,8 @@ public class JsonldJenaUtils {
 				String[] file = targetedRes.split("/");
 				
 				InputStream in = (JsonldJenaUtils.class).getClassLoader()
-						.getResourceAsStream(file[file.length-1]+".n3");
+						.getResourceAsStream("f"+
+								file[file.length-2]+"-"+file[file.length-1]+".n3");
 				subModel.read(in, null, lang);
 				
 				model.add(subModel);
@@ -154,10 +155,11 @@ public class JsonldJenaUtils {
 	
 	/**
 	 * Use the JSON-LD processor from dfki.km.json to write output in 
-	 * JSON-LD from a give InputStream (straight from a file/URL)
+	 * JSON-LD from a give InputStream
 	 * @param in InputStream to file
 	 * @param out OutputStream to Http response
-	 * @throws IOException all exceptions caught...
+	 * @param lang String representing the RDF language of the input data (in all caps). Ex: "N3" or "TURTLE"
+	 * @throws IOException
 	 */
 	public static void writeJsonldFromStream(InputStream in, OutputStream out, String lang) 
 			throws IOException {
@@ -181,7 +183,7 @@ public class JsonldJenaUtils {
 	}
 	
 	/**
-	 * Write JSON-LD data to an OutputStream
+	 * Write JSON-LD data from a Jena model to an OutputStream
 	 * @param model Jena Model
 	 * @param out OutputStream
 	 * @throws JSONLDProcessingError

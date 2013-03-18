@@ -110,9 +110,10 @@ public class ScDemoFile {
 				}
 			} 
 		} else if (parts.length == 3) {
-			if (parts[0].toLowerCase().equals("canvas") && 
-					parts[2].toLowerCase().equals("annotations")) {
-				handleCanvas(parts[1], model, o);
+			// ../canvas/CANV_ID/annotations
+			// ../canvas/CANV_ID/transcriptions
+			if (parts[0].toLowerCase().equals("canvas")) {
+				handleCanvas(parts[1], parts[2], model, o);
 			}
 		} else {
 			throw new IOException("Invalid path: "+path);
@@ -121,7 +122,7 @@ public class ScDemoFile {
 	}
 	
 	
-	private void handleCanvas(String canv, Model model, OutputStream out) 
+	private void handleCanvas(String canv, String type, Model model, OutputStream out) 
 			throws IOException {
 		
 		try {
@@ -135,8 +136,16 @@ public class ScDemoFile {
 						" Canvas must end in 'r' or 'v'");
 			}
 			
-			model = JsonldJenaUtils.singleCanvasAggregateModel(canv, "N3");
-			JsonldJenaUtils.writeJsonldFromModel(model, out);
+			if (type.equals("annotations")) {
+				model = JsonldJenaUtils.singleCanvasAggregateModel(canv, "N3");
+				JsonldJenaUtils.writeJsonldFromModel(model, out);
+			} else if (type.equals("transcriptions")) {
+				InputStream in = this.getClass().getClassLoader().getResourceAsStream(
+						"f"+canv+"-Transcriptions.n3");
+				JsonldJenaUtils.writeJsonldFromStream(in, out, "N3");
+			} else {
+				throw new IOException("Invalid type specified: "+type);
+			}
 			
 		} catch (NumberFormatException e) {
 			throw new IOException("Invalid canvas specified: "+canv);

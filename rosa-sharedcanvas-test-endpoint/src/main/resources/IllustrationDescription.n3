@@ -12,13 +12,14 @@
 @prefix exif: 		<http://www.w3.org/2003/12/exif/ns#> .
 @prefix ore: 		<http://www.openarchives.org/ore/terms/> .
 
-<${baseUrl}IllustrationDescription> dc:format "text/n3" ;
+<${baseUrl}annotations/illustration> dc:format "text/n3" ;
 				dcterms:creator <${prefix}john.abrahams> ;
 				dcterms:modified "timestamp" ;
 				ore:describes <${prefix}IllustrationDescriptions> ;
 				a ore:ResourceMap .
 <${prefix}IllustrationDescription> ore:aggregates <${prefix}IllusAnno-f14r> ,
 					<${prefix}IllusAnno-f15r> ;
+				ore:isDescribedBy <${baseUrl}annotations/illustration> ;
 				a sc:AnnotationList, rdf:List .
 				
 <${prefix}Canv-f14r> a sc:Canvas .

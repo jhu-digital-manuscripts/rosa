@@ -34,11 +34,11 @@
 				exif:width 1111 ;
 				rdfs:label "f16r" .
 
-<${baseUrl}NormalSequence_ResourceMap>	dc:format "text/n3" ;
+<${baseUrl}sequence/read>	dc:format "text/n3" ;
 				dcterms:creator <${prefix}john.abrahams> ;
 				dcterms:modified "timestamp" ;			# ex: "2011-07-21T16:09:58Z"
 				ore:describes <${prefix}NormalSequence> ;
-				rdfs:label "Sequence of single page canvases in normal order" ;
+				rdfs:label "Sequence of single page canvases in normal reading order" ;
 				a ore:ResourceMap .
 <${prefix}NormalSequence> ore:aggregates <${prefix}Canv-f13v> ,
 				<${prefix}Canv-f14r> ,
@@ -46,4 +46,5 @@
 				<${prefix}Canv-f15r> ,
 				<${prefix}Canv-f15v> ,
 				<${prefix}Canv-f16r> ;
+				ore:isDescribedBy <${baseUrl}sequence/read> ;
 				a sc:Sequence, ore:Aggregation, rdf:List .
