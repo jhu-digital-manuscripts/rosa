@@ -176,11 +176,12 @@ public class ResourceMap {
 
         for (int i = 0; i < col.size(); i++) {
             RoseCollection.Book b = col.getBook(i);
-            Resource book_resource = model.createResource(service_url + "/"
+            Resource manifest = model.createResource(service_url + "/"
                     + b.id());
-
-            book_resource.addProperty(RDFS.label, b.fullName());
-            model.add(agg, aggregates, book_resource);
+            manifest.addProperty(RDF.type, manifest_type);
+            
+            manifest.addProperty(RDFS.label, b.fullName());
+            model.add(agg, aggregates, manifest);
         }
 
         return model;

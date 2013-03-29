@@ -2,6 +2,8 @@ package rose.m3;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -14,6 +16,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 import de.dfki.km.json.JSONUtils;
 import de.dfki.km.json.jsonld.JSONLD;
 import de.dfki.km.json.jsonld.JSONLDProcessingError;
+import de.dfki.km.json.jsonld.JSONLDProcessor.Options;
 import de.dfki.km.json.jsonld.impl.JenaJSONLDSerializer;
 
 // TODO enum for endpoints...
@@ -71,6 +74,29 @@ public class M3Servlet extends HttpServlet {
             JenaJSONLDSerializer serializer = new JenaJSONLDSerializer();
             try {
                 Object json = JSONLD.fromRDF(model, serializer);
+
+                Map<String, Object> context = new HashMap<String, Object>();
+
+                context.put("sc", "http://www.shared-canvas.org/ns/");
+                context.put("ore", "http://www.openarchives.org/ore/terms/");
+                context.put("foaf", "http://xmlns.com/foaf/0.1/");
+                context.put("oa", "http://www.w3.org/ns/oa#");
+                context.put("exif", "http://www.w3.org/2003/12/exif/ns/");
+                context.put("dcmi", "http://purl.org/dc/dcmitype/");
+                context.put("cnt", "http://www.w3.org/2011/content#");
+                context.put("dcterms", "http://purl.org/dc/terms/");
+                context.put("dc", "http://purl.org/dc/elements/1.1/");
+                context.put("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+                context.put("rdfs", "http://www.w3.org/2000/01/rdf-schema#");
+                context.put("xsd", "http://www.w3.org/2001/XMLSchema#");
+                
+                Options opts = new Options();
+                opts.optimize = true;
+                opts.graph = true;
+
+                json = JSONLD.compact(json, context, opts);
+
+                // TODO have to set a default graph...
 
                 String output = JSONUtils.toPrettyString(json);
 
@@ -132,8 +158,14 @@ public class M3Servlet extends HttpServlet {
         OutputStream os = resp.getOutputStream();
         Model model;
 
+        String url = req.getRequestURL().toString();
+
+        if (url.endsWith("/")) {
+            url = url.substring(0, url.length() - 1);
+        }
+
         if (bookid == null) {
-            model = resmap.modelCollection(req.getRequestURL().toString(), col);
+            model = resmap.modelCollection(url, col);
         } else {
             int i = bookid.indexOf('/');
 
@@ -149,8 +181,6 @@ public class M3Servlet extends HttpServlet {
                         "Unknown book requested: " + bookid);
                 return;
             } else {
-                String url = req.getRequestURL().toString();
-
                 if (type == null) {
                     model = resmap.modelManifest(url, book);
                 } else if (type.equals("sequence")) {
