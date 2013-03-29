@@ -15,7 +15,7 @@
 
   <properties>
     <!-- Convenience property to set the GWT version -->
-     <gwt.version>2.5.0</gwt.version>
+     <gwt.version>2.5.1</gwt.version>
      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
      <!-- No  need to run these tests in the browser by default -->

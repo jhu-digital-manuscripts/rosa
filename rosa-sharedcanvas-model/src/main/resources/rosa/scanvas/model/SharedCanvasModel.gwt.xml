@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module rename-to='SharedCanvasModel'>
 
-  <inherits name='com.google.gwt.user.User' />
+  <inherits name="com.google.gwt.user.User"/>
   <inherits name="com.google.gwt.json.JSON" />
   <inherits name='com.google.gwt.junit.JUnit' />
 
+  <script src="jsonld.js"/>
+
   <source path='client' />
-  <source path='shared' />
 </module>

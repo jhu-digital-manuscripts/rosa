@@ -1,13 +1,17 @@
-package rosa.scanvas.model.client.impl;
+package rosa.scanvas.model.client.rdf.impl;
+
+import rosa.scanvas.model.client.rdf.RdfException;
+import rosa.scanvas.model.client.rdf.RdfNode;
+import rosa.scanvas.model.client.rdf.RdfValue;
 
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 
-public class JsonLdValue {
+public class RdfValueJson implements RdfValue {
     private final JSONValue v;
 
-    public JsonLdValue(JSONValue v) {
+    public RdfValueJson(JSONValue v) {
         this.v = v;
     }
 
@@ -16,21 +20,21 @@ public class JsonLdValue {
     }
 
     public boolean isNode() {
-        return v.isObject() != null;
+        return v.isString() == null && v.isArray() == null;
     }
 
     public boolean isString() {
         return v.isString() != null;
     }
-    
-    public JsonLdNode nodeValue() {
+
+    public RdfNode nodeValue() throws RdfException {
         JSONObject o = v.isObject();
 
         if (o == null) {
             return null;
         }
 
-        return new JsonLdNode(o);
+        return new RdfNodeJson(o);
     }
 
     public String stringValue() {
@@ -41,5 +45,9 @@ public class JsonLdValue {
         }
 
         return str.stringValue();
+    }
+
+    public String toString() {
+        return v.toString();
     }
 }

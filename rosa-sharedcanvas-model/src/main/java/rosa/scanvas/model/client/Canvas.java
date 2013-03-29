@@ -5,9 +5,9 @@ import java.util.List;
 public interface Canvas {
     String label();
 
-    AnnotationBody body();
+    int width();
 
-    List<AnnotationTarget> targets();
+    int height();
 
-    List<AnnotationList> annotationLists();
+    List<AnnotationList> forCanvas();
 }
