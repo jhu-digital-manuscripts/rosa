@@ -77,7 +77,7 @@ public class ResourceMap {
                 .createResource(ORE_NS_URI + "Aggregation");
         this.annotation_type = model.createResource(OA_NS_URI + "Annotation");
         this.annotation_list_type = model.createResource(OA_NS_URI
-                + "Annotation");
+                + "AnnotationList");
         this.sequence_type = model.createResource(SHARED_CANVAS_NS_URI
                 + "Sequence");
         this.manifest_type = model.createResource(SHARED_CANVAS_NS_URI
