@@ -4,54 +4,72 @@ import java.util.List;
 
 import rosa.scanvas.model.client.AnnotationList;
 import rosa.scanvas.model.client.Manifest;
+import rosa.scanvas.model.client.Reference;
 import rosa.scanvas.model.client.Sequence;
-import rosa.scanvas.model.client.rdf.RdfDataset;
 import rosa.scanvas.model.client.rdf.RdfException;
+import rosa.scanvas.model.client.rdf.RdfGraph;
 
 public class ManifestImpl extends ResourceMapImpl implements Manifest {
-    public ManifestImpl(RdfDataset ds) throws RdfException {
-        super(ds);
-    }
-
-    @Override
-    public List<Sequence> sequences() {
-        // TODO Auto-generated method stub
-        return null;
+    public ManifestImpl(RdfGraph graph) throws RdfException {
+        super(graph);
     }
 
     @Override
     public String label() {
-        // TODO Auto-generated method stub
-        return null;
+        return graph.findObjectStringValue(aggregation_uri(), RDFS_LABEL);
     }
 
     @Override
     public String agent() {
-        // TODO Auto-generated method stub
-        return null;
+        return graph.findObjectStringValue(aggregation_uri(),
+                SHARED_CANVAS_AGENT_LABEL);
     }
 
     @Override
     public String date() {
-        // TODO Auto-generated method stub
-        return null;
+        return graph.findObjectStringValue(aggregation_uri(),
+                SHARED_CANVAS_DATE_LABEL);
     }
 
-    @Override
     public String rights() {
-        // TODO Auto-generated method stub
-        return null;
+        return graph.findObjectStringValue(uri(), DC_RIGHTS);
+    }
+
+    public String toString() {
+        return graph.toString();
     }
 
     @Override
-    public String source() {
-        // TODO Auto-generated method stub
-        return null;
+    public String location() {
+        return graph.findObjectStringValue(aggregation_uri(),
+                SHARED_CANVAS_LOCATION_LABEL);
     }
 
     @Override
-    public List<AnnotationList> annotationsLists() {
-        // TODO Auto-generated method stub
-        return null;
+    public String description() {
+        return graph.findObjectStringValue(aggregation_uri(), DC_DESCRIPTION);
+    }
+
+    @Override
+    public String hasRelatedDescription() {
+        return graph.findObjectStringValue(aggregation_uri(),
+                SHARED_CANVAS_HAS_RELATED_DESCRIPTION);
+    }
+
+    @Override
+    public String hasRelatedService() {
+        return graph.findObjectStringValue(aggregation_uri(),
+                SHARED_CANVAS_HAS_RELATED_SERVICE);
+    }
+
+    @Override
+    public List<Reference<Sequence>> sequences() {
+        return aggregatedReferences(SHARED_CANVAS_SEQUENCE, Sequence.class);
+    }
+
+    @Override
+    public List<Reference<AnnotationList>> annotationsLists() {
+        return aggregatedReferences(SHARED_CANVAS_ANNOTATION_LIST,
+                AnnotationList.class);
     }
 }

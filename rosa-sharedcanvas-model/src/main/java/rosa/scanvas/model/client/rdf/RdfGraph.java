@@ -34,9 +34,21 @@ public interface RdfGraph extends Iterable<RdfTriple> {
      *            , null for any subject
      * @param predicate
      *            , null for any predicate
-     * @return object.
+     * @return object or null for none found
      */
     RdfNode findObject(String subject, String predicate);
+    
+    /**
+     * Return the first triple found which matches the subject and predicate and
+     * return the string value of the object.
+     * 
+     * @param subject
+     *            , null for any subject
+     * @param predicate
+     *            , null for any predicate
+     * @return object or null for none found
+     */
+    String findObjectStringValue(String subject, String predicate);
 
     int size();
 }

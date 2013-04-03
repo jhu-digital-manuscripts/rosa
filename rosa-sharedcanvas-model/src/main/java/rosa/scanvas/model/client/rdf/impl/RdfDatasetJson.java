@@ -48,4 +48,8 @@ public class RdfDatasetJson implements RdfDataset {
 
         return new RdfGraphJson(val.isArray());
     }
+
+    public String toString() {
+        return dataset.toString();
+    }
 }

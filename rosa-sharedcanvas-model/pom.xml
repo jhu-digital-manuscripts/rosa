@@ -17,9 +17,6 @@
     <!-- Convenience property to set the GWT version -->
      <gwt.version>2.5.1</gwt.version>
      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-     <!-- No  need to run these tests in the browser by default -->
-     <gwt.test.mode>htmlunit</gwt.test.mode>
   </properties>
 
     <dependencies>    
@@ -51,6 +48,12 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
         <version>${gwt.version}</version>
+
+	<!-- Use htmlunit to run tests -->
+	<configuration>
+	  <testTimeOut>600</testTimeOut>
+	  <mode>htmlunit</mode>
+	</configuration>
 
         <executions>
           <execution>

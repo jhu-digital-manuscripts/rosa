@@ -17,13 +17,15 @@ public class RdfGraphJson extends AbstractRdfGraph {
         if (triples == null || triples.isArray() == null) {
             throw new RdfException("Invalid dataset: " + triples);
         }
+
+        indexTriples();
     }
 
     @Override
     public int size() {
         return triples.size();
     }
-    
+
     public String toString() {
         return triples.toString();
     }
@@ -32,7 +34,7 @@ public class RdfGraphJson extends AbstractRdfGraph {
     public Iterator<RdfTriple> iterator() {
         return new Iterator<RdfTriple>() {
             int next = 0;
-            
+
             @Override
             public boolean hasNext() {
                 return next < triples.size();

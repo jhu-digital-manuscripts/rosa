@@ -3,17 +3,23 @@ package rosa.scanvas.model.client;
 import java.util.List;
 
 public interface Manifest extends ResourceMap {
-    List<Sequence> sequences();
-
     String label();
 
     String agent();
 
     String date();
 
+    String location();
+
     String rights();
 
-    String source();
+    String description();
 
-    List<AnnotationList> annotationsLists();
+    String hasRelatedDescription();
+
+    String hasRelatedService();
+
+    List<Reference<Sequence>> sequences();
+
+    List<Reference<AnnotationList>> annotationsLists();
 }

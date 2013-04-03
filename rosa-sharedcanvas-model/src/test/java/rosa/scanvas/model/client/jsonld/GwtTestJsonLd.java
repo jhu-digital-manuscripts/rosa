@@ -2,10 +2,11 @@ package rosa.scanvas.model.client.jsonld;
 
 import java.util.List;
 
+import rosa.scanvas.model.client.Reference;
 import rosa.scanvas.model.client.ResourceMap;
+import rosa.scanvas.model.client.Sequence;
+import rosa.scanvas.model.client.SharedCanvasConstants;
 import rosa.scanvas.model.client.impl.ResourceMapImpl;
-import rosa.scanvas.model.client.impl.SharedCanvasConstants;
-import rosa.scanvas.model.client.jsonld.JsonLd.Callback;
 import rosa.scanvas.model.client.rdf.RdfDataset;
 import rosa.scanvas.model.client.rdf.RdfGraph;
 import rosa.scanvas.model.client.rdf.RdfNode;
@@ -15,20 +16,8 @@ import rosa.scanvas.model.client.rdf.impl.RdfDatasetJson;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.junit.client.GWTTestCase;
 
-public class GwtTestJsonLd extends GWTTestCase {
-
-    public String getModuleName() {
-        return "rosa.scanvas.model.SharedCanvasModel";
-    }
-
-    private JavaScriptObject parse(String json) {
-        JSONValue val = JSONParser.parseLenient(json);
-        return val.isObject().getJavaScriptObject();
-    }
+public class GwtTestJsonLd extends AbstractGwtTest {
 
     public void testHasProcessor() {
         assertTrue(JsonLd.hasProcessor());
@@ -39,11 +28,9 @@ public class GwtTestJsonLd extends GWTTestCase {
      * subject.
      */
     private void check_simple_rdf(JsArray<JavaScriptObject> result) {
-        // System.err.println(new JSONObject(result).toString());
-
         assertEquals(2, result.length());
 
-        JavaScriptObject error = result.get(0);
+        JsonLdError error = result.get(0).cast();
         JavaScriptObject rdf = result.get(1);
 
         assertNull(error);
@@ -86,7 +73,7 @@ public class GwtTestJsonLd extends GWTTestCase {
             assertTrue(triple.subject().value().isString());
             assertFalse(triple.subject().value().isArray());
             assertFalse(triple.subject().value().isNode());
-            
+
             assertNotNull(triple.object().value());
             assertNotNull(triple.object().value().stringValue());
         }
@@ -138,8 +125,7 @@ public class GwtTestJsonLd extends GWTTestCase {
                 + "  \"http://schema.org/image\": { \"@id\": \"http://manu.sporny.org/images/manu.png\" }\n"
                 + "}";
 
-        JsonLd.toRdf(parse(json), new Callback() {
-            @Override
+        checkRdf(json, new JsonLd.Callback() {
             public void finished(JsArray<JavaScriptObject> result) {
                 check_simple_rdf(result);
             }
@@ -160,8 +146,7 @@ public class GwtTestJsonLd extends GWTTestCase {
                 + "  \"image\": \"http://manu.sporny.org/images/manu.png\"\n"
                 + "}";
 
-        JsonLd.toRdf(parse(json), new Callback() {
-            @Override
+        checkRdf(json, new JsonLd.Callback() {
             public void finished(JsArray<JavaScriptObject> result) {
                 check_simple_rdf(result);
             }
@@ -169,11 +154,9 @@ public class GwtTestJsonLd extends GWTTestCase {
     }
 
     private void check_simple_resouce_map(JsArray<JavaScriptObject> result) {
-        System.err.println(new JSONObject(result).toString());
-
         assertEquals(2, result.length());
 
-        JavaScriptObject error = result.get(0);
+        JsonLdError error = result.get(0).cast();
         JavaScriptObject rdf = result.get(1);
 
         assertNull(error);
@@ -181,8 +164,8 @@ public class GwtTestJsonLd extends GWTTestCase {
 
         RdfDataset dataset = new RdfDatasetJson(new JSONObject(rdf));
 
-        // Some problems with find to test
-        
+        // // Some problems with find to test
+
         {
             List<RdfTriple> triples = dataset.defaultGraph().find(
                     "http://example.com/Cow/bessie",
@@ -196,13 +179,13 @@ public class GwtTestJsonLd extends GWTTestCase {
                     SharedCanvasConstants.DCTERMS_CREATOR, null);
             assertEquals(1, triples.size());
         }
-        
-        ResourceMap resmap = new ResourceMapImpl(dataset);
+
+        ResourceMap resmap = new ResourceMapImpl(dataset.defaultGraph());
 
         assertEquals("http://rosetest.library.jhu.edu/sc/Douce195",
-                resmap.url());
+                resmap.uri());
         assertEquals("http://rosetest.library.jhu.edu/sc/Douce195#aggregation",
-                resmap.aggregation());
+                resmap.aggregation_uri());
 
         assertEquals("Roman de la Rose Digital Library", resmap.creatorName());
 
@@ -214,6 +197,19 @@ public class GwtTestJsonLd extends GWTTestCase {
                 .contains("http://rosetest.library.jhu.edu/sc/Douce195/sequence"));
         assertTrue(aggregates
                 .contains("http://rosetest.library.jhu.edu/sc/Douce195/annotations"));
+
+        List<Reference<Sequence>> seq_refs = resmap.aggregatedReferences(
+                SHARED_CANVAS_SEQUENCE, Sequence.class);
+
+        assertNotNull(seq_refs);
+
+        assertEquals(1, seq_refs.size());
+        Reference<Sequence> seq_ref = seq_refs.get(0);
+
+        assertEquals("http://rosetest.library.jhu.edu/sc/Douce195/sequence",
+                seq_ref.uri());
+        assertNull(seq_ref.label());
+        assertEquals(Sequence.class, seq_ref.type());
     }
 
     public void testSimpleResourceMap() {
@@ -270,12 +266,10 @@ public class GwtTestJsonLd extends GWTTestCase {
                 + "  \"@id\" : \"http://rosetest.library.jhu.edu/sc/Douce195/sequence\"\n"
                 + "}]}";
 
-        JsonLd.toRdf(parse(json), new Callback() {
-            @Override
+        checkRdf(json, new JsonLd.Callback() {
             public void finished(JsArray<JavaScriptObject> result) {
                 check_simple_resouce_map(result);
             }
         });
     }
-
 }

@@ -4,19 +4,22 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import rosa.scanvas.model.client.Reference;
 import rosa.scanvas.model.client.ResourceMap;
-import rosa.scanvas.model.client.rdf.RdfDataset;
+import rosa.scanvas.model.client.SharedCanvasConstants;
 import rosa.scanvas.model.client.rdf.RdfException;
+import rosa.scanvas.model.client.rdf.RdfGraph;
 import rosa.scanvas.model.client.rdf.RdfNode;
 import rosa.scanvas.model.client.rdf.RdfTriple;
 
 public class ResourceMapImpl implements ResourceMap, SharedCanvasConstants {
-    private final RdfDataset ds;
+    protected final RdfGraph graph;
+
     private final String resmap_uri;
     private final String agg_uri;
 
-    public ResourceMapImpl(RdfDataset ds) {
-        this.ds = ds;
+    public ResourceMapImpl(RdfGraph graph) {
+        this.graph = graph;
         this.resmap_uri = find_resmap_uri();
         this.agg_uri = find_agg_uri(resmap_uri);
 
@@ -26,7 +29,7 @@ public class ResourceMapImpl implements ResourceMap, SharedCanvasConstants {
     }
 
     private String find_resmap_uri() throws RdfException {
-        List<RdfNode> nodes = ds.defaultGraph().withRdfType(ORE_RESOURCE_MAP);
+        List<RdfNode> nodes = graph.withRdfType(ORE_RESOURCE_MAP);
 
         if (nodes.size() == 0) {
             return null;
@@ -36,20 +39,14 @@ public class ResourceMapImpl implements ResourceMap, SharedCanvasConstants {
     }
 
     private String find_agg_uri(String resmap_id) {
-        RdfNode node = ds.defaultGraph().findObject(resmap_id, ORE_DESCRIBES);
-
-        if (node == null) {
-            return null;
-        }
-
-        return node.value().stringValue();
+        return graph.findObjectStringValue(resmap_id, ORE_DESCRIBES);
     }
 
-    public String url() {
+    public String uri() {
         return resmap_uri;
     }
 
-    public String aggregation() {
+    public String aggregation_uri() {
         return agg_uri;
     }
 
@@ -61,8 +58,7 @@ public class ResourceMapImpl implements ResourceMap, SharedCanvasConstants {
 
     @Override
     public String creatorName() {
-        RdfNode node = ds.defaultGraph()
-                .findObject(resmap_uri, DCTERMS_CREATOR);
+        RdfNode node = graph.findObject(resmap_uri, DCTERMS_CREATOR);
 
         if (node == null) {
             return null;
@@ -72,35 +68,37 @@ public class ResourceMapImpl implements ResourceMap, SharedCanvasConstants {
             return null;
         }
 
-        RdfNode name = ds.defaultGraph().findObject(node.value().stringValue(),
+        return graph.findObjectStringValue(node.value().stringValue(),
                 FOAF_NAME);
-
-        if (name == null) {
-            return null;
-        }
-
-        return name.value().stringValue();
     }
 
     @Override
     public List<String> aggregates() {
         List<String> result = new ArrayList<String>();
 
-        for (RdfTriple triple : ds.defaultGraph().find(agg_uri, ORE_AGGREGATES,
-                null)) {
+        for (RdfTriple triple : graph.find(agg_uri, ORE_AGGREGATES, null)) {
             result.add(triple.object().value().stringValue());
         }
 
         return result;
     }
 
-    public String rights() {
-        RdfNode node = ds.defaultGraph().findObject(resmap_uri, DC_RIGHTS);
+    @Override
+    public <T> List<Reference<T>> aggregatedReferences(String type_uri,
+            Class<T> type) {
+        List<Reference<T>> result = new ArrayList<Reference<T>>();
 
-        if (node == null) {
-            return null;
+        for (RdfTriple triple : graph.find(agg_uri, ORE_AGGREGATES, null)) {
+            String child_uri = triple.object().value().stringValue();
+
+            if (graph.find(child_uri, RDF_TYPE, type_uri).size() > 0) {
+                String child_label = graph.findObjectStringValue(child_uri,
+                        RDFS_LABEL);
+
+                result.add(new ReferenceImpl<T>(child_uri, type, child_label));
+            }
         }
 
-        return node.value().stringValue();
+        return result;
     }
 }

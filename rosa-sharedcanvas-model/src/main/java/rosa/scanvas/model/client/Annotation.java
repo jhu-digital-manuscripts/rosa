@@ -3,8 +3,7 @@ package rosa.scanvas.model.client;
 import java.util.List;
 
 public interface Annotation {
-
-    AnnotationBody body();
+    List<AnnotationBody> bodies();
 
     List<AnnotationTarget> targets();
 
