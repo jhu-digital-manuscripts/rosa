@@ -10,8 +10,11 @@ import java.util.List;
 /**
  * Access data from the Roman de la Rose website data directory.
  * 
- * This code is derived from data loading code in rosa-website-common and is a
- * bit of a mess.
+ * TODO This code is derived from data loading code in rosa-website-common and
+ * is a bit of a mess. There should be an interface for a generic collection of
+ * manifests.
+ * 
+ * TODO caching
  * */
 
 public class RoseCollection {
@@ -46,6 +49,11 @@ public class RoseCollection {
         public String dataUrl() {
             return data_url + id() + "/";
         }
+        
+        public String descriptionUrl() {
+            return dataUrl() + id() + ".description_en.xml";
+        }
+        
 
         // TODO prefer cropped...
 
@@ -394,5 +402,9 @@ public class RoseCollection {
 
     public String dataUrl() {
         return data_url;
+    }
+
+    public String name() {
+        return "Roman de la Rose Digital Library";
     }
 }

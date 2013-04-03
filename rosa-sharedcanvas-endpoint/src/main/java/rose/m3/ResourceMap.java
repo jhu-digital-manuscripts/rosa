@@ -36,6 +36,7 @@ public class ResourceMap {
 
     private static final String READING_DIR_LEFT_TO_RIGHT = "Left-to-Right";
     private static final String READING_DIR_RIGHT_TO_LEFT = "Right-to-Left";
+    private static final String AGENT_NAME = "Rosa tools";
 
     private final Model model;
 
@@ -62,11 +63,16 @@ public class ResourceMap {
     private final Property for_canvas;
     private final Property for_motivation;
     private final Property character_content;
-
+    private final Property agent_label;
+    private final Property location_label;
+    private final Property date_label;
+    private final Property has_related_description;
+    
     private final Property name;
     private final Property image_width;
     private final Property image_height;
     private final Property reading_dir;
+
 
     public ResourceMap() {
         this.model = ModelFactory.createDefaultModel();
@@ -76,7 +82,7 @@ public class ResourceMap {
         this.aggregation_type = model
                 .createResource(ORE_NS_URI + "Aggregation");
         this.annotation_type = model.createResource(OA_NS_URI + "Annotation");
-        this.annotation_list_type = model.createResource(OA_NS_URI
+        this.annotation_list_type = model.createResource(SHARED_CANVAS_NS_URI
                 + "AnnotationList");
         this.sequence_type = model.createResource(SHARED_CANVAS_NS_URI
                 + "Sequence");
@@ -106,7 +112,12 @@ public class ResourceMap {
         this.for_motivation = model.createProperty(SHARED_CANVAS_NS_URI
                 + "forMotivation");
         this.character_content = model.createProperty(CNT_NS_URI + "chars");
+        this.agent_label = model.createProperty(SHARED_CANVAS_NS_URI + "agentLabel");
+        this.date_label = model.createProperty(SHARED_CANVAS_NS_URI + "dateLabel");
+        this.location_label = model.createProperty(SHARED_CANVAS_NS_URI + "locationLabel");
+        this.has_related_description = model.createProperty(SHARED_CANVAS_NS_URI + "hasRelatedDescription");
 
+        
         this.name = model.createProperty(FOAF_NS_URI + "name");
         this.image_width = model.createProperty(EXIF_NS_URI + "width");
         this.image_height = model.createProperty(EXIF_NS_URI + "height");
@@ -133,7 +144,7 @@ public class ResourceMap {
 
         Resource agent = model.createResource();
         agent.addProperty(RDF.type, DCTerms.AgentClass);
-        agent.addProperty(name, "Roman de la Rose Digital Library");
+        agent.addProperty(name, AGENT_NAME);
 
         model.add(resmap, DCTerms.creator, agent);
 
@@ -174,6 +185,8 @@ public class ResourceMap {
     public Model modelCollection(String service_url, RoseCollection col) {
         Resource agg = add_resource_map_and_aggregation(service_url);
 
+        agg.addProperty(RDFS.label, col.name());
+        
         for (int i = 0; i < col.size(); i++) {
             RoseCollection.Book b = col.getBook(i);
             Resource manifest = model.createResource(service_url + "/"
@@ -249,10 +262,11 @@ public class ResourceMap {
         manifest.addProperty(RDF.type, manifest_type);
 
         manifest.addProperty(RDFS.label, book.fullName());
-        manifest.addProperty(DC.title, book.commonName());
+        manifest.addProperty(agent_label, book.repository());
+        manifest.addProperty(date_label, book.date());
+        manifest.addProperty(location_label, book.location());        
         manifest.addProperty(DC.rights, book.permissionStatement());
-        manifest.addProperty(DC.source, book.repository());
-        manifest.addProperty(DC.date, book.date());
+        manifest.addProperty(has_related_description, book.descriptionUrl());
 
         {
             Resource r = model.createResource(service_url + "/" + "sequence");

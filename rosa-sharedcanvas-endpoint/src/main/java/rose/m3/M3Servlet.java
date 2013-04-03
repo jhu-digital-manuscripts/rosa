@@ -19,8 +19,6 @@ import de.dfki.km.json.jsonld.JSONLDProcessingError;
 import de.dfki.km.json.jsonld.JSONLDProcessor.Options;
 import de.dfki.km.json.jsonld.impl.JenaJSONLDSerializer;
 
-// TODO enum for endpoints...
-
 public class M3Servlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
@@ -86,20 +84,23 @@ public class M3Servlet extends HttpServlet {
                 context.put("cnt", "http://www.w3.org/2011/content#");
                 context.put("dcterms", "http://purl.org/dc/terms/");
                 context.put("dc", "http://purl.org/dc/elements/1.1/");
-                context.put("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+                context.put("rdf",
+                        "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
                 context.put("rdfs", "http://www.w3.org/2000/01/rdf-schema#");
                 context.put("xsd", "http://www.w3.org/2001/XMLSchema#");
-                
+
+                // TODO Make this configurable
+                context.put("rose.data", "http://romandelarose.org/data/");
+                context.put("rose.sc", "http://rosetest.library.jhu.edu/sc/");
+
                 Options opts = new Options();
                 opts.optimize = true;
                 opts.graph = true;
 
+                // Must compact to turn into a graph and use context
                 json = JSONLD.compact(json, context, opts);
-
-                // TODO have to set a default graph...
-
+                
                 String output = JSONUtils.toPrettyString(json);
-
                 os.write(output.getBytes("UTF-8"));
             } catch (JSONLDProcessingError e) {
                 throw new RuntimeException("JSON LD error", e);
