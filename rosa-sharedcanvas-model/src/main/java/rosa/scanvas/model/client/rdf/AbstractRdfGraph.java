@@ -97,13 +97,38 @@ public abstract class AbstractRdfGraph implements RdfGraph,
         return node.value().stringValue();
     }
 
-    public List<RdfNode> withRdfType(String type) {
+    public List<String> findObjectStringValues(String subject, String predicate) {
+        List<String> result = new ArrayList<String>();
+
+        for (RdfTriple triple : find(subject, predicate, null)) {
+            result.add(triple.object().value().stringValue());
+        }
+
+        return result;
+    }
+
+    public double findObjectNumberValue(String subject, String predicate,
+            double missing) {
+        RdfNode node = findObject(subject, predicate);
+
+        if (node == null) {
+            return missing;
+        }
+
+        RdfValue val = node.value();
+
+        if (val.isNumber()) {
+            return val.numberValue();
+        }
+
+        return missing;
+    }
+
+    public List<RdfNode> findRdfTypes(String type) {
         List<RdfNode> result = new ArrayList<RdfNode>();
 
         for (RdfTriple triple : this) {
-            if (triple.predicate().isIRI()
-                    && triple.predicate().value().stringValue()
-                            .equals(RDF_TYPE)) {
+            if (triple.predicate().value().stringValue().equals(RDF_TYPE)) {
                 if (triple.object().value().stringValue().equals(type)) {
                     result.add(triple.subject());
                 }

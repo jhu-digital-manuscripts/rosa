@@ -8,6 +8,8 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 
+// Number values are always treated as strings by json.
+
 public class RdfValueJson implements RdfValue {
     private final JSONValue v;
 
@@ -20,11 +22,26 @@ public class RdfValueJson implements RdfValue {
     }
 
     public boolean isNode() {
-        return v.isString() == null && v.isArray() == null;
+        return v.isString() == null && v.isArray() == null && !isNumber();
     }
 
     public boolean isString() {
         return v.isString() != null;
+    }
+
+    public boolean isNumber() {
+        String s = stringValue();
+
+        if (s == null) {
+            return false;
+        }
+
+        try {
+            Double.parseDouble(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     public RdfNode nodeValue() throws RdfException {
@@ -49,5 +66,20 @@ public class RdfValueJson implements RdfValue {
 
     public String toString() {
         return v.toString();
+    }
+
+    @Override
+    public double numberValue() {
+        String s = stringValue();
+
+        if (s == null) {
+            throw new RdfException("Not a number");
+        }
+
+        try {
+            return Double.parseDouble(s);
+        } catch (NumberFormatException e) {
+            throw new RdfException("Not a number: " + e.getMessage());
+        }
     }
 }

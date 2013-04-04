@@ -1,11 +1,16 @@
 package rosa.scanvas.model.client;
 
-public interface AnnotationList extends ResourceMap {
+/**
+ * Ordered list of annotations.
+ */
+public interface AnnotationList extends ResourceMap, Iterable<Annotation> {
     String label();
 
     Annotation annotation(int index);
 
-    int length();
+    int size();
 
-    // TODO forCanvas, forMotivation
+    String forCanvas();
+
+    String forMotivation();
 }

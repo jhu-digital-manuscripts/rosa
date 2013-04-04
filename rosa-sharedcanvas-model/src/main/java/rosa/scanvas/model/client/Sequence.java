@@ -1,13 +1,19 @@
 package rosa.scanvas.model.client;
 
-public interface Sequence extends ResourceMap {
+/**
+ * An ordered list of canvases.
+ */
+public interface Sequence extends ResourceMap, Iterable<Canvas> {
     String label();
 
     String readingDirection();
-    
+
     Canvas canvas(int index);
 
-    int length();
-    
-    // TODO sc:hasContentRange
+    /**
+     * @return Number of canvases in sequence.
+     */
+    int size();
+
+    Range hasContentRange();
 }

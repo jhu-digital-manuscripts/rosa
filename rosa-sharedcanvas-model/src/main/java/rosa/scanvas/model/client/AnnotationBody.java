@@ -3,16 +3,25 @@ package rosa.scanvas.model.client;
 import java.util.List;
 
 public interface AnnotationBody {
-    boolean isSingleton();
+    String uri();
 
     boolean isChoice();
 
     boolean isComposite();
 
+    boolean isText();
+
+    boolean isImage();
+    
+    boolean isType(String type_uri);
+    
+    String textContent();
+
     AnnotationBody defaultItem();
 
-    List<AnnotationBody> items();
+    List<AnnotationBody> otherItems();
 
-    public String format();
+    String format();
 
+    String conformsTo();
 }

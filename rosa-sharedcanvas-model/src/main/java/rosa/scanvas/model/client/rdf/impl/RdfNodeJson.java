@@ -15,11 +15,6 @@ import com.google.gwt.json.client.JSONValue;
 public class RdfNodeJson implements RdfNode {
     private final JSONObject node;
 
-    @Override
-    public String toString() {
-        return super.toString();
-    }
-
     public RdfNodeJson(JSONObject node) throws RdfException {
         this.node = node;
 
@@ -161,5 +156,10 @@ public class RdfNodeJson implements RdfNode {
     @Override
     public boolean isIRI() {
         return isType("IRI");
+    }
+    
+    @Override
+    public String toString() {
+        return node.toString();
     }
 }

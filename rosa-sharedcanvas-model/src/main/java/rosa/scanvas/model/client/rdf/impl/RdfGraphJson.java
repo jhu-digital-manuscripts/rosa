@@ -27,7 +27,13 @@ public class RdfGraphJson extends AbstractRdfGraph {
     }
 
     public String toString() {
-        return triples.toString();
+        StringBuilder sb = new StringBuilder();
+        
+        for (int i = 0; i < triples.size(); i++) {
+            sb.append(triples.get(i).toString() + "\n");
+        }
+        
+        return sb.toString();
     }
 
     @Override

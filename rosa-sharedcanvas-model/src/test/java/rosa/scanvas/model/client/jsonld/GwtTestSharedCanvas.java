@@ -2,7 +2,10 @@ package rosa.scanvas.model.client.jsonld;
 
 import java.util.List;
 
+import rosa.scanvas.model.client.Annotation;
+import rosa.scanvas.model.client.AnnotationBody;
 import rosa.scanvas.model.client.AnnotationList;
+import rosa.scanvas.model.client.Canvas;
 import rosa.scanvas.model.client.Manifest;
 import rosa.scanvas.model.client.ManifestCollection;
 import rosa.scanvas.model.client.Reference;
@@ -14,6 +17,10 @@ public class GwtTestSharedCanvas extends AbstractGwtTest {
     private final static String COLLECTION_ENDPOINT = "http://rosetest.library.jhu.edu/sc/";
     private final static String MANIFEST_ENDPOINT = COLLECTION_ENDPOINT
             + "Douce195";
+    private final static String ANNOTATION_LIST_ENDPOINT = COLLECTION_ENDPOINT
+            + "Douce195/canvas/1r/annotations";
+    private final static String SEQUENCE_ENDPOINT = COLLECTION_ENDPOINT
+            + "Douce195/sequence";
 
     private <T> void check_refs(List<Reference<T>> refs, Class<T> type,
             List<String> aggregates) {
@@ -67,6 +74,83 @@ public class GwtTestSharedCanvas extends AbstractGwtTest {
         check_refs(seqs, Sequence.class, aggregates);
     }
 
+    private void check_annotation_list_of_canvas(AnnotationList al) {
+        assertNotNull(al);
+        assertNotNull(al.uri());
+        // assertNotNull(al.label());
+        assertNotNull(al.creatorName());
+        assertNotNull(al.forCanvas());
+
+        List<String> aggregates = al.aggregates();
+
+        assertTrue(aggregates.size() > 0);
+
+        assertEquals(aggregates.size(), al.size());
+
+        for (int i = 0; i < al.size(); i++) {
+            Annotation a = al.annotation(i);
+
+            assertNotNull(a);
+            assertNotNull(a.uri());
+
+            assertTrue(a.targets().size() > 0);
+
+            for (String target : a.targets()) {
+                assertNotNull(target);
+            }
+
+            AnnotationBody body = a.body();
+            assertNotNull(body);
+
+            assertNotNull(body.uri());
+            assertNotNull(body.format());
+
+            if (body.isImage()) {
+                assertNull(body.defaultItem());
+                assertTrue(body.otherItems().isEmpty());
+                assertTrue(body.format().startsWith("image"));
+                assertEquals("IIIF", body.conformsTo());
+            } else if (body.isText()) {
+                assertNull(body.defaultItem());
+                assertTrue(body.otherItems().isEmpty());
+
+                assertTrue(body.format().startsWith("text"));
+                assertNotNull(body.textContent());
+                assertFalse(body.textContent().isEmpty());
+            }
+        }
+    }
+    
+    private void check_sequence(Sequence seq) {
+        assertNotNull(seq);
+        assertNotNull(seq.uri());
+        assertNotNull(seq.label());
+        assertNotNull(seq.creatorName());
+        assertNotNull(seq.readingDirection());
+
+        assertTrue(seq.size() > 0);
+        
+        List<String> aggregates = seq.aggregates();
+
+        assertTrue(aggregates.size() > 0);
+        assertEquals(aggregates.size(), seq.size());
+                
+        for (Canvas canvas: seq) {
+            assertNotNull(canvas.uri());
+            assertNotNull(canvas.label());
+            assertNotNull(canvas.hasAnnotations());
+
+            assertTrue(canvas.height() > 0);
+            assertTrue(canvas.width() > 0);
+
+            assertTrue(aggregates.contains(canvas.uri()));
+            
+            for (Reference<AnnotationList> ref: canvas.hasAnnotations()) {
+                assertNotNull(ref.uri());
+            }
+        }
+    }
+
     public void testManifestCollection() {
         checkRemoteSharedCanvas(COLLECTION_ENDPOINT, ManifestCollection.class,
                 new AsyncCallback<ManifestCollection>() {
@@ -89,6 +173,32 @@ public class GwtTestSharedCanvas extends AbstractGwtTest {
 
                     public void onSuccess(Manifest man) {
                         check_manifest(man);
+                    }
+                });
+    }
+
+    public void testAnnotationListOfCanvas() {
+        checkRemoteSharedCanvas(ANNOTATION_LIST_ENDPOINT, AnnotationList.class,
+                new AsyncCallback<AnnotationList>() {
+                    public void onFailure(Throwable error) {
+                        fail(error.getMessage());
+                    }
+
+                    public void onSuccess(AnnotationList al) {
+                        check_annotation_list_of_canvas(al);
+                    }
+                });
+    }
+
+    public void testSequence() {
+        checkRemoteSharedCanvas(SEQUENCE_ENDPOINT, Sequence.class,
+                new AsyncCallback<Sequence>() {
+                    public void onFailure(Throwable error) {
+                        fail(error.getMessage());
+                    }
+
+                    public void onSuccess(Sequence seq) {
+                        check_sequence(seq);
                     }
                 });
     }

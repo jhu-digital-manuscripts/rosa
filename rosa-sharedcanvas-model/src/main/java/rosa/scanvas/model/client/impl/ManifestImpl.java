@@ -35,10 +35,6 @@ public class ManifestImpl extends ResourceMapImpl implements Manifest {
         return graph.findObjectStringValue(uri(), DC_RIGHTS);
     }
 
-    public String toString() {
-        return graph.toString();
-    }
-
     @Override
     public String location() {
         return graph.findObjectStringValue(aggregation_uri(),

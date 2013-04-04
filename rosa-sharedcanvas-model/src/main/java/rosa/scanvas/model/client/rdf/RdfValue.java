@@ -7,7 +7,11 @@ public interface RdfValue {
 
     boolean isString();
 
+    boolean isNumber();
+
     String stringValue();
 
     RdfNode nodeValue();
+
+    double numberValue();
 }

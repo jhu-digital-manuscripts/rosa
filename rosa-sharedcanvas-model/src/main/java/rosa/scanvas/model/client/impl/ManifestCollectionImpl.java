@@ -23,8 +23,4 @@ public class ManifestCollectionImpl extends ResourceMapImpl implements
     public List<Reference<Manifest>> manifests() {
         return aggregatedReferences(SHARED_CANVAS_MANIFEST, Manifest.class);
     }
-
-    public String toString() {
-        return graph.toString();
-    }
 }

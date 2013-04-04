@@ -24,7 +24,7 @@ public interface RdfGraph extends Iterable<RdfTriple> {
      * @return matching subject nodes.
      * @throws RdfException
      */
-    List<RdfNode> withRdfType(String type);
+    List<RdfNode> findRdfTypes(String type);
 
     /**
      * Return the first triple found which matches the subject and predicate and
@@ -37,10 +37,11 @@ public interface RdfGraph extends Iterable<RdfTriple> {
      * @return object or null for none found
      */
     RdfNode findObject(String subject, String predicate);
-    
+
     /**
-     * Return the first triple found which matches the subject and predicate and
-     * return the string value of the object.
+     * Return the string value of the object of the first triple found which
+     * matches the subject and predicate.
+     * 
      * 
      * @param subject
      *            , null for any subject
@@ -50,5 +51,28 @@ public interface RdfGraph extends Iterable<RdfTriple> {
      */
     String findObjectStringValue(String subject, String predicate);
 
+    /**
+     * Return string values of all objects matching the subject and predicate.
+     * 
+     * @param subject
+     * @param predicate
+     * @return matching object string values
+     */
+    List<String> findObjectStringValues(String subject, String predicate);
+
+    /**
+     * @return number of triples in the graph.
+     */
     int size();
+
+    /**
+     * Return the number value of the object of the first triple found which
+     * matches the subject and predicate.
+     * 
+     * @param uri
+     * @param exifWidth
+     * @param missing
+     * @return value or missing if not found or not a number
+     */
+    double findObjectNumberValue(String uri, String exifWidth, double missing);
 }

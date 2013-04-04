@@ -1,7 +1,9 @@
 package rosa.scanvas.model.client;
 
+import rosa.scanvas.model.client.impl.AnnotationListImpl;
 import rosa.scanvas.model.client.impl.ManifestImpl;
 import rosa.scanvas.model.client.impl.ManifestCollectionImpl;
+import rosa.scanvas.model.client.impl.SequenceImpl;
 import rosa.scanvas.model.client.jsonld.JsonLd;
 import rosa.scanvas.model.client.jsonld.JsonLdError;
 import rosa.scanvas.model.client.rdf.RdfDataset;
@@ -15,6 +17,17 @@ import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class SharedCanvas {
+    /**
+     * Loading a Shared Canvas entity from a JSON-LD endpoint.
+     * 
+     * @param url
+     * @param type
+     * @param cb
+     */
+    public static <T> void load(Reference<T> ref, final AsyncCallback<T> cb) {
+        load(ref.uri(), ref.type(), cb);
+    }
+
     /**
      * Loading a Shared Canvas entity from a JSON-LD endpoint.
      * 
@@ -63,6 +76,10 @@ public class SharedCanvas {
                             cb.onSuccess((T) new ManifestCollectionImpl(graph));
                         } else if (type == Manifest.class) {
                             cb.onSuccess((T) new ManifestImpl(graph));
+                        } else if (type == AnnotationList.class) {
+                            cb.onSuccess((T) new AnnotationListImpl(graph));
+                        } else if (type == Sequence.class) {
+                            cb.onSuccess((T) new SequenceImpl(graph));
                         } else {
                             cb.onFailure(new IllegalArgumentException(
                                     "Unsupported type: " + type.getName()));

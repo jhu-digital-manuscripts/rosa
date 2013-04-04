@@ -29,7 +29,7 @@ public class ResourceMapImpl implements ResourceMap, SharedCanvasConstants {
     }
 
     private String find_resmap_uri() throws RdfException {
-        List<RdfNode> nodes = graph.withRdfType(ORE_RESOURCE_MAP);
+        List<RdfNode> nodes = graph.findRdfTypes(ORE_RESOURCE_MAP);
 
         if (nodes.size() == 0) {
             return null;
@@ -100,5 +100,9 @@ public class ResourceMapImpl implements ResourceMap, SharedCanvasConstants {
         }
 
         return result;
+    }
+
+    public String toString() {
+        return graph.toString();
     }
 }
