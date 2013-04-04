@@ -245,7 +245,11 @@ public class ResourceMap {
             canvas.addLiteral(RDFS.label,
                     RoseCollection.shortImageName(image_id));
 
-            if (!images.missing(i)) {
+            if (images.missing(i)) {
+                // TODO What default?
+                canvas.addLiteral(image_width, 3600);
+                canvas.addLiteral(image_height, 5700);
+            } else {
                 canvas.addLiteral(image_width, images.width(i));
                 canvas.addLiteral(image_height, images.height(i));
             }
@@ -254,6 +258,8 @@ public class ResourceMap {
                     + RoseCollection.shortImageName(image_id) + "/annotations");
             canvas.addProperty(has_annotations,
                     model.createResource(annotation_url));
+
+            sequence.addProperty(aggregates, canvas);
 
             canvas_seq.add(canvas);
         }
@@ -320,6 +326,8 @@ public class ResourceMap {
         text_annotation_body.addProperty(character_content, text);
 
         text_annotation.addProperty(has_body, text_annotation_body);
+
+        agg.addProperty(aggregates, text_annotation);
 
         return text_annotation;
     }
@@ -471,6 +479,8 @@ public class ResourceMap {
         image_annotation_body.addProperty(DC.format, "image/jpg");
         image_annotation_body.addProperty(DCTerms.conformsTo, "IIIF");
         image_annotation_body.addProperty(RDF.type, image_type);
+
+        annotations.addProperty(aggregates, image_annotation);
 
         return image_annotation;
     }
