@@ -1,6 +1,7 @@
 package rosa.scanvas.viewer.client.presenter;
 
 import rosa.scanvas.viewer.client.HistoryInfo;
+import rosa.scanvas.viewer.client.PanelData;
 import rosa.scanvas.viewer.client.event.PanelNumberChangeEvent;
 import rosa.scanvas.viewer.client.widgets.AnnotationListWidget;
 import rosa.scanvas.viewer.client.widgets.ManifestListWidget;
@@ -122,6 +123,11 @@ public class SidebarFullPresenter implements Presenter {
 	private void doPanelListChange() {
 		int selectedPanel = display.getPanelList().getSelectedIndex();
 		eventBus.fireEvent(new PanelNumberChangeEvent("change", selectedPanel));
+	}
+
+	public void setData(PanelData data) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

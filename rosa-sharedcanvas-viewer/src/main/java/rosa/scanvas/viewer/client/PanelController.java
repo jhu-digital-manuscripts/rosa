@@ -8,10 +8,12 @@ import rosa.scanvas.viewer.client.event.PanelNumberChangeEvent;
 import rosa.scanvas.viewer.client.presenter.CanvasNavPresenter;
 import rosa.scanvas.viewer.client.presenter.CollectionPresenter;
 import rosa.scanvas.viewer.client.presenter.HomePresenter;
+import rosa.scanvas.viewer.client.presenter.ManifestPresenter;
 import rosa.scanvas.viewer.client.presenter.Presenter;
 import rosa.scanvas.viewer.client.view.CanvasNavView;
 import rosa.scanvas.viewer.client.view.CollectionView;
 import rosa.scanvas.viewer.client.view.HomeView;
+import rosa.scanvas.viewer.client.view.ManifestView;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.shared.HandlerManager;
@@ -23,31 +25,23 @@ public class PanelController implements Controller {
 	
 	private final HandlerManager eventBus;
 	private HasWidgets container;
-	private ManifestCollection collection;
+	private PanelData data;
 	
 	
-	private void getSharedCanvas(final PanelProperties props) {
-		String url = "http://rosetest.library.jhu.edu/sc";
-		System.out.println("__"+url);
+	private void getManifestCollection(String token, PanelProperties props, final Presenter presenter) {
+		String url = HistoryInfo.getCollection(token, props.getIndex());
 		
 		SharedCanvas.load(url, ManifestCollection.class, new AsyncCallback<ManifestCollection>() {
 			public void onFailure(Throwable caught) {
-				Presenter mainPresenter = new HomePresenter(new HomeView(), eventBus, props);
-				mainPresenter.go(container);
-			}
-
-			public void onSuccess(ManifestCollection result) {
-				collection = result;
-				PanelProperties properties = props;
-				properties.setData(result);
 				
-				Presenter mainPresenter = new CollectionPresenter(new CollectionView(), eventBus, props, "collection");
-				mainPresenter.go(container);
+			}
+			
+			public void onSuccess(ManifestCollection result) {
+				data.setCollection(result);
+				presenter.setData(data);
 			}
 		});
-		
 	}
-	
 	
 	
 	public PanelController(HandlerManager eventBus) {
@@ -81,7 +75,7 @@ public class PanelController implements Controller {
 		String token = event.getValue();
 
 		if (token != null) {
-			String[] panels = token.split(":");
+			String[] panels = token.split(";:");
 			
 			container.clear();
 			for (int i=0; i<panels.length; i++) {
@@ -91,12 +85,14 @@ public class PanelController implements Controller {
 				
 				if (props.getView().equals("home")) {
 					mainPresenter = new HomePresenter(new HomeView(), eventBus, props);
+					((HomePresenter)mainPresenter).bindLinks();
 				} else if (props.getView().equals("collection")) {
-					getSharedCanvas(props);
 					//props.setData(collection);
-					//mainPresenter = new CollectionPresenter(new CollectionView(), eventBus, props, "collection");
+					mainPresenter = new CollectionPresenter(new CollectionView(), eventBus, props);
+					getManifestCollection(token, props, mainPresenter);
 				} else if (props.getView().equals("manifest")) {
-					mainPresenter = new CollectionPresenter(new CollectionView(), eventBus, props, "manifest");
+//					getManifestData(token, props);
+					mainPresenter = new ManifestPresenter(new ManifestView(), eventBus, props);
 				} else if (props.getView().equals("canvasNav")) {
 					mainPresenter = new CanvasNavPresenter(new CanvasNavView(), eventBus, props);
 					setTab(panels[i], mainPresenter);
@@ -152,6 +148,12 @@ public class PanelController implements Controller {
 		} catch (IndexOutOfBoundsException e) {}
 		catch (NumberFormatException e) {}
 		catch (ClassCastException e) {}
+	}
+
+
+	public void setData(PanelData data) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

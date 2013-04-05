@@ -6,11 +6,7 @@ import rosa.scanvas.viewer.client.event.SidebarViewChangeEvent;
 import rosa.scanvas.viewer.client.event.SidebarViewChangeEventHandler;
 import rosa.scanvas.viewer.client.presenter.Presenter;
 import rosa.scanvas.viewer.client.presenter.SidebarFullPresenter;
-//import rosa.scanvas.viewer.client.presenter.SidebarMetaPresenter;
-//import rosa.scanvas.viewer.client.presenter.SidebarPresenter;
-//import rosa.scanvas.viewer.client.view.SidebarAnnoView;
 import rosa.scanvas.viewer.client.view.SidebarFullView;
-//import rosa.scanvas.viewer.client.view.SidebarMetaView;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.shared.HandlerManager;
@@ -70,13 +66,6 @@ public class MainController implements Controller {
 	private void bind() {
 		History.addValueChangeHandler(this);
 		
-/*		eventBus.addHandler(SidebarViewChangeEvent.TYPE, 
-				new SidebarViewChangeEventHandler() {
-					public void onListViewChange(SidebarViewChangeEvent event) {
-						doSidebarViewChange(event.getView());
-					}
-		});*/
-		
 		eventBus.addHandler(PanelNumberChangeEvent.TYPE, 
 				new PanelNumberChangeEventHandler() {
 					public void onPanelNumberChange(PanelNumberChangeEvent event) {
@@ -84,20 +73,6 @@ public class MainController implements Controller {
 					}
 		});
 	}
-	
-/*	private void doSidebarViewChange(String view) {
-		Presenter presenter = null;
-		
-		if (view.equals("annotation list")) {
-			presenter = new SidebarPresenter(new SidebarAnnoView(), eventBus);
-		} else if (view.equals("metadata list")) {
-			presenter = new SidebarMetaPresenter(new SidebarMetaView(), eventBus);
-		}
-		
-		if (presenter != null) {
-			presenter.go(container);
-		}
-	}*/
 	
 	private void doPanelNumberChange(String message, int selectedPanel) {
 		String currentToken = History.getToken();
@@ -107,7 +82,7 @@ public class MainController implements Controller {
 			if (currentToken.equals("")) {
 				currentIndex = 0;
 			} else {
-				currentIndex = currentToken.split(":").length;
+				currentIndex = currentToken.split(";:").length;
 			}
 			
 			String newToken = HistoryInfo.newToken(String.valueOf(++historyId), "home", "0");
@@ -123,17 +98,22 @@ public class MainController implements Controller {
 			
 		} else if (message.equals("remove")) {
 			
-			String[] parts = currentToken.split(":");
+			String[] parts = currentToken.split(";:");
 			String newToken = "";
 			
 			for (int i=0; i<parts.length; i++) {
 				if (i != currentIndex) {
-					newToken += parts[i] + ":";
+					newToken += parts[i] + ";:";
 				}
 			}
 			currentIndex = 0;
 			History.newItem(newToken);
 		}
+	}
+
+	public void setData(PanelData data) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

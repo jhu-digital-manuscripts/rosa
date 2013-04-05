@@ -1,10 +1,10 @@
 package rosa.scanvas.viewer.client.presenter;
 
 import java.util.List;
-import java.util.jar.Manifest;
 
 import rosa.scanvas.model.client.ManifestCollection;
 import rosa.scanvas.viewer.client.HistoryInfo;
+import rosa.scanvas.viewer.client.PanelData;
 import rosa.scanvas.viewer.client.PanelProperties;
 import rosa.scanvas.viewer.client.event.GetDataEvent;
 
@@ -22,26 +22,20 @@ public class CollectionPresenter implements Presenter {
 	public interface Display {
 		HasClickHandlers getList();
 		HasText getViewLabel();
-		void setData(List list, Class type);
-		void setLabel(String label);
+		void setData(List list);
+//		void setLabel(String label);
 		int getSelectedRow(ClickEvent event);
 		Widget asWidget();
 	}
 	
 	private final Display display;
 	private final HandlerManager eventBus;
-	private final String type;
-	private final int row;
-	private final int col;
 	private String next;
 	
 	private PanelProperties props;
 	
-	public CollectionPresenter(Display display, HandlerManager eventBus, PanelProperties props, String type) {
-		row = props.getRow();
-		col = props.getCol();
+	public CollectionPresenter(Display display, HandlerManager eventBus, PanelProperties props) {
 		
-		this.type = type;
 		this.props = props;
 		this.display = display;
 		this.eventBus = eventBus;
@@ -49,22 +43,18 @@ public class CollectionPresenter implements Presenter {
 	
 	public void go(HasWidgets container) {
 		bind();
-//		container.clear();
 		if (container instanceof FlexTable) {
-			((FlexTable) container).setWidget(row, col, display.asWidget());
+			((FlexTable) container).setWidget(props.getRow(), props.getCol(), display.asWidget());
 		}
 
-		if (type.equals("manifest")) {
-			next = "canvasNav";
-			display.getViewLabel().setText("Sequences");
-			display.getViewLabel().setText(props.getCollection().label() + String.valueOf(props.getDataList().size()));
-//			display.setData(props.getDataList(), Manifest.class);
-		} else if (type.equals("collection")) {
-			next = "manifest";
-			display.getViewLabel().setText("Manifests");
-			display.getViewLabel().setText(props.getCollection().label() + String.valueOf(props.getDataList().size()));
-			display.setData(props.getDataList(), ManifestCollection.class);
-		}
+		display.getViewLabel().setText("Manifests");
+
+	}
+	
+	public void setData(PanelData data) {
+		display.getViewLabel().setText(data.getCollection().label() + 
+				data.getCollection().manifests().size());
+		display.setData(data.getCollection().manifests());
 	}
 	
 	private void bind() {

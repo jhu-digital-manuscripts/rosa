@@ -1,6 +1,7 @@
 package rosa.scanvas.viewer.client.presenter;
 
 import rosa.scanvas.viewer.client.HistoryInfo;
+import rosa.scanvas.viewer.client.PanelData;
 import rosa.scanvas.viewer.client.PanelProperties;
 import rosa.scanvas.viewer.client.event.GetDataEvent;
 
@@ -74,24 +75,14 @@ public class HomePresenter implements Presenter {
 		});
 	}
 	
-/*	private void gotoRoseDataLink() {
-		String url = "http://rosetest.library.jhu.edu/sc";
-		
-		eventBus.fireEvent(new GetDataEvent(HistoryInfo.newToken(props.getId(), "collection")));
-	}
-	
-	private void gotoTestDataLink() {
-		eventBus.fireEvent(new GetDataEvent(HistoryInfo.newToken(props.getId(), "manifest")));
-	}*/
-	
-	private void bindLinks() {
+	public void bindLinks() {
 		display.getRoseDataLink().setText("Rose Data");
 		display.getTestDataLink().setText("Test Data");
 		
 		// TODO rebind history token for multiple panels
 		
 		display.getRoseDataLink().setTargetHistoryToken(
-				HistoryInfo.newToken(props.getId(), "collection", "0", "RoseData"));
+				HistoryInfo.newToken(props.getId(), "collection", "0", "http://rosetest.library.jhu.edu/sc"));
 		// http://rosetest.library.jhu.edu/sc
 		
 		display.getTestDataLink().setTargetHistoryToken(
@@ -107,6 +98,11 @@ public class HomePresenter implements Presenter {
 		if (url != null && !url.equals("")) {
 			eventBus.fireEvent(new GetDataEvent(HistoryInfo.newToken(props.getId(), url, "0")));
 		}
+	}
+
+	public void setData(PanelData data) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

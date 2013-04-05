@@ -34,8 +34,10 @@ public class CollectionView extends Composite implements CollectionPresenter.Dis
 		scrollPanel.setSize(LIST_WIDTH, "10em");
 	}
 	
-	public void setData(List data, Class type) {
+	public void setData(List data) {
 		manifestList.removeAllRows();
+		
+		System.out.println("Data List size: "+data.size());
 		
 		for (int i=0; i<data.size(); i++) {
 			DecoratorPanel panel = new DecoratorPanel();
@@ -44,18 +46,6 @@ public class CollectionView extends Composite implements CollectionPresenter.Dis
 			
 			manifestList.setWidget(i, 0, panel);
 		}
-		
-		/*Iterator it = data.iterator();
-		
-		while (it.hasNext()) {
-			int i = 0;
-			
-			DecoratorPanel panel = new DecoratorPanel();
-			panel.setWidth("100%");
-			panel.add(new Label(it.next().toString()));
-			
-			manifestList.setWidget(i++, 0, panel);
-		}*/
 	}
 
 	public int getSelectedRow(ClickEvent event) { 
@@ -86,8 +76,8 @@ public class CollectionView extends Composite implements CollectionPresenter.Dis
 	public HasClickHandlers getList() { return manifestList; }
 	public Widget asWidget() { return this; }
 
-	public void setLabel(String label) {
+/*	public void setLabel(String label) {
 		viewLabel.setText(label);
-	}
+	}*/
 	
 }

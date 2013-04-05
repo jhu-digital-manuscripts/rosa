@@ -1,6 +1,7 @@
 package rosa.scanvas.viewer.client.presenter;
 
 import rosa.scanvas.viewer.client.HistoryInfo;
+import rosa.scanvas.viewer.client.PanelData;
 import rosa.scanvas.viewer.client.PanelProperties;
 import rosa.scanvas.viewer.client.event.GetDataEvent;
 import rosa.scanvas.viewer.client.widgets.PageTurnerWidget;
@@ -65,10 +66,15 @@ public class CanvasNavPresenter implements Presenter {
 	}
 	
 	private void doSelection(int selection) {
-		History.newItem(HistoryInfo.setTab(panelId, String.valueOf(selection)));
+		History.newItem(HistoryInfo.setAttribute(panelId, 2, String.valueOf(selection)));
 	}
 	
 	public void setSelectedTab(int index) {
 		display.setSelectedTab(index);
+	}
+
+	public void setData(PanelData data) {
+		// TODO Auto-generated method stub
+		
 	}
 }

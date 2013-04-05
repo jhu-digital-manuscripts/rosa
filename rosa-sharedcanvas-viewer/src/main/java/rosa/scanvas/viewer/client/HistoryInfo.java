@@ -32,7 +32,7 @@ public class HistoryInfo {
 	 * @return int
 	 */
 	public static int getNumItems(String token) {
-		String[] parts = token.split(":");
+		String[] parts = token.split(";:");
 		
 		return parts.length;
 	}
@@ -44,7 +44,7 @@ public class HistoryInfo {
 	 * @return the index of the id. If the id is not found, -1 will be returned.
 	 */
 	public static int getPosition(String token, String id) {
-		String[] parts = token.split(":");
+		String[] parts = token.split(";:");
 		
 		for (int i=0; i<parts.length; i++) {
 			String segmentId = parts[i].split(";")[0];
@@ -61,7 +61,7 @@ public class HistoryInfo {
 	}
 	
 	public static String getId(String token, int position) {
-		return token.split(":")[position].split(";")[0];
+		return token.split(";:")[position].split(";")[0];
 	}
 	
 	public static String getView(String token) {
@@ -69,7 +69,7 @@ public class HistoryInfo {
 	}	
 	
 	public static String getView(String token, int position) {
-		return token.split(":")[position].split(";")[1];
+		return token.split(";:")[position].split(";")[1];
 	}
 	
 	public static String getTab(String token) {
@@ -77,7 +77,23 @@ public class HistoryInfo {
 	}
 	
 	public static String getTab(String token, int position) {
-		return token.split(":")[position].split(";")[2];
+		return token.split(";:")[position].split(";")[2];
+	}
+	
+	public static String getCollection(String token, int position) {
+		return token.split(";:")[position].split(";")[3];
+	}
+	
+	public static String getManifest(String token, int position) {
+		return token.split(";:")[position].split(";")[4];
+	}
+	
+	public static String getSequence(String token, int position) {
+		return token.split(";:")[position].split(";")[5];
+	}
+	
+	public static String getCanvas(String token, int position) {
+		return token.split(";:")[position].split(";")[6];
 	}
 	
 	/**
@@ -88,7 +104,7 @@ public class HistoryInfo {
 	 * @return String holding the changed history token segment
 	 */
 	public static String changeView(String id, String newView) {
-		String[] parts = History.getToken().split(":");
+		String[] parts = History.getToken().split(";:");
 		
 		String newToken = "";
 		for (int i=0; i<parts.length; i++) {
@@ -102,14 +118,14 @@ public class HistoryInfo {
 				}
 				newToken += ":";
 			} else {
-				newToken += parts[i] + ":";
+				newToken += parts[i] + ";:";
 			}
 		}
 		
 		return newToken;
 	}
 	
-	public static String setTab(String id, String tab) {
+/*	public static String setTab(String id, String tab) {
 		String newToken = "";
 		String[] parts = History.getToken().split(":");
 		
@@ -131,14 +147,14 @@ public class HistoryInfo {
 		return newToken;
 	}
 	
-	/**
+	*//**
 	 * Set the collection attribute of a specified panel within the current history token.
 	 * If the collection attribute does not exist, it will be appended to the history token.
 	 * If the collection attribute already exists, its value will be changed.
 	 * @param id String: the id of the panel to be changed
 	 * @param collection String: the url of the collection
 	 * @return the new history token
-	 */
+	 *//*
 	public static String setCollection(String id, String collection) {
 		String[] parts = History.getToken().split(":");
 		
@@ -164,5 +180,40 @@ public class HistoryInfo {
 		}
 		
 		return newToken;
+	}*/
+	
+	/**
+	 * Set an attribute of a specified panel within the current history token.
+	 * @param id
+	 * @param attribute
+	 * @param value
+	 * @return
+	 */
+	public static String setAttribute(String id, int attribute, String value) {
+		String[] parts = History.getToken().split(";:");
+		
+		String newToken = "";
+		for (int i=0; i<parts.length; i++) {
+			if (id.equals(HistoryInfo.getId(parts[i]))) {
+				String[] segment = parts[i].split(";");
+				
+				if (segment.length > attribute) {
+					segment[attribute] = value;
+					for(int j=0; j<segment.length; j++) {
+						newToken += segment[j] + ";";
+					}
+					
+					newToken += ":";
+				} else if (segment.length <= attribute) {
+					newToken = parts[i] + ";" + value + ";:";
+				}
+				
+			} else {
+				newToken += parts[i] + ";:";
+			}
+		}
+		
+		return newToken;
 	}
+	
 }
