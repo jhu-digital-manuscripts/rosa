@@ -97,7 +97,8 @@ public class MainController implements Controller {
 			}
 			
 		} else if (message.equals("remove")) {
-			
+			// TODO: Move logic to HistoryInfo
+		    
 			String[] parts = currentToken.split(";:");
 			String newToken = "";
 			

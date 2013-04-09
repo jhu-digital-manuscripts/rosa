@@ -74,7 +74,8 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>gwt-maven-plugin</artifactId>
-				<version>2.5.1</version>
+				<version>${gwtVersion}</version>
+
 				<executions>
 					<execution>
 						<goals>
@@ -85,12 +86,13 @@
 						</goals>
 					</execution>
 				</executions>
-				<!-- Plugin configuration. There are many available options, see gwt-maven-plugin 
-					documentation at codehaus.org -->
+
 				<configuration>
-					<runTarget>SharedCanvasDemoWebsite.html</runTarget>
-					<hostedWebapp>${webappDirectory}</hostedWebapp>
-					<i18nMessagesBundle>rosa.scanvas.demo.website.client.Messages</i18nMessagesBundle>
+				  <testTimeOut>600</testTimeOut>
+				  <mode>htmlunit</mode>
+				  <runTarget>SharedCanvasDemoWebsite.html</runTarget>
+				  <hostedWebapp>${webappDirectory}</hostedWebapp>
+				  <i18nMessagesBundle>rosa.scanvas.demo.website.client.Messages</i18nMessagesBundle>
 				</configuration>
 			</plugin>
 

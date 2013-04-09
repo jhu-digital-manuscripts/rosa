@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class CollectionView extends Composite implements CollectionPresenter.Display {
 	
+    // TODO Should be in css.
 	private final String LIST_WIDTH = "30em";
 	
 	private FlexTable manifestList = new FlexTable();

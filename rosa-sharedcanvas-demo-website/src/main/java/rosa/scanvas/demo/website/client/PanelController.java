@@ -33,7 +33,7 @@ public class PanelController implements Controller {
 		
 		SharedCanvas.load(url, ManifestCollection.class, new AsyncCallback<ManifestCollection>() {
 			public void onFailure(Throwable caught) {
-				
+				// TODO handle error condition
 			}
 			
 			public void onSuccess(ManifestCollection result) {
@@ -71,6 +71,8 @@ public class PanelController implements Controller {
 		}
 	}
 
+	// TODO Handle case of invalid history token
+	
 	public void onValueChange(ValueChangeEvent<String> event) {
 		String token = event.getValue();
 

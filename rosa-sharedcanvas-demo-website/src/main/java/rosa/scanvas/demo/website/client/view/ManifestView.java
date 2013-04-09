@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ManifestView extends Composite implements ManifestPresenter.Display {
+    // TODO Put in css
 	private final String LIST_WIDTH = "30em";
 	
 	private FlexTable manifestList = new FlexTable();

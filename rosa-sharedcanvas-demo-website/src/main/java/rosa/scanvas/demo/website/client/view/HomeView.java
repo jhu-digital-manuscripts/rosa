@@ -23,6 +23,8 @@ public class HomeView extends Composite implements HomePresenter.Display{
 	private Button goButton = new Button("Go");
 	private TextBox userUrlText = new TextBox();
 	
+	// TODO Why a focuspanel here?
+	
 	public HomeView() {
 		FocusPanel focusPanel = new FocusPanel();
 		DecoratorPanel dPanel = new DecoratorPanel();

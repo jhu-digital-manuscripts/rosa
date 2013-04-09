@@ -2,6 +2,8 @@ package rosa.scanvas.demo.website.client.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
+// TODO message should be enum
+
 public class PanelNumberChangeEvent extends GwtEvent<PanelNumberChangeEventHandler> {
 	public static Type<PanelNumberChangeEventHandler> TYPE = new Type<PanelNumberChangeEventHandler>();
 	private final String message;
