@@ -43,7 +43,7 @@ public class CanvasImpl implements Canvas, SharedCanvasConstants {
     public List<Reference<AnnotationList>> hasAnnotations() {
         List<Reference<AnnotationList>> result = new ArrayList<Reference<AnnotationList>>();
 
-        for (RdfTriple triple : graph.find(uri, SHARED_CANVAS_HAS_ANNOTATIONS,
+        for (RdfTriple triple : graph.find(uri, OA_HAS_ANNOTATIONS,
                 null)) {
             String al_uri = triple.object().value().stringValue();
             result.add(new ReferenceImpl<AnnotationList>(al_uri,

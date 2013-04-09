@@ -145,6 +145,8 @@ public class GwtTestSharedCanvas extends AbstractGwtTest {
 
             assertTrue(aggregates.contains(canvas.uri()));
             
+            assertTrue(canvas.hasAnnotations().size() > 0);
+            
             for (Reference<AnnotationList> ref: canvas.hasAnnotations()) {
                 assertNotNull(ref.uri());
             }

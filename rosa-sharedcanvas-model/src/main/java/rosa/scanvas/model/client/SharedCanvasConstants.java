@@ -46,7 +46,7 @@ public interface SharedCanvasConstants {
     public static final String SHARED_CANVAS_AGENT_LABEL = SHARED_CANVAS_NS_URI
             + "agentLabel";
 
-    public static final String SHARED_CANVAS_HAS_ANNOTATIONS = SHARED_CANVAS_NS_URI
+    public static final String OA_HAS_ANNOTATIONS = OA_NS_URI
             + "hasAnnotations";
 
     public static final String SHARED_CANVAS_FOR_CANVAS = SHARED_CANVAS_NS_URI
