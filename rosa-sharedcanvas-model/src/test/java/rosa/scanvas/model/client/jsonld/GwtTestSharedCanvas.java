@@ -60,7 +60,8 @@ public class GwtTestSharedCanvas extends AbstractGwtTest {
         assertNotNull(man.agent());
         assertNotNull(man.date());
         assertNotNull(man.hasRelatedDescription());
-
+        assertNotNull(man.rights());
+        
         List<String> aggregates = man.aggregates();
 
         assertTrue(aggregates.size() > 0);

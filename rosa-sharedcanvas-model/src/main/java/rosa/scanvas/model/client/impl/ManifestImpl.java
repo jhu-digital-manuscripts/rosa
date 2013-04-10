@@ -32,7 +32,7 @@ public class ManifestImpl extends ResourceMapImpl implements Manifest {
     }
 
     public String rights() {
-        return graph.findObjectStringValue(uri(), DC_RIGHTS);
+        return graph.findObjectStringValue(aggregation_uri(), DC_RIGHTS);
     }
 
     @Override
