@@ -21,6 +21,11 @@ public class HistoryInfo {
 	}
 	
 	public static String newToken(String id, String view, String tab, String collection, 
+			String manifest, String sequence) {
+		return id+";"+view+";"+tab+";"+collection+";"+manifest+";"+sequence+";:";
+	}
+	
+	public static String newToken(String id, String view, String tab, String collection, 
 			String manifest, String sequence, String canvas) {
 		return id+";"+view+";"+tab+";"+collection+";"+manifest+";"+sequence+";"+canvas+";:";
 	}
@@ -80,16 +85,32 @@ public class HistoryInfo {
 		return token.split(";:")[position].split(";")[2];
 	}
 	
+	public static String getCollection(String token) {
+		return token.split(";")[3];
+	}
+	
 	public static String getCollection(String token, int position) {
 		return token.split(";:")[position].split(";")[3];
+	}
+	
+	public static String getManifest(String token) {
+		return token.split(";")[4];
 	}
 	
 	public static String getManifest(String token, int position) {
 		return token.split(";:")[position].split(";")[4];
 	}
 	
+	public static String getSequence(String token) {
+		return token.split(";")[5];
+	}
+	
 	public static String getSequence(String token, int position) {
 		return token.split(";:")[position].split(";")[5];
+	}
+	
+	public static String getCanvas(String token) {
+		return token.split(";")[6];
 	}
 	
 	public static String getCanvas(String token, int position) {
@@ -206,6 +227,38 @@ public class HistoryInfo {
 					newToken += ":";
 				} else if (segment.length <= attribute) {
 					newToken = parts[i] + ";" + value + ";:";
+				}
+				
+			} else {
+				newToken += parts[i] + ";:";
+			}
+		}
+		
+		return newToken;
+	}
+	
+	public static String setAttributeAndView(String id, int attribute, String value, String view) {
+		String[] parts = History.getToken().split(";:");
+		
+		String newToken = "";
+		for (int i=0; i<parts.length; i++) {
+			if (id.equals(HistoryInfo.getId(parts[i]))) {
+				String[] segment = parts[i].split(";");
+				segment[1] = view;
+				
+				if (segment.length > attribute) {
+					segment[attribute] = value;
+					for(int j=0; j<segment.length; j++) {
+						newToken += segment[j] + ";";
+					}
+					
+					newToken += ":";
+				} else if (segment.length <= attribute) {
+					for (String elem : segment) {
+						newToken += elem + ";";
+					}
+					newToken += value + ";:";
+//					newToken = parts[i] + ";" + value + ";:";
 				}
 				
 			} else {

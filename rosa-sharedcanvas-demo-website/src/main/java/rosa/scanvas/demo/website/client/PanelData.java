@@ -1,5 +1,10 @@
 package rosa.scanvas.demo.website.client;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import rosa.scanvas.model.client.Annotation;
+import rosa.scanvas.model.client.AnnotationList;
 import rosa.scanvas.model.client.Manifest;
 import rosa.scanvas.model.client.ManifestCollection;
 import rosa.scanvas.model.client.Sequence;
@@ -11,12 +16,16 @@ public class PanelData {
 	private Manifest manifest;
 	private Sequence sequence;
 	private Canvas canvas;
+	private List<AnnotationList> annotationLists;
+	private List<Annotation> visibleAnnotations;
 	
 	public ManifestCollection getCollection() {
 		return collection;
 	}
 	public void setCollection(ManifestCollection collection) {
 		this.collection = collection;
+		annotationLists = new ArrayList<AnnotationList>();
+		visibleAnnotations = new ArrayList<Annotation>();
 	}
 	public Manifest getManifest() {
 		return manifest;
@@ -36,5 +45,10 @@ public class PanelData {
 	public void setCanvas(Canvas canvas) {
 		this.canvas = canvas;
 	}
-	
+	public List<AnnotationList> getAnnotationLists() {
+		return annotationLists;
+	}
+	public List<Annotation> getVisibleAnnotations() {
+		return visibleAnnotations;
+	}
 }

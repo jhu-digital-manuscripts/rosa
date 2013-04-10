@@ -2,7 +2,8 @@ package rosa.scanvas.demo.website.client.presenter;
 
 import java.util.List;
 
-import rosa.scanvas.model.client.ManifestCollection;
+import rosa.scanvas.model.client.Manifest;
+import rosa.scanvas.model.client.Reference;
 import rosa.scanvas.demo.website.client.HistoryInfo;
 import rosa.scanvas.demo.website.client.PanelData;
 import rosa.scanvas.demo.website.client.PanelProperties;
@@ -22,7 +23,7 @@ public class CollectionPresenter implements Presenter {
 	public interface Display {
 		HasClickHandlers getList();
 		HasText getViewLabel();
-		void setData(List list);
+		void setData(List<Reference<Manifest>> list);
 //		void setLabel(String label);
 		int getSelectedRow(ClickEvent event);
 		Widget asWidget();
@@ -42,29 +43,29 @@ public class CollectionPresenter implements Presenter {
 	}
 	
 	public void go(HasWidgets container) {
-		bind();
 		if (container instanceof FlexTable) {
 			((FlexTable) container).setWidget(props.getRow(), props.getCol(), display.asWidget());
 		}
 
-		display.getViewLabel().setText("Manifests");
-
 	}
 	
 	public void setData(PanelData data) {
-		display.getViewLabel().setText(data.getCollection().label() + 
-				data.getCollection().manifests().size());
+		display.getViewLabel().setText(data.getCollection().label());
 		display.setData(data.getCollection().manifests());
+		
+		bind(data);
 	}
 	
-	private void bind() {
+	private void bind(final PanelData data) {
 		display.getList().addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				int selectedRow = display.getSelectedRow(event);
 				
 				if (selectedRow >= 0) {
 					eventBus.fireEvent(new GetDataEvent(HistoryInfo.newToken(
-							props.getId(), next, "0")));
+							props.getId(), "manifest", "0", 
+							data.getCollection().uri(), 
+							data.getCollection().manifests().get(selectedRow).uri())));
 				}
 			}
 		});

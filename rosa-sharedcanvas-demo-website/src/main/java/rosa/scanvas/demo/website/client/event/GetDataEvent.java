@@ -21,6 +21,6 @@ public class GetDataEvent extends GwtEvent<GetDataEventHandler>{
 
 	@Override
 	protected void dispatch(GetDataEventHandler handler) {
-		handler.retrieveData(url);
+		handler.retrieveData(this);
 	}
 }

@@ -3,6 +3,7 @@ package rosa.scanvas.demo.website.client.view;
 import rosa.scanvas.demo.website.client.presenter.CanvasNavPresenter;
 import rosa.scanvas.demo.website.client.widgets.PageTurnerWidget;
 import rosa.scanvas.demo.website.client.widgets.ThumbnailWidget;
+import rosa.scanvas.model.client.Sequence;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
@@ -33,7 +34,7 @@ public class CanvasNavView extends Composite implements CanvasNavPresenter.Displ
 		tabPanel.selectTab(0);
 	}
 	
-	public void setData(String[] data) {
+	public void setData(Sequence data) {
 		thumbnailWidget.setData(data);
 	}
 	

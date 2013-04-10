@@ -52,12 +52,6 @@ public class CanvasNavPresenter implements Presenter {
 	}
 
 	private void bind() {
-		display.getThumbnailWidget().getThumbTable().addClickHandler(new ClickHandler() {
-					public void onClick(ClickEvent event) {
-						eventBus.fireEvent(new GetDataEvent("canvas"+"."+panelId));
-					}
-				});
-		
 		display.getTabPanelSelector().addSelectionHandler(new SelectionHandler<Integer>() {
 			public void onSelection(SelectionEvent<Integer> event) {
 				doSelection(event.getSelectedItem());
@@ -65,7 +59,28 @@ public class CanvasNavPresenter implements Presenter {
 		});
 	}
 	
+	private void bindThumbnailTable(final PanelData data) {
+		display.getThumbnailWidget().getThumbTable().addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				int row = display.getThumbnailWidget().getSelectedRow(event);
+				int col = display.getThumbnailWidget().getSelectedColumn(event);
+				
+				if (row >= 0 && col >= 0) {
+					eventBus.fireEvent(new GetDataEvent(HistoryInfo.newToken(
+							panelId, "canvas", "0",
+							data.getCollection().uri(), 
+							data.getManifest().uri(),
+							data.getSequence().uri(),
+							String.valueOf(row*4 + col)
+							/*data.getSequence().canvas(row*4 + col).uri()*/)));
+				}
+				
+			}
+		});
+	}
+	
 	private void doSelection(int selection) {
+	// TODO change to fire an event on the eventBus, instead of directly accessing the History
 		History.newItem(HistoryInfo.setAttribute(panelId, 2, String.valueOf(selection)));
 	}
 	
@@ -74,7 +89,8 @@ public class CanvasNavPresenter implements Presenter {
 	}
 
 	public void setData(PanelData data) {
-		// TODO Auto-generated method stub
+		bindThumbnailTable(data);
 		
+		display.getThumbnailWidget().setData(data.getSequence());
 	}
 }

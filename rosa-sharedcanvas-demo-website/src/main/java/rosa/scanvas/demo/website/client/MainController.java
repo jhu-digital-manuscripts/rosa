@@ -1,6 +1,9 @@
 package rosa.scanvas.demo.website.client;
 
+import rosa.scanvas.demo.website.client.event.DataUpdateEvent;
+import rosa.scanvas.demo.website.client.event.DataUpdateEventHandler;
 import rosa.scanvas.demo.website.client.event.PanelNumberChangeEvent;
+import rosa.scanvas.demo.website.client.event.PanelNumberChangeEvent.PanelAction;
 import rosa.scanvas.demo.website.client.event.PanelNumberChangeEventHandler;
 import rosa.scanvas.demo.website.client.event.SidebarViewChangeEvent;
 import rosa.scanvas.demo.website.client.event.SidebarViewChangeEventHandler;
@@ -15,6 +18,12 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.ScrollPanel;
 
+/**
+ * Controls the sidebar, which includes ways to add/remove panels, and the 
+ * metadata display and annotation list display
+ * @author john
+ *
+ */
 public class MainController implements Controller {
 
 	private int currentIndex;
@@ -42,7 +51,7 @@ public class MainController implements Controller {
 
 		if (token != null) {
 			sidebarPresenter.refreshList(token);
-			sidebarPresenter.setListSelectet(currentIndex);
+			sidebarPresenter.setListSelected(currentIndex);
 		}
 	}
 
@@ -72,13 +81,24 @@ public class MainController implements Controller {
 						doPanelNumberChange(event.getMessage(), event.getSelectedPanel());
 					}
 		});
+		
+		eventBus.addHandler(DataUpdateEvent.TYPE, new DataUpdateEventHandler() {
+			public void onDataUpdate(DataUpdateEvent event) {
+				doDataUpdate(event.getData());
+			}
+		});
 	}
 	
-	private void doPanelNumberChange(String message, int selectedPanel) {
+	/**
+	 * Occurs when a panel is added or removed, or a different panel is selected
+	 * @param message PanelAction enum message from the event, indicates type of action (add, remove, change)
+	 * @param selectedPanel index of the selected panel
+	 */
+	private void doPanelNumberChange(PanelAction message, int selectedPanel) {
 		String currentToken = History.getToken();
 		
-		if (message.equals("add")) {
-			
+		if (message.equals(PanelAction.ADD)) {
+			// add a default home token to the end of the current history token
 			if (currentToken.equals("")) {
 				currentIndex = 0;
 			} else {
@@ -88,7 +108,7 @@ public class MainController implements Controller {
 			String newToken = HistoryInfo.newToken(String.valueOf(++historyId), "home", "0");
 			History.newItem(currentToken+newToken);
 			
-		} else if (message.equals("change")) {
+		} else if (message.equals(PanelAction.CHANGE)) {
 			
 			if (currentIndex != selectedPanel) {
 				// unhighlight previous panel
@@ -96,9 +116,9 @@ public class MainController implements Controller {
 				// highlight panel;
 			}
 			
-		} else if (message.equals("remove")) {
+		} else if (message.equals(PanelAction.REMOVE)) {
 			// TODO: Move logic to HistoryInfo
-		    
+		    // remove history token segment from current history token, removing the panel from display
 			String[] parts = currentToken.split(";:");
 			String newToken = "";
 			
@@ -112,6 +132,11 @@ public class MainController implements Controller {
 		}
 	}
 
+	public void doDataUpdate(PanelData data) {
+		sidebarPresenter.setData(data);
+	}
+	
+	
 	public void setData(PanelData data) {
 		// TODO Auto-generated method stub
 		

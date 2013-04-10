@@ -2,7 +2,6 @@ package rosa.scanvas.demo.website.client.presenter;
 
 import java.util.List;
 
-import rosa.scanvas.model.client.Manifest;
 import rosa.scanvas.model.client.Reference;
 import rosa.scanvas.model.client.Sequence;
 import rosa.scanvas.demo.website.client.HistoryInfo;
@@ -33,7 +32,6 @@ public class ManifestPresenter implements Presenter {
 	private final HandlerManager eventBus;
 //	private final String type;
 //	private String next;
-	private Manifest manifest;
 	
 	private PanelProperties props;
 	
@@ -44,33 +42,33 @@ public class ManifestPresenter implements Presenter {
 	}
 	
 	public void go(HasWidgets container) {
-		bind();
 		if (container instanceof FlexTable) {
 			((FlexTable) container).setWidget(props.getRow(), props.getCol(), display.asWidget());
 		}
-
-//		next = "canvasNav";
-		display.getViewLabel().setText("Sequences");
-		display.getViewLabel().setText(manifest.label());
-		display.setData(manifest.sequences());
+		
 	}
 	
-	private void bind() {
+	private void bind(final PanelData data) {
 		display.getList().addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				int selectedRow = display.getSelectedRow(event);
 				
 				if (selectedRow >= 0) {
 					eventBus.fireEvent(new GetDataEvent(HistoryInfo.newToken(
-							props.getId(), "canvasNav", "0")));
+							props.getId(), "canvasNav", "0",
+							data.getCollection().uri(), 
+							data.getManifest().uri(),
+							data.getManifest().sequences().get(selectedRow).uri())));
 				}
 			}
 		});
 	}
 
 	public void setData(PanelData data) {
-		// TODO Auto-generated method stub
+		bind(data);
 		
+		display.getViewLabel().setText(data.getManifest().label());
+		display.setData(data.getManifest().sequences());
 	}
 	
 }

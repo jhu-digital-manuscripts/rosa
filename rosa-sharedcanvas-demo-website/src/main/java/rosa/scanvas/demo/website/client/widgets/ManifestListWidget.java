@@ -32,21 +32,7 @@ public class ManifestListWidget extends Composite {
 		mainPanel.add(new Label("Pick a different sequence: "));
 		mainPanel.add(sequencePickerBox);
 		
-		collectionPanel.add(collectionCheckBox);
-		collectionCheckBox.setText("Collection");
-		collectionPanel.add(new Label("Collection text"));
-		
-		manifestPanel.add(manifestCheckBox);
-		manifestCheckBox.setText("Manifest");
-		manifestPanel.add(new Label("Manifest text"));
-		
-		sequencePanel.add(sequenceCheckBox);
-		sequenceCheckBox.setText("Sequence");
-		sequencePanel.add(new Label("Sequence text"));
-		
-		collectionCheckBox.setValue(true);
-		manifestCheckBox.setValue(true);
-		sequenceCheckBox.setValue(true);
+		setDataPanels();
 		
 		sequencePickerBox.setWidth("75%");
 	}
@@ -60,12 +46,47 @@ public class ManifestListWidget extends Composite {
 	public CheckBox getSequenceCheckBox() { return sequenceCheckBox; }
 	public ListBox getSequencePickerBox() { return sequencePickerBox; }
 	
+	public void newCollectionLabel(String text) {
+		collectionPanel.add(new Label(text));
+	}
+	
+	public void newManifestLabel(String text) {
+		manifestPanel.add(new Label(text));
+	}
+	
+	public void newSequenceLabel(String text) {
+		sequencePanel.add(new Label(text));
+	}
+	
+	public void clearLabels() {
+		collectionPanel.clear();
+		manifestPanel.clear();
+		sequencePanel.clear();
+		
+		setDataPanels();
+	}
+	
 	public void hide() {
 		this.setVisible(false);
 	}
 	
 	public void show() {
 		this.setVisible(true);
+	}
+	
+	private void setDataPanels() {
+		collectionPanel.add(collectionCheckBox);
+		collectionCheckBox.setText("Collection");
+		
+		manifestPanel.add(manifestCheckBox);
+		manifestCheckBox.setText("Manifest");
+		
+		sequencePanel.add(sequenceCheckBox);
+		sequenceCheckBox.setText("Sequence");
+		
+		collectionCheckBox.setValue(true);
+		manifestCheckBox.setValue(true);
+		sequenceCheckBox.setValue(true);
 	}
 	
 }

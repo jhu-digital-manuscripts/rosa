@@ -2,6 +2,8 @@ package rosa.scanvas.demo.website.client.view;
 
 import java.util.List;
 
+import rosa.scanvas.model.client.Manifest;
+import rosa.scanvas.model.client.Reference;
 import rosa.scanvas.demo.website.client.presenter.CollectionPresenter;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -35,7 +37,7 @@ public class CollectionView extends Composite implements CollectionPresenter.Dis
 		scrollPanel.setSize(LIST_WIDTH, "10em");
 	}
 	
-	public void setData(List data) {
+	public void setData(List<Reference<Manifest>> data) {
 		manifestList.removeAllRows();
 		
 		System.out.println("Data List size: "+data.size());
@@ -43,7 +45,7 @@ public class CollectionView extends Composite implements CollectionPresenter.Dis
 		for (int i=0; i<data.size(); i++) {
 			DecoratorPanel panel = new DecoratorPanel();
 			panel.setWidth("100%");
-			panel.add(new Label(data.get(i).toString()));
+			panel.add(new Label(data.get(i).label()));
 			
 			manifestList.setWidget(i, 0, panel);
 		}
@@ -53,32 +55,15 @@ public class CollectionView extends Composite implements CollectionPresenter.Dis
 		int selectedRow = -1;
 		HTMLTable.Cell cell = manifestList.getCellForEvent(event);
 		
-		if (cell != null && cell.getCellIndex() > 0) {
+		if (cell != null) {
 			selectedRow = cell.getRowIndex();
 		}
 		
 		return selectedRow; 
 	}
 	
-/*	public String getSelectedManifest() { 
-		String data = null;
-		
-		for(int i=0; i<manifestList.getRowCount(); i++) {
-			CheckBox checkBox = (CheckBox)manifestList.getWidget(i, 0);
-			if (checkBox.getValue()) {
-				data = String.valueOf(i);
-			}
-		}
-		
-		return data; 
-	}*/
-	
 	public HasText getViewLabel() { return viewLabel; }
 	public HasClickHandlers getList() { return manifestList; }
 	public Widget asWidget() { return this; }
-
-/*	public void setLabel(String label) {
-		viewLabel.setText(label);
-	}*/
 	
 }

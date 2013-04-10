@@ -53,7 +53,8 @@ public class ManifestView extends Composite implements ManifestPresenter.Display
 		for (int i=0; i<seq.size(); i++) {
 			DecoratorPanel panel = new DecoratorPanel();
 			panel.setWidth("100%");
-			panel.add(new Label(seq.get(i).label()));
+//			panel.add(new Label(seq.get(i).label()));			labels for Rose data blank??
+			panel.add(new Label(seq.get(i).uri()));
 			
 			manifestList.setWidget(i, 0, panel);
 		}

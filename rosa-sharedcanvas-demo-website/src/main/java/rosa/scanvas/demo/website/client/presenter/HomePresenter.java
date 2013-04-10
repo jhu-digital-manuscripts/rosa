@@ -54,7 +54,6 @@ public class HomePresenter implements Presenter {
 					row, col, display.asWidget());
 		}
 		
-		
 	}
 	
 	private void bind() {
@@ -79,14 +78,11 @@ public class HomePresenter implements Presenter {
 		display.getRoseDataLink().setText("Rose Data");
 		display.getTestDataLink().setText("Test Data");
 		
-		// TODO rebind history token for multiple panels
+		display.getRoseDataLink().setTargetHistoryToken(HistoryInfo.
+				setAttributeAndView(props.getId(), 3, "http://rosetest.library.jhu.edu/sc", "collection"));
 		
-		display.getRoseDataLink().setTargetHistoryToken(
-				HistoryInfo.newToken(props.getId(), "collection", "0", "http://rosetest.library.jhu.edu/sc"));
-		// http://rosetest.library.jhu.edu/sc
-		
-		display.getTestDataLink().setTargetHistoryToken(
-				HistoryInfo.newToken(props.getId(), "manifest", "0", "X", "TestLudwigXV7"));
+/*		display.getRoseDataLink().setTargetHistoryToken(HistoryInfo.
+				setAttributeAndView(props.getId(), 4, "TestLudwigXV7", "manifest"));*/
 	}
 	
 	private void doGoClick() {

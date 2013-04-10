@@ -1,5 +1,10 @@
 package rosa.scanvas.demo.website.client.widgets;
 
+import java.util.Iterator;
+
+import rosa.scanvas.model.client.Canvas;
+import rosa.scanvas.model.client.Sequence;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -41,12 +46,18 @@ public class ThumbnailWidget extends Composite {
 		closePanelButton.setText("Close Panel");
 	}
 	
-	public void setData(String[] data) {
-		for(int i=0; i<(data.length/THUMB_PANEL_WIDTH); i++) {
-			for(int j=0; j<THUMB_PANEL_WIDTH; j++) {
-				thumbTable.setWidget(i, j, new Label(data[i*THUMB_PANEL_WIDTH + j]));
-			}
+	public void setData(Sequence sequence) {
+		searchPanel.add(new Label("Size: "+sequence.size()));
+		int index = 0;
+		
+		Iterator<Canvas> it = sequence.iterator();
+		while (it.hasNext()) {
+			Canvas canvas = it.next();
+			
+			thumbTable.setWidget(index/4, index%4, new Label(canvas.label(), true));
+			index++;
 		}
+		
 	}
 	
 	public int getSelectedRow(ClickEvent event) {
