@@ -89,4 +89,8 @@ public class WebImage extends FocusWidget {
             addStyleDependentName("Loading");
         }
     }
+
+    public ImageElement getImageElement() {
+        return img;
+    }
 }
