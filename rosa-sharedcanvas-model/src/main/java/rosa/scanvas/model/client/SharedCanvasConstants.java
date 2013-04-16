@@ -32,6 +32,8 @@ public interface SharedCanvasConstants {
     public static final String EXIF_WIDTH = EXIF_NS_URI + "width";
     public static final String EXIF_HEIGHT = EXIF_NS_URI + "height";
 
+    public static final String RDF_VALUE = RDF_NS_URI + "value";
+    
     public static final String RDFS_LABEL = RDFS_NS_URI + "label";
 
     public static final String SHARED_CANVAS_MANIFEST = SHARED_CANVAS_NS_URI
@@ -85,11 +87,23 @@ public interface SharedCanvasConstants {
 
     public static final String OA_DEFAULT = OA_NS_URI + "default";
     
+    public static final String OA_HAS_SOURCE = OA_NS_URI + "hasSource";
+    
+    public static final String OA_HAS_SELECTOR= OA_NS_URI + "hasSelector";
+    
+    public static final String OA_SVG_SELECTOR = OA_NS_URI + "SvgSelector";
+
+    public static final String OA_FRAGMENT_SELECTOR = OA_NS_URI + "FragmentSelector";
+
+    public static final String OA_SPECIFIC_RESOURCE = OA_NS_URI + "SpecificResource";
+
     public static final String OA_ITEM = OA_NS_URI + "item";
     
     public static final String DCMI_IMAGE = DCMI_TYPES_NS_URI + "Image";
 
     public static final String DCMI_TEXT = DCMI_TYPES_NS_URI + "Text";
+
+    public static final String CNT_CONTENT_AS_TEXT = CNT_NS_URI + "ContentAsText";
 
     public static final String CNT_CHARS = CNT_NS_URI + "chars";
 }

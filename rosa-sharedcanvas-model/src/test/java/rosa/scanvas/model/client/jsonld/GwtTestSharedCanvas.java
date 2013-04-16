@@ -5,6 +5,7 @@ import java.util.List;
 import rosa.scanvas.model.client.Annotation;
 import rosa.scanvas.model.client.AnnotationBody;
 import rosa.scanvas.model.client.AnnotationList;
+import rosa.scanvas.model.client.AnnotationTarget;
 import rosa.scanvas.model.client.Canvas;
 import rosa.scanvas.model.client.Manifest;
 import rosa.scanvas.model.client.ManifestCollection;
@@ -96,8 +97,13 @@ public class GwtTestSharedCanvas extends AbstractGwtTest {
 
             assertTrue(a.targets().size() > 0);
 
-            for (String target : a.targets()) {
-                assertNotNull(target);
+            for (AnnotationTarget target : a.targets()) {
+                assertNotNull(target.uri());
+                assertFalse(target.isSpecificResource());
+                assertNull(target.hasSource());
+                
+                // TODO test selector
+                assertNull(target.hasSelector());
             }
 
             AnnotationBody body = a.body();

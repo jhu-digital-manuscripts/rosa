@@ -15,6 +15,8 @@ public interface AnnotationBody {
     
     boolean isType(String type_uri);
     
+    boolean hasTextContent();
+    
     String textContent();
 
     AnnotationBody defaultItem();

@@ -9,7 +9,7 @@ public interface Annotation {
     
     AnnotationBody body();
 
-    List<String> targets();
+    List<AnnotationTarget> targets();
 
     String motivatedBy();
 }

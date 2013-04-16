@@ -26,11 +26,6 @@ public class SequenceImpl extends ResourceMapImpl implements Sequence {
     }
 
     @Override
-    public String label() {
-        return graph.findObjectStringValue(aggregation_uri(), RDFS_LABEL);
-    }
-
-    @Override
     public String readingDirection() {
         return graph.findObjectStringValue(aggregation_uri(),
                 SHARED_CANVAS_READING_DIR);
@@ -38,7 +33,7 @@ public class SequenceImpl extends ResourceMapImpl implements Sequence {
 
     @Override
     public Canvas canvas(int index) {
-        return new CanvasImpl(graph, canvas_uris.get(index));
+        return new CanvasImpl(canvas_uris.get(index), graph);
     }
 
     @Override

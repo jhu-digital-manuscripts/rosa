@@ -15,11 +15,6 @@ public class ManifestImpl extends ResourceMapImpl implements Manifest {
     }
 
     @Override
-    public String label() {
-        return graph.findObjectStringValue(aggregation_uri(), RDFS_LABEL);
-    }
-
-    @Override
     public String agent() {
         return graph.findObjectStringValue(aggregation_uri(),
                 SHARED_CANVAS_AGENT_LABEL);

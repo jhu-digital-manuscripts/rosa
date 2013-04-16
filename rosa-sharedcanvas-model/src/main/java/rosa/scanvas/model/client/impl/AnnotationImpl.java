@@ -1,29 +1,16 @@
 package rosa.scanvas.model.client.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rosa.scanvas.model.client.Annotation;
 import rosa.scanvas.model.client.AnnotationBody;
-import rosa.scanvas.model.client.SharedCanvasConstants;
+import rosa.scanvas.model.client.AnnotationTarget;
 import rosa.scanvas.model.client.rdf.RdfGraph;
 
-public class AnnotationImpl implements Annotation, SharedCanvasConstants {
-    private final RdfGraph graph;
-    private final String uri;
-
-    public AnnotationImpl(RdfGraph graph, String uri) {
-        this.graph = graph;
-        this.uri = uri;
-    }
-
-    @Override
-    public String uri() {
-        return uri;
-    }
-    
-    @Override
-    public String label() {
-        return graph.findObjectStringValue(uri, RDFS_LABEL);
+public class AnnotationImpl extends BaseObject implements Annotation {
+    public AnnotationImpl(String uri, RdfGraph graph) {
+        super(uri, graph);
     }
 
     @Override
@@ -34,12 +21,18 @@ public class AnnotationImpl implements Annotation, SharedCanvasConstants {
             return null;
         }
 
-        return new AnnotationBodyImpl(graph, body_uri);
+        return new AnnotationBodyImpl(body_uri, graph);
     }
 
     @Override
-    public List<String> targets() {
-        return graph.findObjectStringValues(uri, OA_HAS_TARGET);
+    public List<AnnotationTarget> targets() {
+        List<AnnotationTarget> result = new ArrayList<AnnotationTarget>();
+        
+        for (String target_uri: graph.findObjectStringValues(uri, OA_HAS_TARGET)) {
+            result.add(new AnnotationTargetImpl(target_uri, graph));
+        }
+        
+        return result;
     }
 
     @Override

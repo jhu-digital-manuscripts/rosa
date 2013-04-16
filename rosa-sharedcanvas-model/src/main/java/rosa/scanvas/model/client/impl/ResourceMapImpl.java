@@ -6,29 +6,31 @@ import java.util.List;
 
 import rosa.scanvas.model.client.Reference;
 import rosa.scanvas.model.client.ResourceMap;
-import rosa.scanvas.model.client.SharedCanvasConstants;
 import rosa.scanvas.model.client.rdf.RdfException;
 import rosa.scanvas.model.client.rdf.RdfGraph;
 import rosa.scanvas.model.client.rdf.RdfNode;
 import rosa.scanvas.model.client.rdf.RdfTriple;
 
-public class ResourceMapImpl implements ResourceMap, SharedCanvasConstants {
-    protected final RdfGraph graph;
-
-    private final String resmap_uri;
+public class ResourceMapImpl extends BaseObject implements ResourceMap {
     private final String agg_uri;
 
     public ResourceMapImpl(RdfGraph graph) {
-        this.graph = graph;
-        this.resmap_uri = find_resmap_uri();
-        this.agg_uri = find_agg_uri(resmap_uri);
+        super(find_resmap_uri(graph), graph);
+        this.agg_uri = find_agg_uri(uri, graph);
 
-        if (resmap_uri == null || agg_uri == null) {
+        if (uri == null || agg_uri == null) {
             throw new RdfException("Cannot find resource map or aggregation.");
         }
     }
 
-    private String find_resmap_uri() throws RdfException {
+    /**
+     * Return the aggregation label.
+     */
+    public String label() {
+        return graph.findObjectStringValue(agg_uri, RDFS_LABEL);
+    }
+
+    private static String find_resmap_uri(RdfGraph graph) throws RdfException {
         List<RdfNode> nodes = graph.findRdfTypes(ORE_RESOURCE_MAP);
 
         if (nodes.size() == 0) {
@@ -38,12 +40,8 @@ public class ResourceMapImpl implements ResourceMap, SharedCanvasConstants {
         return nodes.get(0).value().stringValue();
     }
 
-    private String find_agg_uri(String resmap_id) {
+    private static String find_agg_uri(String resmap_id, RdfGraph graph) {
         return graph.findObjectStringValue(resmap_id, ORE_DESCRIBES);
-    }
-
-    public String uri() {
-        return resmap_uri;
     }
 
     public String aggregation_uri() {
@@ -58,7 +56,7 @@ public class ResourceMapImpl implements ResourceMap, SharedCanvasConstants {
 
     @Override
     public String creatorName() {
-        RdfNode node = graph.findObject(resmap_uri, DCTERMS_CREATOR);
+        RdfNode node = graph.findObject(uri, DCTERMS_CREATOR);
 
         if (node == null) {
             return null;

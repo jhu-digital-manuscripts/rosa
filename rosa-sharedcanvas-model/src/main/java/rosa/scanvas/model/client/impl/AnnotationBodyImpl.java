@@ -4,22 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rosa.scanvas.model.client.AnnotationBody;
-import rosa.scanvas.model.client.SharedCanvasConstants;
 import rosa.scanvas.model.client.rdf.RdfGraph;
 
-public class AnnotationBodyImpl implements AnnotationBody,
-        SharedCanvasConstants {
-    private final RdfGraph graph;
-    private final String uri;
-
-    public AnnotationBodyImpl(RdfGraph graph, String uri) {
-        this.graph = graph;
-        this.uri = uri;
-    }
-
-    @Override
-    public String uri() {
-        return uri;
+public class AnnotationBodyImpl extends BaseObject implements AnnotationBody {
+    public AnnotationBodyImpl(String uri, RdfGraph graph) {
+        super(uri, graph);
     }
 
     @Override
@@ -33,21 +22,6 @@ public class AnnotationBodyImpl implements AnnotationBody,
     }
 
     @Override
-    public boolean isText() {
-        return isType(DCMI_TEXT);
-    }
-
-    @Override
-    public boolean isImage() {
-        return isType(DCMI_IMAGE);
-    }
-
-    @Override
-    public String textContent() {
-        return graph.findObjectStringValue(uri, CNT_CHARS);
-    }
-
-    @Override
     public AnnotationBody defaultItem() {
         String def_uri = graph.findObjectStringValue(uri, OA_DEFAULT);
 
@@ -55,7 +29,7 @@ public class AnnotationBodyImpl implements AnnotationBody,
             return null;
         }
 
-        return new AnnotationBodyImpl(graph, def_uri);
+        return new AnnotationBodyImpl(def_uri, graph);
     }
 
     @Override
@@ -63,25 +37,9 @@ public class AnnotationBodyImpl implements AnnotationBody,
         List<AnnotationBody> result = new ArrayList<AnnotationBody>();
 
         for (String item_uri : graph.findObjectStringValues(uri, OA_ITEM)) {
-            result.add(new AnnotationBodyImpl(graph, item_uri));
+            result.add(new AnnotationBodyImpl(item_uri, graph));
         }
 
         return result;
     }
-
-    @Override
-    public String format() {
-        return graph.findObjectStringValue(uri, DC_FORMAT);
-    }
-
-    @Override
-    public String conformsTo() {
-        return graph.findObjectStringValue(uri, DCTERMS_CONFORMS_TO);
-    }
-
-    @Override
-    public boolean isType(String type_uri) {
-        return !graph.find(uri, RDF_TYPE, type_uri).isEmpty();
-    }
-
 }

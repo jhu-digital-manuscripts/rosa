@@ -26,7 +26,7 @@ public class AnnotationListImpl extends ResourceMapImpl implements
     @Override
     public Annotation annotation(int index) {
         String uri = annotation_uris.get(index);
-        return new AnnotationImpl(graph, uri);
+        return new AnnotationImpl(uri, graph);
     }
 
     @Override

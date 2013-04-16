@@ -15,11 +15,6 @@ public class ManifestCollectionImpl extends ResourceMapImpl implements
     }
 
     @Override
-    public String label() {
-        return graph.findObjectStringValue(aggregation_uri(), RDFS_LABEL);
-    }
-
-    @Override
     public List<Reference<Manifest>> manifests() {
         return aggregatedReferences(SHARED_CANVAS_MANIFEST, Manifest.class);
     }
