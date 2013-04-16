@@ -310,9 +310,10 @@ public class ResourceMap {
     }
 
     private Resource add_text_annotation(Resource agg, String annotation_uri,
-            String target_uri, String text, String format) {
+            String target_uri, String text, String format, String label) {
         Resource text_annotation = model.createResource(annotation_uri);
 
+        text_annotation.addProperty(RDFS.label, label);
         text_annotation.addProperty(RDF.type, annotation_type);
         text_annotation.addProperty(motivated_by, describing_motivation);
 
@@ -360,16 +361,21 @@ public class ResourceMap {
 
         List<Resource> result = new ArrayList<Resource>();
 
+        int num = 1;
+        
         for (int illus : tagging.findIllusIndexes(image)) {
             String uri = get_illustration_annotation_uri(book, image_id, illus);
             String text = tagging.descriptions(illus);
-
+            String label = "Illustration " + num;
+            
             Resource a = add_text_annotation(annotations, uri, canvas_uri,
-                    text, "text/plain");
+                    text, "text/plain", label);
 
             if (a != null) {
                 result.add(a);
             }
+            
+            num++;
         }
 
         return result;
@@ -419,7 +425,7 @@ public class ResourceMap {
 
             String text = new String(data.array, 0, data.length, "UTF-8");
             return add_text_annotation(annotations, uri, canvas_uri, text,
-                    "text/xml");
+                    "text/xml", "Transcription");
         } else {
             return null;
         }
@@ -467,7 +473,8 @@ public class ResourceMap {
         Resource image_annotation = model.createResource(image_uri);
         image_annotation.addProperty(RDF.type, annotation_type);
         image_annotation.addProperty(motivated_by, painting_motivation);
-
+        image_annotation.addProperty(RDFS.label, RoseCollection.shortImageName(image_id));
+        
         Resource canvas = model.createResource(canvas_uri);
         canvas.addProperty(RDF.type, canvas_type);
 
