@@ -20,6 +20,11 @@ public class AnnotationImpl implements Annotation, SharedCanvasConstants {
     public String uri() {
         return uri;
     }
+    
+    @Override
+    public String label() {
+        return graph.findObjectStringValue(uri, RDFS_LABEL);
+    }
 
     @Override
     public AnnotationBody body() {
