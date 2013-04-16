@@ -1,5 +1,8 @@
 package rosa.scanvas.model.client;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import rosa.scanvas.model.client.impl.AnnotationListImpl;
 import rosa.scanvas.model.client.impl.ManifestImpl;
 import rosa.scanvas.model.client.impl.ManifestCollectionImpl;
@@ -17,6 +20,10 @@ import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class SharedCanvas {
+    private static int MAX_CACHE_SIZE = 100;
+
+    private static final Map<String, Object> cache = new HashMap<String, Object>();
+
     /**
      * Loading a Shared Canvas entity from a JSON-LD endpoint.
      * 
@@ -29,14 +36,24 @@ public class SharedCanvas {
     }
 
     /**
-     * Loading a Shared Canvas entity from a JSON-LD endpoint.
+     * Loading a Shared Canvas entity from a JSON-LD endpoint. Load results are
+     * cached in memory up until a certain number.
      * 
      * @param url
      * @param type
      * @param cb
      */
-    public static <T> void load(String url, final Class<T> type,
+
+    // GWT doesn't support type.cast()
+    @SuppressWarnings("unchecked")
+    public static <T> void load(final String url, final Class<T> type,
             final AsyncCallback<T> cb) {
+
+        if (cache.containsKey(url)) {
+            cb.onSuccess((T) cache.get(url));
+            return;
+        }
+
         JsonpRequestBuilder rb = new JsonpRequestBuilder();
 
         rb.requestObject(url, new AsyncCallback<JavaScriptObject>() {
@@ -45,7 +62,6 @@ public class SharedCanvas {
                 cb.onFailure(err);
             }
 
-            @SuppressWarnings("unchecked")
             @Override
             public void onSuccess(JavaScriptObject json) {
                 JsonLd.toRdf(json, new JsonLd.Callback() {
@@ -72,17 +88,29 @@ public class SharedCanvas {
                         // Assume everything in default graph
                         RdfGraph graph = ds.defaultGraph();
 
+                        Object obj = null;
+
                         if (type == ManifestCollection.class) {
-                            cb.onSuccess((T) new ManifestCollectionImpl(graph));
+                            obj = new ManifestCollectionImpl(graph);
                         } else if (type == Manifest.class) {
-                            cb.onSuccess((T) new ManifestImpl(graph));
+                            obj = new ManifestImpl(graph);
                         } else if (type == AnnotationList.class) {
-                            cb.onSuccess((T) new AnnotationListImpl(graph));
+                            obj = new AnnotationListImpl(graph);
                         } else if (type == Sequence.class) {
-                            cb.onSuccess((T) new SequenceImpl(graph));
-                        } else {
+                            obj = new SequenceImpl(graph);
+                        }
+
+                        if (obj == null) {
                             cb.onFailure(new IllegalArgumentException(
                                     "Unsupported type: " + type.getName()));
+                        } else {
+                            cb.onSuccess((T) obj);
+
+                            if (cache.size() > MAX_CACHE_SIZE) {
+                                cache.clear();
+                            }
+
+                            cache.put(url, obj);
                         }
                     }
                 });
