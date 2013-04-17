@@ -4,8 +4,6 @@ package rosa.scanvas.demo.website.client.disparea;
  * A DisplayElement is drawn within a bounding box on a DisplayArea.
  */
 
-// TODO can we get rid of the zoom stuff from here??
-
 public abstract class DisplayElement {
     private final String id;
     private final int base_x, base_y;

@@ -3,8 +3,8 @@ package rosa.scanvas.demo.website.client.dynimg;
 public abstract class AbstractImageServer implements ImageServer {
     public WebImage render(MasterImage image, int width, int height,
             int... crop) {
-        return new WebImage(image, width, height, renderAsUrl(image, width,
-                height, crop), crop);
+        return new WebImage(renderAsUrl(image, width, height, crop), width,
+                height);
     }
 
     public WebImage renderToSquare(MasterImage image, int square_size,
@@ -29,16 +29,16 @@ public abstract class AbstractImageServer implements ImageServer {
             }
         }
 
-        return new WebImage(image, width, height, renderAsUrl(image, width,
-                height, crop), crop);
+        return new WebImage(renderAsUrl(image, width, height, crop), width,
+                height);
     }
 
     public WebImage renderToWidth(MasterImage image, int render_width,
             int... crop) {
         int height = (render_width * image.height()) / image.width();
 
-        return new WebImage(image, render_width, height, renderAsUrl(image,
-                render_width, height, crop), crop);
+        return new WebImage(renderAsUrl(image, render_width, height, crop),
+                render_width, height);
     }
 
     /**

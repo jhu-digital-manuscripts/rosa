@@ -39,7 +39,7 @@ public class MasterImageDrawable extends DisplayElement {
             tile_cache[area.zoomLevel()] = tiles;
         }
 
-        Context2d context = view.context();
+        final Context2d context = view.context();
 
         context.save();
         context.translate(baseLeft() * zoom, baseTop() * zoom);
@@ -48,16 +48,24 @@ public class MasterImageDrawable extends DisplayElement {
                 .height()) {
             for (int col = 0, left = 0; col < tiles[row].length; left += tiles[row][col++]
                     .width()) {
-                WebImage tile = tiles[row][col];
+                final WebImage tile = tiles[row][col];
 
-                // TODO have to wait for image load, only do this when need to
-                // Probably won't load because not attached
-                tile.makeViewable();
+                if (tile.isViewable()) {
+                    continue;
+                }
 
-                ImageElement img = tile.getImageElement();
+                final int tile_left = left;
+                final int tile_top = top;
 
-                // Only draw if in viewport
-                context.drawImage(img, left, top);
+                tile.makeViewable(new WebImage.OnLoadCallback() {
+                    @Override
+                    public void onLoad() {
+                        ImageElement img = tile.getImageElement();
+
+                        // Only draw if in viewport
+                        context.drawImage(img, tile_left, tile_top);
+                    }
+                });
             }
         }
 

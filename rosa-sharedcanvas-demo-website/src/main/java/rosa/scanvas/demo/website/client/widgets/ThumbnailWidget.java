@@ -65,12 +65,10 @@ public class ThumbnailWidget extends Composite {
 			String imageId = IIIFImageServer.parseIdentifier(anno.body().uri());
 			int width = 50;
 			int height = 50;
-			int[] crop = new int[0];
 			
-			MasterImage master = new MasterImage(imageId, width, height);	// fake MasterImage to hold the ID
-			String url = iiifServer.renderAsUrl(imageId, width, height, crop);	
+			String url = iiifServer.renderAsUrl(imageId, width, height);	
 			
-			return new WebImage(master, width, height, url, crop);
+			return new WebImage(url, width, height);
 		}
 		
 		public void makeViewable() {

@@ -80,12 +80,10 @@ public class PageTurnerWidget extends Composite {
 				String imageId = IIIFImageServer.parseIdentifier(imageAnno.body().uri());
 				int width = 150;
 				int height = 150;
-				int[] crop = new int[0];
 				
-				MasterImage master = new MasterImage(imageId, width, height);	// fake MasterImage to hold the ID
-				String url = iiifServer.renderAsUrl(imageId, width, height, crop);	
+				String url = iiifServer.renderAsUrl(imageId, width, height);	
 				
-				WebImage page = new WebImage(master, width, height, url, crop);
+				WebImage page = new WebImage(url, width, height);
 		Window.alert("WebImage created");	
 		
 				pagePanel.add(page);
