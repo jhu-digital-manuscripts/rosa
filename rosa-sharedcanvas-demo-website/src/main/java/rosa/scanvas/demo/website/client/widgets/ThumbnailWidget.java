@@ -1,15 +1,27 @@
 package rosa.scanvas.demo.website.client.widgets;
 
-import java.util.Iterator;
+import java.lang.IndexOutOfBoundsException;
 
+import java.util.Iterator;
+import java.util.List;
+
+import rosa.scanvas.demo.website.client.PanelData;
+import rosa.scanvas.demo.website.client.dynimg.IIIFImageServer;
+import rosa.scanvas.demo.website.client.dynimg.MasterImage;
+import rosa.scanvas.demo.website.client.dynimg.WebImage;
+import rosa.scanvas.model.client.Annotation;
 import rosa.scanvas.model.client.Canvas;
+import rosa.scanvas.model.client.Manifest;
+import rosa.scanvas.model.client.ManifestCollection;
 import rosa.scanvas.model.client.Sequence;
 
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLTable;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -17,13 +29,73 @@ import com.google.gwt.user.client.ui.TextBox;
 
 public class ThumbnailWidget extends Composite {
 	
-	private final int THUMB_PANEL_WIDTH = 5;
+	/**
+	 * Widget holding a thumbnail image and an associated label
+	 */
+	public class ThumbnailImageWidget extends FocusPanel {
+		private WebImage image;
+		private Label label = new Label();
+		private FlowPanel mainPanel = new FlowPanel();
+		
+		private final String collection;
+		private final String manifest;
+		private final String sequence;
+		private final String canvas;
+		
+		public ThumbnailImageWidget(Annotation anno, String collection, 
+				String manifest, String sequence, String canvas) {
+			add(mainPanel);
+			
+			this.collection = collection;
+			this.manifest = manifest;
+			this.sequence = sequence;
+			this.canvas = canvas;
+			
+			if (anno != null) {
+				image = initImage(anno);
+				mainPanel.add(image);
+			}
+			
+			mainPanel.add(label);
+		}
+		
+		private WebImage initImage(Annotation anno) {
+			IIIFImageServer iiifServer = new IIIFImageServer();
+			
+			String imageId = IIIFImageServer.parseIdentifier(anno.body().uri());
+			int width = 50;
+			int height = 50;
+			int[] crop = new int[0];
+			
+			MasterImage master = new MasterImage(imageId, width, height);	// fake MasterImage to hold the ID
+			String url = iiifServer.renderAsUrl(imageId, width, height, crop);	
+			
+			return new WebImage(master, width, height, url, crop);
+		}
+		
+		public void makeViewable() {
+			image.makeViewable();
+		}
+		
+		public void setLabel(String text) {
+			label.setText(text);
+		}
+		
+		public String getCanvasUri() { return canvas; }
+		public String getCollectionUri() { return collection; }
+		public String getManifestUri() { return manifest; }
+		public String getSequenceUri() { return sequence; }
+	}
+	
+// -------------------------------------------------------------------
+	
+	private final int THUMB_PANEL_WIDTH = 4;
 
 	private FlowPanel mainPanel = new FlowPanel();
 	private FlowPanel searchPanel = new FlowPanel();
 	private ScrollPanel tablePanel = new ScrollPanel();
 	
-	private FlexTable thumbTable = new FlexTable();
+	private FlowPanel thumbTable = new FlowPanel();
 	private TextBox searchBox = new TextBox();
 	
 	private Button searchButton = new Button();
@@ -37,54 +109,97 @@ public class ThumbnailWidget extends Composite {
 		searchPanel.add(searchBox);
 		searchPanel.add(searchButton);
 		searchPanel.add(closePanelButton);
+		searchPanel.setHeight("30px");
 		
 		tablePanel.add(thumbTable);
+		tablePanel.setSize("100%", "90%");
 		
-		/*mainPanel.setHeight("100%");
-		mainPanel.setWidth("100%");*/
 		searchButton.setText("Search");
 		closePanelButton.setText("Close Panel");
 	}
 	
-	public void setData(Sequence sequence) {
+	/**
+	 * Set the thumbnail data: thumbnail images plus canvas labels
+	 */
+	public void setData(PanelData data) {
+		Sequence sequence = data.getSequence();
+		List<Annotation> images = data.getImageAnnotations();
 		searchPanel.add(new Label("Size: "+sequence.size()));
 		int index = 0;
 		
 		Iterator<Canvas> it = sequence.iterator();
 		while (it.hasNext()) {
 			Canvas canvas = it.next();
+			ThumbnailImageWidget thumb = new ThumbnailImageWidget(
+					getAssociatedAnnotation(canvas, images), 
+							data.getCollection().uri(),
+							data.getManifest().uri(),
+							sequence.uri(),
+							canvas.uri());
+			thumb.setLabel(canvas.label().replace(".", " "));
+			thumb.addStyleName("thumbnail");
 			
-			thumbTable.setWidget(index/4, index%4, new Label(canvas.label(), true));
+			thumbTable.add(thumb);
 			index++;
 		}
 		
+		// Show the first visible thumbnails
 	}
 	
-	public int getSelectedRow(ClickEvent event) {
-		int selectedRow = -1;
-		HTMLTable.Cell cell = thumbTable.getCellForEvent(event);
-		
-		if (cell != null) {
-			selectedRow = cell.getRowIndex();
+	/**
+	 * returns the first annotation that has its target as the given canvas.
+	 * if no annotations meet this criteria, NULL is returned
+	 */
+	private Annotation getAssociatedAnnotation(Canvas canvas, List<Annotation> images) {
+		for (Annotation anno : images) {
+			if (anno.targets().contains(canvas.uri())) {
+				images.remove(anno);
+				return anno;
+			}
 		}
-		
-		return selectedRow;
+		return null;
 	}
 	
-	public int getSelectedColumn(ClickEvent event) {
-		int selectedCol = -1;
-		HTMLTable.Cell cell = thumbTable.getCellForEvent(event);
+	/**
+	 * Load the images for any thumbnails made viewable
+	 * @param visible The previous vertical scroll position, in pixels
+	 */
+	public void loadThumbnails(int visible) {
+		// height of visible area in number of rows + 1
+		//int offset = tablePanel.getOffsetHeight() / getRowHeight(0) + 1;
+		int offset = 5;
+		int scrollPosition = getVerticalScrollPosition() / getRowHeight(0) + offset;
+		visible = visible/getRowHeight(0);
 		
-		if (cell != null) {
-			selectedCol = cell.getCellIndex();
+		// number of thumbnails in the first row (should be the same for all except maybe the last row)
+		int rowLength = tablePanel.getOffsetWidth() / thumbTable.getWidget(0).getOffsetWidth();
+		
+		for (int i=visible; i<scrollPosition; i++) {
+			try {
+				for (int j=0; j<rowLength; j++) {
+					((ThumbnailImageWidget)thumbTable.getWidget(i*rowLength + j)).makeViewable();
+				}
+			} catch (IndexOutOfBoundsException e) {}
 		}
-		
-		return selectedCol;
+	}
+	
+	/**
+	 * Returns the current vertical scroll position in pixels
+	 */
+	public int getVerticalScrollPosition() {
+		return tablePanel.getVerticalScrollPosition();
+	}
+	
+	/**
+	 * Returns the height of a row in pixels
+	 */
+	public int getRowHeight(int row) {
+		return thumbTable.getWidget(0).getOffsetHeight();
 	}
 
 	public ScrollPanel getTablePanel() { return tablePanel; }
 	public void setTablePanel(ScrollPanel tablePanel) { this.tablePanel = tablePanel; }
-	public FlexTable getThumbTable() { return thumbTable; }
+	public FlowPanel getThumbTable() { return thumbTable; }
 	public TextBox getSearchBox() { return searchBox; }
 	public Button getSearchButton() { return searchButton; }
 	public Button getClosePanelButton() { return closePanelButton; }

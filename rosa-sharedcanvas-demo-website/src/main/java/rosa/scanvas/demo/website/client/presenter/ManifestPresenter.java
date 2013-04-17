@@ -71,4 +71,8 @@ public class ManifestPresenter implements Presenter {
 		display.setData(data.getManifest().sequences());
 	}
 	
+	public void setSize(String width, String height) {
+		// TODO
+	}
+	
 }

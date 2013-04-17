@@ -17,5 +17,13 @@ public class DockPanel extends DockLayoutPanel {
 		}
 		super.add(widget);
 	}
+	
+	public double getCenterWidth() {
+		return getCenterWidth();
+	}
+	
+	public double getCenterHeight() {
+		return getCenterHeight();
+	}
 
 }

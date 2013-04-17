@@ -101,4 +101,8 @@ public class HomePresenter implements Presenter {
 		
 	}
 	
+	public void setSize(String width, String height) {
+		// TODO
+	}
+	
 }

@@ -71,4 +71,8 @@ public class CollectionPresenter implements Presenter {
 		});
 	}
 
+	public void setSize(String width, String height) {
+		// TODO
+	}
+	
 }

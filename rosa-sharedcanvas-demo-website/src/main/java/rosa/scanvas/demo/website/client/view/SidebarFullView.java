@@ -9,6 +9,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -34,6 +35,7 @@ public class SidebarFullView extends Composite implements SidebarFullPresenter.D
 	
 	public HasClickHandlers getAddPanelButton() { return addPanelButton; }
 	public HasClickHandlers getRemovePanelButton() { return removePanelButton; }
+	public HasEnabled getRemovePanelEnabler() { return removePanelButton; }
 	public ListBox getPanelList() { return panelList; }
 	public AnnotationListWidget getAnnoListWidget() { return annoListWidget; }
 	public ManifestListWidget getMetaListWidget() { return metaListWidget; }
@@ -74,6 +76,15 @@ public class SidebarFullView extends Composite implements SidebarFullPresenter.D
 		tabPanel.setHeight("90%");
 		tabPanel.setWidth("100%");
 		linkPanel.setHeight("100%");
+	}
+	
+	public void setSize(String width, String height) {
+		mainPanel.setWidth(width);
+		mainPanel.setHeight(height);
+	}
+	
+	public void setWidth(String width) {
+		mainPanel.setWidth(width);
 	}
 
 }

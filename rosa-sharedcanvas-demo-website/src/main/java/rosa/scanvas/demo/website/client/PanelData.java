@@ -19,19 +19,32 @@ public class PanelData {
 	private List<AnnotationList> annotationLists;
 	private List<Annotation> visibleAnnotations;
 	
+	private List<Annotation> imageAnnotations;
+	public List<Annotation> getImageAnnotations() {
+		return imageAnnotations;
+	}
+	
+	public PanelData() {
+		annotationLists = new ArrayList<AnnotationList>();
+		visibleAnnotations = new ArrayList<Annotation>();
+		imageAnnotations = new ArrayList<Annotation>();
+	}
+	
 	public ManifestCollection getCollection() {
 		return collection;
 	}
 	public void setCollection(ManifestCollection collection) {
 		this.collection = collection;
-		annotationLists = new ArrayList<AnnotationList>();
-		visibleAnnotations = new ArrayList<Annotation>();
 	}
 	public Manifest getManifest() {
 		return manifest;
 	}
 	public void setManifest(Manifest manifest) {
 		this.manifest = manifest;
+		
+		annotationLists.clear();
+		visibleAnnotations.clear();
+		imageAnnotations.clear();
 	}
 	public Sequence getSequence() {
 		return sequence;
@@ -50,5 +63,34 @@ public class PanelData {
 	}
 	public List<Annotation> getVisibleAnnotations() {
 		return visibleAnnotations;
+	}
+	
+	
+	public String tokenForData() {
+		String token = "";
+		
+		if (collection != null) { token += collection.uri(); }
+		if (manifest != null) { token += manifest.uri(); }
+		if (sequence != null) { token += sequence.uri(); }
+		if (canvas != null) { token += canvas.uri(); }
+		
+		return token;
+	}
+	
+	
+	public void clearCollection() {
+		setCollection(null);
+		clearManifest();
+	}
+	public void clearManifest() {
+		setManifest(null);
+		clearSequence();
+	}
+	public void clearSequence() {
+		setSequence(null);
+		clearCanvas();
+	}
+	public void clearCanvas() {
+		setCanvas(null);
 	}
 }

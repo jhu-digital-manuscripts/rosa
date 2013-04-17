@@ -14,6 +14,7 @@ import rosa.scanvas.demo.website.client.view.SidebarFullView;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -21,7 +22,6 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 /**
  * Controls the sidebar, which includes ways to add/remove panels, and the 
  * metadata display and annotation list display
- * @author john
  *
  */
 public class MainController implements Controller {
@@ -46,6 +46,9 @@ public class MainController implements Controller {
 		bind();
 	}
 	
+	/**
+	 * Add handler to listen to changes in History
+	 */
 	public void onValueChange(ValueChangeEvent<String> event) {
 		String token = event.getValue();
 
@@ -72,6 +75,9 @@ public class MainController implements Controller {
 		panelController.go(mainTable);
 	}
 	
+	/**
+	 * Add handlers to listen for application events
+	 */
 	private void bind() {
 		History.addValueChangeHandler(this);
 		
@@ -119,16 +125,9 @@ public class MainController implements Controller {
 		} else if (message.equals(PanelAction.REMOVE)) {
 			// TODO: Move logic to HistoryInfo
 		    // remove history token segment from current history token, removing the panel from display
-			String[] parts = currentToken.split(";:");
-			String newToken = "";
 			
-			for (int i=0; i<parts.length; i++) {
-				if (i != currentIndex) {
-					newToken += parts[i] + ";:";
-				}
-			}
+			
 			currentIndex = 0;
-			History.newItem(newToken);
 		}
 	}
 

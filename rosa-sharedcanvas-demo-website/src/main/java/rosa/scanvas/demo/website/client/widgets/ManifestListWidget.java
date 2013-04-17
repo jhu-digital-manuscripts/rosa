@@ -23,16 +23,25 @@ public class ManifestListWidget extends Composite {
 	public ManifestListWidget() {
 		initWidget(mainPanel);
 		
+		mainPanel.add(collectionCheckBox);
 		mainPanel.add(collectionPanel);
 		mainPanel.add(new HTML("<br><br><br><br>"));
+		mainPanel.add(manifestCheckBox);
 		mainPanel.add(manifestPanel);
 		mainPanel.add(new HTML("<br><br><br><br>"));
+		mainPanel.add(sequenceCheckBox);
 		mainPanel.add(sequencePanel);
 		mainPanel.add(new HTML("<br><br><br><br>"));
 		mainPanel.add(new Label("Pick a different sequence: "));
 		mainPanel.add(sequencePickerBox);
 		
-		setDataPanels();
+		collectionCheckBox.setText("Collection");
+		manifestCheckBox.setText("Manifest");
+		sequenceCheckBox.setText("Sequence");
+		
+		collectionCheckBox.setValue(true);
+		manifestCheckBox.setValue(true);
+		sequenceCheckBox.setValue(true);
 		
 		sequencePickerBox.setWidth("75%");
 	}
@@ -47,15 +56,15 @@ public class ManifestListWidget extends Composite {
 	public ListBox getSequencePickerBox() { return sequencePickerBox; }
 	
 	public void newCollectionLabel(String text) {
-		collectionPanel.add(new Label(text));
+		collectionPanel.add(new HTML(text));
 	}
 	
 	public void newManifestLabel(String text) {
-		manifestPanel.add(new Label(text));
+		manifestPanel.add(new HTML(text));
 	}
 	
 	public void newSequenceLabel(String text) {
-		sequencePanel.add(new Label(text));
+		sequencePanel.add(new HTML(text));
 	}
 	
 	public void clearLabels() {
@@ -63,7 +72,7 @@ public class ManifestListWidget extends Composite {
 		manifestPanel.clear();
 		sequencePanel.clear();
 		
-		setDataPanels();
+//		setDataPanels();
 	}
 	
 	public void hide() {
@@ -72,21 +81,6 @@ public class ManifestListWidget extends Composite {
 	
 	public void show() {
 		this.setVisible(true);
-	}
-	
-	private void setDataPanels() {
-		collectionPanel.add(collectionCheckBox);
-		collectionCheckBox.setText("Collection");
-		
-		manifestPanel.add(manifestCheckBox);
-		manifestCheckBox.setText("Manifest");
-		
-		sequencePanel.add(sequenceCheckBox);
-		sequenceCheckBox.setText("Sequence");
-		
-		collectionCheckBox.setValue(true);
-		manifestCheckBox.setValue(true);
-		sequenceCheckBox.setValue(true);
 	}
 	
 }

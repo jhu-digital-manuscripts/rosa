@@ -1,5 +1,6 @@
 package rosa.scanvas.demo.website.client.presenter;
 
+import java.lang.Boolean;
 import java.util.Iterator;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
@@ -36,6 +38,7 @@ public class SidebarFullPresenter implements Presenter {
 	public interface Display {
 		HasClickHandlers getAddPanelButton();
 		HasClickHandlers getRemovePanelButton();
+		HasEnabled getRemovePanelEnabler();
 		ListBox getPanelList();
 		AnnotationListWidget getAnnoListWidget();
 		ManifestListWidget getMetaListWidget();
@@ -52,6 +55,8 @@ public class SidebarFullPresenter implements Presenter {
 	
 	public void go(HasWidgets container) {
 		bind();
+		display.getRemovePanelEnabler().setEnabled(false);
+		
 		if (container instanceof DockLayoutPanel) {
 			((DockLayoutPanel)container).addWest(display.asWidget(), 300);
 		}
@@ -76,6 +81,32 @@ public class SidebarFullPresenter implements Presenter {
 				doPanelListChange();
 			}
 		});
+
+		// Metadata list hide/show checkboxes
+		display.getMetaListWidget().getCollectionCheckBox().addValueChangeHandler(
+				new ValueChangeHandler<Boolean>() {
+					public void onValueChange(ValueChangeEvent<Boolean> event) {
+						doCollectionHide(event.getValue());
+					}
+		});
+		
+		display.getMetaListWidget().getManifestCheckBox().addValueChangeHandler(
+				new ValueChangeHandler<Boolean>() {
+					public void onValueChange(ValueChangeEvent<Boolean> event) {
+						doManifestHide(event.getValue());
+					}
+		});
+		
+		display.getMetaListWidget().getSequenceCheckBox().addValueChangeHandler(
+				new ValueChangeHandler<Boolean>() {
+					public void onValueChange(ValueChangeEvent<Boolean> event) {
+						doSequenceHide(event.getValue());
+					}
+		});
+	}
+	
+	public void setSize(String width, String height) {
+		// TODO
 	}
 	
 	/**
@@ -117,10 +148,13 @@ public class SidebarFullPresenter implements Presenter {
 		}
 		
 		display.getPanelList().setSelectedIndex(0);
+		
+		
 	}
 	
 	/**
 	 * Adds a new item to the list and sets it to be selected.
+	 * UNUSED?
 	 * @param item
 	 */
 	public void addPanel(String item) {
@@ -128,23 +162,73 @@ public class SidebarFullPresenter implements Presenter {
 		
 		int selectedPanel = display.getPanelList().getItemCount()-1;
 		display.getPanelList().setSelectedIndex(selectedPanel);
-		
-//		eventBus.fireEvent(new PanelNumberChangeEvent("change", selectedPanel));
 	}
+
+// -------------- DOM Event Actions --------------
 	
 	private void doAddPanel() {		
+		if (!display.getRemovePanelEnabler().isEnabled()) {
+			display.getRemovePanelEnabler().setEnabled(true);
+		}
 		eventBus.fireEvent(new PanelNumberChangeEvent(PanelAction.ADD));
 	}
 	
 	private void doRemovePanel() {
-		eventBus.fireEvent(new PanelNumberChangeEvent(PanelAction.REMOVE));
+		int selectedPanel = display.getPanelList().getSelectedIndex();
+		eventBus.fireEvent(new PanelNumberChangeEvent(PanelAction.REMOVE, selectedPanel));
+		
+		// if there is now only 1 item in the list, disable Remove button
+		if (display.getPanelList().getItemCount() == 1) {
+			display.getRemovePanelEnabler().setEnabled(false);
+		}
 	}
 	
 	private void doPanelListChange() {
 		int selectedPanel = display.getPanelList().getSelectedIndex();
 		eventBus.fireEvent(new PanelNumberChangeEvent(PanelAction.CHANGE, selectedPanel));
 	}
+	
+// Metadata List hide/show labels
+	private int metaChecks = 0;
+	private void doCollectionHide(Boolean enabled) {
+		if (enabled) {
+			display.getMetaListWidget().getMainPanel().insert(
+					display.getMetaListWidget().getCollectionPanel(), 1);
+			metaChecks--;
+		} else {
+			display.getMetaListWidget().getMainPanel().remove(
+					display.getMetaListWidget().getCollectionPanel());
+			metaChecks++;
+		}
+	}
+	
+	private void doManifestHide(Boolean enabled) {
+		if (enabled) {
+			display.getMetaListWidget().getMainPanel().insert(
+					display.getMetaListWidget().getManifestPanel(), 5-metaChecks);
+			metaChecks--;
+		} else {
+			display.getMetaListWidget().getMainPanel().remove(
+					display.getMetaListWidget().getManifestPanel());
+			metaChecks++;
+		}
+	}
+	
+	private void doSequenceHide(Boolean enabled) {
+		if (enabled) {
+			display.getMetaListWidget().getMainPanel().insert(
+					display.getMetaListWidget().getSequencePanel(), 7-metaChecks);
+		} else {
+			display.getMetaListWidget().getMainPanel().remove(
+					display.getMetaListWidget().getSequencePanel());
+		}
+	}
 
+// -------------- End DOM Event Actions --------------	
+	
+	/**
+	 * Place data from selected panel in appropriate place in sidebar
+	 */
 	public void setData(PanelData data) {
 		// TODO display a list of sequences for the 'sequence picker'
 		display.getMetaListWidget().clearLabels();
@@ -186,7 +270,7 @@ public class SidebarFullPresenter implements Presenter {
 				while (annotationIterator.hasNext()) {
 					Annotation annotation = annotationIterator.next();
 					if (annotation.body().isImage()) {
-						// ensure that image conformsTo() IIIF
+						// TODO: ensure that image conformsTo() IIIF
 						// add to image annotation listbox
 						display.getAnnoListWidget().getImageAnnoList()
 								.setWidget(i, 1, new Label(annotation.body().uri()));
@@ -210,6 +294,9 @@ public class SidebarFullPresenter implements Presenter {
 		
 	}
 	
+	/**
+	 * Add handlers to the image annotations list to listen to value changes of checkboxes
+	 */
 	private void bindImageRow(int row, final Annotation annotation) {
 		((CheckBox)display.getAnnoListWidget().getImageAnnoList().getWidget(row,0))
 			.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
@@ -224,6 +311,9 @@ public class SidebarFullPresenter implements Presenter {
 		});
 	}
 	
+	/**
+	 * Add handlers to the nontargeted text annotations list to listen to value changes of checkboxes
+	 */
 	private void bindNontargetedTextRow(int row, final Annotation annotation) {
 		((CheckBox)display.getAnnoListWidget().getNontargetedTextAnnoList().getWidget(row,0))
 			.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
