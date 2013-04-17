@@ -137,4 +137,23 @@ public abstract class AbstractRdfGraph implements RdfGraph,
 
         return result;
     }
+
+    public List<String> listToStringValues(String list_uri) {
+        List<String> result = new ArrayList<String>();
+
+        while (!list_uri.equals(RDF_NIL)) {
+            String value = findObjectStringValue(list_uri, RDF_FIRST);
+            String rest = findObjectStringValue(list_uri, RDF_REST);
+
+            if (value == null || rest == null) {
+                break;
+            }
+
+            result.add(value);
+            list_uri = rest;
+        }
+
+        return result;
+    }
+
 }

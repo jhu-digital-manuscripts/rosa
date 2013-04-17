@@ -1,6 +1,5 @@
 package rosa.scanvas.model.client.impl;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -8,7 +7,6 @@ import rosa.scanvas.model.client.Canvas;
 import rosa.scanvas.model.client.Range;
 import rosa.scanvas.model.client.Sequence;
 import rosa.scanvas.model.client.rdf.RdfGraph;
-import rosa.scanvas.model.client.rdf.RdfNode;
 
 public class SequenceImpl extends ResourceMapImpl implements Sequence {
     private final List<String> canvas_uris;
@@ -16,12 +14,14 @@ public class SequenceImpl extends ResourceMapImpl implements Sequence {
     public SequenceImpl(RdfGraph graph) {
         super(graph);
 
-        // TODO WRONG ORDER!!
+        // TODO: Hack to deal with json-ld serialization issues
+        String list_head = graph.findObjectStringValue(aggregation_uri(),
+                SHARED_CANVAS_HAS_ORDER);
 
-        this.canvas_uris = new ArrayList<String>();
-
-        for (RdfNode node : graph.findRdfTypes(SHARED_CANVAS_CANVAS)) {
-            canvas_uris.add(node.value().stringValue());
+        if (list_head == null) {
+            this.canvas_uris = aggregates();
+        } else {
+            this.canvas_uris = graph.listToStringValues(list_head);
         }
     }
 

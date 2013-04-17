@@ -33,6 +33,9 @@ public interface SharedCanvasConstants {
     public static final String EXIF_HEIGHT = EXIF_NS_URI + "height";
 
     public static final String RDF_VALUE = RDF_NS_URI + "value";
+    public static final String RDF_FIRST = RDF_NS_URI + "first";
+    public static final String RDF_REST = RDF_NS_URI + "rest";
+    public static final String RDF_NIL = RDF_NS_URI + "nil";
     
     public static final String RDFS_LABEL = RDFS_NS_URI + "label";
 
@@ -70,6 +73,10 @@ public interface SharedCanvasConstants {
             + "hasRelatedService";
     public static final String SHARED_CANVAS_READING_DIR = SHARED_CANVAS_NS_URI
             + "readingDirection";
+    
+    // TODO made up
+    public static final String SHARED_CANVAS_HAS_ORDER = SHARED_CANVAS_NS_URI
+            + "hasOrder";
 
     public static final String RDF_TYPE = RDF_NS_URI + "type";
 

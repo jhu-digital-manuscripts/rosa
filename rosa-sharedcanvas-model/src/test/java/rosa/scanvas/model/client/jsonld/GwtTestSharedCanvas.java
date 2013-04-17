@@ -76,13 +76,13 @@ public class GwtTestSharedCanvas extends AbstractGwtTest {
         check_refs(seqs, Sequence.class, aggregates);
     }
 
-    private void check_annotation_list_of_canvas(AnnotationList al) {
+    private void check_annotation_list_of_canvas(AnnotationList al) {        
         assertNotNull(al);
         assertNotNull(al.uri());
         // assertNotNull(al.label());
         assertNotNull(al.creatorName());
         assertNotNull(al.forCanvas());
-
+       
         List<String> aggregates = al.aggregates();
 
         assertTrue(aggregates.size() > 0);

@@ -75,4 +75,13 @@ public interface RdfGraph extends Iterable<RdfTriple> {
      * @return value or missing if not found or not a number
      */
     double findObjectNumberValue(String uri, String exifWidth, double missing);
+
+    /**
+     * Turn an RdfList of string value into a List<String>.
+     * 
+     * @param uri_head
+     * @return
+     */
+    List<String> listToStringValues(String uri_head);
+
 }
