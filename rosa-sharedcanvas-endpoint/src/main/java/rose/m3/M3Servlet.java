@@ -96,7 +96,8 @@ public class M3Servlet extends HttpServlet {
                 Options opts = new Options();
                 opts.optimize = true;
                 opts.graph = true;
-
+                opts.useRdfType = true;
+                
                 // Must compact to turn into a graph and use context
                 json = JSONLD.compact(json, context, opts);
                 
