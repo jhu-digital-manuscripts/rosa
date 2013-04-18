@@ -24,7 +24,7 @@ public class CollectionPresenter implements Presenter {
 		HasClickHandlers getList();
 		HasText getViewLabel();
 		void setData(List<Reference<Manifest>> list);
-//		void setLabel(String label);
+		void setSize(String width, String height);
 		int getSelectedRow(ClickEvent event);
 		Widget asWidget();
 	}
@@ -71,8 +71,12 @@ public class CollectionPresenter implements Presenter {
 		});
 	}
 
-	public void setSize(String width, String height) {
-		// TODO
+	public void setSize(int width, int height) {
+		display.setSize(width+"px", height+"px");
+	}
+	
+	public void setIndex(int index) {
+		props.setIndex(index);
 	}
 	
 }

@@ -11,6 +11,8 @@ import rosa.scanvas.demo.website.client.presenter.Presenter;
 import rosa.scanvas.demo.website.client.presenter.SidebarFullPresenter;
 import rosa.scanvas.demo.website.client.view.SidebarFullView;
 
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.History;
@@ -29,6 +31,9 @@ import com.google.gwt.user.client.ui.ScrollPanel;
  */
 public class MainController implements Controller {
 
+	private final double SIDEBAR_WIDTH_PERCENT = 0.25;
+	private final double SIDEBAR_HEIGHT_PERCENT= 1;
+	
 	private int currentIndex;
 	private FlexTable mainTable;
 	private HasWidgets container;
@@ -37,12 +42,12 @@ public class MainController implements Controller {
 	
 	private PanelController panelController;
 	
-	private int historyId;
+	private int width;
+	private int height;
 	
 	public MainController(HandlerManager eventBus) {
 		this.eventBus = eventBus;
 		currentIndex = 0;
-		historyId = 0;
 		
 		mainTable = new FlexTable();
 		
@@ -63,6 +68,8 @@ public class MainController implements Controller {
 
 	public void go(HasWidgets container) {
 		this.container = container;
+		width = (int) (Window.getClientWidth() * SIDEBAR_WIDTH_PERCENT);
+		height= (int) (Window.getClientHeight()* SIDEBAR_HEIGHT_PERCENT);
 		
 		FlowPanel header = new FlowPanel();
 		header.setStylePrimaryName("Header");
@@ -93,6 +100,15 @@ public class MainController implements Controller {
 	private void bind() {
 		History.addValueChangeHandler(this);
 		
+		Window.addResizeHandler(new ResizeHandler() {
+			public void onResize(ResizeEvent event) {
+				width = (int) (event.getWidth() * SIDEBAR_WIDTH_PERCENT);
+				height = (int) (event.getHeight()*SIDEBAR_HEIGHT_PERCENT);
+				
+				doResize();
+			}
+		});
+		
 		eventBus.addHandler(PanelNumberChangeEvent.TYPE, 
 				new PanelNumberChangeEventHandler() {
 					public void onPanelNumberChange(PanelNumberChangeEvent event) {
@@ -105,6 +121,11 @@ public class MainController implements Controller {
 				doDataUpdate(event.getData());
 			}
 		});
+	}
+	
+	private void doResize() {
+/*		sidebarPresenter.setSize(String.valueOf(width)+"px", 
+								String.valueOf(height)+"px");*/
 	}
 	
 	/**
@@ -122,9 +143,6 @@ public class MainController implements Controller {
 			} else {
 				currentIndex = currentToken.split(";:").length;
 			}
-			
-			String newToken = HistoryInfo.newToken(String.valueOf(++historyId), "home", "0");
-			History.newItem(currentToken+newToken);
 			
 		} else if (message.equals(PanelAction.CHANGE)) {
 			

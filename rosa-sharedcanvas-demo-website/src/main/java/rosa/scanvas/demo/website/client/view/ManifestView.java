@@ -19,21 +19,19 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ManifestView extends Composite implements ManifestPresenter.Display {
-    // TODO Put in css
-	private final String LIST_WIDTH = "30em";
 	
 	private FlexTable manifestList = new FlexTable();
 	private Label viewLabel = new Label();
 	
+	private ScrollPanel scrollPanel = new ScrollPanel();
+	
 	public ManifestView() {
 		DockPanel mainPanel = new DockPanel();
-		ScrollPanel scrollPanel = new ScrollPanel();
 		initWidget(mainPanel);
 		
 		mainPanel.add(scrollPanel, DockPanel.CENTER);
 		mainPanel.add(viewLabel, DockPanel.NORTH);
 		scrollPanel.add(manifestList);
-		scrollPanel.setSize(LIST_WIDTH, "10em");
 	}
 	
 	public int getSelectedRow(ClickEvent event) { 
@@ -53,7 +51,6 @@ public class ManifestView extends Composite implements ManifestPresenter.Display
 		for (int i=0; i<seq.size(); i++) {
 			DecoratorPanel panel = new DecoratorPanel();
 			panel.setWidth("100%");
-//			panel.add(new Label(seq.get(i).label()));			labels for Rose data blank??
 			panel.add(new Label(seq.get(i).uri()));
 			
 			manifestList.setWidget(i, 0, panel);
@@ -63,4 +60,9 @@ public class ManifestView extends Composite implements ManifestPresenter.Display
 	public HasText getViewLabel() { return viewLabel; }
 	public HasClickHandlers getList() { return manifestList; }
 	public Widget asWidget() { return this; }
+	
+	public void setSize(String width, String height) {
+		scrollPanel.setWidth(width);
+		scrollPanel.setHeight(height);
+	}
 }

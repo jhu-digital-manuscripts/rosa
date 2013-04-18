@@ -23,17 +23,13 @@ public class HomeView extends Composite implements HomePresenter.Display{
 	private Button goButton = new Button("Go");
 	private TextBox userUrlText = new TextBox();
 	
-	// TODO Why a focuspanel here?
+	private FlowPanel mainPanel = new FlowPanel();
 	
 	public HomeView() {
-		FocusPanel focusPanel = new FocusPanel();
-		DecoratorPanel dPanel = new DecoratorPanel();
-		FlowPanel mainPanel = new FlowPanel();
-		FlowPanel goPanel = new FlowPanel();
-		initWidget(focusPanel);
 		
-		focusPanel.add(dPanel);
-		dPanel.add(mainPanel);
+		FlowPanel goPanel = new FlowPanel();
+		initWidget(mainPanel);
+		
 		mainPanel.add(new Label("some instructions....."));
 		mainPanel.add(roseDataLink);
 		mainPanel.add(testDataLink);
@@ -42,8 +38,6 @@ public class HomeView extends Composite implements HomePresenter.Display{
 		goPanel.add(userUrlText);
 		goPanel.add(goButton);
 		
-		dPanel.setWidth("100%");
-		dPanel.setHeight("100%");
 	}
 	
 	public Hyperlink getRoseDataLink() { return roseDataLink; }
@@ -52,5 +46,10 @@ public class HomeView extends Composite implements HomePresenter.Display{
 	public HasValue<String> getUserUrlText() { return userUrlText; }
 	public HasKeyUpHandlers getUserUrlKeyUpHandlers() { return userUrlText; }
 	public Widget asWidget() { return this; }
+	
+	public void setSize(String width, String height) {
+		mainPanel.setWidth(width);
+		mainPanel.setHeight(height);
+	}
 	
 }

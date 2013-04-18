@@ -29,8 +29,8 @@ public class CanvasNavView extends Composite implements CanvasNavPresenter.Displ
 		initWidget(mainPanel);
 		mainPanel.add(tabPanel);
 		
-		mainPanel.setHeight("30em");
-		mainPanel.setWidth("30em");
+		/*mainPanel.setHeight("30em");
+		mainPanel.setWidth("30em");*/
 		tabPanel.setHeight("100%");
 		tabPanel.setWidth("100%");
 		

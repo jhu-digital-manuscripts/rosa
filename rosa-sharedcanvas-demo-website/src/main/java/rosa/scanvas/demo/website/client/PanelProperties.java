@@ -27,6 +27,12 @@ public class PanelProperties {
 		return col;
 	}
 	
+	public void setIndex(int index) {
+		this.index = index;
+		row = index/2;
+		col = index%2;
+	}
+	
 	public int getIndex() {
 		return index;
 	}

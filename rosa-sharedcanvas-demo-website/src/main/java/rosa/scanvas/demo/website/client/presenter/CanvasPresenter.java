@@ -63,7 +63,12 @@ public class CanvasPresenter implements Presenter {
 
 
     @Override
-    public void setSize(String width, String height) {
+    public void setSize(int width, int height) {
 
+    }
+    
+    @Override
+    public void setIndex(int index) {
+    	// used to update the index (row and column) in the PanelProperties, due to the use of a FlexTable
     }
 }

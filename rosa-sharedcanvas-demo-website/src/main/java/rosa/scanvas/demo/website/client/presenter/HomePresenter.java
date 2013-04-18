@@ -28,15 +28,16 @@ public class HomePresenter implements Presenter {
 		HasClickHandlers getGoButton();
 		HasValue<String> getUserUrlText();
 		HasKeyUpHandlers getUserUrlKeyUpHandlers();
+		void setSize(String width, String height);
 		Widget asWidget();
 	}
 	
-	private final int row;
-	private final int col;
+	private int row;
+	private int col;
 	private final Display display;
 	private final HandlerManager eventBus;
 	
-	private final PanelProperties props;
+	private PanelProperties props;
 	
 	public HomePresenter(Display display, HandlerManager eventBus, PanelProperties props) {
 		row = props.getRow();
@@ -96,13 +97,18 @@ public class HomePresenter implements Presenter {
 		}
 	}
 
+	public void setIndex(int index) {
+		row = index/2;
+		col = index%2;
+	}
+	
 	public void setData(PanelData data) {
 		// TODO Auto-generated method stub
 		
 	}
 	
-	public void setSize(String width, String height) {
-		// TODO
+	public void setSize(int width, int height) {
+		display.asWidget().setSize(width+"px", height+"px");
 	}
 	
 }

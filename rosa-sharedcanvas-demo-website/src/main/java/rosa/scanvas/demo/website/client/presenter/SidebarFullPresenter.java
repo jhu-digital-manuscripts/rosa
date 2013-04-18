@@ -32,6 +32,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.Window;
 
 public class SidebarFullPresenter implements Presenter {
 
@@ -48,9 +49,12 @@ public class SidebarFullPresenter implements Presenter {
 	private final Display display;
 	private final HandlerManager eventBus;
 	
+//	private PanelData data;
+	
 	public SidebarFullPresenter(Display display, HandlerManager eventBus){
 		this.display = display;
 		this.eventBus = eventBus;
+//		data = new PanelData();
 	}
 	
 	public void go(HasWidgets container) {
@@ -63,6 +67,7 @@ public class SidebarFullPresenter implements Presenter {
 	}
 	
 	private void bind() {
+		
 		// event handlers for the Panel List list and buttons
 		display.getAddPanelButton().addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -105,8 +110,8 @@ public class SidebarFullPresenter implements Presenter {
 		});
 	}
 	
-	public void setSize(String width, String height) {
-		// TODO
+	public void setSize(int width, int height) {
+		display.asWidget().setSize(width+"px", height+"px");
 	}
 	
 	/**
@@ -230,6 +235,35 @@ public class SidebarFullPresenter implements Presenter {
 	 * Place data from selected panel in appropriate place in sidebar
 	 */
 	public void setData(PanelData data) {
+		
+//		Window.alert(String.valueOf(!this.data.getCollection().uri().equals(data.getCollection().uri())));
+		
+		/*if (this.data.getCollection() == null || 
+				!this.data.getCollection().uri().equals(data.getCollection().uri())) {
+			this.data.setCollection(data.getCollection());
+		}
+		if (this.data.getManifest() == null || 
+				!this.data.getManifest().uri().equals(data.getManifest().uri())) {
+			this.data.setManifest(data.getManifest());
+			this.data.getAnnotationLists().addAll(data.getAnnotationLists());
+			this.data.getImageAnnotations().addAll(data.getImageAnnotations());
+		}
+		if (this.data.getSequence() == null || 
+				!this.data.getSequence().uri().equals(data.getSequence().uri())) {
+			this.data.setSequence(data.getSequence());
+		}
+		if (this.data.getCanvas() == null || 
+				!this.data.getCanvas().uri().equals(data.getCanvas().uri())) {
+			this.data.setCanvas(data.getCanvas());
+		}
+		
+		setMetadata();
+		setAnnotations();*/
+		setMetadata(data);
+		setAnnotations(data);
+	}
+	
+	private void setMetadata(PanelData data) {
 		// TODO display a list of sequences for the 'sequence picker'
 		display.getMetaListWidget().clearLabels();
 		display.getAnnoListWidget().clearLists();
@@ -257,7 +291,9 @@ public class SidebarFullPresenter implements Presenter {
 			display.getMetaListWidget().newSequenceLabel(sequence.uri());
 			display.getMetaListWidget().newSequenceLabel("Number of canvases: " + sequence.size());
 		}
-		
+	}
+	
+	private void setAnnotations(PanelData data) {
 		List<AnnotationList> list = data.getAnnotationLists();
 		if (list.size() > 0) {
 			// iterate through the list of annotation lists
@@ -273,7 +309,7 @@ public class SidebarFullPresenter implements Presenter {
 						// TODO: ensure that image conformsTo() IIIF
 						// add to image annotation listbox
 						display.getAnnoListWidget().getImageAnnoList()
-								.setWidget(i, 1, new Label(annotation.body().uri()));
+								.setWidget(i, 1, new Label(annotation.label()));
 						display.getAnnoListWidget().getImageAnnoList()
 								.setWidget(i, 0, new CheckBox());
 						bindImageRow(i, annotation);
@@ -281,8 +317,7 @@ public class SidebarFullPresenter implements Presenter {
 					} else if (annotation.body().isText()) {
 						// add to text annotation listbox
 						display.getAnnoListWidget().getNontargetedTextAnnoList()
-								.setWidget(j, 1, new Label(annotation.body().uri()/* + 
-												annotation.body().targets().get(0)*/));
+								.setWidget(j, 1, new Label(annotation.label()));
 						display.getAnnoListWidget().getNontargetedTextAnnoList()
 								.setWidget(j, 0, new CheckBox());
 						bindNontargetedTextRow(j, annotation);
@@ -291,7 +326,6 @@ public class SidebarFullPresenter implements Presenter {
 				}
 			}
 		}
-		
 	}
 	
 	/**
@@ -306,6 +340,7 @@ public class SidebarFullPresenter implements Presenter {
 					boolean value = event.getValue();
 					int panel = display.getPanelList().getSelectedIndex();
 					
+					//data.getVisibleAnnotations().add(annotation);
 					eventBus.fireEvent(new AnnotationSelectionEvent(annotation, value, panel));
 				}
 		});
@@ -323,9 +358,13 @@ public class SidebarFullPresenter implements Presenter {
 					boolean value = event.getValue();
 					int panel = display.getPanelList().getSelectedIndex();
 					
+				//	data.getVisibleAnnotations().add(annotation);
 					eventBus.fireEvent(new AnnotationSelectionEvent(annotation, value, panel));
 				}
 		});
 	}
 
+	public void setIndex(int index) {
+		
+	}
 }

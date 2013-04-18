@@ -7,6 +7,7 @@ import rosa.scanvas.demo.website.client.dynimg.IIIFImageServer;
 import rosa.scanvas.demo.website.client.dynimg.MasterImage;
 import rosa.scanvas.demo.website.client.dynimg.WebImage;
 import rosa.scanvas.model.client.Annotation;
+import rosa.scanvas.model.client.AnnotationTarget;
 import rosa.scanvas.model.client.Canvas;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -62,9 +63,12 @@ public class PageTurnerWidget extends Composite {
 	
 	private Annotation getAssociatedAnnotation(Canvas canvas, List<Annotation> annotations) {
 		for (Annotation anno : annotations) {
-			if (anno.targets().contains(canvas.uri()) && 
-					anno.body().isImage()) {
-				return anno;
+			if (anno.body().isImage()) {
+				for (AnnotationTarget target : anno.targets()) {
+					if (target.uri().equals(canvas.uri())) {
+						return anno;
+					}
+				}
 			}
 		}
 		return null;
@@ -75,7 +79,7 @@ public class PageTurnerWidget extends Composite {
 		for (Canvas canv : canvas) {
 			FocusPanel pagePanel = new FocusPanel();
 			Annotation imageAnno = getAssociatedAnnotation(canv, annotations);
-	Window.alert("Associated annotation retrieved");
+			
 			if (imageAnno != null) {
 				String imageId = IIIFImageServer.parseIdentifier(imageAnno.body().uri());
 				int width = 150;
@@ -84,7 +88,6 @@ public class PageTurnerWidget extends Composite {
 				String url = iiifServer.renderAsUrl(imageId, width, height);	
 				
 				WebImage page = new WebImage(url, width, height);
-		Window.alert("WebImage created");	
 		
 				pagePanel.add(page);
 				page.addStyleName("opening");

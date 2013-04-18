@@ -44,8 +44,8 @@ public class CanvasNavPresenter implements Presenter {
 	
 	private final HandlerManager eventBus;
 	private final Display display;
-	private final int row;
-	private final int col;
+	private int row;
+	private int col;
 	private final String panelId;
 	
 	private int tab;
@@ -270,7 +270,12 @@ public class CanvasNavPresenter implements Presenter {
 		}
 	}
 	
-	public void setSize(String width, String height) {
-		// TODO
+	public void setSize(int width, int height) {
+		display.asWidget().setSize(width+"px", height+"px");
+	}
+	
+	public void setIndex(int index) {
+		row = index/2;
+		col = index%2;
 	}
 }

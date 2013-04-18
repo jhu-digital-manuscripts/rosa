@@ -25,13 +25,12 @@ public class ManifestPresenter implements Presenter {
 		HasText getViewLabel();
 		void setData(List<Reference<Sequence>> seq);
 		int getSelectedRow(ClickEvent event);
+		void setSize(String width, String height);
 		Widget asWidget();
 	}
 	
 	private final Display display;
 	private final HandlerManager eventBus;
-//	private final String type;
-//	private String next;
 	
 	private PanelProperties props;
 	
@@ -71,8 +70,12 @@ public class ManifestPresenter implements Presenter {
 		display.setData(data.getManifest().sequences());
 	}
 	
-	public void setSize(String width, String height) {
-		// TODO
+	public void setSize(int width, int height) {
+		display.setSize(width+"px", height+"px");
+	}
+	
+	public void setIndex(int index) {
+		props.setIndex(index);
 	}
 	
 }

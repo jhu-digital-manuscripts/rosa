@@ -61,16 +61,14 @@ public class SidebarFullView extends Composite implements SidebarFullPresenter.D
 		panelChangePanel.add(panelList);
 		panelChangePanel.add(addPanelButton);
 		panelChangePanel.add(removePanelButton);
-		panelList.setWidth("125px");
+		panelList.setWidth("50%");
 		addPanelButton.setText("Add");
 		removePanelButton.setText("Remove");
 		
+		setWidth("250px");
 //		panelChangePanel.setStyleName("horizontalFlowPanel");
 		
-		linkPanel.add(new Label("this will be a link"));
-		
-		mainPanel.setWidth("250px");
-		mainPanel.setHeight("100%");
+		linkPanel.add(new Label("this may be links"));
 		
 		panelChangePanel.setHeight("5%");
 		tabPanel.setHeight("90%");

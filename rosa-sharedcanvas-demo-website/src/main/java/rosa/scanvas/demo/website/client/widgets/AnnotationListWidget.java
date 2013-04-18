@@ -40,8 +40,8 @@ public class AnnotationListWidget extends Composite {
 		
 		mainPanel.add(annoListPanel);
 		
-		annoListPanel.add(new Label("Search for annotations: "));
-		annoListPanel.add(searchBox);
+		/*annoListPanel.add(new Label("Search for annotations: "));
+		annoListPanel.add(searchBox);*/
 		annoListPanel.add(new Label("Images"));
 		annoListPanel.add(imageScrollPanel);
 		annoListPanel.add(new Label("Text (targeted)"));

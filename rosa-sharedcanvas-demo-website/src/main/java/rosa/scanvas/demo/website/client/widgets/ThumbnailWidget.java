@@ -10,6 +10,7 @@ import rosa.scanvas.demo.website.client.dynimg.IIIFImageServer;
 import rosa.scanvas.demo.website.client.dynimg.MasterImage;
 import rosa.scanvas.demo.website.client.dynimg.WebImage;
 import rosa.scanvas.model.client.Annotation;
+import rosa.scanvas.model.client.AnnotationTarget;
 import rosa.scanvas.model.client.Canvas;
 import rosa.scanvas.model.client.Manifest;
 import rosa.scanvas.model.client.ManifestCollection;
@@ -133,7 +134,7 @@ public class ThumbnailWidget extends Composite {
 							data.getCollection().uri(),
 							data.getManifest().uri(),
 							sequence.uri(),
-							canvas.uri());
+							String.valueOf(index));
 			thumb.setLabel(canvas.label().replace(".", " "));
 			thumb.addStyleName("thumbnail");
 			
@@ -150,9 +151,12 @@ public class ThumbnailWidget extends Composite {
 	 */
 	private Annotation getAssociatedAnnotation(Canvas canvas, List<Annotation> images) {
 		for (Annotation anno : images) {
-			if (anno.targets().contains(canvas.uri())) {
-				images.remove(anno);
-				return anno;
+			Iterator<AnnotationTarget> it = anno.targets().iterator();
+			while (it.hasNext()) {
+				if (it.next().uri().equals(canvas.uri())) {
+					images.remove(anno);
+					return anno;
+				}
 			}
 		}
 		return null;
@@ -164,8 +168,7 @@ public class ThumbnailWidget extends Composite {
 	 */
 	public void loadThumbnails(int visible) {
 		// height of visible area in number of rows + 1
-		//int offset = tablePanel.getOffsetHeight() / getRowHeight(0) + 1;
-		int offset = 5;
+		int offset = tablePanel.getOffsetHeight() / getRowHeight(0) + 1;
 		int scrollPosition = getVerticalScrollPosition() / getRowHeight(0) + offset;
 		visible = visible/getRowHeight(0);
 		
