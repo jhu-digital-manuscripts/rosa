@@ -360,12 +360,13 @@ public class PanelController implements Controller {
 					}
 					//mainPresenter.setSize(panelWidth, panelHeight);
 					
-					if (mainPresenter != null) {
-						presenterList.set(i, mainPresenter);
-						mainPresenter.setSize(panelWidth, panelHeight);
-						mainPresenter.go(container);
-					}
 					
+					
+				}
+				if (mainPresenter != null) {
+					presenterList.set(i, mainPresenter);
+					mainPresenter.setSize(panelWidth, panelHeight);
+					mainPresenter.go(container);
 				}
 				
 			}

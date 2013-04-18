@@ -143,6 +143,7 @@ public class ThumbnailWidget extends Composite {
 		}
 		
 		// Show the first visible thumbnails
+		loadThumbnails(0);
 	}
 	
 	/**
@@ -167,20 +168,24 @@ public class ThumbnailWidget extends Composite {
 	 * @param visible The previous vertical scroll position, in pixels
 	 */
 	public void loadThumbnails(int visible) {
-		// height of visible area in number of rows + 1
-		int offset = tablePanel.getOffsetHeight() / getRowHeight(0) + 1;
-		int scrollPosition = getVerticalScrollPosition() / getRowHeight(0) + offset;
-		visible = visible/getRowHeight(0);
+		int left = tablePanel.getAbsoluteLeft();
+		int right = left + tablePanel.getOffsetWidth();
+		int top = tablePanel.getAbsoluteTop();
+		int bottom = top + tablePanel.getOffsetHeight();
 		
-		// number of thumbnails in the first row (should be the same for all except maybe the last row)
-		int rowLength = tablePanel.getOffsetWidth() / thumbTable.getWidget(0).getOffsetWidth();
-		
-		for (int i=visible; i<scrollPosition; i++) {
-			try {
-				for (int j=0; j<rowLength; j++) {
-					((ThumbnailImageWidget)thumbTable.getWidget(i*rowLength + j)).makeViewable();
-				}
-			} catch (IndexOutOfBoundsException e) {}
+		int size = thumbTable.getWidgetCount();
+		for (int i=0; i<size; i++) {
+			ThumbnailImageWidget thumb = (ThumbnailImageWidget) thumbTable.getWidget(i);
+			
+			int thumbLeft = thumb.getAbsoluteLeft();
+			int thumbTop = thumb.getAbsoluteTop();
+			
+			if (thumbLeft >= left && thumbTop >= top && 
+					thumbLeft < right && thumbTop < bottom) {
+				
+				thumb.makeViewable();
+			}
+			
 		}
 	}
 	
