@@ -20,7 +20,7 @@ public class CollectionView extends Composite implements
         CollectionPresenter.Display {
     private Label title_label;
     private ListBox collections_listbox;
-
+    
     public CollectionView() {
         this.title_label = new Label();
 
@@ -36,8 +36,8 @@ public class CollectionView extends Composite implements
 
         initWidget(main);
     }
-
-    public void setData(List<Reference<Manifest>> data) {
+	
+	public void setData(List<Reference<Manifest>> data) {
         collections_listbox.clear();
 
         for (int i = 0; i < data.size(); i++) {
@@ -60,4 +60,9 @@ public class CollectionView extends Composite implements
     public Widget asWidget() {
         return this;
     }
+	
+	public void setSize(String width, String height) {
+//		scrollPanel.setSize(width, height);
+	}
+	
 }

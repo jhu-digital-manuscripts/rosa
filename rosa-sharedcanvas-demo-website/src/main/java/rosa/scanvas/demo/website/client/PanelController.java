@@ -23,14 +23,14 @@ import rosa.scanvas.demo.website.client.event.GetDataEventHandler;
 import rosa.scanvas.demo.website.client.event.PanelNumberChangeEvent;
 import rosa.scanvas.demo.website.client.event.PanelNumberChangeEvent.PanelAction;
 import rosa.scanvas.demo.website.client.event.PanelNumberChangeEventHandler;
-import rosa.scanvas.demo.website.client.presenter.CanvasNavPresenter;
 import rosa.scanvas.demo.website.client.presenter.CanvasPresenter;
+import rosa.scanvas.demo.website.client.presenter.CanvasNavPresenter;
 import rosa.scanvas.demo.website.client.presenter.CollectionPresenter;
 import rosa.scanvas.demo.website.client.presenter.HomePresenter;
 import rosa.scanvas.demo.website.client.presenter.ManifestPresenter;
 import rosa.scanvas.demo.website.client.presenter.Presenter;
-import rosa.scanvas.demo.website.client.view.CanvasNavView;
 import rosa.scanvas.demo.website.client.view.CanvasView;
+import rosa.scanvas.demo.website.client.view.CanvasNavView;
 import rosa.scanvas.demo.website.client.view.CollectionView;
 import rosa.scanvas.demo.website.client.view.HomeView;
 import rosa.scanvas.demo.website.client.view.ManifestView;
@@ -47,12 +47,18 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
 
 public class PanelController implements Controller {
+	private final double BODY_WIDTH_PERCENT = 0.70;
+	private final double BODY_HEIGHT_PERCENT= 0.92;
+	private int scale;
+	private int panelWidth;		// in pixels
+	private int panelHeight;	// in pixels
+	
+	private int historyId;
 	
 	private final HandlerManager eventBus;
 	private HasWidgets container;
-	private int panelWidth;		// in pixels
-	private int panelHeight;	// in pixels
 	private ArrayList<PanelData> panelDataList = new ArrayList<PanelData>();
+	private ArrayList<Presenter> presenterList = new ArrayList<Presenter>();
 	
 // --------------- Data loading callbacks ---------------
 	
@@ -230,8 +236,19 @@ public class PanelController implements Controller {
 			Canvas canvas = panelDataList.get(props.getIndex()).getSequence().canvas(canvasIndex);
 			panelDataList.get(props.getIndex()).setCanvas(canvas);
 			
-			// TODO: find all annotations for this canvas
-			// Use canvas.hasAnnotations() !
+			/*panelDataList.get(props.getIndex()).getAnnotationLists().clear();
+			for (Reference<AnnotationList> ref : canvas.hasAnnotations()) {
+				SharedCanvas.load(ref.uri(), AnnotationList.class, new AsyncCallback<AnnotationList>() {
+					public void onFailure(Throwable caught) {
+						// TODO
+					}
+					
+					public void onSuccess(AnnotationList result) {
+						panelDataList.get(props.getIndex()).getAnnotationLists().add(result);
+						eventBus.fireEvent(new DataUpdateEvent(panelDataList.get(props.getIndex())));
+					}
+				});
+			}*/
 			
 		} catch (NumberFormatException e) {
 			Presenter pre = new HomePresenter(new HomeView(), eventBus, props);
@@ -255,10 +272,10 @@ public class PanelController implements Controller {
 		
 		Window.addResizeHandler(new ResizeHandler() {
 			public void onResize(ResizeEvent event) {
-				panelWidth = (int) (event.getWidth() * 0.75);
-				panelHeight = (int) (event.getHeight() * 0.75);
+				int x = event.getWidth();
+				int y = event.getHeight();
 				
-				doResize();
+				doResize(x, y);
 			}
 		});
 		
@@ -283,10 +300,13 @@ public class PanelController implements Controller {
 		
 	}
 	
-	public void go(HasWidgets container) {		
+	public void go(HasWidgets container) {	
 		this.container = container;
-		/*panelWidth = (int) container.getCenterWidth();
-		panelHeight= (int) container.getCenterHeight();*/
+		historyId = 0;
+		
+		scale = 1;
+		panelWidth = (int) (Window.getClientWidth()*BODY_WIDTH_PERCENT);
+		panelHeight= (int) (Window.getClientHeight()*BODY_HEIGHT_PERCENT);
 		
 		if (History.getToken().equals("")) {
 			eventBus.fireEvent(new PanelNumberChangeEvent(PanelNumberChangeEvent.PanelAction.ADD));
@@ -313,33 +333,59 @@ public class PanelController implements Controller {
 						HistoryInfo.getId(token, i), HistoryInfo.getView(token, i),
 						Integer.parseInt(HistoryInfo.getTab(token, i)));
 				
-				// before getting data, find the index on Data stack
-				// clean PanelData
 				
-				if (props.getView().equals("home")) {
-					mainPresenter = new HomePresenter(new HomeView(), eventBus, props);
-					((HomePresenter)mainPresenter).bindLinks();
-				} else if (props.getView().equals("collection")) {
-					mainPresenter = new CollectionPresenter(new CollectionView(), eventBus, props);
-					getManifestCollection(token, props, mainPresenter);
-				} else if (props.getView().equals("manifest")) {
-					mainPresenter = new ManifestPresenter(new ManifestView(), eventBus, props);
-					getManifestCollection(token, props, mainPresenter);
-				} else if (props.getView().equals("canvasNav")) {
-					mainPresenter = new CanvasNavPresenter(new CanvasNavView(), eventBus, props);
-					setTab(panels[i], mainPresenter);
-					getManifestCollection(token, props, mainPresenter);
-				} else if (props.getView().equals("canvas")) {
-					mainPresenter = new CanvasPresenter(new CanvasView(500, 500, 200, 200), eventBus, props);
-					getCanvas(token, props, mainPresenter);
+				if (presenterList.get(i) != null && 
+						checkPresenter(presenterList.get(i), props.getView())) {
+					
+					mainPresenter = presenterList.get(i);
+					mainPresenter.setIndex(i);
+					
+				} else {
+					if (props.getView().equals("home")) {
+						mainPresenter = new HomePresenter(new HomeView(), eventBus, props);
+						((HomePresenter)mainPresenter).bindLinks();
+					} else if (props.getView().equals("collection")) {
+						mainPresenter = new CollectionPresenter(new CollectionView(), eventBus, props);
+						getManifestCollection(token, props, mainPresenter);
+					} else if (props.getView().equals("manifest")) {
+						mainPresenter = new ManifestPresenter(new ManifestView(), eventBus, props);
+						getManifestCollection(token, props, mainPresenter);
+					} else if (props.getView().equals("canvasNav")) {
+						mainPresenter = new CanvasNavPresenter(new CanvasNavView(), eventBus, props);
+						setTab(panels[i], mainPresenter);
+						getManifestCollection(token, props, mainPresenter);
+					} else if (props.getView().equals("canvas")) {
+						mainPresenter = new CanvasPresenter(new CanvasView(500, 500, 200, 200), eventBus, props);
+						getCanvas(token, props, mainPresenter);
+					}
+					//mainPresenter.setSize(panelWidth, panelHeight);
+					
+					if (mainPresenter != null) {
+						presenterList.set(i, mainPresenter);
+						mainPresenter.setSize(panelWidth, panelHeight);
+						mainPresenter.go(container);
+					}
+					
 				}
 				
-				if (mainPresenter != null) {
-					mainPresenter.setSize(String.valueOf(panelWidth), String.valueOf(panelHeight));
-					mainPresenter.go(container);
-				}
 			}
 		}
+	}
+	
+	private boolean checkPresenter(Presenter presenter, String view) {
+		boolean check = false;
+		
+		if (view.equals("home")) {
+			check = (presenter instanceof HomePresenter);
+		} else if (view.equals("collection")) {
+			check = (presenter instanceof CollectionPresenter);
+		} else if (view.equals("manifest")) {
+			check = (presenter instanceof ManifestPresenter);
+		} else if (view.equals("canvasNav")) {
+			check = (presenter instanceof CanvasNavPresenter);
+		}
+		
+		return check;
 	}
 	
 	/**
@@ -368,8 +414,18 @@ public class PanelController implements Controller {
 		History.newItem(newToken);
 	}
 	
-	private void doResize() {
+	private void doResize(int newWidth, int newHeight) {
+		if (panelDataList.size() > 1) {
+			panelWidth = (int) (newWidth * BODY_WIDTH_PERCENT / 2);
+		} else {
+			panelWidth = (int) (newWidth * BODY_WIDTH_PERCENT);
+		}
 		
+		panelHeight = (int)(newHeight* BODY_HEIGHT_PERCENT/ scale);
+
+		for (Presenter pres : presenterList) {
+			pres.setSize(panelWidth, panelHeight);
+		}
 	}
 	
 	/**
@@ -380,9 +436,27 @@ public class PanelController implements Controller {
 	 */
 	private void doPanelNumberChange(PanelAction message, int selectedPanel) {
 		if (message.equals(PanelAction.ADD)) {
-			
+			historyId++;
+
+			presenterList.add(new ManifestPresenter(new ManifestView(), eventBus, 
+					new PanelProperties(0, String.valueOf(historyId), "N/A", 0)));
 			panelDataList.add(new PanelData());
 			
+			int size = panelDataList.size();
+			scale = ((size-1) / 2) + 1;
+		
+			if (size == 2) {
+				panelWidth = (int) ((Window.getClientWidth()*BODY_WIDTH_PERCENT) / 2);
+			} else if (size > 1 && size%2 == 1) {
+				panelHeight = (int) ((Window.getClientHeight()*BODY_HEIGHT_PERCENT) / scale);
+			}
+	
+			// append a new panel history segment onto current history token
+			String currentToken = History.getToken();
+			String newToken = HistoryInfo.newToken(String.valueOf(historyId), "home", "0");
+			History.newItem(currentToken+newToken);
+			
+			doResize(Window.getClientWidth(), Window.getClientHeight());
 		} else if (message.equals(PanelAction.CHANGE)) {
 			
 			eventBus.fireEvent(new DataUpdateEvent(panelDataList.get(selectedPanel)));
@@ -396,7 +470,18 @@ public class PanelController implements Controller {
 			// and remove the panel from History token
 			try {
 				
+				presenterList.remove(selectedPanel);
 				panelDataList.remove(selectedPanel);
+				
+				int size = panelDataList.size();
+				scale = ((size-1) / 2) + 1;
+				
+				if (size == 1) {
+					panelWidth = (int) ((Window.getClientWidth()*BODY_WIDTH_PERCENT));
+				} else if (size%2 == 0) {
+					panelHeight = (int) ((Window.getClientHeight()*BODY_HEIGHT_PERCENT) / scale);
+				}
+				
 				
 				for (int i=0; i<parts.length; i++) {
 					if (i != selectedPanel) {
@@ -405,7 +490,9 @@ public class PanelController implements Controller {
 				}
 				History.newItem(newToken);
 				
+				doResize(Window.getClientWidth(), Window.getClientHeight());
 			} catch (IndexOutOfBoundsException e) {}
+			
 		}
 	}
 	
@@ -420,12 +507,8 @@ public class PanelController implements Controller {
 			// checkbox unchecked, remove from data
 			panelDataList.get(panel).getVisibleAnnotations().remove(annotation);
 		}
-		
-		
-		//
-		
 		// update display
-		//History.fireCurrentHistoryState();
+		History.fireCurrentHistoryState();
 	}
 	
 	/**
