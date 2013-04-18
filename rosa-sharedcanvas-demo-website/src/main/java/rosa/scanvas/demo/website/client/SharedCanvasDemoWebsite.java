@@ -1,7 +1,5 @@
 package rosa.scanvas.demo.website.client;
 
-import rosa.scanvas.demo.website.client.widgets.DockPanel;
-
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.shared.HandlerManager;

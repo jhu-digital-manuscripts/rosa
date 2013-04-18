@@ -15,8 +15,11 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 
 /**
@@ -60,6 +63,15 @@ public class MainController implements Controller {
 
 	public void go(HasWidgets container) {
 		this.container = container;
+		
+		FlowPanel header = new FlowPanel();
+		header.setStylePrimaryName("Header");
+		
+		header.add(new Label("JHU Prototype Shared Canvas Viewier"));
+		
+		if (container instanceof DockLayoutPanel) {
+		    ((DockLayoutPanel)container).addNorth(header, 100);
+		}    
 		
 		panelController = new PanelController(eventBus);
 		
@@ -134,11 +146,4 @@ public class MainController implements Controller {
 	public void doDataUpdate(PanelData data) {
 		sidebarPresenter.setData(data);
 	}
-	
-	
-	public void setData(PanelData data) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 }

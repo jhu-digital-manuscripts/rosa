@@ -8,13 +8,13 @@ import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.dom.client.ImageElement;
 
 public class MasterImageDrawable extends DisplayElement {
-    private final DisplayView view;
+    private final DisplayAreaWidget view;
     private final ImageServer server;
     private final MasterImage master;
 
     private final WebImage[][][] tile_cache;
 
-    public MasterImageDrawable(String id, int x, int y, DisplayView view,
+    public MasterImageDrawable(String id, int x, int y, DisplayAreaWidget view,
             ImageServer server, MasterImage master) {
         super(id, x, y, master.width(), master.height());
 

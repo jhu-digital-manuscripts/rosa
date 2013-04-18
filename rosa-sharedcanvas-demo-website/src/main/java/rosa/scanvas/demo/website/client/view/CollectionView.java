@@ -2,68 +2,62 @@ package rosa.scanvas.demo.website.client.view;
 
 import java.util.List;
 
+import rosa.scanvas.demo.website.client.presenter.CollectionPresenter;
 import rosa.scanvas.model.client.Manifest;
 import rosa.scanvas.model.client.Reference;
-import rosa.scanvas.demo.website.client.presenter.CollectionPresenter;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DecoratorPanel;
-import com.google.gwt.user.client.ui.DockPanel;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.HTMLTable;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class CollectionView extends Composite implements CollectionPresenter.Display {
-	
-    // TODO Should be in css.
-	private final String LIST_WIDTH = "30em";
-	
-	private FlexTable manifestList = new FlexTable();
-	private Label viewLabel = new Label();
-	
-	public CollectionView() {
-		DockPanel mainPanel = new DockPanel();
-		ScrollPanel scrollPanel = new ScrollPanel();
-		initWidget(mainPanel);
-		
-		mainPanel.add(scrollPanel, DockPanel.CENTER);
-		mainPanel.add(viewLabel, DockPanel.NORTH);
-		scrollPanel.add(manifestList);
-		scrollPanel.setSize(LIST_WIDTH, "10em");
-	}
-	
-	public void setData(List<Reference<Manifest>> data) {
-		manifestList.removeAllRows();
-		
-		System.out.println("Data List size: "+data.size());
-		
-		for (int i=0; i<data.size(); i++) {
-			DecoratorPanel panel = new DecoratorPanel();
-			panel.setWidth("100%");
-			panel.add(new Label(data.get(i).label()));
-			
-			manifestList.setWidget(i, 0, panel);
-		}
-	}
+public class CollectionView extends Composite implements
+        CollectionPresenter.Display {
+    private Label title_label;
+    private ListBox collections_listbox;
 
-	public int getSelectedRow(ClickEvent event) { 
-		int selectedRow = -1;
-		HTMLTable.Cell cell = manifestList.getCellForEvent(event);
-		
-		if (cell != null) {
-			selectedRow = cell.getRowIndex();
-		}
-		
-		return selectedRow; 
-	}
-	
-	public HasText getViewLabel() { return viewLabel; }
-	public HasClickHandlers getList() { return manifestList; }
-	public Widget asWidget() { return this; }
-	
+    public CollectionView() {
+        this.title_label = new Label();
+
+        Panel main = new FlowPanel();
+
+        this.collections_listbox = new ListBox(false);
+        
+        //  TODO Should adjust this to size
+        this.collections_listbox.setVisibleItemCount(10);
+
+        main.add(title_label);
+        main.add(collections_listbox);
+
+        initWidget(main);
+    }
+
+    public void setData(List<Reference<Manifest>> data) {
+        collections_listbox.clear();
+
+        for (int i = 0; i < data.size(); i++) {
+            collections_listbox.addItem(data.get(i).label());
+        }
+    }
+
+    public int getSelectedRow(ClickEvent event) {
+        return collections_listbox.getSelectedIndex();
+    }
+
+    public HasText getViewLabel() {
+        return title_label;
+    }
+
+    public HasClickHandlers getList() {
+        return collections_listbox;
+    }
+
+    public Widget asWidget() {
+        return this;
+    }
 }

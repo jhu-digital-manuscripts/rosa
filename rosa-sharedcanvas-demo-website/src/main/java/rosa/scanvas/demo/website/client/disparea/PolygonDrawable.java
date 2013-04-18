@@ -3,11 +3,11 @@ package rosa.scanvas.demo.website.client.disparea;
 import com.google.gwt.canvas.dom.client.Context2d;
 
 public class PolygonDrawable extends DisplayElement {
-    private final DisplayView view;
+    private final DisplayAreaWidget view;
     private final int[][] coords;
 
     public PolygonDrawable(String id, int x, int y, int width,
-            int height, DisplayView view, int[][] coords) {
+            int height, DisplayAreaWidget view, int[][] coords) {
         super(id, x, y, width, height);
 
         this.view = view;

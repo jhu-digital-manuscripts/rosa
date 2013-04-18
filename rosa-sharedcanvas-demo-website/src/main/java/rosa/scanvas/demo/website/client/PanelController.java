@@ -24,11 +24,13 @@ import rosa.scanvas.demo.website.client.event.PanelNumberChangeEvent;
 import rosa.scanvas.demo.website.client.event.PanelNumberChangeEvent.PanelAction;
 import rosa.scanvas.demo.website.client.event.PanelNumberChangeEventHandler;
 import rosa.scanvas.demo.website.client.presenter.CanvasNavPresenter;
+import rosa.scanvas.demo.website.client.presenter.CanvasPresenter;
 import rosa.scanvas.demo.website.client.presenter.CollectionPresenter;
 import rosa.scanvas.demo.website.client.presenter.HomePresenter;
 import rosa.scanvas.demo.website.client.presenter.ManifestPresenter;
 import rosa.scanvas.demo.website.client.presenter.Presenter;
 import rosa.scanvas.demo.website.client.view.CanvasNavView;
+import rosa.scanvas.demo.website.client.view.CanvasView;
 import rosa.scanvas.demo.website.client.view.CollectionView;
 import rosa.scanvas.demo.website.client.view.HomeView;
 import rosa.scanvas.demo.website.client.view.ManifestView;
@@ -229,7 +231,7 @@ public class PanelController implements Controller {
 			panelDataList.get(props.getIndex()).setCanvas(canvas);
 			
 			// TODO: find all annotations for this canvas
-			
+			// Use canvas.hasAnnotations() !
 			
 		} catch (NumberFormatException e) {
 			Presenter pre = new HomePresenter(new HomeView(), eventBus, props);
@@ -328,9 +330,8 @@ public class PanelController implements Controller {
 					setTab(panels[i], mainPresenter);
 					getManifestCollection(token, props, mainPresenter);
 				} else if (props.getView().equals("canvas")) {
-					// TODO detailed canvas view (not canvasNav)
-					mainPresenter = null;
-					getManifestCollection(token, props, mainPresenter);
+					mainPresenter = new CanvasPresenter(new CanvasView(500, 500, 200, 200), eventBus, props);
+					getCanvas(token, props, mainPresenter);
 				}
 				
 				if (mainPresenter != null) {
@@ -419,8 +420,12 @@ public class PanelController implements Controller {
 			// checkbox unchecked, remove from data
 			panelDataList.get(panel).getVisibleAnnotations().remove(annotation);
 		}
+		
+		
+		//
+		
 		// update display
-		History.fireCurrentHistoryState();
+		//History.fireCurrentHistoryState();
 	}
 	
 	/**
