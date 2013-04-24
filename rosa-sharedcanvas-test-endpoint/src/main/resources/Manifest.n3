@@ -10,78 +10,31 @@
 @prefix rdfs:		<http://www.w3.org/2000/01/rdf-schema#> .
 				
 <${baseUrl}manifest> dc:format "text/n3" ;
-				dcterms:creator <${prefix}john.abrahams> ;
-				dcterms:modified "timestamp" ;
-				rdfs:label "Ludwig XV7" ;
 				ore:describes <${prefix}Manifest> ;
 				a ore:ResourceMap .
-
-<${prefix}john.abrahams> a dcterms:Agent ;
-				foaf:name "John Abrahams" .
 				
-<${prefix}Manifest> ore:aggregates <${prefix}ImageAnnotations> ,
-	<${prefix}NormalSequence> ,
-	<${prefix}f13v-Transcriptions> ,
-	<${prefix}f14r-Transcriptions> ,
-	<${prefix}f14v-Transcriptions> ,
-	<${prefix}f15r-Transcriptions> ,
-	<${prefix}f15v-Transcriptions> ,
-	<${prefix}f16r-Transcriptions> ,
-	<${prefix}IllustrationDescription> ;
+<${prefix}Manifest> ore:aggregates <${baseUrl}annotations/image> ,
+	<${baseUrl}sequence/read> ,
+	<${baseUrl}canvas/13v/transcriptions> ,
+	<${baseUrl}canvas/14r/transcriptions> ,
+	<${baseUrl}canvas/14v/transcriptions> ,
+	<${baseUrl}canvas/15r/transcriptions> ,
+	<${baseUrl}canvas/15v/transcriptions> ,
+	<${baseUrl}canvas/16r/transcriptions> ,
+	<${baseUrl}annotations/illustration> ;
+				rdfs:label "Ludwig XV7" ;
+				dc:rights """
+					Courtesy of the J. Paul Getty Museum, Los Angeles. For permission to reproduce images, please contact Rights and Reproductions, Registrar's Office, The J.Paul Getty Museum.
+				""" ;
 				ore:isDescribedBy <${baseUrl}manifest> ;
 				a sc:Manifest, ore:Aggregation .
-				
-<${baseUrl}sequence/read> dc:format "text/n3" ;
-				ore:describes <${prefix}NormalSequence> ;
-				a ore:ResourceMap .
-<${prefix}NormalSequence> ore:isDescribedBy <${baseUrl}sequence/read> ;
-				a sc:Sequence, ore:Aggregation, rdf:List .
-				
-<${baseUrl}annotations/image> dc:format "text/n3" ;
-				ore:describes <${prefix}ImageAnnotations> ;
-				a ore:ResourceMap .
-<${prefix}ImageAnnotations> ore:isDescribedBy <${baseUrl}annotations/image> ;
-				a sc:AnnotationList, ore:Aggregation, rdf:List .
-				
-<${baseUrl}annotations/illustration> dc:format "text/n3" ;
-				ore:describes <${prefix}IllustrationDescription> ;
-				a ore:ResourceMap .
-<${prefix}IllustrationDescription> ore:isDescribedBy <${baseUrl}annotations/illustration> ;
-				a sc:AnnotationList, ore:Aggregation, rdf:List .
-				
-<${baseUrl}canvas/13v/transcriptions> dc:format "text/n3" ;
-				ore:describes <${prefix}f13v-Transcriptions> ;
-				a ore:ResourceMap .
-<${prefix}f13v-Transcriptions> sc:forCanvas <${prefix}Canv-f13v> ;
-				ore:isDescribedBy <${baseUrl}canvas/13v/transcriptions> ;
-				a sc:AnnotationList, ore:Aggregation, rdf:List .
-<${baseUrl}canvas/14r/transcriptions> dc:format "text/n3" ;
-				ore:describes <${prefix}f14r-Transcriptions> ;
-				a ore:ResourceMap .
-<${prefix}f14r-Transcriptions> sc:forCanvas <${prefix}Canv-f14r> ;
-				ore:isDescribedBy <${baseUrl}canvas/14r/transcriptions> ;
-				a sc:AnnotationList, ore:Aggregation, rdf:List .
-<${baseUrl}canvas/14v/transcriptions> dc:format "text/n3" ;
-				ore:describes <${prefix}f14v-Transcriptions> ;
-				a ore:ResourceMap .
-<${prefix}f14v-Transcriptions> sc:forCanvas <${prefix}Canv-f14v> ;
-				ore:isDescribedBy <${baseUrl}canvas/14v/transcriptions> ;
-				a sc:AnnotationList, ore:Aggregation, rdf:List .
-<${baseUrl}canvas/15r/transcriptions> dc:format "text/n3" ;
-				ore:describes <${prefix}f15r-Transcriptions> ;
-				a ore:ResourceMap .
-<${prefix}f15r-Transcriptions> sc:forCanvas <${prefix}Canv-f15r> ;
-				ore:isDescribedBy <${baseUrl}canvas/15r/transcriptions> ;
-				a sc:AnnotationList, ore:Aggregation, rdf:List .
-<${baseUrl}canvas/15v/transcriptions> dc:format "text/n3" ;
-				ore:describes <${prefix}f15v-Transcriptions> ;
-				a ore:ResourceMap .
-<${prefix}f15v-Transcriptions> sc:forCanvas <${prefix}Canv-f15v> ;
-				ore:isDescribedBy <${baseUrl}canvas/15v/transcriptions> ;
-				a sc:AnnotationList, ore:Aggregation, rdf:List .
-<${baseUrl}canvas/16r/transcriptions> dc:format "text/n3" ;
-				ore:describes <${prefix}f16r-Transcriptions> ;
-				a ore:ResourceMap .
-<${prefix}f16r-Transcriptions> sc:forCanvas <${prefix}Canv-f16r> ;
-				ore:isDescribedBy <${baseUrl}canvas/16r/transcriptions> ;
-				a sc:AnnotationList, ore:Aggregation, rdf:List .
+
+<${baseUrl}sequence/read> a sc:Sequence .
+<${baseUrl}annotations/image> a sc:AnnotationList .
+<${baseUrl}annotations/illustration> a sc:AnnotationList .
+<${baseUrl}canvas/13v/transcriptions> a sc:AnnotationList .
+<${baseUrl}canvas/14r/transcriptions> a sc:AnnotationList .
+<${baseUrl}canvas/14v/transcriptions> a sc:AnnotationList .
+<${baseUrl}canvas/15r/transcriptions> a sc:AnnotationList .
+<${baseUrl}canvas/15v/transcriptions> a sc:AnnotationList .
+<${baseUrl}canvas/16r/transcriptions> a sc:AnnotationList .

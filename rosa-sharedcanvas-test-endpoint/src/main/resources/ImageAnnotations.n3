@@ -5,41 +5,22 @@
 @prefix dcterms: 	<http://purl.org/dc/terms/> .
 @prefix dctypes:	<http://purl.org/dc/dcmitype/> .
 #		@prefix foaf: 		<http://xmlns.clm/foaf/0.1/> .
-@prefix oa: 		<http://www.openannotation.org/ns/> .
-@prefix cnt: 		<http://www.w3.org/2008/content#> .
+@prefix oa: 		<http://www.w3.org/ns/oa#> .
+@prefix cnt: 		<http://www.w3.org/2011/content#> .
 @prefix rdf: 		<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:		<http://www.w3.org/2000/01/rdf-schema#> .
-@prefix exif: 		<http://www.w3.org/2003/12/exif/ns#> .
+@prefix exif: 		<http://www.w3.org/2003/12/exif/ns/> .
 @prefix ore: 		<http://www.openarchives.org/ore/terms/> .
 
 
-<${prefix}Canv-f13v>		a sc:Canvas ;
-				exif:height 0000 ;
-				exif:width 1111 ;
-				rdfs:label "f13v" .
-<${prefix}Canv-f14r>		a sc:Canvas ;
-				exif:height 0000 ;
-				exif:width 1111 ;
-				rdfs:label "f14r" .
-<${prefix}Canv-f14v>		a sc:Canvas ;
-				exif:height 0000 ;
-				exif:width 1111 ;
-				rdfs:label "f14v" .
-<${prefix}Canv-f15r>		a sc:Canvas ;
-				exif:height 0000 ;
-				exif:width 1111 ;
-				rdfs:label "f15r" .
-<${prefix}Canv-f15v>		a sc:Canvas ;
-				exif:height 0000 ;
-				exif:width 1111 ;
-				rdfs:label "f15v" .
-<${prefix}Canv-f16r>		a sc:Canvas ;
-				exif:height 0000 ;
-				exif:width 1111 ;
-				rdfs:label "f16r" .
+<${prefix}Canv-f13v>		a sc:Canvas .
+<${prefix}Canv-f14r>		a sc:Canvas .
+<${prefix}Canv-f14v>		a sc:Canvas .
+<${prefix}Canv-f15r>		a sc:Canvas .
+<${prefix}Canv-f15v>		a sc:Canvas .
+<${prefix}Canv-f16r>		a sc:Canvas .
 				
 <${baseUrl}annotations/image> dc:format "text/n3" ;
-				dcterms:creator <${prefix}john.abrahams> ;
 				dcterms:modified "timestamp" ;		# ex: "2011-07-21T16:09:58Z"
 				ore:describes <${prefix}ImageAnnotations> ;
 				a  ore:ResourceMap .
@@ -50,60 +31,67 @@
 					<${prefix}ImgAnno-f15v> ,
 					<${prefix}ImgAnno-f16r> ;
 				ore:isDescribedBy <${baseUrl}annotations/image> ;
-				a sc:AnnotationList, rdf:List .		
+				sc:hasOrder ( <${prefix}ImgAnno-f13v> <${prefix}ImgAnno-f14r> <${prefix}ImgAnno-f14v> <${prefix}ImgAnno-f15r> <${prefix}ImgAnno-f15v> <${prefix}ImgAnno-f16r> ) ;
+				a sc:AnnotationList, ore:Aggregation .		
 				
 <${prefix}ImgAnno-f13v>	a oa:Annotation ;
 				oa:motivatedBy sc:painting ;
+				rdfs:label "13v" ;
 				oa:hasTarget <${prefix}Canv-f13v> ;
 				oa:hasBody <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.013v.tif/full/300,/0/native.jpg> .
 <${prefix}ImgAnno-f14r>	a oa:Annotation ;
 				oa:motivatedBy sc:painting ;
+				rdfs:label "14r" ;
 				oa:hasTarget <${prefix}Canv-f13r> ;
 				oa:hasBody <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.014r.tif/full/300,/0/native.jpg> .
 <${prefix}ImgAnno-f14v>	a oa:Annotation ;
 				oa:motivatedBy sc:painting ;
+				rdfs:label "14v" ;
 				oa:hasTarget <${prefix}Canv-f14v> ;
 				oa:hasBody <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.014v.tif/full/300,/0/native.jpg> .
 <${prefix}ImgAnno-f15r>	a oa:Annotation ;
 				oa:motivatedBy sc:painting ;
+				rdfs:label "15r" ;
 				oa:hasTarget <${prefix}Canv-f15r> ;
 				oa:hasBody <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.015r.tif/full/300,/0/native.jpg> .
 <${prefix}ImgAnno-f15v>	a oa:Annotation ;
 				oa:motivatedBy sc:painting ;
+				rdfs:label "15v" ;
 				oa:hasTarget <${prefix}Canv-f15v> ;
 				oa:hasBody <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.015v.tif/full/300,/0/native.jpg> .
 <${prefix}ImgAnno-f16r>	a oa:Annotation ;
 				oa:motivatedBy sc:painting ;
+				rdfs:label "16r" ;
 				oa:hasTarget <${prefix}Canv-f16r> ;
 				oa:hasBody <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.016r.tif/full/300,/0/native.jpg> .
 				
 <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.013v.tif/full/300,/0/native.jpg>		a dctypes:Image ;
 				dc:format "image/jpeg" ;
 				dcterms:conformsTo "IIIF" ;
-				exif:height 0000 ;
-				exif:width 1111 .
+				exif:height 5279 ;
+				exif:width 3946 .
 <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.014r.tif/full/300,/0/native.jpg>		a dctypes:Image ;
 				dc:format "image/jpeg" ;
 				dcterms:conformsTo "IIIF" ;
-				exif:height 0000 ;
-				exif:width 1111 .
+				exif:height 5429 ;
+				exif:width 3816 .
 <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.014v.tif/full/300,/0/native.jpg>		a dctypes:Image ;
 				dc:format "image/jpeg" ;
 				dcterms:conformsTo "IIIF" ;
-				exif:height 0000 ;
-				exif:width 1111 .
+				exif:height 5277 ;
+				exif:width 3920 .
 <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.015r.tif/full/300,/0/native.jpg>		a dctypes:Image ;
 				dc:format "image/jpeg" ;
 				dcterms:conformsTo "IIIF" ;
-				exif:height 0000 ;
-				exif:width 1111 .
+				exif:height 5260 ;
+				exif:width 3512 .
 <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.015v.tif/full/300,/0/native.jpg>		a dctypes:Image ;
 				dc:format "image/jpeg" ;
 				dcterms:conformsTo "IIIF" ;
-				exif:height 0000 ;
-				exif:width 1111 .
+				exif:height 5301 ;
+				exif:width 3944 .
 <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.016r.tif/full/300,/0/native.jpg>		a dctypes:Image ;
 				dc:format "image/jpeg" ;
 				dcterms:conformsTo "IIIF" ;
-				exif:height 0000 ;
-				exif:width 1111 .
+				exif:height 5451 ;
+				exif:width 3920 .

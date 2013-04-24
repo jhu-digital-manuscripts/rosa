@@ -57,7 +57,8 @@
 	<properties>
 	    <!-- <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory> -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<baseUrl>http://localhost:8080/rosa-sharedcanvas-test-endpoint/</baseUrl>
+		<!-- <baseUrl>http://localhost:8080/rosa-sharedcanvas-test-endpoint/</baseUrl> -->
+		<baseUrl>http://rosetest.library.jhu.edu/sctest/</baseUrl>
 		<prefix>urn:</prefix>
 	</properties>
 	

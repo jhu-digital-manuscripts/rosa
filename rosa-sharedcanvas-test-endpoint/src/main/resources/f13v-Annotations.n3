@@ -20,12 +20,19 @@
 			ore:aggregates <${prefix}TxtAnno-f13v-c-ln1> ,
 				<${prefix}TxtAnno-f13v-c-ln2> ,
 				<${prefix}TxtAnno-f13v-d-ln1> ,
-				<${prefix}TxtAnno-f13v-d-ln2> ;
+				<${prefix}TxtAnno-f13v-d-ln2> ,
+				<${prefix}ImgAnno-f13v> ;
 				ore:isDescribedBy <${baseUrl}canvas/13v/transcriptions> ;
-				sc:hasOrder ( <${prefix}TxtAnno-f13v-c-ln1> <${prefix}TxtAnno-f13v-c-ln2> <${prefix}TxtAnno-f13v-d-ln1> <${prefix}TxtAnno-f13v-d-ln2> ) ;
+				sc:hasOrder ( <${prefix}ImgAnno-f13v> <${prefix}TxtAnno-f13v-c-ln1> <${prefix}TxtAnno-f13v-c-ln2> <${prefix}TxtAnno-f13v-d-ln1> <${prefix}TxtAnno-f13v-d-ln2> ) ;
 				a sc:AnnotationList, ore:Aggregation .
 	
 <${prefix}Canv-f13v>		a sc:Canvas .
+				
+<${prefix}ImgAnno-f13v>	a oa:Annotation ;
+				oa:motivatedBy sc:painting ;
+				rdfs:label "13v" ;
+				oa:hasTarget <${prefix}Canv-f13v> ;
+				oa:hasBody <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.013v.tif/full/300,/0/native.jpg> .
 				
 <${prefix}TxtAnno-f13v-c-ln1>	a oa:Annotation ;
 				oa:motivatedBy oa:describing ;
@@ -69,6 +76,12 @@
 				cnt:chars "<Svg:poly points='2433,578 3452,578 3452,658 2433,658'/>" .
 <${prefix}SvgSel-f13v-d-ln2>	a oa:SvgSelector, cnt:ContentAsText ;
 				cnt:chars "<Svg:poly points='2433,658 3452,658 3449,733 2433,733'/>" .
+				
+<http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.013v.tif/full/300,/0/native.jpg>		a dctypes:Image ;
+				dc:format "image/jpeg" ;
+				dcterms:conformsTo "IIIF" ;
+				exif:height 5279 ;
+				exif:width 3946 .
 				
 <${prefix}Txt-f13v-c-ln1>	a dctypes:Text, cnt:ContentAsText ;
 				dc:format "text/plain" ;

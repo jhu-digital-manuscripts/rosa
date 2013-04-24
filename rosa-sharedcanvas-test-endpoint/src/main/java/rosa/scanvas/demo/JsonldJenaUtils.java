@@ -43,7 +43,7 @@ public class JsonldJenaUtils {
 		sequenceModel.read(in, null, lang);
 		
 		StmtIterator statementIt = sequenceModel.listStatements(
-				null, RDFS.label, "f"+canvas);
+				null, RDFS.label, /*"f"+*/canvas);
 		
 		in.close();
 		return statementIt.next().getSubject();
@@ -97,6 +97,7 @@ public class JsonldJenaUtils {
 		Model model = ModelFactory.createDefaultModel();
 		
 		try {
+			
 			// read Sequence to get canvas urn
 			Resource canvRes = getCanvasUrn(canvas, lang);
 			

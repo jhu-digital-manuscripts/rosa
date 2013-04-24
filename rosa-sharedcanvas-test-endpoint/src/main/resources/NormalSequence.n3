@@ -1,50 +1,60 @@
 # J. Paul Getty Museum - Ludwig XV7 - 13v-16r - NormalSequence
 
 @prefix sc:			<http://www.shared-canvas.org/ns/> .
-@prefix exif: 		<http://www.w3.org/2003/12/exif/ns#>.
+@prefix exif: 		<http://www.w3.org/2003/12/exif/ns/>.
 #		@prefix foaf: <http://xmlns.com/foaf/0.1/>.
 @prefix dc: 		<http://purl.org/dc/elements/1.1/>.
 @prefix ore: 		<http://www.openarchives.org/ore/terms/>.
+@prefix oa: 		<http://www.w3.org/ns/oa#> .
 @prefix rdf: 		<http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix rdfs: 		<http://www.w3.org/2000/01/rdf-schema#> .
 @prefix dcterms: 	<http://purl.org/dc/terms/>.
+@prefix xsd: 		<http://www.w3.org/2001/XMLSchema#> .
 
 <${prefix}Canv-f13v>		a sc:Canvas ;
-				exif:height 0000 ;
-				exif:width 1111 ;
-				rdfs:label "f13v" .
+				exif:height "5279"^^xsd:long ;
+				exif:width "3946"^^xsd:long ;
+				rdfs:label "13v"^^xsd:string ;
+				oa:hasAnnotations <${baseUrl}canvas/13v/annotations> .
 <${prefix}Canv-f14r>		a sc:Canvas ;
-				exif:height 0000 ;
-				exif:width 1111 ;
-				rdfs:label "f14r" .
+				exif:height "5429"^^xsd:long ;
+				exif:width "3816"^^xsd:long ;
+				rdfs:label "14r"^^xsd:string ;
+				oa:hasAnnotations <${baseUrl}canvas/14r/annotations> .
 <${prefix}Canv-f14v>		a sc:Canvas ;
-				exif:height 0000 ;
-				exif:width 1111 ;
-				rdfs:label "f14v" .
+				exif:height "5277"^^xsd:long ;
+				exif:width "3920"^^xsd:long ;
+				rdfs:label "14v"^^xsd:string ;
+				oa:hasAnnotations <${baseUrl}canvas/14v/annotations> .
 <${prefix}Canv-f15r>		a sc:Canvas ;
-				exif:height 0000 ;
-				exif:width 1111 ;
-				rdfs:label "f15r" .
+				exif:height "5260"^^xsd:long ;
+				exif:width "3512"^^xsd:long ;
+				rdfs:label "15r"^^xsd:string ;
+				oa:hasAnnotations <${baseUrl}canvas/15r/annotations> .
 <${prefix}Canv-f15v>		a sc:Canvas ;
-				exif:height 0000 ;
-				exif:width 1111 ;
-				rdfs:label "f15v" .
+				exif:height "5301"^^xsd:long ;
+				exif:width "3944"^^xsd:long ;
+				rdfs:label "15v"^^xsd:string ;
+				oa:hasAnnotations <${baseUrl}canvas/15v/annotations> .
 <${prefix}Canv-f16r>		a sc:Canvas ;
-				exif:height 0000 ;
-				exif:width 1111 ;
-				rdfs:label "f16r" .
+				exif:height "5451"^^xsd:long ;
+				exif:width "3920"^^xsd:long ;
+				rdfs:label "16r"^^xsd:string ;
+				oa:hasAnnotations <${baseUrl}canvas/16r/annotations> .
 
 <${baseUrl}sequence/read>	dc:format "text/n3" ;
-				dcterms:creator <${prefix}john.abrahams> ;
 				dcterms:modified "timestamp" ;			# ex: "2011-07-21T16:09:58Z"
 				ore:describes <${prefix}NormalSequence> ;
-				rdfs:label "Sequence of single page canvases in normal reading order" ;
 				a ore:ResourceMap .
-<${prefix}NormalSequence> ore:aggregates <${prefix}Canv-f13v> ,
+<${prefix}NormalSequence> a sc:Sequence, ore:Aggregation ;
+				ore:aggregates <${prefix}Canv-f13v> ,
 				<${prefix}Canv-f14r> ,
 				<${prefix}Canv-f14v> ,
 				<${prefix}Canv-f15r> ,
 				<${prefix}Canv-f15v> ,
 				<${prefix}Canv-f16r> ;
 				ore:isDescribedBy <${baseUrl}sequence/read> ;
-				a sc:Sequence, ore:Aggregation, rdf:List .
+				rdfs:label "Sequence in normal reading order" ;
+				sc:readingDirection "Left-to-Right" ;
+				sc:hasOrder ( <${prefix}Canv-f13v> <${prefix}Canv-f14r> <${prefix}Canv-f14v> <${prefix}Canv-f15r> <${prefix}Canv-f15v> <${prefix}Canv-f16r> ).
+				

@@ -1,0 +1,532 @@
+@prefix sc:			<http://www.shared-canvas.org/ns/> .
+@prefix dc: 		<http://purl.org/dc/elements/1.1/> .
+@prefix dcterms: 	<http://purl.org/dc/terms/> .
+@prefix dctypes:	<http://purl.org/dc/dcmitype/> .
+#		@prefix foaf: 		<http://xmlns.clm/foaf/0.1/> .
+@prefix oa: 		<http://www.w3.org/ns/oa#> .
+@prefix cnt: 		<http://www.w3.org/2011/content#> .
+@prefix rdf: 		<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:		<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix exif: 		<http://www.w3.org/2003/12/exif/ns/> .
+@prefix ore: 		<http://www.openarchives.org/ore/terms/> .
+
+<${prefix}Canv-f13v>		a sc:Canvas .
+<${prefix}Canv-f14r>		a sc:Canvas .
+<${prefix}Canv-f14v>		a sc:Canvas .
+<${prefix}Canv-f15r>		a sc:Canvas .
+<${prefix}Canv-f15v>		a sc:Canvas .
+<${prefix}Canv-f16r>		a sc:Canvas .
+
+<${baseUrl}annotations> dc:format "text/n3" ;
+				dcterms:modified "timestamp" ;		# ex: "2011-07-21T16:09:58Z"
+				ore:describes <${prefix}Annotation> ;
+				a  ore:ResourceMap .
+<${prefix}Annotation> ore:aggregates  	  <${prefix}ImgAnno-f13v> ,
+					<${prefix}ImgAnno-f14r> ,
+					<${prefix}ImgAnno-f14v> ,
+					<${prefix}ImgAnno-f15r> ,
+					<${prefix}ImgAnno-f15v> ,
+					<${prefix}ImgAnno-f16r> ,
+					<${prefix}IllusAnno-f14r> ,
+					<${prefix}IllusAnno-f15r> ,
+					<${prefix}TxtAnno-f13v-c-ln1> ,
+					<${prefix}TxtAnno-f13v-c-ln2> ,
+					<${prefix}TxtAnno-f13v-d-ln1> ,
+					<${prefix}TxtAnno-f13v-d-ln2> ,
+					<${baseUrl}TxtAnnof14raln1> ,
+					<${baseUrl}TxtAnnof14raln2> ,
+					<${baseUrl}TxtAnnof14rbln1> ,
+					<${baseUrl}TxtAnnof14rbln2> ,
+					<${prefix}TxtAnno-f14v-c-ln1> ,
+					<${prefix}TxtAnno-f14v-c-ln2> ,
+					<${prefix}TxtAnno-f14v-d-ln1> ,
+					<${prefix}TxtAnno-f14v-d-ln2> ,
+					<${prefix}TxtAnno-f15r-a-ln1> ,
+					<${prefix}TxtAnno-f15r-a-ln2> ,
+					<${prefix}TxtAnno-f15r-b-ln1> ,
+					<${prefix}TxtAnno-f15r-b-ln2> ,
+					<${prefix}TxtAnno-f15v-c-ln1> ,
+					<${prefix}TxtAnno-f15v-c-ln2> ,
+					<${prefix}TxtAnno-f15v-d-ln1> ,
+					<${prefix}TxtAnno-f15v-d-ln2> ,
+					<${prefix}TxtAnno-f16r-a-ln1> ,
+					<${prefix}TxtAnno-f16r-a-ln2> ,
+					<${prefix}TxtAnno-f16r-b-ln1> ,
+					<${prefix}TxtAnno-f16r-b-ln2> ;
+				ore:isDescribedBy <${baseUrl}annotations> ;
+				sc:hasOrder ( <${prefix}ImgAnno-f13v> <${prefix}ImgAnno-f14r> <${prefix}ImgAnno-f14v> <${prefix}ImgAnno-f15r> <${prefix}ImgAnno-f15v> <${prefix}ImgAnno-f16r> <${prefix}IllusAnno-f14r> <${prefix}IllusAnno-f15r> <${prefix}TxtAnno-f13v-c-ln1> <${prefix}TxtAnno-f13v-c-ln2> <${prefix}TxtAnno-f13v-d-ln1> <${prefix}TxtAnno-f13v-d-ln2> <${baseUrl}TxtAnnof14raln1> <${baseUrl}TxtAnnof14raln2> <${baseUrl}TxtAnnof14rbln1> <${baseUrl}TxtAnnof14rbln2> <${prefix}TxtAnno-f14v-c-ln1> <${prefix}TxtAnno-f14v-c-ln2> <${prefix}TxtAnno-f14v-d-ln1> <${prefix}TxtAnno-f14v-d-ln2> <${prefix}TxtAnno-f15r-a-ln1> <${prefix}TxtAnno-f15r-a-ln2> <${prefix}TxtAnno-f15r-b-ln1> <${prefix}TxtAnno-f15r-b-ln2> <${prefix}TxtAnno-f15v-c-ln1> <${prefix}TxtAnno-f15v-c-ln2> <${prefix}TxtAnno-f15v-d-ln1> <${prefix}TxtAnno-f15v-d-ln2> <${prefix}TxtAnno-f16r-a-ln1> <${prefix}TxtAnno-f16r-a-ln2> <${prefix}TxtAnno-f16r-b-ln1> <${prefix}TxtAnno-f16r-b-ln2> ) ;
+				a sc:AnnotationList, ore:Aggregation .	
+				
+<${prefix}TxtAnno-f16r-a-ln1>	a oa:Annotation ;
+				rdfs:label "Transcription: Column A, Line 1" ;
+				oa:motivatedBy oa:describing ;
+				oa:hasTarget <${prefix}SubCanv-f16r-a-ln1> ;
+				oa:hasBody <${prefix}Txt-f16r-a-ln1> .
+<${prefix}TxtAnno-f16r-a-ln2>	a oa:Annotation ;
+				rdfs:label "Transcription: Column A, Line 2" ;
+				oa:motivatedBy oa:describing ;
+				oa:hasTarget <${prefix}SubCanv-f16r-a-ln2> ;
+				oa:hasBody <${prefix}Txt-f16r-a-ln2> .
+<${prefix}TxtAnno-f16r-b-ln1>	a oa:Annotation ;
+				rdfs:label "Transcription: Column B, Line 1" ;
+				oa:motivatedBy oa:describing ;
+				oa:hasTarget <${prefix}SubCanv-f16r-b-ln1> ;
+				oa:hasBody <${prefix}Txt-f16r-b-ln1> .
+<${prefix}TxtAnno-f16r-b-ln2>	a oa:Annotation ;
+				rdfs:label "Transcription: Column B, Line 2" ;
+				oa:motivatedBy oa:describing ;
+				oa:hasTarget <${prefix}SubCanv-f16r-b-ln2> ;
+				oa:hasBody <${prefix}Txt-f16r-b-ln2> .
+				
+<${prefix}SubCanv-f16r-a-ln1> a oa:SpecificResource ;
+				oa:hasSource <${prefix}Canv-f16r> ;
+				oa:hasSelector <${prefix}SvgSel-f16r-a-ln1> .
+<${prefix}SubCanv-f16r-a-ln2> a oa:SpecificResource ;
+				oa:hasSource <${prefix}Canv-f16r> ;
+				oa:hasSelector <${prefix}SvgSel-f16r-a-ln2> .
+<${prefix}SubCanv-f16r-b-ln1> a oa:SpecificResource ;
+				oa:hasSource <${prefix}Canv-f16r> ;
+				oa:hasSelector <${prefix}SvgSel-f16r-b-ln1> .
+<${prefix}SubCanv-f16r-b-ln2> a oa:SpecificResource ;
+				oa:hasSource <${prefix}Canv-f16r> ;
+				oa:hasSelector <${prefix}SvgSel-f16r-b-ln2> .
+				
+<${prefix}SvgSel-f16r-a-ln1>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='514,609 1577,596 1577,677 516,687'/>" .
+<${prefix}SvgSel-f16r-a-ln2>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='516,687 1577,677 1577,758 516,768'/>" .
+<${prefix}SvgSel-f16r-b-ln1>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1829,597 2877,597 2877,676 1829,679'/>" .
+<${prefix}SvgSel-f16r-b-ln2>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1829,679 2877,676 2877,755 1859,761'/>" .
+				
+<${prefix}Txt-f16r-a-ln1>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "En bien amer soit ton penser." .
+<${prefix}Txt-f16r-a-ln2>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Adés y pense sanz cesser," .
+<${prefix}Txt-f16r-b-ln1>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Vermeil une heure et autre pales." .
+<${prefix}Txt-f16r-b-ln2>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Oncques fievres n'euz si males," .
+				
+<${prefix}TxtAnno-f15v-c-ln1>	a oa:Annotation ;
+				rdfs:label "Transcription: Column C, Line 1" ;
+				oa:motivatedBy oa:describing ;
+				oa:hasTarget <${prefix}SubCanv-f15v-c-ln1> ;
+				oa:hasBody <${prefix}Txt-f15v-c-ln1> .
+<${prefix}TxtAnno-f15v-c-ln2>	a oa:Annotation ;
+				rdfs:label "Transcription: Column C, Line 2" ;
+				oa:motivatedBy oa:describing ;
+				oa:hasTarget <${prefix}SubCanv-f15v-c-ln2> ;
+				oa:hasBody <${prefix}Txt-f15v-c-ln2> .
+<${prefix}TxtAnno-f15v-d-ln1>	a oa:Annotation ;
+				rdfs:label "Transcription: Column D, Line 1" ;
+				oa:motivatedBy oa:describing ;
+				oa:hasTarget <${prefix}SubCanv-f15v-d-ln1> ;
+				oa:hasBody <${prefix}Txt-f15v-d-ln1> .
+<${prefix}TxtAnno-f15v-d-ln2>	a oa:Annotation ;
+				rdfs:label "Transcription: Column D, Line 2" ;
+				oa:motivatedBy oa:describing ;
+				oa:hasTarget <${prefix}SubCanv-f15v-d-ln2> ;
+				oa:hasBody <${prefix}Txt-f15v-d-ln2> .
+				
+<${prefix}SubCanv-f15v-c-ln1> a oa:SpecificResource ;
+				oa:hasSource <${prefix}Canv-f15v> ;
+				oa:hasSelector <${prefix}SvgSel-f15v-c-ln1> .
+<${prefix}SubCanv-f15v-c-ln2> a oa:SpecificResource ;
+				oa:hasSource <${prefix}Canv-f15v> ;
+				oa:hasSelector <${prefix}SvgSel-f15v-c-ln2> .
+<${prefix}SubCanv-f15v-d-ln1> a oa:SpecificResource ;
+				oa:hasSource <${prefix}Canv-f15v> ;
+				oa:hasSelector <${prefix}SvgSel-f15v-d-ln1> .
+<${prefix}SubCanv-f15v-d-ln2> a oa:SpecificResource ;
+				oa:hasSource <${prefix}Canv-f15v> ;
+				oa:hasSelector <${prefix}SvgSel-f15v-d-ln2> .
+				
+<${prefix}SvgSel-f15v-c-ln1>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1174,607 2170,596 2170,674 1174,680'/>" .
+<${prefix}SvgSel-f15v-c-ln2>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1174,680 2170,674 2170,749 1174,757'/>" .
+<${prefix}SvgSel-f15v-d-ln1>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='2409,594 3434,590 3434,666 2409,671'/>" .
+<${prefix}SvgSel-f15v-d-ln2>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='2409,671 3434,666 3431,741 2409,746'/>" .
+				
+<${prefix}Txt-f15v-c-ln1>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Et les manches vestans et jointes." .
+<${prefix}Txt-f15v-c-ln2>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Souliers a las ou estuvaux " .
+<${prefix}Txt-f15v-d-ln1>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Ce qu'il sceit que mieux lui avient, " .
+<${prefix}Txt-f15v-d-ln2>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Car los et pris et grace en vient." .
+				
+<${prefix}TxtAnno-f15r-a-ln1>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 1" ;
+				oa:hasTarget <${prefix}SubCanv-f15r-a-ln1> ;
+				oa:hasBody <${prefix}Txt-f15r-a-ln1> .
+<${prefix}TxtAnno-f15r-a-ln2>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 2" ;
+				oa:hasTarget <${prefix}SubCanv-f15r-a-ln2> ;
+				oa:hasBody <${prefix}Txt-f15r-a-ln2> .
+<${prefix}TxtAnno-f15r-b-ln1>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 1" ;
+				oa:hasTarget <${prefix}SubCanv-f15r-b-ln1> ;
+				oa:hasBody <${prefix}Txt-f15r-b-ln1> .
+<${prefix}TxtAnno-f15r-b-ln2>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 2" ;
+				oa:hasTarget <${prefix}SubCanv-f15r-b-ln2> ;
+				oa:hasBody <${prefix}Txt-f15r-b-ln2> .
+				
+<${prefix}SubCanv-f15r-a-ln1> a oa:SpecificResource ;
+				oa:hasSource <${prefix}Canv-f15r> ;
+				oa:hasSelector <${prefix}SvgSel-f15r-a-ln1> .
+<${prefix}SubCanv-f15r-a-ln2> a oa:SpecificResource ;
+				oa:hasSource <${prefix}Canv-f15r> ;
+				oa:hasSelector <${prefix}SvgSel-f15r-a-ln2> .
+<${prefix}SubCanv-f15r-b-ln1> a oa:SpecificResource ;
+				oa:hasSource <${prefix}Canv-f15r> ;
+				oa:hasSelector <${prefix}SvgSel-f15r-b-ln1> .
+<${prefix}SubCanv-f15r-b-ln2> a oa:SpecificResource ;
+				oa:hasSource <${prefix}Canv-f15r> ;
+				oa:hasSelector <${prefix}SvgSel-f15r-b-ln2> .
+				
+<${prefix}SvgSel-f15r-a-ln1>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points=''/>" .
+<${prefix}SvgSel-f15r-a-ln2>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='600,1622 1412,1622 1412,1700 600,1700'/>" .
+<${prefix}SvgSel-f15r-b-ln1>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1623,478 2666,475 2666,557 1623,563'/>" .
+<${prefix}SvgSel-f15r-b-ln2>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1623,563 2666,557 2662,636 1623,648'/>" .
+				
+<${prefix}Txt-f15r-a-ln1>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "'Villenie premierement," .
+<${prefix}Txt-f15r-a-ln2>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Ce dist Amours, vueil et commant" .
+<${prefix}Txt-f15r-b-ln1>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Sanz demourer et sanz atendre. " .
+<${prefix}Txt-f15r-b-ln2>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Le quart commandement " .
+				
+<${prefix}TxtAnno-f14v-c-ln1>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column C, Line 1" ;
+				oa:hasTarget <${prefix}SubCanv-f14v-c-ln1> ;
+				oa:hasBody <${prefix}Txt-f14v-c-ln1> .
+<${prefix}TxtAnno-f14v-c-ln2>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column C, Line 2" ;
+				oa:hasTarget <${prefix}SubCanv-f14v-c-ln2> ;
+				oa:hasBody <${prefix}Txt-f14v-c-ln2> .
+<${prefix}TxtAnno-f14v-d-ln1>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column D, Line 1" ;
+				oa:hasTarget <${prefix}SubCanv-f14v-d-ln1> ;
+				oa:hasBody <${prefix}Txt-f14v-d-ln1> .
+<${prefix}TxtAnno-f14v-d-ln2>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column D, Line 2" ;
+				oa:hasTarget <${prefix}SubCanv-f14v-d-ln2> ;
+				oa:hasBody <${prefix}Txt-f14v-d-ln2> .
+				
+<${prefix}SubCanv-f14v-c-ln1> a oa:SpecificResource ;
+				oa:hasSource <${prefix}Canv-f14v> ;
+				oa:hasSelector <${prefix}SvgSel-f14v-c-ln1> .
+<${prefix}SubCanv-f14v-c-ln2> a oa:SpecificResource ;
+				oa:hasSource <${prefix}Canv-f14v> ;
+				oa:hasSelector <${prefix}SvgSel-f14v-c-ln2> .
+<${prefix}SubCanv-f14v-d-ln1> a oa:SpecificResource ;
+				oa:hasSource <${prefix}Canv-f14v> ;
+				oa:hasSelector <${prefix}SvgSel-f14v-d-ln1> .
+<${prefix}SubCanv-f14v-d-ln2> a oa:SpecificResource ;
+				oa:hasSource <${prefix}Canv-f14v> ;
+				oa:hasSelector <${prefix}SvgSel-f14v-d-ln2> .
+				
+<${prefix}SvgSel-f14v-c-ln1>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1169,611 2166,607 2166,685 1169,691'/>" .
+<${prefix}SvgSel-f14v-c-ln2>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1169,691 2166,685 2166,761 1169,761'/>" .
+<${prefix}SvgSel-f14v-d-ln1>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='x1,y1 x2,y2 x3,y3 x4,y4'/>" .
+<${prefix}SvgSel-f14v-d-ln2>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='2588,685 3432,683 3428,758 2588,761'/>" .
+				
+<${prefix}Txt-f14v-c-ln1>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "'A cest, dist il, fermeré " .
+<${prefix}Txt-f14v-c-ln2>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Ton cuer, n'y vueil autre apouyau." .
+<${prefix}Txt-f14v-d-ln1>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "'Sire, diz je, pour Dieu mercy," .
+<${prefix}Txt-f14v-d-ln2>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Avant que vous partez de cy," .
+				
+<${baseUrl}TxtAnnof14raln1>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 1" ;
+				oa:hasTarget <${baseUrl}SubCanvf14raln1> ;
+				oa:hasBody <${baseUrl}Txtf14raln1> .
+<${baseUrl}TxtAnnof14raln2>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 2" ;
+				oa:hasTarget <${baseUrl}SubCanvf14raln2> ;
+				oa:hasBody <${baseUrl}Txtf14raln2> .
+<${baseUrl}TxtAnnof14rbln1>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 1" ;
+				oa:hasTarget <${baseUrl}SubCanvf14rbln1> ;
+				oa:hasBody <${baseUrl}Txtf14rbln1> .
+<${baseUrl}TxtAnnof14rbln2>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 2" ;
+				oa:hasTarget <${baseUrl}SubCanvf14rbln2> ;
+				oa:hasBody <${baseUrl}Txtf14rbln2> .
+				
+<${baseUrl}SubCanvf14raln1> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln1> .
+<${baseUrl}SubCanvf14raln2> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln2> .
+<${baseUrl}SubCanvf14rbln1> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln1> .
+<${baseUrl}SubCanvf14rbln2> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln2> .
+				
+<${baseUrl}SvgSelf14raln1>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='411,614 1456,582 1456,661 414,693'/>" .
+<${baseUrl}SvgSelf14raln2>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='413,697 1456,661 1456,743 416,776'/>" .
+<${baseUrl}SvgSelf14rbln1>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1703,578 2752,558 2752,634 1703,658'/>" .
+<${baseUrl}SvgSelf14rbln2>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1703,658 2752,634 2752,716 1703,740'/>" .
+				
+<${baseUrl}Txtf14raln1>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Que je vueil pour ton avantage" .
+<${baseUrl}Txtf14raln2>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Quorendroit me faces hommage." .
+<${baseUrl}Txtf14rbln1>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Dont j'ay esté moult deceuz." .
+<${baseUrl}Txtf14rbln2>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Li felon plain de fausseté" .
+				
+<${prefix}TxtAnno-f13v-c-ln1>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column C, Line 1" ;
+				oa:hasTarget <${prefix}SubCanv-f13v-c-ln1> ;
+				oa:hasBody <${prefix}Txt-f13vc-ln1> .
+<${prefix}TxtAnno-f13v-c-ln2>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column C, Line 2" ;
+				oa:hasTarget <${prefix}SubCanv-f13v-c-ln2> ;
+				oa:hasBody <${prefix}Txt-f13vc-ln2> .
+<${prefix}TxtAnno-f13v-d-ln1>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column D, Line 1" ;
+				oa:hasTarget <${prefix}SubCanv-f13v-d-ln1> ;
+				oa:hasBody <${prefix}Txt-f13v-d-ln1> .
+<${prefix}TxtAnno-f13v-d-ln2>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column D, Line 2" ;
+				oa:hasTarget <${prefix}SubCanv-f13v-d-ln2> ;
+				oa:hasBody <${prefix}Txt-f13v-d-ln2> .
+				
+<${prefix}SubCanv-f13v-c-ln1> a oa:SpecificResource ;
+				oa:hasSource <${prefix}Canv-f13v> ;
+				oa:hasSelector <${prefix}SvgSel-f13v-c-ln1> .
+<${prefix}SubCanv-f13v-c-ln2> a oa:SpecificResource ;
+				oa:hasSource <${prefix}Canv-f13v> ;
+				oa:hasSelector <${prefix}SvgSel-f13v-c-ln2> .
+<${prefix}SubCanv-f13v-d-ln1> a oa:SpecificResource ;
+				oa:hasSource <${prefix}Canv-f13v> ;
+				oa:hasSelector <${prefix}SvgSel-f13v-d-ln1> .
+<${prefix}SubCanv-f13v-d-ln2> a oa:SpecificResource ;
+				oa:hasSource <${prefix}Canv-f13v> ;
+				oa:hasSelector <${prefix}SvgSel-f13v-d-ln2> .
+				
+<${prefix}SvgSel-f13v-c-ln1>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1203,580 2195,580 2195,660 1203,660'/>" .
+<${prefix}SvgSel-f13v-c-ln2>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1203,660 2195,660 2195,730 1203,733'/>" .
+<${prefix}SvgSel-f13v-d-ln1>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='2433,578 3452,578 3452,658 2433,658'/>" .
+<${prefix}SvgSel-f13v-d-ln2>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='2433,658 3452,658 3449,733 2433,733'/>" .
+				
+<${prefix}Txt-f13v-c-ln1>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "D'un precieux oignement ointe" .
+<${prefix}Txt-f13v-c-ln2>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Pour ce qu'el ne me peust nuire" .
+<${prefix}Txt-f13v-d-ln1>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Et qu'il convient a supploier." .
+<${prefix}Txt-f13v-d-ln2>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Tu ne pues vers moy forçoier," .
+				
+<${prefix}IllusAnno-f14r> a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Illustration Description: 14r" ;
+				oa:hasTarget <${prefix}Canv-f14r> ;
+				oa:hasBody <${prefix}IllusText-f14r> .
+<${prefix}IllusAnno-f15r> a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Illustration Description: 15r" ;
+				oa:hasTarget <${prefix}Canv-f15r> ;
+				oa:hasBody <${prefix}IllusText-f15r> .
+				
+<${prefix}IllusText-f14r> a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "en" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars """Illustration title: Amors and L’Amans Embrace 
+					Character depicted: L'Amans, Amors 
+					Costume: Houpellande 
+					Landscape: Ground and sky """ .
+<${prefix}IllusText-f15r> a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "en" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars """Illustration title: Amors Explains His Commandments 
+					Character depicted: L'Amans, Amors
+					Costume: Houpellandes; Objects: Scroll
+					Landscape: Ground and sky""" .
+				
+<${prefix}ImgAnno-f13v>	a oa:Annotation ;
+				oa:motivatedBy sc:painting ;
+				rdfs:label "13v" ;
+				oa:hasTarget <${prefix}Canv-f13v> ;
+				oa:hasBody <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.013v.tif/full/300,/0/native.jpg> .
+<${prefix}ImgAnno-f14r>	a oa:Annotation ;
+				oa:motivatedBy sc:painting ;
+				rdfs:label "14r" ;
+				oa:hasTarget <${prefix}Canv-f13r> ;
+				oa:hasBody <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.014r.tif/full/300,/0/native.jpg> .
+<${prefix}ImgAnno-f14v>	a oa:Annotation ;
+				oa:motivatedBy sc:painting ;
+				rdfs:label "14v" ;
+				oa:hasTarget <${prefix}Canv-f14v> ;
+				oa:hasBody <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.014v.tif/full/300,/0/native.jpg> .
+<${prefix}ImgAnno-f15r>	a oa:Annotation ;
+				oa:motivatedBy sc:painting ;
+				rdfs:label "15r" ;
+				oa:hasTarget <${prefix}Canv-f15r> ;
+				oa:hasBody <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.015r.tif/full/300,/0/native.jpg> .
+<${prefix}ImgAnno-f15v>	a oa:Annotation ;
+				oa:motivatedBy sc:painting ;
+				rdfs:label "15v" ;
+				oa:hasTarget <${prefix}Canv-f15v> ;
+				oa:hasBody <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.015v.tif/full/300,/0/native.jpg> .
+<${prefix}ImgAnno-f16r>	a oa:Annotation ;
+				oa:motivatedBy sc:painting ;
+				rdfs:label "16r" ;
+				oa:hasTarget <${prefix}Canv-f16r> ;
+				oa:hasBody <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.016r.tif/full/300,/0/native.jpg> .
+				
+<http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.013v.tif/full/300,/0/native.jpg>		a dctypes:Image ;
+				dc:format "image/jpeg" ;
+				dcterms:conformsTo "IIIF" ;
+				exif:height 5279 ;
+				exif:width 3946 .
+<http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.014r.tif/full/300,/0/native.jpg>		a dctypes:Image ;
+				dc:format "image/jpeg" ;
+				dcterms:conformsTo "IIIF" ;
+				exif:height 5429 ;
+				exif:width 3816 .
+<http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.014v.tif/full/300,/0/native.jpg>		a dctypes:Image ;
+				dc:format "image/jpeg" ;
+				dcterms:conformsTo "IIIF" ;
+				exif:height 5277 ;
+				exif:width 3920 .
+<http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.015r.tif/full/300,/0/native.jpg>		a dctypes:Image ;
+				dc:format "image/jpeg" ;
+				dcterms:conformsTo "IIIF" ;
+				exif:height 5260 ;
+				exif:width 3512 .
+<http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.015v.tif/full/300,/0/native.jpg>		a dctypes:Image ;
+				dc:format "image/jpeg" ;
+				dcterms:conformsTo "IIIF" ;
+				exif:height 5301 ;
+				exif:width 3944 .
+<http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.016r.tif/full/300,/0/native.jpg>		a dctypes:Image ;
+				dc:format "image/jpeg" ;
+				dcterms:conformsTo "IIIF" ;
+				exif:height 5451 ;
+				exif:width 3920 .

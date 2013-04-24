@@ -55,7 +55,7 @@ public class ScDemoFile {
 				"f14v-Transcriptions.n3",
 				"f15r-Transcriptions.n3",
 				"f15v-Transcriptions.n3",
-				"f16r-Transcriptions.n3"
+				"f16r-Transcriptions.n3",
 		};
 		String[] parts = parse(path);
 		Model model = ModelFactory.createDefaultModel();
@@ -70,13 +70,16 @@ public class ScDemoFile {
 						"NormalSequence.n3");
 				JsonldJenaUtils.writeJsonldFromStream(in, o, "N3");
 			} else if (parts[0].equals("annotations")) {
-				String[] agr = new String[aggregate.length+2];
+				/*String[] agr = new String[aggregate.length+2];
 				System.arraycopy(aggregate, 0, agr, 0, aggregate.length);
 				agr[agr.length-1] = "ImageAnnotations.n3";
 				agr[agr.length-2] = "IllustrationDescription.n3";
 				
 				model = JsonldJenaUtils.generateAggregateModel(agr, "N3");
-				JsonldJenaUtils.writeJsonldFromModel(model, o);
+				JsonldJenaUtils.writeJsonldFromModel(model, o);*/
+				in = this.getClass().getClassLoader().getResourceAsStream(
+						"Annotations.n3");
+				JsonldJenaUtils.writeJsonldFromStream(in, o, "N3");
 			} else {
 				throw new IOException("Unknown resource requested: " + path);
 			}
@@ -137,8 +140,11 @@ public class ScDemoFile {
 			}
 			
 			if (type.equals("annotations")) {
-				model = JsonldJenaUtils.singleCanvasAggregateModel(canv, "N3");
-				JsonldJenaUtils.writeJsonldFromModel(model, out);
+				/*model = JsonldJenaUtils.singleCanvasAggregateModel(canv, "N3");
+				JsonldJenaUtils.writeJsonldFromModel(model, out);*/
+				InputStream in = this.getClass().getClassLoader().getResourceAsStream(
+						"f"+canv+"-Annotations.n3");
+				JsonldJenaUtils.writeJsonldFromStream(in, out, "N3");
 			} else if (type.equals("transcriptions")) {
 				InputStream in = this.getClass().getClassLoader().getResourceAsStream(
 						"f"+canv+"-Transcriptions.n3");
@@ -165,6 +171,9 @@ public class ScDemoFile {
 	public void retrieveFile(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		
+		response.setContentType("application/javascript");
+		response.setCharacterEncoding("UTF-8");
+		
 		OutputStream o = response.getOutputStream();
 
 		// extract filename from path
@@ -181,7 +190,16 @@ public class ScDemoFile {
 
 		try {
 			
+			String jsoncallback = request.getParameter("callback");
+			if (jsoncallback != null) {
+				o.write(jsoncallback.getBytes("UTF-8"));
+				o.write('(');
+			}
 			processRequest(path, in, o);
+			
+			if (jsoncallback != null) {
+				o.write(')');
+			}
 			
 		} catch (IOException e) {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND, e.getMessage());
@@ -197,5 +215,6 @@ public class ScDemoFile {
 
 		o.flush();
 		o.close();
+		response.flushBuffer();
 	}
 }

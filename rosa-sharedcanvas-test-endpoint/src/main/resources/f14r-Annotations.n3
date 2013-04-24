@@ -19,12 +19,26 @@
 			ore:aggregates <${baseUrl}TxtAnnof14raln1> ,
 				<${baseUrl}TxtAnnof14raln2> ,
 				<${baseUrl}TxtAnnof14rbln1> ,
-				<${baseUrl}TxtAnnof14rbln2> ;
+				<${baseUrl}TxtAnnof14rbln2> ,
+				<${prefix}IllusAnno-f14r> ,
+				<${prefix}ImgAnno-f14r> ;
 				ore:isDescribedBy <${baseUrl}canvas/14r/transcriptions> ;
-				sc:hasOrder ( <${baseUrl}TxtAnnof14raln1> <${baseUrl}TxtAnnof14raln2> <${baseUrl}TxtAnnof14rbln1> <${baseUrl}TxtAnnof14rbln2> ) ;
+				sc:hasOrder ( <${prefix}IllusAnno-f14r> <${prefix}ImgAnno-f14r> <${baseUrl}TxtAnnof14raln1> <${baseUrl}TxtAnnof14raln2> <${baseUrl}TxtAnnof14rbln1> <${baseUrl}TxtAnnof14rbln2> ) ;
 				a sc:AnnotationList, ore:Aggregation .
 				
 <${baseUrl}Canv-f14r>		a sc:Canvas .
+				
+<${prefix}IllusAnno-f14r> a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Illustration Description: 14r" ;
+				oa:hasTarget <${prefix}Canv-f14r> ;
+				oa:hasBody <${prefix}IllusText-f14r> .
+				
+<${prefix}ImgAnno-f14r>	a oa:Annotation ;
+				oa:motivatedBy sc:painting ;
+				rdfs:label "14r" ;
+				oa:hasTarget <${prefix}Canv-f13r> ;
+				oa:hasBody <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.014r.tif/full/300,/0/native.jpg> .
 				
 <${baseUrl}TxtAnnof14raln1>	a oa:Annotation ;
 				oa:motivatedBy oa:describing ;
@@ -68,6 +82,21 @@
 				cnt:chars "<Svg:poly points='1703,578 2752,558 2752,634 1703,658'/>" .
 <${baseUrl}SvgSelf14rbln2>	a oa:SvgSelector, cnt:ContentAsText ;
 				cnt:chars "<Svg:poly points='1703,658 2752,634 2752,716 1703,740'/>" .
+				
+<${prefix}IllusText-f14r> a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "en" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars """Illustration title: Amors and L’Amans Embrace 
+					Character depicted: L'Amans, Amors 
+					Costume: Houpellande 
+					Landscape: Ground and sky """ .
+				
+<http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.014r.tif/full/300,/0/native.jpg>		a dctypes:Image ;
+				dc:format "image/jpeg" ;
+				dcterms:conformsTo "IIIF" ;
+				exif:height 5429 ;
+				exif:width 3816 .
 				
 <${baseUrl}Txtf14raln1>	a dctypes:Text, cnt:ContentAsText ;
 				dc:format "text/plain" ;
