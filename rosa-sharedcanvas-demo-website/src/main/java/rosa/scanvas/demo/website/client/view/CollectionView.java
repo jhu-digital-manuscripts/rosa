@@ -2,7 +2,7 @@ package rosa.scanvas.demo.website.client.view;
 
 import java.util.List;
 
-import rosa.scanvas.demo.website.client.presenter.CollectionPresenter;
+import rosa.scanvas.demo.website.client.presenter.ManifestCollectionPanelPresenter;
 import rosa.scanvas.model.client.Manifest;
 import rosa.scanvas.model.client.Reference;
 
@@ -17,7 +17,7 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class CollectionView extends Composite implements
-        CollectionPresenter.Display {
+        ManifestCollectionPanelPresenter.Display {
     private Label title_label;
     private ListBox collections_listbox;
     
@@ -27,12 +27,12 @@ public class CollectionView extends Composite implements
         Panel main = new FlowPanel();
 
         this.collections_listbox = new ListBox(false);
-        
-        //  TODO Should adjust this to size
         this.collections_listbox.setVisibleItemCount(10);
 
         main.add(title_label);
         main.add(collections_listbox);
+
+        main.setStylePrimaryName("PanelView"); 
 
         initWidget(main);
     }
@@ -60,9 +60,17 @@ public class CollectionView extends Composite implements
     public Widget asWidget() {
         return this;
     }
-	
-	public void setSize(String width, String height) {
-//		scrollPanel.setSize(width, height);
-	}
-	
+
+    @Override
+    public void resize(int width, int height) {
+        setPixelSize(width, height);
+
+        int count = height / 20;
+
+        if (count < 10) {
+            count = 10;
+        }
+
+        collections_listbox.setVisibleItemCount(count);
+    }
 }

@@ -2,9 +2,7 @@ package rosa.scanvas.demo.website.client.widgets;
 
 import java.util.List;
 
-import rosa.scanvas.demo.website.client.PanelData;
 import rosa.scanvas.demo.website.client.dynimg.IIIFImageServer;
-import rosa.scanvas.demo.website.client.dynimg.MasterImage;
 import rosa.scanvas.demo.website.client.dynimg.WebImage;
 import rosa.scanvas.model.client.Annotation;
 import rosa.scanvas.model.client.AnnotationTarget;
@@ -18,7 +16,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.Window;
 
 public class PageTurnerWidget extends Composite {
 	

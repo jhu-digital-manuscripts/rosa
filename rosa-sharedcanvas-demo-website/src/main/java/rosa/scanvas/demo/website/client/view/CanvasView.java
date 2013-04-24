@@ -2,14 +2,14 @@ package rosa.scanvas.demo.website.client.view;
 
 import rosa.scanvas.demo.website.client.disparea.DisplayArea;
 import rosa.scanvas.demo.website.client.disparea.DisplayAreaWidget;
-import rosa.scanvas.demo.website.client.presenter.CanvasPresenter;
+import rosa.scanvas.demo.website.client.presenter.CanvasPanelPresenter;
 
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 
-public class CanvasView extends Composite implements CanvasPresenter.Display {
+public class CanvasView extends Composite implements CanvasPanelPresenter.Display {
     private final Panel main;
     private final Label title;
     private final DisplayAreaWidget area_view;
@@ -24,6 +24,8 @@ public class CanvasView extends Composite implements CanvasPresenter.Display {
         main.add(title);
         main.add(area_view);
 
+        main.setStylePrimaryName("PanelView");
+        
         initWidget(main);
     }
 

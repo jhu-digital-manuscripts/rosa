@@ -1,167 +1,337 @@
 package rosa.scanvas.demo.website.client;
 
-import rosa.scanvas.demo.website.client.event.DataUpdateEvent;
-import rosa.scanvas.demo.website.client.event.DataUpdateEventHandler;
-import rosa.scanvas.demo.website.client.event.PanelNumberChangeEvent;
-import rosa.scanvas.demo.website.client.event.PanelNumberChangeEvent.PanelAction;
-import rosa.scanvas.demo.website.client.event.PanelNumberChangeEventHandler;
-import rosa.scanvas.demo.website.client.event.SidebarViewChangeEvent;
-import rosa.scanvas.demo.website.client.event.SidebarViewChangeEventHandler;
-import rosa.scanvas.demo.website.client.presenter.Presenter;
-import rosa.scanvas.demo.website.client.presenter.SidebarFullPresenter;
+import java.util.ArrayList;
+import java.util.List;
+
+import rosa.scanvas.demo.website.client.event.PanelRequestEvent;
+import rosa.scanvas.demo.website.client.event.PanelRequestEvent.PanelAction;
+import rosa.scanvas.demo.website.client.event.PanelRequestEventHandler;
+import rosa.scanvas.demo.website.client.presenter.CanvasPanelPresenter;
+import rosa.scanvas.demo.website.client.presenter.HomePanelPresenter;
+import rosa.scanvas.demo.website.client.presenter.ManifestCollectionPanelPresenter;
+import rosa.scanvas.demo.website.client.presenter.ManifestPanelPresenter;
+import rosa.scanvas.demo.website.client.presenter.PanelPresenter;
+import rosa.scanvas.demo.website.client.presenter.SequencePanelPresenter;
+import rosa.scanvas.demo.website.client.presenter.SidebarPresenter;
+import rosa.scanvas.demo.website.client.view.CanvasNavView;
+import rosa.scanvas.demo.website.client.view.CanvasView;
+import rosa.scanvas.demo.website.client.view.CollectionView;
+import rosa.scanvas.demo.website.client.view.HomeView;
+import rosa.scanvas.demo.website.client.view.ManifestView;
 import rosa.scanvas.demo.website.client.view.SidebarFullView;
 
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.Widget;
 
-/**
- * Controls the sidebar, which includes ways to add/remove panels, and the 
- * metadata display and annotation list display
- *
- */
-public class MainController implements Controller {
+public class MainController implements ValueChangeHandler<String>, IsWidget {
+    private static int next_panel_id = 0;
 
-	private final double SIDEBAR_WIDTH_PERCENT = 0.25;
-	private final double SIDEBAR_HEIGHT_PERCENT= 1;
-	
-	private int currentIndex;
-	private FlexTable mainTable;
-	private HasWidgets container;
-	private final HandlerManager eventBus;
-	private SidebarFullPresenter sidebarPresenter;
-	
-	private PanelController panelController;
-	
-	private int width;
-	private int height;
-	
-	public MainController(HandlerManager eventBus) {
-		this.eventBus = eventBus;
-		currentIndex = 0;
-		
-		mainTable = new FlexTable();
-		
-		bind();
-	}
-	
-	/**
-	 * Add handler to listen to changes in History
-	 */
-	public void onValueChange(ValueChangeEvent<String> event) {
-		String token = event.getValue();
+    private final DockLayoutPanel main;
+    private final FlowPanel main_content;
+    private final HandlerManager event_bus;
+    private final SidebarPresenter sidebar_presenter;
+    private final ArrayList<Panel> panels;
 
-		if (token != null) {
-			sidebarPresenter.refreshList(token);
-			sidebarPresenter.setListSelected(currentIndex);
-		}
-	}
+    private int panel_width;
+    private int panel_height;
 
-	public void go(HasWidgets container) {
-		this.container = container;
-		width = (int) (Window.getClientWidth() * SIDEBAR_WIDTH_PERCENT);
-		height= (int) (Window.getClientHeight()* SIDEBAR_HEIGHT_PERCENT);
-		
-		FlowPanel header = new FlowPanel();
-		header.setStylePrimaryName("Header");
-		
-		header.add(new Label("JHU Prototype Shared Canvas Viewier"));
-		
-		if (container instanceof DockLayoutPanel) {
-		    ((DockLayoutPanel)container).addNorth(header, 100);
-		}    
-		
-		panelController = new PanelController(eventBus);
-		
-		sidebarPresenter = new SidebarFullPresenter(new SidebarFullView(),eventBus);
-		sidebarPresenter.go(container);
-		
-		ScrollPanel sPanel = new ScrollPanel();
-		sPanel.add(mainTable);
-		this.container.add(sPanel);
-		
-		mainTable.setStylePrimaryName("mainTable");
-		
-		panelController.go(mainTable);
-	}
-	
-	/**
-	 * Add handlers to listen for application events
-	 */
-	private void bind() {
-		History.addValueChangeHandler(this);
-		
-		Window.addResizeHandler(new ResizeHandler() {
-			public void onResize(ResizeEvent event) {
-				width = (int) (event.getWidth() * SIDEBAR_WIDTH_PERCENT);
-				height = (int) (event.getHeight()*SIDEBAR_HEIGHT_PERCENT);
-				
-				doResize();
-			}
-		});
-		
-		eventBus.addHandler(PanelNumberChangeEvent.TYPE, 
-				new PanelNumberChangeEventHandler() {
-					public void onPanelNumberChange(PanelNumberChangeEvent event) {
-						doPanelNumberChange(event.getMessage(), event.getSelectedPanel());
-					}
-		});
-		
-		eventBus.addHandler(DataUpdateEvent.TYPE, new DataUpdateEventHandler() {
-			public void onDataUpdate(DataUpdateEvent event) {
-				doDataUpdate(event.getData());
-			}
-		});
-	}
-	
-	private void doResize() {
-/*		sidebarPresenter.setSize(String.valueOf(width)+"px", 
-								String.valueOf(height)+"px");*/
-	}
-	
-	/**
-	 * Occurs when a panel is added or removed, or a different panel is selected
-	 * @param message PanelAction enum message from the event, indicates type of action (add, remove, change)
-	 * @param selectedPanel index of the selected panel
-	 */
-	private void doPanelNumberChange(PanelAction message, int selectedPanel) {
-		String currentToken = History.getToken();
-		
-		if (message.equals(PanelAction.ADD)) {
-			// add a default home token to the end of the current history token
-			if (currentToken.equals("")) {
-				currentIndex = 0;
-			} else {
-				currentIndex = currentToken.split(";:").length;
-			}
-			
-		} else if (message.equals(PanelAction.CHANGE)) {
-			
-			if (currentIndex != selectedPanel) {
-				// unhighlight previous panel
-				currentIndex = selectedPanel;
-				// highlight panel;
-			}
-			
-		} else if (message.equals(PanelAction.REMOVE)) {
-			// TODO: Move logic to HistoryInfo
-		    // remove history token segment from current history token, removing the panel from display
-			
-			
-			currentIndex = 0;
-		}
-	}
+    public MainController(HandlerManager event_bus) {
+        this.main = new DockLayoutPanel(Unit.PX);
+        main.setStylePrimaryName("Main");
 
-	public void doDataUpdate(PanelData data) {
-		sidebarPresenter.setData(data);
-	}
+        this.main_content = new FlowPanel();
+        this.event_bus = event_bus;
+        this.panels = new ArrayList<Panel>();
+
+        FlowPanel header = new FlowPanel();
+        header.setStylePrimaryName("Header");
+        header.add(new Label("JHU Prototype Shared Canvas Viewer"));
+
+        main.addNorth(header, 100);
+
+        this.sidebar_presenter = new SidebarPresenter(new SidebarFullView(),
+                event_bus);
+        main.addWest(sidebar_presenter.asWidget(), 300);
+
+        ScrollPanel sp = new ScrollPanel();
+        sp.add(main_content);
+        main.add(sp);
+
+        calculate_panel_size(Window.getClientWidth(), Window.getClientHeight());
+        bind();
+    }
+
+    /**
+     * Bind event handlers to the event bus.
+     */
+    private void bind() {
+        History.addValueChangeHandler(this);
+
+        Window.addResizeHandler(new ResizeHandler() {
+            public void onResize(ResizeEvent event) {
+                doResize(event.getWidth(), event.getHeight());
+            }
+        });
+
+        Window.addResizeHandler(new ResizeHandler() {
+            int width = Window.getClientWidth();
+            int height = Window.getClientHeight();
+
+            public void onResize(ResizeEvent event) {
+                int dx = event.getWidth() - width;
+                int dy = event.getHeight() - height;
+
+                if (Math.abs(dx) > 100 || Math.abs(dy) > 100) {
+                    width = event.getWidth();
+                    height = event.getHeight();
+
+                    doResize(width, height);
+                }
+            }
+        });
+
+        event_bus.addHandler(PanelRequestEvent.TYPE,
+                new PanelRequestEventHandler() {
+                    public void onPanelRequest(PanelRequestEvent event) {
+                        doPanelRequest(event.getAction(), event.getPanelId(),
+                                event.getPanelState());
+                    }
+                });
+    }
+
+    private Panel create_panel(PanelView view) {
+        PanelPresenter p;
+
+        int panel_id = next_panel_id++;
+
+        switch (view) {
+        case CANVAS:
+            p = new CanvasPanelPresenter(new CanvasView(panel_width,
+                    panel_height, panel_width, panel_height), event_bus);
+            break;
+
+        case HOME:
+            p = new HomePanelPresenter(new HomeView(), event_bus, panel_id);
+
+            break;
+
+        case MANIFEST:
+            p = new ManifestPanelPresenter(new ManifestView(), event_bus, panel_id);
+            break;
+
+        case MANIFEST_COLLECTION:
+            p = new ManifestCollectionPanelPresenter(new CollectionView(),
+                    event_bus, panel_id);
+            break;
+
+        case SEQUENCE:
+            p = new SequencePanelPresenter(new CanvasNavView(), event_bus,
+                    panel_id);
+            break;
+
+        default:
+            throw new RuntimeException("Unhandled view: " + view);
+        }
+
+        return new Panel(p, panel_id);
+    }
+
+    private void add_panel(PanelState state) {
+        Panel panel = create_panel(state.getView());
+        panels.add(panel);
+        main_content.add(panel.getPresenter());
+
+        update_panel_sizes(Window.getClientWidth(), Window.getClientHeight());
+        panel.display(state);
+    }
+
+    private void set_panel_by_id(PanelState state, int panel_id) {
+        int index = find_panel_index(panel_id);
+
+        if (index == -1) {
+            return;
+        }
+
+        set_panel_by_index(state, index);
+    }
+
+    private void set_panel_by_index(PanelState state, int index) {
+        Panel old_panel = panels.get(index);
+
+        if (old_panel.getState().getView() == state.getView()) {
+            // Update data and redisplay
+            old_panel.display(state);
+        } else if (old_panel.getState().equals(state)) {
+            // Nothing to do
+        } else {
+            // Actually replace the panel
+
+            Panel panel = create_panel(state.getView());
+
+            panels.add(index, panel);
+            panels.remove(index + 1);
+            main_content.insert(panel.getPresenter(), index);
+            main_content.remove(index + 1);
+
+            panel.display(state);
+        }
+    }
+
+    private void remove_panel_by_id(int panel_id) {
+        int index = find_panel_index(panel_id);
+
+        if (index == -1) {
+            return;
+        }
+
+        panels.remove(index);
+        main_content.remove(index);
+
+        update_panel_sizes(Window.getClientWidth(), Window.getClientHeight());
+    }
+
+    /**
+     * Issue events to handle history changes.
+     */
+    public void onValueChange(ValueChangeEvent<String> event) {
+        HistoryState history_state = HistoryState.parseHistoryToken(event
+                .getValue());
+
+        if (history_state == null) {
+            Window.alert("Failed to parse history state");
+            // TODO
+            return;
+        }
+
+        List<PanelState> panel_states = history_state.panelStates();
+
+        for (int i = 0; i < panel_states.size(); i++) {
+            PanelState panel_state = panel_states.get(i);
+
+            if (i < panels.size()) {
+                Panel old_panel = panels.get(i);
+                PanelRequestEvent req = new PanelRequestEvent(
+                        PanelRequestEvent.PanelAction.CHANGE,
+                        old_panel.getId(), panel_state);
+                event_bus.fireEvent(req);
+            } else {
+                PanelRequestEvent req = new PanelRequestEvent(
+                        PanelRequestEvent.PanelAction.ADD, panel_state);
+                event_bus.fireEvent(req);
+            }
+        }
+    }
+
+    private void calculate_panel_size(int win_width, int win_height) {
+        int count = panels.size();
+
+        if (count == 0) {
+            count = 1;
+        }
+
+        panel_width = (win_width - 300) - 50;
+        panel_height = (win_height - 100) - 20;
+
+        if (count > 1) {
+            panel_width /= 2;
+            panel_width -= 20;
+
+            if (count > 2) {
+                panel_height /= 2;
+                panel_height -= 20;
+            }
+        }
+
+        // panel_width -= count * 10;
+        // panel_height -= count * 5;
+
+        if (panel_width < 300) {
+            panel_width = 300;
+        }
+
+        if (panel_width > 2000) {
+            panel_width = 2000;
+        }
+
+        if (panel_height < 200) {
+            panel_height = 200;
+        }
+
+        if (panel_height > 2000) {
+            panel_height = 2000;
+        }
+    }
+
+    // TODO Be smart and only call resize when size changes...
+    private void update_panel_sizes(int win_width, int win_height) {
+        calculate_panel_size(win_width, win_height);
+
+        for (Panel panel : panels) {
+            panel.presenter.resize(panel_width, panel_height);
+        }
+    }
+
+    private void doResize(int win_width, int win_height) {
+        update_panel_sizes(win_width, win_height);
+    }
+
+    private int find_panel_index(int panel_id) {
+        for (int i = 0; i < panels.size(); i++) {
+            if (panels.get(i).getId() == panel_id) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private void doPanelRequest(PanelAction action, int panel_id,
+            PanelState panel_state) {
+        if (action == PanelAction.ADD) {
+            add_panel(panel_state);
+        } else if (action == PanelAction.CHANGE) {
+            set_panel_by_id(panel_state, panel_id);
+        } else if (action == PanelAction.REMOVE) {
+            remove_panel_by_id(panel_id);
+        }
+
+        History.newItem(get_history_token(), false);
+    }
+
+    private String get_history_token() {
+        PanelState[] panel_states = new PanelState[panels.size()];
+
+        for (int i = 0; i < panels.size(); i++) {
+            panel_states[i] = panels.get(i).getState();
+        }
+
+        return new HistoryState(panel_states).toToken();
+    }
+
+    public void go() {
+        if (History.getToken().isEmpty()) {
+            PanelRequestEvent event = new PanelRequestEvent(
+                    PanelRequestEvent.PanelAction.ADD, new PanelState());
+            event_bus.fireEvent(event);
+        } else {
+            History.fireCurrentHistoryState();
+        }
+    }
+
+    @Override
+    public Widget asWidget() {
+        return main;
+    }
 }

@@ -1,6 +1,6 @@
 package rosa.scanvas.demo.website.client.view;
 
-import rosa.scanvas.demo.website.client.presenter.SidebarFullPresenter;
+import rosa.scanvas.demo.website.client.presenter.SidebarPresenter;
 import rosa.scanvas.demo.website.client.widgets.AnnotationListWidget;
 import rosa.scanvas.demo.website.client.widgets.ManifestListWidget;
 
@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class SidebarFullView extends Composite implements SidebarFullPresenter.Display {
+public class SidebarFullView extends Composite implements SidebarPresenter.Display {
 
 	private TabLayoutPanel tabPanel = new TabLayoutPanel(4, Style.Unit.EM);
 	

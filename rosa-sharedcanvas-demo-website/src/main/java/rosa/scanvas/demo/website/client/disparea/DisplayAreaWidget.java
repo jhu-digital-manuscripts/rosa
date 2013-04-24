@@ -7,18 +7,23 @@ import com.google.gwt.user.client.ui.Composite;
 public class DisplayAreaWidget extends Composite {
     private final Canvas canvas;
     private final Context2d context;
-    private final DisplayArea area;
+    private DisplayArea area;
 
     public DisplayAreaWidget(DisplayArea area) {
         this.canvas = Canvas.createIfSupported();
         this.context = canvas.getContext2d();
+
+        initWidget(canvas);
+    }
+
+    public void display(DisplayArea area) {
         this.area = area;
 
         canvas.setPixelSize(area.viewportWidth(), area.viewportHeight());
         canvas.setCoordinateSpaceWidth(area.baseWidth());
         canvas.setCoordinateSpaceHeight(area.baseHeight());
 
-        initWidget(canvas);
+        redraw();
     }
 
     public void redraw() {

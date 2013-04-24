@@ -1,5 +1,5 @@
 /** Add css rules here for your application. */
-
+m
 
 .thumbnail {
 	float: left;
@@ -9,4 +9,10 @@
 .opening {
 	float: left;
 	margin: 20px 0px;
+}
+
+.PanelView {
+  float: left;
+  margin: 10px;
+  border: 2px solid red;
 }
