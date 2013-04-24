@@ -14,3 +14,27 @@
   margin: 10px;
   border: 2px solid red;
 }
+
+.PanelTitle {
+  font-size: larger;
+  font-weight: bold;
+  margin-bottom: 1em;
+}
+
+.PanelHeader {
+  font-weight: bold;
+  margin: 1em;
+}
+
+.PanelToolbar .gwt-TextBox {
+  margin-right: 1em;
+}
+
+.PanelToolbar {
+  margin-top: 1em;
+}
+
+.PanelToolbar .gwt-Button {
+  margin-left: 1em;
+}
+
