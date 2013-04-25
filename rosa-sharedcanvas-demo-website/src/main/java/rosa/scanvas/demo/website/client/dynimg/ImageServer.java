@@ -38,13 +38,11 @@ public interface ImageServer {
 
     /**
      * Render image into the specified square, preserving the aspect ratio. The
-     * actual image may be smaller than the square.
+     * actual width may be smaller than the given size, but the height should be
+     * the same.
      * 
      * @param image
-     * @param width
-     *            of rendered image
-     * @param height
-     *            of rendered image
+     * @param square_size
      * @param crop
      *            location in master image
      * @return resulting web image

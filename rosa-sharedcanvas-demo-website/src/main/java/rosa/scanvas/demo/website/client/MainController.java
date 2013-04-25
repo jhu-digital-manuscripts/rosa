@@ -13,7 +13,7 @@ import rosa.scanvas.demo.website.client.presenter.ManifestPanelPresenter;
 import rosa.scanvas.demo.website.client.presenter.PanelPresenter;
 import rosa.scanvas.demo.website.client.presenter.SequencePanelPresenter;
 import rosa.scanvas.demo.website.client.presenter.SidebarPresenter;
-import rosa.scanvas.demo.website.client.view.CanvasNavView;
+import rosa.scanvas.demo.website.client.view.SequenceView;
 import rosa.scanvas.demo.website.client.view.CanvasView;
 import rosa.scanvas.demo.website.client.view.CollectionView;
 import rosa.scanvas.demo.website.client.view.HomeView;
@@ -126,7 +126,7 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
             return new ManifestCollectionPanelPresenter(new CollectionView(),
                     event_bus, panel_id);
         case SEQUENCE:
-            return new SequencePanelPresenter(new CanvasNavView(), event_bus,
+            return new SequencePanelPresenter(new SequenceView(), event_bus,
                     panel_id);
         default:
             throw new RuntimeException("Unhandled view: " + view);

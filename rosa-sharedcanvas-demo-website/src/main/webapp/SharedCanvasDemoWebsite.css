@@ -1,7 +1,15 @@
 /** Add css rules here for your application. */
-.thumbnail {
-	float: left;
-	margin: 15px 10px;
+.Thumbnail {
+  float: left;
+  margin: 5px
+}
+
+.Thumbnail:hover {
+  background-color: #6495ED;
+}
+
+.Thumbnail .gwt-Label {
+  font-weight: bold;
 }
 
 .opening {

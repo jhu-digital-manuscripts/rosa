@@ -3,8 +3,6 @@ package rosa.scanvas.demo.website.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-
 import rosa.scanvas.model.client.Annotation;
 import rosa.scanvas.model.client.AnnotationList;
 import rosa.scanvas.model.client.Canvas;
@@ -13,6 +11,8 @@ import rosa.scanvas.model.client.ManifestCollection;
 import rosa.scanvas.model.client.Reference;
 import rosa.scanvas.model.client.Sequence;
 import rosa.scanvas.model.client.SharedCanvas;
+
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
  * A container holding data operated on by a panel view.
@@ -149,7 +149,16 @@ public class PanelData {
                     public void onSuccess(AnnotationList al) {
                         data.getAnnotationLists().add(al);
 
-                        if (index < lists.size()) {
+                        // TODO filter here with certain guarantees? iiif?
+                        List<Annotation> images = data.getImageAnnotations();
+
+                        for (Annotation a : al) {
+                            if (a.body().isImage()) {
+                                images.add(a);
+                            }
+                        }
+
+                        if (index + 1 < lists.size()) {
                             load_annotation_lists(lists, index + 1, data, cb);
                         } else {
                             cb.onSuccess(data);

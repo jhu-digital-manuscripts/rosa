@@ -34,6 +34,10 @@ public class WebImage extends FocusWidget {
         setStylePrimaryName("WebImage");
     }
 
+    public WebImage(String url) {
+        this(url, -1, -1);
+    }
+
     public int width() {
         return width;
     }
@@ -52,13 +56,13 @@ public class WebImage extends FocusWidget {
             viewable = true;
         }
     }
-    
+
     public void makeViewable(OnLoadCallback cb) {
         if (!viewable) {
             setOnloadCallback(cb);
-            
+
             img.setSrc(url);
-            viewable = true;                        
+            viewable = true;
         }
     }
 
