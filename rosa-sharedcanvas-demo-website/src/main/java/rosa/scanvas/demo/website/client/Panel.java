@@ -6,10 +6,10 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class Panel {
-    final int id;
-    final PanelPresenter presenter;
-    PanelData data;
-    PanelState state;
+    private final int id;
+    private final PanelPresenter presenter;
+    private PanelData data;
+    private PanelState state;
 
     public Panel(PanelPresenter presenter, int id) {
         this.id = id;

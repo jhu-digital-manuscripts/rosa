@@ -128,7 +128,8 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
             break;
 
         case MANIFEST:
-            p = new ManifestPanelPresenter(new ManifestView(), event_bus, panel_id);
+            p = new ManifestPanelPresenter(new ManifestView(), event_bus,
+                    panel_id);
             break;
 
         case MANIFEST_COLLECTION:
@@ -185,6 +186,7 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
             main_content.insert(panel.getPresenter(), index);
             main_content.remove(index + 1);
 
+            panel.getPresenter().resize(panel_width, panel_height);
             panel.display(state);
         }
     }
@@ -279,7 +281,7 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
         calculate_panel_size(win_width, win_height);
 
         for (Panel panel : panels) {
-            panel.presenter.resize(panel_width, panel_height);
+            panel.getPresenter().resize(panel_width, panel_height);
         }
     }
 

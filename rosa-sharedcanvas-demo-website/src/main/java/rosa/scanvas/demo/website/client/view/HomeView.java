@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -29,10 +30,12 @@ public class HomeView extends Composite implements HomePanelPresenter.Display {
         this.is_col_checkbox = new CheckBox("Collection");
 
         FlowPanel main = new FlowPanel();
+        ScrollPanel top = new ScrollPanel(main);
+        top.setStylePrimaryName("PanelView");
 
-        Label panel_title = new Label("Choose a collection to access.");
+        Label panel_title = new Label("Choose a collection to view.");
         panel_title.setStylePrimaryName("PanelTitle");
-        
+
         main.add(panel_title);
         main.add(col_listbox);
 
@@ -40,10 +43,10 @@ public class HomeView extends Composite implements HomePanelPresenter.Display {
 
         FlowPanel toolbar_panel = new FlowPanel();
         toolbar_panel.setStylePrimaryName("PanelToolbar");
-        
+
         Label panel_header = new Label("Access data from URL.");
         panel_header.setStylePrimaryName("PanelHeader");
-        
+
         main.add(panel_header);
         main.add(new Label(
                 "Indicate whether it is a collection of manifest or an individual manifest with the checkbox."));
@@ -54,9 +57,7 @@ public class HomeView extends Composite implements HomePanelPresenter.Display {
         toolbar_panel.add(is_col_checkbox);
         toolbar_panel.add(load_button);
 
-        main.setStylePrimaryName("PanelView");
-
-        initWidget(main);
+        initWidget(top);
     }
 
     public HasValue<String> getUserUrlText() {

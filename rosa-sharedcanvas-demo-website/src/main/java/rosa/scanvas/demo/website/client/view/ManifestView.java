@@ -1,61 +1,73 @@
 package rosa.scanvas.demo.website.client.view;
 
-import java.util.List;
-
 import rosa.scanvas.demo.website.client.presenter.ManifestPanelPresenter;
+import rosa.scanvas.model.client.Manifest;
 import rosa.scanvas.model.client.Reference;
 import rosa.scanvas.model.client.Sequence;
 
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ManifestView extends Composite implements
         ManifestPanelPresenter.Display {
-    private final ListBox manifest_listbox;
-    private final Label view_label;
-    private final Panel main;
+    private final ListBox sequence_listbox;
+    private final Label manifest_label;
 
     public ManifestView() {
-        this.manifest_listbox = new ListBox();
-        this.view_label = new Label();
-        this.main = new FlowPanel();
+        Panel main = new FlowPanel();
+        ScrollPanel top = new ScrollPanel(main);
+        top.setStylePrimaryName("PanelView");
 
-        manifest_listbox.setVisibleItemCount(10);
+        Label panel_title = new Label("Choose a sequence to view.");
+        panel_title.setStylePrimaryName("PanelTitle");
 
-        main.add(view_label);
-        main.add(new Label("Choose a sequence"));
-        main.add(manifest_listbox);
+        this.sequence_listbox = new ListBox(false);
+        this.sequence_listbox.setVisibleItemCount(5);
 
-        main.setStylePrimaryName("PanelView");
-        
-        initWidget(main);        
+        this.manifest_label = new Label();
+        manifest_label.setStylePrimaryName("PanelHeader");
+
+        main.add(panel_title);
+        main.add(manifest_label);
+        main.add(sequence_listbox);
+
+        initWidget(top);
     }
 
-    public int getSelectedRow(ClickEvent event) {
-        return manifest_listbox.getSelectedIndex();
+    public int getSelectedSequence() {
+        return sequence_listbox.getSelectedIndex();
     }
 
-    public void setData(List<Reference<Sequence>> seq) {
-        manifest_listbox.clear();
+    public void setManifest(Manifest manifest) {
+        sequence_listbox.clear();
 
-        for (int i = 0; i < seq.size(); i++) {
-            manifest_listbox.addItem(seq.get(i).uri());
+        String label = manifest.label();
+
+        if (label == null) {
+            label = "Unknown title";
+        }
+
+        manifest_label.setText(label);
+
+        for (Reference<Sequence> ref : manifest.sequences()) {
+            String seq_label = ref.label();
+
+            if (seq_label == null) {
+                seq_label = "Sequence";
+            }
+
+            sequence_listbox.addItem(seq_label);
         }
     }
 
-    public HasText getViewLabel() {
-        return view_label;
-    }
-
-    public HasClickHandlers getList() {
-        return manifest_listbox;
+    public HasClickHandlers getSequenceList() {
+        return sequence_listbox;
     }
 
     public Widget asWidget() {
