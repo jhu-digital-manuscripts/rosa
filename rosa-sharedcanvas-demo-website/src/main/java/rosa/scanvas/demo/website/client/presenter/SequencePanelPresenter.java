@@ -52,8 +52,9 @@ public class SequencePanelPresenter implements PanelPresenter {
         this.eventBus = eventBus;
         this.display = display;
         this.panel_id = panel_id;
+        this.visiblePosition = 0;
 
-        visiblePosition = 0;
+        bind();
     }
 
     /**
@@ -233,7 +234,7 @@ public class SequencePanelPresenter implements PanelPresenter {
         return -1;
     }
 
-    public void setPageTurner() {
+    private void setPageTurner() {
 
         if (canvas[0] != null) {
 
