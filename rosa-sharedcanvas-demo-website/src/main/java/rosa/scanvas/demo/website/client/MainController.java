@@ -111,46 +111,33 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
                 });
     }
 
-    private Panel create_panel(PanelView view) {
-        PanelPresenter p;
-
-        int panel_id = next_panel_id++;
-
+    private PanelPresenter create_panel_presenter(PanelView view, int panel_id) {
         switch (view) {
         case CANVAS:
-            p = new CanvasPanelPresenter(new CanvasView(panel_width,
+            return new CanvasPanelPresenter(new CanvasView(panel_width,
                     panel_height, panel_width, panel_height), event_bus);
-            break;
-
         case HOME:
-            p = new HomePanelPresenter(new HomeView(), event_bus, panel_id);
-
-            break;
+            return new HomePanelPresenter(new HomeView(), event_bus, panel_id);
 
         case MANIFEST:
-            p = new ManifestPanelPresenter(new ManifestView(), event_bus,
+            return new ManifestPanelPresenter(new ManifestView(), event_bus,
                     panel_id);
-            break;
-
         case MANIFEST_COLLECTION:
-            p = new ManifestCollectionPanelPresenter(new CollectionView(),
+            return new ManifestCollectionPanelPresenter(new CollectionView(),
                     event_bus, panel_id);
-            break;
-
         case SEQUENCE:
-            p = new SequencePanelPresenter(new CanvasNavView(), event_bus,
+            return new SequencePanelPresenter(new CanvasNavView(), event_bus,
                     panel_id);
-            break;
-
         default:
             throw new RuntimeException("Unhandled view: " + view);
         }
-
-        return new Panel(p, panel_id);
     }
 
     private void add_panel(PanelState state) {
-        Panel panel = create_panel(state.getView());
+        int panel_id = next_panel_id++;
+        Panel panel = new Panel(create_panel_presenter(state.getView(),
+                panel_id), panel_id);
+
         panels.add(panel);
         main_content.add(panel.getPresenter());
 
@@ -158,35 +145,35 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
         panel.display(state);
     }
 
-    private void set_panel_by_id(PanelState state, int panel_id) {
+    private void change_panel_by_id(PanelState state, int panel_id) {
         int index = find_panel_index(panel_id);
 
         if (index == -1) {
             return;
         }
 
-        set_panel_by_index(state, index);
+        change_panel_by_index(state, index);
     }
 
-    private void set_panel_by_index(PanelState state, int index) {
-        Panel old_panel = panels.get(index);
+    private void change_panel_by_index(PanelState state, int index) {
+        Panel panel = panels.get(index);
 
-        if (old_panel.getState().getView() == state.getView()) {
+        if (panel.getState().getView() == state.getView()) {
             // Update data and redisplay
-            old_panel.display(state);
-        } else if (old_panel.getState().equals(state)) {
+            panel.display(state);
+        } else if (panel.getState().equals(state)) {
             // Nothing to do
         } else {
-            // Actually replace the panel
+            // Change the panel presenter and display
 
-            Panel panel = create_panel(state.getView());
+            PanelPresenter presenter = create_panel_presenter(state.getView(),
+                    panel.getId());
+            panel.setPresenter(presenter);
 
-            panels.add(index, panel);
-            panels.remove(index + 1);
-            main_content.insert(panel.getPresenter(), index);
+            main_content.insert(presenter, index);
             main_content.remove(index + 1);
 
-            panel.getPresenter().resize(panel_width, panel_height);
+            presenter.resize(panel_width, panel_height);
             panel.display(state);
         }
     }
@@ -304,7 +291,7 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
         if (action == PanelAction.ADD) {
             add_panel(panel_state);
         } else if (action == PanelAction.CHANGE) {
-            set_panel_by_id(panel_state, panel_id);
+            change_panel_by_id(panel_state, panel_id);
         } else if (action == PanelAction.REMOVE) {
             remove_panel_by_id(panel_id);
         }

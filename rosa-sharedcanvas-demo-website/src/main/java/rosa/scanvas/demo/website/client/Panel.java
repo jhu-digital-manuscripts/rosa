@@ -7,7 +7,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class Panel {
     private final int id;
-    private final PanelPresenter presenter;
+    private PanelPresenter presenter;
     private PanelData data;
     private PanelState state;
 
@@ -74,5 +74,9 @@ public class Panel {
 
     public PanelPresenter getPresenter() {
         return presenter;
+    }
+
+    public void setPresenter(PanelPresenter presenter) {
+        this.presenter = presenter;
     }
 }
