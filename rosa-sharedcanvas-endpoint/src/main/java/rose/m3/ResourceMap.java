@@ -274,7 +274,7 @@ public class ResourceMap {
                 canvas_seq);
 
         sequence.addProperty(RDF.type, sequence_type);
-        sequence.addProperty(RDFS.label, "Read");
+        sequence.addProperty(RDFS.label, "Reading order");
         sequence.addProperty(reading_dir, READING_DIR_LEFT_TO_RIGHT);
 
         return model;
@@ -296,6 +296,7 @@ public class ResourceMap {
         {
             Resource r = model.createResource(service_url + "/" + "sequence");
             r.addProperty(RDF.type, sequence_type);
+            r.addProperty(RDFS.label, "Reading order");
             model.add(manifest, aggregates, r);
         }
 
@@ -303,6 +304,7 @@ public class ResourceMap {
             Resource r = model
                     .createResource(service_url + "/" + "annotations");
             r.addProperty(RDF.type, annotation_list_type);
+            r.addProperty(RDFS.label, "All annotations");
             model.add(manifest, aggregates, r);
         }
 
