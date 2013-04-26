@@ -33,6 +33,35 @@ public abstract class AbstractImageServer implements ImageServer {
                 height);
     }
 
+    public WebImage renderToRectangle(MasterImage image, int rect_width,
+            int rect_height, int... crop) {
+        int width, height;
+
+        if (image.width() > image.height()) {
+            width = rect_width;
+            height = (rect_width * image.height()) / image.width();
+
+            if (height > rect_height) {
+                int diff = height - rect_height;
+                height = rect_height;
+
+                width -= (image.width() * diff / image.height());
+            }
+        } else {
+            height = rect_height;
+            width = (rect_height * image.width()) / image.height();
+
+            if (width > rect_width) {
+                int diff = width - rect_width;
+                width = rect_width;
+                height -= (image.height() * diff / image.width());
+            }
+        }
+
+        return new WebImage(renderAsUrl(image, width, height, crop), width,
+                height);
+    }
+
     public WebImage renderToWidth(MasterImage image, int render_width,
             int... crop) {
         int height = (render_width * image.height()) / image.width();

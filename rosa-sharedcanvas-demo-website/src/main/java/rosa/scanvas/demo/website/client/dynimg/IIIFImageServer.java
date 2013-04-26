@@ -14,6 +14,11 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  * image server.
  */
 public class IIIFImageServer extends AbstractImageServer {
+    private static IIIFImageServer instance = new IIIFImageServer();
+
+    public static IIIFImageServer instance() {
+        return instance;
+    }
 
     public static void loadMasterImage(final String id,
             final AsyncCallback<MasterImage> cb) {

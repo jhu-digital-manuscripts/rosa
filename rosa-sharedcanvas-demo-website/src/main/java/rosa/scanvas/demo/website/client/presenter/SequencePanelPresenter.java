@@ -2,7 +2,6 @@ package rosa.scanvas.demo.website.client.presenter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +13,8 @@ import rosa.scanvas.demo.website.client.dynimg.MasterImage;
 import rosa.scanvas.demo.website.client.dynimg.WebImage;
 import rosa.scanvas.demo.website.client.event.PanelDisplayedEvent;
 import rosa.scanvas.demo.website.client.event.PanelRequestEvent;
-import rosa.scanvas.demo.website.client.widgets.PageTurnerWidget;
+import rosa.scanvas.demo.website.client.widgets.Opening;
+import rosa.scanvas.demo.website.client.widgets.PageTurner;
 import rosa.scanvas.demo.website.client.widgets.Thumbnail;
 import rosa.scanvas.demo.website.client.widgets.ThumbnailBrowser;
 import rosa.scanvas.model.client.Annotation;
@@ -25,19 +25,16 @@ import rosa.scanvas.model.client.Sequence;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
 public class SequencePanelPresenter implements PanelPresenter {
-
-    // TODO
-    private static IIIFImageServer iiif_server = new IIIFImageServer();
-
     public interface Display extends IsWidget {
-        PageTurnerWidget getPageTurnerWidget();
+        PageTurner getPageTurner();
 
         ThumbnailBrowser getThumbnailBrowser();
 
@@ -51,12 +48,13 @@ public class SequencePanelPresenter implements PanelPresenter {
     private final HandlerManager eventBus;
     private final Display display;
     private final int panel_id;
+    private int page_width, page_height;
     private int thumb_size;
     private int tab;
+    boolean thumb_browser_setup;
+    boolean page_turner_setup;
 
     private PanelData data;
-    private int canvasIndex;
-    private Canvas[] canvas = new Canvas[2];
 
     public SequencePanelPresenter(Display display, HandlerManager eventBus,
             int panel_id) {
@@ -64,32 +62,26 @@ public class SequencePanelPresenter implements PanelPresenter {
         this.display = display;
         this.panel_id = panel_id;
         this.thumb_size = 128;
+        this.page_width = 200;
+        this.page_height = 300;
+        this.thumb_browser_setup = false;
+        this.page_turner_setup = false;
 
-        bind();
-    }
+        display.getTabPanelSelector().addSelectionHandler(
+                new SelectionHandler<Integer>() {
+                    @Override
+                    public void onSelection(SelectionEvent<Integer> sel) {
+                        tab = sel.getSelectedItem();
 
-    /**
-     * Add handlers to listen for DOM events
-     */
-    private void bind() {
-        display.getPageTurnerWidget().getPrevButton()
-                .addClickHandler(new ClickHandler() {
-                    public void onClick(ClickEvent event) {
-                        doPrevious();
-                    }
-                });
-
-        display.getPageTurnerWidget().getNextButton()
-                .addClickHandler(new ClickHandler() {
-                    public void onClick(ClickEvent event) {
-                        doNext();
-                    }
-                });
-
-        display.getPageTurnerWidget().getJumpButton()
-                .addClickHandler(new ClickHandler() {
-                    public void onClick(ClickEvent event) {
-                        doJump();
+                        if (tab == 0) {
+                            if (!page_turner_setup) {
+                                setup_page_turner();
+                            }
+                        } else if (tab == 1) {
+                            if (!thumb_browser_setup) {
+                                setup_thumb_browser();
+                            }
+                        }
                     }
                 });
     }
@@ -117,100 +109,13 @@ public class SequencePanelPresenter implements PanelPresenter {
         eventBus.fireEvent(event);
     }
 
-    private void bindPageTurner(final PanelData data) {
-        FlowPanel main = display.getPageTurnerWidget().getCanvasDisplayPanel();
-
-        FocusPanel panel = (FocusPanel) main.getWidget(0);
-        panel.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                doPageTurnerClick(data, 0);
-            }
-        });
-
-        panel = (FocusPanel) main.getWidget(1);
-        panel.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                doPageTurnerClick(data, 1);
-            }
-        });
-    }
-
-    /**
-     * Set data in Page Turner to the next opening
-     */
-    private void doNext() {
-        canvasIndex += 2;
-        canvas[0] = data.getSequence().canvas(canvasIndex - 1);
-        canvas[1] = data.getSequence().canvas(canvasIndex);
-
-        display.getPageTurnerWidget().setData(canvas,
-                data.getImageAnnotations());
-    }
-
-    /**
-     * Set data in Page Turner to the previous opening
-     */
-    private void doPrevious() {
-
-    }
-
-    /**
-     * Set data in Page Turner to the opening specified in the text box
-     */
-    private void doJump() {
-    }
-
-    private void doPageTurnerClick(final PanelData data, int index) {
-
-    }
-
-    // ------------------------------------------------
-
-    /**
-     * Returns the index of the canvas of the first page with label 1r, or 001r,
-     * etc. If no such canvas exists, returns NULL.
-     */
-    private int findFirstPage() {
-        Iterator<Canvas> it = data.getSequence().iterator();
-        int index = 0;
-
-        while (it.hasNext()) {
-            Canvas canv = it.next();
-
-            if (canv.label().equals("1r") || canv.label().equals("001r")) {
-                return index;
-            }
-            index++;
-        }
-        return -1;
-    }
-
-    private void setPageTurner() {
-
-        if (canvas[0] != null) {
-
-        } else {
-            canvasIndex = findFirstPage();
-            if (canvasIndex > 0) {
-                canvas[0] = data.getSequence().canvas(canvasIndex - 1);
-                canvas[1] = data.getSequence().canvas(canvasIndex);
-
-                display.getPageTurnerWidget().setData(canvas,
-                        data.getImageAnnotations());
-            }
-        }
-    }
-
     @Override
     public Widget asWidget() {
         return display.asWidget();
     }
 
-    private List<Thumbnail> construct_thumbs(Sequence sequence,
-            List<Annotation> annotations) {
-        List<Thumbnail> result = new ArrayList<Thumbnail>();
-
-        // canvas uri -> annotation
+    private Map<String, Annotation> map_targets(List<Annotation> annotations) {
+        // target uri -> annotation
         // TODO maybe panel data should contain various uri mappings...
         Map<String, Annotation> targets = new HashMap<String, Annotation>();
 
@@ -223,6 +128,16 @@ public class SequencePanelPresenter implements PanelPresenter {
                 }
             }
         }
+
+        return targets;
+    }
+
+    private List<Thumbnail> construct_thumbs(Sequence sequence,
+            List<Annotation> annotations) {
+        List<Thumbnail> result = new ArrayList<Thumbnail>();
+
+        IIIFImageServer iiif_server = IIIFImageServer.instance();
+        Map<String, Annotation> targets = map_targets(annotations);
 
         for (Canvas canvas : sequence) {
             Annotation a = targets.get(canvas.uri());
@@ -238,24 +153,76 @@ public class SequencePanelPresenter implements PanelPresenter {
         return result;
     }
 
+    private List<Opening> construct_openings(Sequence sequence,
+            List<Annotation> annotations) {
+        List<Opening> openings = new ArrayList<Opening>();
+
+        Map<String, Annotation> targets = map_targets(annotations);
+
+        int seq_size = sequence.size();
+
+        for (int i = 0; i < seq_size;) {
+            Canvas c1 = sequence.canvas(i++);
+            Canvas c2 = i + 1 < seq_size ? sequence.canvas(i++) : null;
+
+            Annotation a1 = targets.get(c1.uri());
+            Annotation a2 = c2 == null ? null : targets.get(c2.uri());
+
+            MasterImage verso = null;
+            String verso_label = null;
+            MasterImage recto = null;
+            String recto_label = null;
+
+            if (a1 != null) {
+                verso = as_master_image(a1, c1);
+                verso_label = a1.label();
+            }
+
+            if (a2 != null) {
+                recto = as_master_image(a2, c2);
+                recto_label = a2.label();
+            }
+
+            openings.add(new Opening(verso, verso_label, recto, recto_label));
+        }
+
+        return openings;
+    }
+
     // Assume annotation is image covering whole canvas using iiif
     private MasterImage as_master_image(Annotation a, Canvas canvas) {
         String id = IIIFImageServer.parseIdentifier(a.body().uri());
         return new MasterImage(id, canvas.width(), canvas.height());
     }
 
+    private void setup_thumb_browser() {
+        List<Thumbnail> thumbs = construct_thumbs(data.getSequence(),
+                data.getImageAnnotations());
+        display.getThumbnailBrowser().setThumbnails(thumbs);
+        bindThumbnails(thumbs);
+        thumb_browser_setup = true;
+    }
+
+    private void setup_page_turner() {
+        List<Opening> openings = construct_openings(data.getSequence(),
+                data.getImageAnnotations());
+
+        display.getPageTurner().setOpenings(openings, page_width, page_height);
+
+        page_turner_setup = true;
+    }
+
     @Override
     public void display(PanelData data) {
         this.data = data;
 
+        thumb_browser_setup = false;
+        page_turner_setup = false;
+
         if (tab == 0) {
-            List<Thumbnail> thumbs = construct_thumbs(data.getSequence(),
-                    data.getImageAnnotations());
-            display.getThumbnailBrowser().setThumbnails(thumbs);
-            bindThumbnails(thumbs);
+            setup_page_turner();
         } else if (tab == 1) {
-            setPageTurner();
-            bindPageTurner(data);
+            setup_thumb_browser();
         }
 
         PanelDisplayedEvent event = new PanelDisplayedEvent(panel_id, data);
@@ -264,6 +231,11 @@ public class SequencePanelPresenter implements PanelPresenter {
 
     @Override
     public void resize(int width, int height) {
+        page_width = (width / 2) - 20;
+        page_height = height - 50;
+
+        display.getPageTurner().resize(page_width, page_height);
+
         // TODO scale thumb size
 
         display.resize(width, height);

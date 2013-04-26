@@ -12,6 +12,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 
+// TODO Pass in ancestor scroll panel....
+
 public class ThumbnailBrowser extends Composite {
     private final ScrollPanel container;
     private final FlowPanel content;

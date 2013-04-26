@@ -12,15 +12,10 @@
   font-weight: bold;
 }
 
-.opening {
-	float: left;
-	margin: 20px 0px;
-}
-
 .PanelView {
   float: left;
   margin: 10px;
-  border: 2px solid red;
+  border: 1px solid black;
 }
 
 .PanelTitle {
@@ -46,14 +41,7 @@
   margin-left: 1em;
 }
 
-.MetadataTitle {
-	font-weight: bold;
+.PageTurner .gwt-Label {
+  font-weight: bold;
 }
 
-.MetadataSubtitle {
-	font-style: italic;
-}
-
-.SidebarItem {
-	margin-bottom: 40px;
-}

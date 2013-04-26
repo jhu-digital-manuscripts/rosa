@@ -51,6 +51,19 @@ public interface ImageServer {
     WebImage renderToSquare(MasterImage image, int square_size, int... crop);
 
     /**
+     * Render image into the specified rectangle, preserving the aspect ratio. The
+     * actual width and height may be smaller than the given size.
+     * 
+     * @param image
+     * @param square_size
+     * @param crop
+     *            location in master image
+     * @return resulting web image
+     */
+
+    WebImage renderToRectangle(MasterImage image, int width, int height, int... crop);
+    
+    /**
      * Render image into the specified width, preserving the aspect ratio.
      * 
      * @param image
