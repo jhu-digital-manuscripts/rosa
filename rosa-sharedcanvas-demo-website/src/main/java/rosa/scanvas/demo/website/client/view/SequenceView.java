@@ -15,7 +15,7 @@ import com.google.gwt.user.client.ui.TabLayoutPanel;
 public class SequenceView extends Composite implements
         SequencePanelPresenter.Display {
 
-    private final Label seq_label;
+    //private final Label seq_label;
     private final TabLayoutPanel tab_panel;
     private final ThumbnailBrowser thumb_browser;
     private final PageTurner page_turner;
@@ -28,10 +28,10 @@ public class SequenceView extends Composite implements
 
         this.thumb_browser = new ThumbnailBrowser();
         this.page_turner = new PageTurner(IIIFImageServer.instance());
-        this.tab_panel = new TabLayoutPanel(50, Unit.PX);
+        this.tab_panel = new TabLayoutPanel(20, Unit.PX);
 
-        tab_panel.setHeight("100%");
-        tab_panel.setWidth("100%");
+        //tab_panel.setHeight("100%");
+        //tab_panel.setWidth("100%");
 
         tab_panel.add(page_turner, "Page Turner");
         tab_panel.add(thumb_browser, "Thumbnail Browser");
@@ -39,11 +39,11 @@ public class SequenceView extends Composite implements
         Label panel_title = new Label("View a sequence");
         panel_title.setStylePrimaryName("PanelTitle");
         
-        this.seq_label = new Label();
-        seq_label.setStylePrimaryName("PanelHeader");
+        //this.seq_label = new Label();
+        //seq_label.setStylePrimaryName("PanelHeader");
 
         main.add(panel_title);
-        main.add(seq_label);
+        //main.add(seq_label);
         main.add(tab_panel);
 
         tab_panel.selectTab(0);
@@ -69,6 +69,8 @@ public class SequenceView extends Composite implements
 
     @Override
     public void resize(int width, int height) {
+        // TODO
+        tab_panel.setPixelSize(width - 10, height - 40);
         setPixelSize(width, height);
     }
 

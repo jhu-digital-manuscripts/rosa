@@ -28,7 +28,6 @@ import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -232,7 +231,8 @@ public class SequencePanelPresenter implements PanelPresenter {
     @Override
     public void resize(int width, int height) {
         page_width = (width / 2) - 20;
-        page_height = height - 50;
+        // TODO
+        page_height = height - 120;
 
         display.getPageTurner().resize(page_width, page_height);
 
