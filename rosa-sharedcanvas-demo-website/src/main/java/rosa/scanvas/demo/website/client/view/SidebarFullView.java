@@ -28,7 +28,7 @@ public class SidebarFullView extends Composite implements SidebarPresenter.Displ
 	private Button addPanelButton = new Button();
 	private Button removePanelButton = new Button();
 	
-	private Label panelListLabel = new Label("Current Panel: ");
+	private Label panelListLabel = new Label("Currently Selected Panel: ");
 	
 	private AnnotationListWidget annoListWidget = new AnnotationListWidget();
 	private ManifestListWidget metaListWidget = new ManifestListWidget();
