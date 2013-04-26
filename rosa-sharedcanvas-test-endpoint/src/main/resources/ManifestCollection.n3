@@ -1,0 +1,23 @@
+@prefix sc: 		<http://www.shared-canvas.org/ns/>.
+@prefix rdf: 		<http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix dms: 		<http://dms.stanford.edu/ns/>.
+@prefix foaf: 		<http://xmlns.com/foaf/0.1/>.
+@prefix ore: 		<http://www.openarchives.org/ore/terms/>.
+@prefix dc: 		<http://purl.org/dc/elements/1.1/>.
+@prefix dcterms: 	<http://purl.org/dc/terms/>.
+@prefix rdfs:		<http://www.w3.org/2000/01/rdf-schema#> .
+
+<${baseUrl}> dc:format "text/n3" ;
+				ore:describes <${prefix}Collection> ;
+				a ore:ResourceMap .
+				
+<${prefix}Collection> ore:aggregates <${baseUrl}manifest> ;
+				rdfs:label "Test data from the Roman de la Rose Digital Library" ;
+				dc:rights """
+					Courtesy of the J. Paul Getty Museum, Los Angeles. For permission to reproduce images, please contact Rights and Reproductions, Registrar's Office, The J.Paul Getty Museum.
+				""" ;
+				ore:isDescribedBy <${baseUrl}> ;
+				a ore:Aggregation .
+
+<${baseUrl}manifest> a sc:Manifest ;
+				rdfs:label "Ludwig XV7" .

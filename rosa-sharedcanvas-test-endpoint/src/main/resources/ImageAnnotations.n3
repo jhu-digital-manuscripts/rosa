@@ -42,7 +42,7 @@
 <${prefix}ImgAnno-f14r>	a oa:Annotation ;
 				oa:motivatedBy sc:painting ;
 				rdfs:label "14r" ;
-				oa:hasTarget <${prefix}Canv-f13r> ;
+				oa:hasTarget <${prefix}Canv-f14r> ;
 				oa:hasBody <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.014r.tif/full/300,/0/native.jpg> .
 <${prefix}ImgAnno-f14v>	a oa:Annotation ;
 				oa:motivatedBy sc:painting ;

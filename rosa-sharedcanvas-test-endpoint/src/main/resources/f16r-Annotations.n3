@@ -12,17 +12,17 @@
 @prefix dctypes:	<http://purl.org/dc/dcmitype/> .
 @prefix rdfs:		<http://www.w3.org/2000/01/rdf-schema#> .
 
-<${baseUrl}canvas/16r/transcriptions> dc:format "text/n3" ;
+<${baseUrl}canvas/16r/annotations> dc:format "text/n3" ;
 				dcterms:modified "timestamp" ;			# ex: "2011-07-21T16:10:19Z"
-				ore:describes <${prefix}f16r-Transcriptions> ;
+				ore:describes <${prefix}f16r-Annotations> ;
 				a ore:ResourceMap .
-<${prefix}f16r-Transcriptions> sc:forCanvas <${prefix}Canv-f16r> ;
+<${prefix}f16r-Annotations> sc:forCanvas <${prefix}Canv-f16r> ;
 			ore:aggregates <${prefix}TxtAnno-f16r-a-ln1> ,
 				<${prefix}TxtAnno-f16r-a-ln2> ,
 				<${prefix}TxtAnno-f16r-b-ln1> ,
 				<${prefix}TxtAnno-f16r-b-ln2> ,
 				<${prefix}ImgAnno-f16r> ;
-				ore:isDescribedBy <${baseUrl}canvas/16r/transcriptions> ;
+				ore:isDescribedBy <${baseUrl}canvas/16r/annotations> ;
 				sc:hasOrder ( <${prefix}ImgAnno-f16r> <${prefix}TxtAnno-f16r-a-ln1> <${prefix}TxtAnno-f16r-a-ln2> <${prefix}TxtAnno-f16r-b-ln1> <${prefix}TxtAnno-f16r-b-ln2> ) ;
 				a sc:AnnotationList, ore:Aggregation .
 				

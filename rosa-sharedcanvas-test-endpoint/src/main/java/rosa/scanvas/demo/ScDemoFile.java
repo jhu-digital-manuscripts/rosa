@@ -59,8 +59,13 @@ public class ScDemoFile {
 		};
 		String[] parts = parse(path);
 		Model model = ModelFactory.createDefaultModel();
-		
-		if (parts.length == 1) {
+		/*if (parts.length == 0) {
+			
+			in = this.getClass().getClassLoader().getResourceAsStream(
+					"ManifestCollection.n3");
+			JsonldJenaUtils.writeJsonldFromStream(in, o, "N3");
+			
+		} else */if (parts.length == 1) {
 			if (parts[0].equals("manifest")) {
 				in = this.getClass().getClassLoader().getResourceAsStream(
 						"Manifest.n3");
@@ -79,6 +84,10 @@ public class ScDemoFile {
 				JsonldJenaUtils.writeJsonldFromModel(model, o);*/
 				in = this.getClass().getClassLoader().getResourceAsStream(
 						"Annotations.n3");
+				JsonldJenaUtils.writeJsonldFromStream(in, o, "N3");
+			} else if (parts[0].equals("") || parts[0] == null) {
+				in = this.getClass().getClassLoader().getResourceAsStream(
+						"ManifestCollection.n3");
 				JsonldJenaUtils.writeJsonldFromStream(in, o, "N3");
 			} else {
 				throw new IOException("Unknown resource requested: " + path);

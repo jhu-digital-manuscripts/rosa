@@ -12,17 +12,17 @@
 @prefix exif: 		<http://www.w3.org/2003/12/exif/ns/> .
 @prefix ore: 		<http://www.openarchives.org/ore/terms/> .
 
-<${baseUrl}canvas/13v/transcriptions> dc:format "text/n3" ;
+<${baseUrl}canvas/13v/annotations> dc:format "text/n3" ;
 				dcterms:modified "timestamp" ;			# ex: "2011-07-21T16:10:19Z"
-				ore:describes <${prefix}f13v-Transcriptions> ;
+				ore:describes <${prefix}f13v-Annotations> ;
 				a ore:ResourceMap .
-<${prefix}f13v-Transcriptions> sc:forCanvas <${prefix}Canv-f13v> ;
+<${prefix}f13v-Annotations> sc:forCanvas <${prefix}Canv-f13v> ;
 			ore:aggregates <${prefix}TxtAnno-f13v-c-ln1> ,
 				<${prefix}TxtAnno-f13v-c-ln2> ,
 				<${prefix}TxtAnno-f13v-d-ln1> ,
 				<${prefix}TxtAnno-f13v-d-ln2> ,
 				<${prefix}ImgAnno-f13v> ;
-				ore:isDescribedBy <${baseUrl}canvas/13v/transcriptions> ;
+				ore:isDescribedBy <${baseUrl}canvas/13v/annotations> ;
 				sc:hasOrder ( <${prefix}ImgAnno-f13v> <${prefix}TxtAnno-f13v-c-ln1> <${prefix}TxtAnno-f13v-c-ln2> <${prefix}TxtAnno-f13v-d-ln1> <${prefix}TxtAnno-f13v-d-ln2> ) ;
 				a sc:AnnotationList, ore:Aggregation .
 	
