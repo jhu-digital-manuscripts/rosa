@@ -45,3 +45,14 @@
   font-weight: bold;
 }
 
+.MetadataTitle {
+  font-weight: bold;
+}
+
+.MetadataSubtitle {
+  font-style: italic;
+}
+
+.SidebarItem {
+  margin-bottom: 40px;
+}
