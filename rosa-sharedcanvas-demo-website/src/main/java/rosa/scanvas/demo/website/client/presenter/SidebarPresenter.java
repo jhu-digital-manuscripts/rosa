@@ -137,13 +137,14 @@ public class SidebarPresenter implements IsWidget {
 		if (data != null) {
 			if (dataMap.containsKey(panelId)) {
 				updateData(panelId, data);
-				currentIndex = findIndexById(panelId);
-				display.getPanelList().setSelectedIndex(currentIndex);
+				
 			} else {
 				// this will occur when a panel is added from a history token, so that
 				// it will start from an arbitrary View, with associated data
 				dataMap.put(panelId, data);
 			}
+			currentIndex = findIndexById(panelId);
+			display.getPanelList().setSelectedIndex(currentIndex);
 			setData(dataMap.get(panelId));
 		} else {
 			// this will happen when a new panel is added with the Add button

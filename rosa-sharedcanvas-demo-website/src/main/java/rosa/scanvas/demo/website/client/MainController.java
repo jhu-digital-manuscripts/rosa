@@ -57,7 +57,9 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
 
         FlowPanel header = new FlowPanel();
         header.setStylePrimaryName("Header");
-        header.add(new Label("JHU Prototype Shared Canvas Viewer"));
+        Label app_header = new Label("JHU Prototype Shared Canvas Viewer");
+        app_header.setStylePrimaryName("HeaderText");
+        header.add(app_header);
 
         main.addNorth(header, 100);
 

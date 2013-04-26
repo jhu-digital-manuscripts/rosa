@@ -50,7 +50,7 @@ public class SidebarFullView extends Composite implements SidebarPresenter.Displ
 		mainPanel.add(panelListLabel);
 		mainPanel.add(panelChangePanel);
 		mainPanel.add(tabPanel);
-		mainPanel.add(linkPanel);
+//		mainPanel.add(linkPanel);
 		
 		tabPanel.add(metaScrollPanel, "Metadata");
 		tabPanel.add(annoScrollPanel, "Annotations");
@@ -68,7 +68,7 @@ public class SidebarFullView extends Composite implements SidebarPresenter.Displ
 		setWidth("250px");
 //		panelChangePanel.setStyleName("horizontalFlowPanel");
 		
-		linkPanel.add(new Label("this may be links"));
+//		linkPanel.add(new Label("this may be links"));
 		
 		panelChangePanel.setHeight("5%");
 		tabPanel.setHeight("90%");
