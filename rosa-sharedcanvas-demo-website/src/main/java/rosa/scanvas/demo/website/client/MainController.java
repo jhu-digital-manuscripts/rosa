@@ -113,11 +113,18 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
                 });
     }
 
+    /**
+     * Create a new panel presenter for a panel based off
+     * information about its view
+     * 
+     * @param view
+     * @param panel_id
+     */
     private PanelPresenter create_panel_presenter(PanelView view, int panel_id) {
         switch (view) {
         case CANVAS:
             return new CanvasPanelPresenter(new CanvasView(panel_width,
-                    panel_height, panel_width, panel_height), event_bus);
+                    panel_height, panel_width, panel_height), event_bus, panel_id);
         case HOME:
             return new HomePanelPresenter(new HomeView(), event_bus, panel_id);
 
@@ -135,6 +142,11 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
         }
     }
 
+    /**
+     * Add a new panel with a specified state.
+     * 
+     * @param state
+     */
     private void add_panel(PanelState state) {
         int panel_id = next_panel_id++;
         Panel panel = new Panel(create_panel_presenter(state.getView(),
@@ -147,6 +159,14 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
         panel.display(state);
     }
 
+    /**
+     * Change the state of a panel
+     * 
+     * @param state
+     * 			the new panel state
+     * @param panel_id
+     * 			ID of the panel to change
+     */
     private void change_panel_by_id(PanelState state, int panel_id) {
         int index = find_panel_index(panel_id);
 
@@ -157,6 +177,14 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
         change_panel_by_index(state, index);
     }
 
+    /**
+     * Change the state of a panel
+     * 
+     * @param state
+     * 			the new panel state
+     * @param index
+     * 			index of the panel to change
+     */
     private void change_panel_by_index(PanelState state, int index) {
         Panel panel = panels.get(index);
 
@@ -180,6 +208,12 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
         }
     }
 
+    /**
+     * Remove a panel from the content area and data list
+     * 
+     * @param panel_id
+     * 				ID of the panel to remove
+     */
     private void remove_panel_by_id(int panel_id) {
         int index = find_panel_index(panel_id);
 
@@ -195,6 +229,8 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
 
     /**
      * Issue events to handle history changes.
+     * 
+     * @param event
      */
     public void onValueChange(ValueChangeEvent<String> event) {
         HistoryState history_state = HistoryState.parseHistoryToken(event
@@ -222,6 +258,15 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
                         PanelRequestEvent.PanelAction.ADD, panel_state);
                 event_bus.fireEvent(req);
             }
+        }
+  
+        // if any old panels still exist, remove them
+        int old_size = panels.size();
+        for (int i = panel_states.size(); i < old_size; i++) {
+        	Panel old_panel = panels.get(panel_states.size());
+        	PanelRequestEvent req = new PanelRequestEvent(
+        			PanelRequestEvent.PanelAction.REMOVE, old_panel.getId());
+        	event_bus.fireEvent(req);
         }
     }
 
@@ -278,6 +323,13 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
         update_panel_sizes(win_width, win_height);
     }
 
+    /**
+     * Retrieves the index of a panel from its ID
+     * 
+     * @param panel_id
+     * @return the index of the panel. If the specified ID is not found,
+     * -1 is returned.
+     */
     private int find_panel_index(int panel_id) {
         for (int i = 0; i < panels.size(); i++) {
             if (panels.get(i).getId() == panel_id) {
@@ -288,6 +340,12 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
         return -1;
     }
 
+    /**
+     * Performs appropriate action to a panel
+     * 
+     * @param action
+     * @param panel_id
+     */
     private void doPanelRequest(PanelAction action, int panel_id,
             PanelState panel_state) {
         if (action == PanelAction.ADD) {

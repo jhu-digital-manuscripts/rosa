@@ -39,8 +39,11 @@ public class Panel {
         case CANVAS:
             // TODO Actually have to update history stuff because need
             // canvas, sequence, and manifest
-            PanelData.loadManifestSequenceAndAnnotationLists(
-                    state.getManifestUri(), state.getObjectUri(), data, cb);
+            /*PanelData.loadManifestSequenceAndAnnotationLists(
+                    state.getManifestUri(), state.getObjectUri(), data, cb);*/
+        	PanelData.loadManifestSequenceCanvasAndAnnotationLists(
+            		state.getManifestUri(), state.getObjectUri(), 
+            		data, state.getCanvasIndex(), cb);
             break;
         case HOME:
             cb.onSuccess(null);

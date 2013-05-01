@@ -28,6 +28,15 @@ public class PanelData {
     private List<Annotation> visibleAnnotations;
     private List<Annotation> imageAnnotations;
 
+    /**
+     * Load a Shared Canvas manifest
+     * 
+     * @param url
+     * @param data
+     * 			container to hold the loaded data
+     * @param cb
+     * 			asynchronous callback to use when loading is done
+     */
     public static void loadManifest(String url, final PanelData data,
             final AsyncCallback<PanelData> cb) {
         SharedCanvas.load(url, Manifest.class, new AsyncCallback<Manifest>() {
@@ -44,6 +53,15 @@ public class PanelData {
         });
     }
 
+    /**
+     * Load a collection of Shared Canvas manifests
+     * 
+     * @param url
+     * @param data
+     * 			container to hold the loaded data
+     * @param cb
+     * 			asynchronous callback to use when loading is done
+     */
     public static void loadManifestCollection(String url, final PanelData data,
             final AsyncCallback<PanelData> cb) {
         SharedCanvas.load(url, ManifestCollection.class,
@@ -61,6 +79,15 @@ public class PanelData {
                 });
     }
 
+    /**
+     * Load a Shared Canvas sequence
+     * 
+     * @param url
+     * @param data
+     * 			container to hold the loaded data
+     * @param cb
+     * 			asynchronous callback to use when loading is done
+     */
     public static void loadSequence(String url, final PanelData data,
             final AsyncCallback<PanelData> cb) {
         SharedCanvas.load(url, Sequence.class, new AsyncCallback<Sequence>() {
@@ -77,6 +104,16 @@ public class PanelData {
         });
     }
 
+    /**
+     * Load a Shared Canvas manifest, sequence, and annotation lists
+     * 
+     * @param manifest_url
+     * @param seq_url
+     * @param data
+     * 			container to hold the loaded data
+     * @param cb
+     * 			asynchronous callback to call when loading is done
+     */
     public static void loadManifestSequenceAndAnnotationLists(
             final String manifest_url, final String seq_url,
             final PanelData data, final AsyncCallback<PanelData> cb) {
@@ -111,6 +148,15 @@ public class PanelData {
                 });
     }
 
+    /**
+     * Load a single Shared Canvas annotation list
+     * 
+     * @param url
+     * @param data
+     * 			container to hold the loaded data
+     * @param cb
+     * 			asynchronous callback to call when loading is done
+     */
     public static void loadAnnotationList(String url, final PanelData data,
             final AsyncCallback<PanelData> cb) {
         SharedCanvas.load(url, AnnotationList.class,
@@ -128,6 +174,16 @@ public class PanelData {
                 });
     }
 
+    /**
+     * Load multiple Shared Canvas annotation lists
+     * 
+     * @param lists
+     * 			a list of references to annotation lists
+     * @param data
+     * 			container to hold the loaded data
+     * @param cb
+     * 			asynchronous callback to call when loading is done
+     */
     public static void loadAnnotationLists(
             final List<Reference<AnnotationList>> lists, final PanelData data,
             final AsyncCallback<PanelData> cb) {
@@ -167,6 +223,55 @@ public class PanelData {
                 });
     }
 
+    /**
+     * Load a Shared Canvas manifest, sequence, and canvas with 
+     * associated annotation lists
+     * 
+     * @param manifest_url
+     * @param seq_url
+     * @param data
+     * @param canvas_index
+     * @param cb
+     */
+    public static void loadManifestSequenceCanvasAndAnnotationLists(
+    		final String manifest_url, final String seq_url, 
+    		final PanelData data, final int canvas_index, 
+    		final AsyncCallback<PanelData> cb) {
+    	
+    	SharedCanvas.load(seq_url, Sequence.class,
+    			new AsyncCallback<Sequence>() {
+                    @Override
+                    public void onFailure(Throwable err) {
+                        cb.onFailure(err);
+                    }
+
+                    @Override
+                    public void onSuccess(Sequence seq) {
+                        data.setSequence(seq);
+                        data.setCanvas(data.getSequence().canvas(
+                        		canvas_index));
+
+                        SharedCanvas.load(manifest_url, Manifest.class,
+                                new AsyncCallback<Manifest>() {
+                                    @Override
+                                    public void onFailure(Throwable err) {
+                                        cb.onFailure(err);
+                                    }
+
+                                    @Override
+                                    public void onSuccess(Manifest man) {
+                                        data.setManifest(man);
+                                        
+                                        loadAnnotationLists(
+                                                data.getCanvas()
+                                                .hasAnnotations(), data, cb);
+                                    }
+                                });
+                    }
+                });
+    	
+    }
+    
     public List<Annotation> getImageAnnotations() {
         return imageAnnotations;
     }

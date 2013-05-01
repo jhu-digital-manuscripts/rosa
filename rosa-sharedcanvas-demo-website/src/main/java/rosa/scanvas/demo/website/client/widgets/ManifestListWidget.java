@@ -18,13 +18,6 @@ import rosa.scanvas.model.client.Sequence;
 public class ManifestListWidget extends Composite {
 	
 	private FlowPanel mainPanel = new FlowPanel();
-/*	private FlowPanel collectionPanel = new FlowPanel();
-	private FlowPanel manifestPanel = new FlowPanel();
-	private FlowPanel sequencePanel = new FlowPanel();*/
-	
-/*	private CheckBox collectionCheckBox = new CheckBox();
-	private CheckBox manifestCheckBox = new CheckBox();
-	private CheckBox sequenceCheckBox = new CheckBox();*/
 	
 	private DisclosurePanel collectionPanel = new DisclosurePanel();
 	private DisclosurePanel manifestPanel = new DisclosurePanel();
@@ -45,10 +38,6 @@ public class ManifestListWidget extends Composite {
 		mainPanel.add(new Label("Pick a different sequence: "));
 		mainPanel.add(sequencePickerBox);
 		
-		// FlowPanel
-		/*collectionPanel.add(collectionTable);
-		manifestPanel.add(manifestTable);
-		sequencePanel.add(sequenceTable);*/
 		collectionPanel.setContent(collectionTable);
 		collectionPanel.setHeader(new HTML("Collection: "));
 		collectionPanel.getHeader().setStylePrimaryName("MetadataTitle");
@@ -77,20 +66,6 @@ public class ManifestListWidget extends Composite {
 		for (int i=0; i<manifestTable.getRowCount(); i++) {
 			manifestTable.getCellFormatter().setStylePrimaryName(i, 0, "MetadataSubtitle");
 		}
-//		manifestTable.getColumnFormatter().addStyleName(0, "MetadataSubtitle");
-		
-/*		collectionCheckBox.setText("Collection");
-		collectionCheckBox.setStylePrimaryName("MetadataCheckbox");
-		manifestCheckBox.setText("Manifest");
-		manifestCheckBox.setStylePrimaryName("MetadataCheckbox");
-		sequenceCheckBox.setText("Sequence");
-		sequenceCheckBox.setStylePrimaryName("MetadataCheckbox");
-		
-		collectionCheckBox.setValue(true);
-		manifestCheckBox.setValue(true);
-		sequenceCheckBox.setValue(true);*/
-		
-		
 		
 		sequencePickerBox.setWidth("75%");
 	}
@@ -99,9 +74,6 @@ public class ManifestListWidget extends Composite {
 	public DisclosurePanel getCollectionPanel() { return collectionPanel; }
 	public DisclosurePanel getManifestPanel() { return manifestPanel; }
 	public DisclosurePanel getSequencePanel() { return sequencePanel; }
-/*	public CheckBox getCollectionCheckBox() { return collectionCheckBox; }
-	public CheckBox getManifestCheckBox() { return manifestCheckBox; }
-	public CheckBox getSequenceCheckBox() { return sequenceCheckBox; }*/
 	public ListBox getSequencePickerBox() { return sequencePickerBox; }
 	
 	public void newCollectionLabel(String text, int row) {
@@ -136,8 +108,8 @@ public class ManifestListWidget extends Composite {
 		ManifestCollection collection = data.getManifestCollection();
 		if (collection != null) {
 			collectionTable.setWidget(0, 1, new HTML(collection.label()));
-			collectionTable.setWidget(1, 1, new HTML("Contains " 
-					+ collection.manifests().size() + " items."));
+			collectionTable.setWidget(1, 1, new HTML(
+					"Items: " + collection.manifests().size()));
 		}
 
 		Manifest manifest = data.getManifest();
@@ -158,8 +130,7 @@ public class ManifestListWidget extends Composite {
 		Sequence sequence = data.getSequence();
 		if (sequence != null) {
 			sequenceTable.setWidget(0, 1, new HTML(sequence.label()));
-			sequenceTable.setWidget(1, 1, new HTML("Number of images: "
-					+ sequence.size()));
+			sequenceTable.setWidget(1, 1, new HTML("Images: " + sequence.size()));
 			
 			sequencePickerBox.addItem(sequence.label());
 			for (Reference<Sequence> ref : manifest.sequences()) {

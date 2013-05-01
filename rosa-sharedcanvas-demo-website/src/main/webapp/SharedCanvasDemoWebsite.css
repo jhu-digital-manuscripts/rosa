@@ -55,12 +55,15 @@
   font-weight: bold;
 }
 
+/** ------ */
+
 .MetadataTitle {
   font-weight: bold;
 }
 
 .MetadataSubtitle {
   font-style: italic;
+  vertical-align: top;
 }
 
 .SidebarItem {

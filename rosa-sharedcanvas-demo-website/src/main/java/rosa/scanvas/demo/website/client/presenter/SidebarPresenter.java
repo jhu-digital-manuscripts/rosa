@@ -8,6 +8,7 @@ import java.util.List;
 import rosa.scanvas.demo.website.client.PanelData;
 import rosa.scanvas.demo.website.client.PanelState;
 import rosa.scanvas.demo.website.client.event.AnnotationSelectionEvent;
+import rosa.scanvas.demo.website.client.event.AnnotationSelectionHandler;
 import rosa.scanvas.demo.website.client.event.PanelDisplayedEvent;
 import rosa.scanvas.demo.website.client.event.PanelDisplayedEventHandler;
 import rosa.scanvas.demo.website.client.event.PanelRequestEvent;
@@ -17,6 +18,7 @@ import rosa.scanvas.demo.website.client.widgets.AnnotationListWidget;
 import rosa.scanvas.demo.website.client.widgets.ManifestListWidget;
 import rosa.scanvas.model.client.Annotation;
 import rosa.scanvas.model.client.AnnotationList;
+import rosa.scanvas.model.client.AnnotationTarget;
 import rosa.scanvas.model.client.Manifest;
 import rosa.scanvas.model.client.ManifestCollection;
 import rosa.scanvas.model.client.Sequence;
@@ -52,7 +54,7 @@ public class SidebarPresenter implements IsWidget {
 
 		ManifestListWidget getMetaListWidget();
 	}
-
+	
 	private final Display display;
 	private final HandlerManager eventBus;
 
@@ -75,6 +77,14 @@ public class SidebarPresenter implements IsWidget {
 			public void onPanelDisplayed(PanelDisplayedEvent event) {
 				doPanelDisplayed(event.getPanelId(),
 						event.getPanelData());
+			}
+		});
+// temporary		
+		eventBus.addHandler(AnnotationSelectionEvent.TYPE, 
+				new AnnotationSelectionHandler() {
+			public void onSelection(AnnotationSelectionEvent event) {
+				doAnnotationSelection(event.getAnnotation(), event.getStatus(),
+						event.getPanel());
 			}
 		});
 
@@ -105,11 +115,17 @@ public class SidebarPresenter implements IsWidget {
 		});
 	}
 
+// temporary	
+	private void doAnnotationSelection(Annotation anno, boolean status, int panel) {
+		Window.alert("Annotation [" + anno.label() + "] has been "
+				+ (status ? "":"un") + "selected for Panel ID = " + panel);
+	}
+	
 	/**
 	 * Removes item at specified index from the list. Panels in list are renamed
 	 * 
 	 * @param index
-	 *            int of item to remove. Selects the first item in list.
+	 *            int of item to remove.
 	 */
 	private void removePanelFromListBox(int index) {
 		display.getPanelList().removeItem(index);
@@ -123,15 +139,23 @@ public class SidebarPresenter implements IsWidget {
 
 	/**
 	 * Adds a new item to the list and sets it to be selected.
-	 * 
-	 * @param item
 	 */
-	private void addPanelToListBox(String item) {
-		display.getPanelList().addItem(item);
+	private void addPanelToListBox() {
+		currentIndex = display.getPanelList().getItemCount();
+		String item = "Panel " + (currentIndex + 1);
 		
+		display.getPanelList().addItem(item);
 		display.getPanelList().setSelectedIndex(currentIndex);
 	}
 
+	/**
+	 * Adds new data associated with a particular panel to the sidebar
+	 * 
+	 * @param panelId
+	 * 			id number identifying the associated panel
+	 * @param data
+	 * 			new data
+	 */
 	private void doPanelDisplayed(int panelId, PanelData data) {
 
 		if (data != null) {
@@ -142,38 +166,52 @@ public class SidebarPresenter implements IsWidget {
 				// this will occur when a panel is added from a history token, so that
 				// it will start from an arbitrary View, with associated data
 				dataMap.put(panelId, data);
+				display.getPanelList().setValue(currentIndex, String.valueOf(panelId));
 			}
-			currentIndex = findIndexById(panelId);
-			display.getPanelList().setSelectedIndex(currentIndex);
-			setData(dataMap.get(panelId));
 		} else {
 			// this will happen when a new panel is added with the Add button
 			// on the sidebar. It will start at the HomeView, so it sends
 			// PanelData == null on display
+			dataMap.put(panelId, new PanelData());
 			display.getPanelList().setValue(currentIndex, String.valueOf(panelId));
 		}
+		setData(dataMap.get(panelId));
 	}
 
+	/**
+	 * Performs appropriate action to the panel specified by its id, 
+	 * based off the PanelAction specified
+	 * 
+	 * @param action
+	 * @param panelId
+	 */
 	private void doPanelRequest(PanelAction action, int panelId) {
 
 		if (action == PanelAction.ADD) {
+			// if there is more than 0 items before adding to the list, 
+			// resulting in more than 1 items after adding to the list,
+			// enable the Remove button
 			if (!display.getRemovePanelEnabler().isEnabled() && 
 					display.getPanelList().getItemCount() > 0) {
 				display.getRemovePanelEnabler().setEnabled(true);
 			}
 			
-			currentIndex = display.getPanelList().getItemCount();
-			String item = "Panel " + (currentIndex + 1);
-			
-			addPanelToListBox(item);
+			addPanelToListBox();
 			doPanelListChange();
 		} else if (action == PanelAction.REMOVE) {
+			int index = findIndexById(panelId);
+			removePanelFromListBox(index);
+			
 			display.getPanelList().setSelectedIndex(0);
 			doPanelListChange();
 			// if there is now only 1 item in the list, disable Remove button
 			if (display.getPanelList().getItemCount() == 1) {
 				display.getRemovePanelEnabler().setEnabled(false);
 			}
+		} else if (action == PanelAction.CHANGE) {
+			currentIndex = findIndexById(panelId);
+			display.getPanelList().setSelectedIndex(currentIndex);
+			doPanelListChange();
 		}
 	}
 
@@ -187,32 +225,43 @@ public class SidebarPresenter implements IsWidget {
 
 	private void doRemovePanel() {
 		int selectedPanel = display.getPanelList().getSelectedIndex();
-		int id = Integer.parseInt(display.getPanelList().getValue(selectedPanel));
+		String idStr = display.getPanelList().getValue(selectedPanel);
 		
-		removePanelFromListBox(selectedPanel);
-		eventBus.fireEvent(new PanelRequestEvent(PanelAction.REMOVE, id));
+		try {
+			int id = Integer.parseInt(idStr);
+			eventBus.fireEvent(new PanelRequestEvent(PanelAction.REMOVE, id));
+		} catch(NumberFormatException e) {
+			Window.alert("Incorrect ID format: " + idStr);
+		}
 	}
 
 	private void doPanelListChange() {
 		int selectedPanel = display.getPanelList().getSelectedIndex();
-		/*eventBus.fireEvent(new PanelRequestEvent(PanelAction.CHANGE,
-				selectedPanel));*/
 
 		String itemValue = display.getPanelList().getValue(selectedPanel);
-		PanelData dataToLoad = new PanelData();
+		PanelData dataToLoad = null;
 		try {
 			int id = Integer.parseInt(itemValue);
 			
 			if (dataMap.containsKey(id)) {
 				dataToLoad = dataMap.get(id);
 			}
-		} catch (NumberFormatException e) {}
+		} catch (NumberFormatException e) { dataToLoad = new PanelData(); }
 		
-		setData(dataToLoad);
+		if (dataToLoad != null) {
+			setData(dataToLoad);
+		}
+		
 	}
 
 	// -------------- End DOM Event Actions --------------
 
+	/**
+	 * Find the index in the list based on its id
+	 * 
+	 * @param id
+	 * 			number uniquely identifying a panel
+	 */
 	private int findIndexById(int id) {
 		String strId = String.valueOf(id);
 		
@@ -225,8 +274,16 @@ public class SidebarPresenter implements IsWidget {
 		return -1;
 	}
 	
+	/**
+	 * Updates the data associated with a particular panel
+	 * 
+	 * @param id
+	 * 			number identifying the associated panel
+	 * @param data
+	 * 			incoming data
+	 */
 	private void updateData(int id, PanelData data) {
-		PanelData newData = dataMap.remove(id);
+		PanelData newData = dataMap.get(id);
 
 		if (data.getManifestCollection() != null) {
 			newData.setManifestCollection(data.getManifestCollection());
@@ -234,19 +291,28 @@ public class SidebarPresenter implements IsWidget {
 
 		if (data.getManifest() != null) {
 			newData.setManifest(data.getManifest());
+		} else {
+			newData.setManifest(null);
+			newData.setSequence(null);
+			newData.setCanvas(null);
 		}
 
 		if (data.getSequence() != null) {
 			newData.setSequence(data.getSequence());
+		} else if (data.getSequence() == null && data.getManifest() != null) {
+			newData.setSequence(null);
+			newData.setCanvas(null);
+			// this will clear the Annotation Lists
+			newData.setManifest(newData.getManifest());
 		}
 
 		if (data.getCanvas() != null) {
 			newData.setCanvas(data.getCanvas());
 		}
 		
-		if (data.getAnnotationLists() != null && 
+		if (data.getAnnotationLists() != null/* && 
 				data.getAnnotationLists().size() != 
-				newData.getAnnotationLists().size()) {
+				newData.getAnnotationLists().size()*/) {
 			newData.getAnnotationLists().clear();
 			newData.getAnnotationLists().addAll(data.getAnnotationLists());
 		}
@@ -279,94 +345,85 @@ public class SidebarPresenter implements IsWidget {
 		 * 
 		 * setMetadata(); setAnnotations();
 		 */
+		
 		display.getMetaListWidget().setMetadata(data);
 		setAnnotations(data);
 	}
 
+	/**
+	 * Displays all annotations into the AnnotationListWidget
+	 */
 	private void setAnnotations(PanelData data) {
 		display.getAnnoListWidget().clearLists();
-		
+	
 		List<AnnotationList> list = data.getAnnotationLists();
 		if (list.size() > 0) {
 			// iterate through the list of annotation lists
-			Iterator<AnnotationList> listIterator = list.iterator();
-			int i = 0, j = 0;
-			while (listIterator.hasNext()) {
+			int i = 0, j = 0, k = 0;
+			for (AnnotationList al : list) {
 				// for each list, put each annotation in appropriate area
-				AnnotationList annotationList = listIterator.next();
-				Iterator<Annotation> annotationIterator = annotationList
-						.iterator();
-				while (annotationIterator.hasNext()) {
-					Annotation annotation = annotationIterator.next();
-					if (annotation.body().isImage()) {
-						// TODO: ensure that image conformsTo() IIIF?
-						// add to image annotation listbox
+				for (Annotation anno : al) {
+					CheckBox checkbox = new CheckBox();
+					
+					if (anno.body().isImage()) {
+						
 						display.getAnnoListWidget().getImageAnnoList()
-							.setWidget(i, 1, new Label(
-									annotation.label().replace(".", " ")));
+							.setWidget(i, 0, checkbox);
 						display.getAnnoListWidget().getImageAnnoList()
-							.setWidget(i, 0, new CheckBox());
-						bindImageRow(i, annotation);
+							.setWidget(i, 1, new Label(anno.label()));
 						i++;
-					} else if (annotation.body().isText()) {
-						// add to text annotation listbox
-						display.getAnnoListWidget()
-							.getNontargetedTextAnnoList()
-							.setWidget(j, 1, new Label(
-									annotation.label().replace(".", " ")));
-						display.getAnnoListWidget()
-							.getNontargetedTextAnnoList()
-							.setWidget(j, 0, new CheckBox());
-						bindNontargetedTextRow(j, annotation);
-						j++;
+						
+					} else if (anno.body().isText()) {
+						// check if the text annotation is targeted
+						boolean isTargeted = false;
+						for (AnnotationTarget target : anno.targets()) {
+							if (target.isSpecificResource()) {
+								isTargeted = true;
+							}
+						}
+						
+						if (isTargeted) {
+							display.getAnnoListWidget().getTargetedTextAnnoList()
+									.setWidget(k, 0, checkbox);
+							display.getAnnoListWidget().getTargetedTextAnnoList()
+									.setWidget(k, 1, new Label(anno.label()));
+							k++;
+						} else {
+							display.getAnnoListWidget().getNontargetedTextAnnoList()
+									.setWidget(j, 0, checkbox);
+							display.getAnnoListWidget().getNontargetedTextAnnoList()
+									.setWidget(j, 1, new Label(anno.label()));
+							j++;
+						}
 					}
+					
+					bindCheckBox(checkbox, anno);
 				}
 			}
 		}
 	}
 
 	/**
-	 * Add handlers to the image annotations list to listen to value changes of
-	 * checkboxes
+	 * Binds an event handler to the checkboxes in the annotation lists
 	 */
-	private void bindImageRow(int row, final Annotation annotation) {
-		((CheckBox) display.getAnnoListWidget().getImageAnnoList()
-				.getWidget(row, 0))
-				.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-					public void onValueChange(ValueChangeEvent<Boolean> event) {
-						// fire event on eventBus indicating an annotation
-						// should be
-						// shown or hidden
-						boolean value = event.getValue();
-						int panel = display.getPanelList().getSelectedIndex();
+	private void bindCheckBox(CheckBox box, final Annotation annotation) {
+		box.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+			public void onValueChange(ValueChangeEvent<Boolean> event) {
+				// fire event on eventBus indicating an annotation
+				// should be shown or hidden
+				boolean value = event.getValue();
+				int index = display.getPanelList().getSelectedIndex();
+				
+				try {
+					int panel = Integer.parseInt(display.getPanelList()
+										.getValue(index));
 
-						// data.getVisibleAnnotations().add(annotation);
-						eventBus.fireEvent(new AnnotationSelectionEvent(
-								annotation, value, panel));
-					}
-				});
-	}
-
-	/**
-	 * Add handlers to the nontargeted text annotations list to listen to value
-	 * changes of checkboxes
-	 */
-	private void bindNontargetedTextRow(int row, final Annotation annotation) {
-		((CheckBox) display.getAnnoListWidget().getNontargetedTextAnnoList()
-				.getWidget(row, 0))
-				.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-					public void onValueChange(ValueChangeEvent<Boolean> event) {
-						// fire event on eventBus indicating an annotation
-						// should be
-						// shown or hidden
-						boolean value = event.getValue();
-						int panel = display.getPanelList().getSelectedIndex();
-
-						// data.getVisibleAnnotations().add(annotation);
-						eventBus.fireEvent(new AnnotationSelectionEvent(
-								annotation, value, panel));
-					}
-				});
+					// data.getVisibleAnnotations().add(annotation);
+					eventBus.fireEvent(new AnnotationSelectionEvent(
+							annotation, value, panel));
+				} catch (NumberFormatException e) {}
+			}
+		});
 	}
 
 	@Override

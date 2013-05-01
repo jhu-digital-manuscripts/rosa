@@ -16,6 +16,9 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * UI view that displays metadata about some displayed Shared Canvas
+ */
 public class SidebarFullView extends Composite implements SidebarPresenter.Display {
 
 	private TabLayoutPanel tabPanel = new TabLayoutPanel(4, Style.Unit.EM);

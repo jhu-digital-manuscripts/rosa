@@ -4,6 +4,7 @@ import rosa.scanvas.demo.website.client.PanelData;
 import rosa.scanvas.demo.website.client.disparea.DisplayArea;
 import rosa.scanvas.demo.website.client.disparea.DisplayAreaWidget;
 import rosa.scanvas.demo.website.client.disparea.DisplayElement;
+import rosa.scanvas.demo.website.client.event.PanelDisplayedEvent;
 import rosa.scanvas.model.client.Annotation;
 import rosa.scanvas.model.client.Canvas;
 
@@ -20,13 +21,15 @@ public class CanvasPanelPresenter implements PanelPresenter {
     }
 
     private final Display display;
+    private final int panel_id;
     private final HandlerManager event_bus;
     private Canvas canvas;
     private int width, height;
 
-    public CanvasPanelPresenter(Display display, HandlerManager eventBus) {
+    public CanvasPanelPresenter(Display display, HandlerManager eventBus, int panel_id) {
         this.display = display;
         this.event_bus = eventBus;
+        this.panel_id = panel_id;
         this.width = -1;
         this.height = -1;
     }
@@ -42,7 +45,7 @@ public class CanvasPanelPresenter implements PanelPresenter {
 
         da.redraw();
     }
-
+    
     @Override
     public Widget asWidget() {
         return display.asWidget();
@@ -53,6 +56,8 @@ public class CanvasPanelPresenter implements PanelPresenter {
         this.canvas = data.getCanvas();
 
         update();
+        PanelDisplayedEvent event = new PanelDisplayedEvent(panel_id, data);
+        event_bus.fireEvent(event);
     }
 
     @Override
