@@ -13,8 +13,8 @@
 				
 <${prefix}Collection> ore:aggregates <${baseUrl}manifest> ;
 				rdfs:label "Test data from the Roman de la Rose Digital Library" ;
-				dc:rights """
-					Courtesy of the J. Paul Getty Museum, Los Angeles. For permission to reproduce images, please contact Rights and Reproductions, Registrar's Office, The J.Paul Getty Museum.
+				dc:rights """Courtesy of the J. Paul Getty Museum, Los Angeles. 
+				For permission to reproduce images, please contact Rights and Reproductions, Registrar's Office, The J.Paul Getty Museum.
 				""" ;
 				ore:isDescribedBy <${baseUrl}> ;
 				a ore:Aggregation .

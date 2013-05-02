@@ -76,7 +76,7 @@
 				oa:hasSelector <${prefix}SvgSel-f15r-b-ln2> .
 				
 <${prefix}SvgSel-f15r-a-ln1>	a oa:SvgSelector, cnt:ContentAsText ;
-				cnt:chars "<Svg:poly points=''/>" .
+				cnt:chars "<Svg:poly points='328,1539 600,1539 1368,1539 1371,1622 600,1622 600,1788 328,1788'/>" .
 <${prefix}SvgSel-f15r-a-ln2>	a oa:SvgSelector, cnt:ContentAsText ;
 				cnt:chars "<Svg:poly points='600,1622 1412,1622 1412,1700 600,1700'/>" .
 <${prefix}SvgSel-f15r-b-ln1>	a oa:SvgSelector, cnt:ContentAsText ;

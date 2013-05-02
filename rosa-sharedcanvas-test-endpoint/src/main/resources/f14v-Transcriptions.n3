@@ -66,7 +66,7 @@
 <${prefix}SvgSel-f14v-c-ln2>	a oa:SvgSelector, cnt:ContentAsText ;
 				cnt:chars "<Svg:poly points='1169,691 2166,685 2166,761 1169,761'/>" .
 <${prefix}SvgSel-f14v-d-ln1>	a oa:SvgSelector, cnt:ContentAsText ;
-				cnt:chars "<Svg:poly points='x1,y1 x2,y2 x3,y3 x4,y4'/>" .
+				cnt:chars "<Svg:poly points='2405,607 3432,607 3432,683 2588,685 2588,761 2405,761'/>" .
 <${prefix}SvgSel-f14v-d-ln2>	a oa:SvgSelector, cnt:ContentAsText ;
 				cnt:chars "<Svg:poly points='2588,685 3432,683 3428,758 2588,761'/>" .
 				

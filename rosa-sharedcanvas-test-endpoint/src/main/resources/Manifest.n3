@@ -23,8 +23,8 @@
 	<${baseUrl}canvas/16r/transcriptions> ,
 	<${baseUrl}annotations/illustration> ;
 				rdfs:label "Ludwig XV7" ;
-				dc:rights """
-					Courtesy of the J. Paul Getty Museum, Los Angeles. For permission to reproduce images, please contact Rights and Reproductions, Registrar's Office, The J.Paul Getty Museum.
+				dc:rights """Courtesy of the J. Paul Getty Museum, Los Angeles. 
+				For permission to reproduce images, please contact Rights and Reproductions, Registrar's Office, The J.Paul Getty Museum.
 				""" ;
 				ore:isDescribedBy <${baseUrl}manifest> ;
 				a sc:Manifest, ore:Aggregation .
