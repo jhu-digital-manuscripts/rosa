@@ -1,17 +1,30 @@
 package rosa.scanvas.demo.website.client.presenter;
 
+import java.lang.IndexOutOfBoundsException;
+import java.lang.NumberFormatException;
+
 import rosa.scanvas.demo.website.client.PanelData;
+import rosa.scanvas.demo.website.client.disparea.AnnotationUtil;
 import rosa.scanvas.demo.website.client.disparea.DisplayArea;
 import rosa.scanvas.demo.website.client.disparea.DisplayAreaWidget;
 import rosa.scanvas.demo.website.client.disparea.DisplayElement;
+import rosa.scanvas.demo.website.client.disparea.MasterImageDrawable;
+import rosa.scanvas.demo.website.client.dynimg.IIIFImageServer;
+import rosa.scanvas.demo.website.client.dynimg.MasterImage;
+import rosa.scanvas.demo.website.client.event.AnnotationSelectionEvent;
+import rosa.scanvas.demo.website.client.event.AnnotationSelectionHandler;
 import rosa.scanvas.demo.website.client.event.PanelDisplayedEvent;
 import rosa.scanvas.model.client.Annotation;
+import rosa.scanvas.model.client.AnnotationBody;
+import rosa.scanvas.model.client.AnnotationSelector;
+import rosa.scanvas.model.client.AnnotationTarget;
 import rosa.scanvas.model.client.Canvas;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.Window;
 
 public class CanvasPanelPresenter implements PanelPresenter {
     public interface Display extends IsWidget {
@@ -32,15 +45,42 @@ public class CanvasPanelPresenter implements PanelPresenter {
         this.panel_id = panel_id;
         this.width = -1;
         this.height = -1;
+        
+        bind();
     }
 
+    /**
+     * Bind event handlers to the event bus
+     */
+    private void bind() {
+    	event_bus.addHandler(AnnotationSelectionEvent.TYPE, 
+    			new AnnotationSelectionHandler() {
+    		public void onSelection(AnnotationSelectionEvent event) {
+    			if (event.getPanel() == panel_id) {
+    				setAnnotationVisible(event.getAnnotation(), event.getStatus());
+    			}
+    		}
+    	});
+    }
+    
     // TODO Can save display elements and operate on them for efficiency
     private void setAnnotationVisible(Annotation ann, boolean status) {
+    	if (!AnnotationUtil.isSpecificResource(ann) &&
+    			ann.body().isText()) {
+    	// nontargeted text annotations are not displayed on the canvas
+    		return;
+    	}
+    	
         DisplayAreaWidget da = display.getDisplayAreaWidget();
         DisplayElement el = da.area().get(ann.uri());
 
         if (el != null) {
             el.setVisible(status);
+        } else {
+        	el = AnnotationUtil.annotationToDisplayElement(
+        			ann, canvas, display.getDisplayAreaWidget());
+        	el.setVisible(status);
+        	da.area().add(el);
         }
 
         da.redraw();

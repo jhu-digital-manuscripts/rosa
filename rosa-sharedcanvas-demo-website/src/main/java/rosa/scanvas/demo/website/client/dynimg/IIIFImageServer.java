@@ -120,8 +120,18 @@ public class IIIFImageServer extends AbstractImageServer {
         if (crop.length == 0) {
             region = "full";
         } else {
-            region = crop[0] + "," + crop[1] + "," + (crop[2] - crop[0]) + ","
+        	region = crop[0] + "," + crop[1] + "," + (crop[2] - crop[0]) + ","
                     + (crop[3] - crop[1]);
+        	
+/*        	// changed renderAsUrl to return a URL in PERCENT instead of ABSOLUTE
+        	// 100% = 100, 5% = 5, etc
+        	// NOTE: precision is lost, since these are treated as integers, not doubles
+        	int left = 100 * crop[0] / width;
+        	int top = 100 * crop[1] / height;
+        	int right = 100 * (crop[2] - crop[0]) / width;
+        	int bottom = 100 * (crop[3] - crop[1]) / height;
+        	
+        	region = "pct:" + left + "," + top + "," + right + "," + bottom;*/
         }
 
         String size = width + "," + height;

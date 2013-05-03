@@ -4,6 +4,10 @@ import rosa.scanvas.model.client.Annotation;
 
 import com.google.gwt.event.shared.GwtEvent;
 
+/**
+ * Indicates that an annotaion has been selected in the sidebar, 
+ * to be show or hidden in the content area
+ */
 public class AnnotationSelectionEvent extends GwtEvent<AnnotationSelectionHandler> {
 	public static Type<AnnotationSelectionHandler> TYPE = new Type<AnnotationSelectionHandler>();
 	private final Annotation annotation;

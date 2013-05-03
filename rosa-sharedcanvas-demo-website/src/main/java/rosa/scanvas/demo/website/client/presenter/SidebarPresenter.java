@@ -117,8 +117,8 @@ public class SidebarPresenter implements IsWidget {
 
 // temporary	
 	private void doAnnotationSelection(Annotation anno, boolean status, int panel) {
-		Window.alert("Annotation [" + anno.label() + "] has been "
-				+ (status ? "":"un") + "selected for Panel ID = " + panel);
+/*		Window.alert("Annotation [" + anno.label() + "] has been "
+				+ (status ? "":"un") + "selected for Panel ID = " + panel);*/
 	}
 	
 	/**

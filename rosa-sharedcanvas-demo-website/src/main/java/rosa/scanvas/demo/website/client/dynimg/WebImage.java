@@ -76,11 +76,12 @@ public class WebImage extends FocusWidget {
      * @param cb
      */
     private native void setOnloadCallback(OnLoadCallback cb) /*-{
-      this.img.onload = function() {        
+      var img = this.@rosa.scanvas.demo.website.client.dynimg.WebImage::getImageElement()();
+      img.onload = function() {        
         cb.@rosa.scanvas.demo.website.client.dynimg.WebImage.OnLoadCallback::onLoad();
       };
     }-*/;
-
+    
     public boolean isViewable() {
         return viewable;
     }
