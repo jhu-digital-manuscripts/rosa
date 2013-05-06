@@ -75,6 +75,8 @@ public class WebImage extends FocusWidget {
      * 
      * @param cb
      */
+    
+    // TODO can use this here?
     private native void setOnloadCallback(OnLoadCallback cb) /*-{
       var img = this.@rosa.scanvas.demo.website.client.dynimg.WebImage::getImageElement()();
       img.onload = function() {        

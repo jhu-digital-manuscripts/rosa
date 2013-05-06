@@ -1,7 +1,7 @@
 package rosa.scanvas.demo.website.client.view;
 
 import rosa.scanvas.demo.website.client.disparea.DisplayArea;
-import rosa.scanvas.demo.website.client.disparea.DisplayAreaWidget;
+import rosa.scanvas.demo.website.client.disparea.Html5DisplayAreaView;
 import rosa.scanvas.demo.website.client.presenter.CanvasPanelPresenter;
 
 import com.google.gwt.user.client.ui.Composite;
@@ -12,14 +12,14 @@ import com.google.gwt.user.client.ui.Panel;
 public class CanvasView extends Composite implements CanvasPanelPresenter.Display {
     private final Panel main;
     private final Label title;
-    private final DisplayAreaWidget area_view;
+    private final Html5DisplayAreaView area_view;
 
     public CanvasView(int width, int height, int vp_width, int vp_height) {
         this.main = new FlowPanel();
         this.title = new Label();
 
         DisplayArea area = new DisplayArea(width, height, vp_width, vp_height);
-        this.area_view = new DisplayAreaWidget(area);
+        this.area_view = new Html5DisplayAreaView(area);
 
         main.add(title);
         main.add(area_view);
@@ -35,7 +35,7 @@ public class CanvasView extends Composite implements CanvasPanelPresenter.Displa
     }
 
     @Override
-    public DisplayAreaWidget getDisplayAreaWidget() {
+    public Html5DisplayAreaView getDisplayAreaWidget() {
         return area_view;
     }
 }

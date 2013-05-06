@@ -23,7 +23,11 @@ public class DisplayArea implements Iterable<DisplayElement> {
     private final int base_width, base_height;
     private final int vp_width, vp_height;
 
-    private final Map<String, DisplayElement> content;
+    // DisplayElement id -> DisplayElement
+    private final Map<String, DisplayElement> content_map;
+
+    // Ordered by stacking
+    private List<DisplayElement> content_list;
 
     private ZoomLevels zoom_levels;
     private int zoom_level;
@@ -33,7 +37,8 @@ public class DisplayArea implements Iterable<DisplayElement> {
     private int vp_base_center_y;
 
     public DisplayArea(int width, int height, int vp_width, int vp_height) {
-        this.content = new HashMap<String, DisplayElement>();
+        this.content_map = new HashMap<String, DisplayElement>();
+        this.content_list = new ArrayList<DisplayElement>();
 
         this.base_width = width;
         this.base_height = height;
@@ -94,21 +99,40 @@ public class DisplayArea implements Iterable<DisplayElement> {
         return (int) (base_height * zoom);
     }
 
-    public void add(DisplayElement el) {
-        content.put(el.id(), el);
+    public void setContent(List<DisplayElement> els) {
+        content_map.clear();
+        content_list = els;
+
+        for (DisplayElement el : content_list) {
+            content_map.put(el.id(), el);
+        }
+
+        stackingOrderChanged();
+    }
+
+    /**
+     * Must be called if the element stacking order changes.
+     */
+    public void stackingOrderChanged() {
+        Collections.sort(content_list, new Comparator<DisplayElement>() {
+            public int compare(DisplayElement e1, DisplayElement e2) {
+                return e2.stackingOrder() - e1.stackingOrder();
+            }
+        });
     }
 
     public void remove(DisplayElement el) {
-        content.remove(el.id());
+        content_map.remove(el.id());
+        content_list.remove(el);
     }
 
     public DisplayElement get(String id) {
-        return content.get(id);
+        return content_map.get(id);
     }
 
     @Override
     public Iterator<DisplayElement> iterator() {
-        return content.values().iterator();
+        return content_list.iterator();
     }
 
     public int zoomLevel() {
@@ -143,18 +167,12 @@ public class DisplayArea implements Iterable<DisplayElement> {
         int vp_base_left = vp_base_center_x - (vp_base_width / 2);
         int vp_base_top = vp_base_center_y - (vp_base_height / 2);
 
-        for (DisplayElement el : content.values()) {
+        for (DisplayElement el : content_list) {
             if (el.inRectangle(vp_base_left, vp_base_top, vp_base_width,
                     vp_base_height)) {
                 result.add(el);
             }
         }
-
-        Collections.sort(result, new Comparator<DisplayElement>() {
-            public int compare(DisplayElement e1, DisplayElement e2) {
-                return e2.stackingOrder() - e1.stackingOrder();
-            }
-        });
 
         return result;
     }
@@ -170,18 +188,11 @@ public class DisplayArea implements Iterable<DisplayElement> {
     public List<DisplayElement> findContaining(int x, int y) {
         List<DisplayElement> result = new ArrayList<DisplayElement>();
 
-        for (DisplayElement el : content.values()) {
-            if (x >= el.baseLeft() && x <= el.baseLeft() + el.baseWidth()
-                    && y >= el.baseTop() && y <= el.baseTop() + el.baseHeight()) {
+        for (DisplayElement el : content_list) {
+            if (el.contains(x, y)) {
                 result.add(el);
             }
         }
-
-        Collections.sort(result, new Comparator<DisplayElement>() {
-            public int compare(DisplayElement e1, DisplayElement e2) {
-                return e2.stackingOrder() - e1.stackingOrder();
-            }
-        });
 
         return result;
     }

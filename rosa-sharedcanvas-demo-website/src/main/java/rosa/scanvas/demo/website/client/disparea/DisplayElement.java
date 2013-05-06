@@ -57,6 +57,18 @@ public abstract class DisplayElement {
         visible = status;
     }
 
+    /**
+     * Must be overridden by non-rectangular elements.
+     * 
+     * @param x
+     * @param y
+     * @return whether or not the point is contained within the element.
+     */
+    public boolean contains(int x, int y) {
+        return x >= base_x && x <= base_x + base_width && y >= base_y
+                && y <= base_y + base_height;
+    }
+
     public abstract void draw();
 
     public boolean inRectangle(int rect_x, int rect_y, int rect_width,

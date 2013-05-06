@@ -3,16 +3,19 @@ package rosa.scanvas.demo.website.client.disparea;
 import com.google.gwt.canvas.dom.client.Context2d;
 
 public class PolygonDrawable extends DisplayElement {
-    private final DisplayAreaWidget view;
+    private final Html5DisplayAreaView view;
     private final int[][] coords;
 
-    public PolygonDrawable(String id, int x, int y, int width,
-            int height, DisplayAreaWidget view, int[][] coords) {
+    public PolygonDrawable(String id, int x, int y, int width, int height,
+            Html5DisplayAreaView view, int[][] coords) {
         super(id, x, y, width, height);
 
         this.view = view;
         this.coords = coords;
     }
+
+    // TODO Override contains. Implement by drawing on another canvas and
+    // testing pixel color
 
     @Override
     public void draw() {

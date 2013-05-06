@@ -4,12 +4,12 @@ import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.user.client.ui.Composite;
 
-public class DisplayAreaWidget extends Composite {
+public class Html5DisplayAreaView extends Composite {
     private final Canvas canvas;
     private final Context2d context;
     private DisplayArea area;
 
-    public DisplayAreaWidget(DisplayArea area) {
+    public Html5DisplayAreaView(DisplayArea area) {
         this.canvas = Canvas.createIfSupported();
         this.context = canvas.getContext2d();
 
