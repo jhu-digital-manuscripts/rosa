@@ -2,13 +2,16 @@ package iiif;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Parse a URL path info a IIIF request. If a path_prefix is given, it is
  * stripped from paths before parsing.
  */
 public class IIIFParser {
-    private String path_prefix;
+    private final String path_prefix;
+    private final Map<String,String> aliases; // alias -> fsi image id
 
     public IIIFParser() {
         this(null);
@@ -16,6 +19,7 @@ public class IIIFParser {
     
     public IIIFParser(String path_prefix) {
         this.path_prefix = path_prefix;
+        this.aliases = new HashMap<String, String>();
     }
 
     public IIIFRequestType determineRequestType(String path) {
@@ -26,6 +30,10 @@ public class IIIFParser {
         }
     }
 
+    public Map<String,String> getImageAliases() {
+        return aliases;
+    }
+    
     private String[] parse(String path) {
         if (path_prefix != null && path.startsWith(path_prefix)) {
             path = path.substring(path_prefix.length());
@@ -57,8 +65,13 @@ public class IIIFParser {
         }
 
         IIIFInfoRequest req = new IIIFInfoRequest();
-        req.setImage(parts[0]);
-
+        
+        if (aliases.containsKey(parts[0])) {
+            req.setImage(aliases.get(parts[0]));
+        } else {
+            req.setImage(parts[0]);
+        }
+        
         if (parts[1].equals("info.xml")) {
             req.setFormat(InfoFormat.XML);
         } else if (parts[1].equals("info.json")) {
@@ -80,7 +93,12 @@ public class IIIFParser {
 
         IIIFImageRequest req = new IIIFImageRequest();
 
-        req.setImage(parts[0]);
+        if (aliases.containsKey(parts[0])) {
+            req.setImage(aliases.get(parts[0]));
+        } else {
+            req.setImage(parts[0]);
+        }
+        
         req.setRegion(parseRegion(parts[1]));
         req.setSize(parseScale(parts[2]));
 

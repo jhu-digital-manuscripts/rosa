@@ -1,6 +1,8 @@
 package iiif;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Enumeration;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -24,7 +26,7 @@ public class IIIFServlet extends HttpServlet {
     private ImageServer server;
     private IIIFParser parser;
     private IIIFSerializer serializer;
-
+    
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
 
@@ -38,12 +40,24 @@ public class IIIFServlet extends HttpServlet {
         parser = new IIIFParser();
         serializer = new IIIFSerializer();
         server = new FSIServer(fsi_url);
-    }
+                
+        Enumeration<?> params = config.getInitParameterNames();
+        
+        while (params.hasMoreElements()) {
+            String param = (String) params.nextElement();
+            
+            if (param.startsWith("alias.")) {
+                String alias = param.substring("alias.".length());                
+                parser.getImageAliases().put(alias, config.getInitParameter(param));
+            }
+        }
+     }
 
     private void report_error(HttpServletResponse resp, int code,
             String message, String param) throws ServletException, IOException {
         resp.setStatus(code);
-
+        resp.setContentType("text/xml");
+        
         DocumentBuilderFactory docFactory = DocumentBuilderFactory
                 .newInstance();
         try {
@@ -54,7 +68,7 @@ public class IIIFServlet extends HttpServlet {
             Element root = doc.createElementNS(ns, "error");
             doc.appendChild(root);
 
-            Element param_el = doc.createElementNS(ns, "param");
+            Element param_el = doc.createElementNS(ns, "parameter");
             root.appendChild(param_el);
             param_el.setTextContent(param);
 
@@ -95,6 +109,8 @@ public class IIIFServlet extends HttpServlet {
 
         String path = sb.substring(i + context.length());
 
+        //System.err.println(sb);
+        
         IIIFRequestType type = parser.determineRequestType(path);
 
         try {
@@ -105,11 +121,23 @@ public class IIIFServlet extends HttpServlet {
                 if (info == null) {
                     report_error(resp, 404, "not found", "identifier");
                 } else {
+                    OutputStream os = resp.getOutputStream();
+                    
                     try {
                         if (inforeq.getFormat() == InfoFormat.XML) {
-                            serializer.toXML(info, resp.getOutputStream());
+                            serializer.toXML(info, os);
                         } else if (inforeq.getFormat() == InfoFormat.JSON) {
-                            serializer.toJSON(info, resp.getOutputStream());
+                            String callback = req.getParameter("callback");
+                            
+                            if (callback != null) {
+                                os.write(callback.getBytes("UTF-8"));
+                                os.write('(');
+                            }
+                            
+                            serializer.toJSON(info, os);
+                            if (callback != null) {
+                                os.write(')');
+                            }
                         } else {
                             report_error(resp, 415, "no such info format",
                                     "format");
@@ -137,6 +165,8 @@ public class IIIFServlet extends HttpServlet {
                 report_error(resp, 400, "malformed request", "unknown");
             }
         } catch (IIIFException e) {
+            //System.err.println(e);
+            
             String param = e.getParameter() == null ? "unknown" : e
                     .getParameter();
             int code = 400;
