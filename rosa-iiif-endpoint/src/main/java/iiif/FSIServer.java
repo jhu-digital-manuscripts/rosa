@@ -7,6 +7,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -21,9 +23,12 @@ import org.xml.sax.SAXException;
  */
 public class FSIServer implements ImageServer {
     private String baseurl;
+    private Map<String, ImageInfo> image_info_cache;
+    private static int MAX_IMAGE_INFO_CACHE_SIZE = 1000;
 
     public FSIServer(String baseurl) {
         this.baseurl = baseurl;
+        this.image_info_cache = new ConcurrentHashMap<String, ImageInfo>();
     }
 
     public String constructURL(IIIFImageRequest req) throws IIIFException {
@@ -164,8 +169,13 @@ public class FSIServer implements ImageServer {
     }
 
     public ImageInfo lookupImage(String image) throws IIIFException {
-        ImageInfo info = new ImageInfo();
+        ImageInfo info = image_info_cache.get(image);
 
+        if (info != null) {
+            return info;
+        }
+
+        info = new ImageInfo();
         info.setId(image);
         info.setTileWidth(1000);
         info.setTileHeight(1000);
@@ -217,6 +227,12 @@ public class FSIServer implements ImageServer {
         } catch (IOException e) {
             throw new IIIFException(e);
         }
+
+        if (image_info_cache.size() > MAX_IMAGE_INFO_CACHE_SIZE) {
+            image_info_cache.clear();
+        }
+
+        image_info_cache.put(image, info);
 
         return info;
     }

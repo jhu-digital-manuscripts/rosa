@@ -1,6 +1,7 @@
 package iiif;
 
 public class IIIFException extends Exception {
+    private static final long serialVersionUID = 1L;
     private final String param;
 
     public IIIFException(String message) {

@@ -23,6 +23,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 public class IIIFServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+    
     private ImageServer server;
     private IIIFParser parser;
     private IIIFSerializer serializer;
@@ -56,7 +58,7 @@ public class IIIFServlet extends HttpServlet {
     private void report_error(HttpServletResponse resp, int code,
             String message, String param) throws ServletException, IOException {
         resp.setStatus(code);
-        resp.setContentType("text/xml");
+        resp.setContentType("application/xml");
         
         DocumentBuilderFactory docFactory = DocumentBuilderFactory
                 .newInstance();
@@ -108,8 +110,6 @@ public class IIIFServlet extends HttpServlet {
         }
 
         String path = sb.substring(i + context.length());
-
-        //System.err.println(sb);
         
         IIIFRequestType type = parser.determineRequestType(path);
 
@@ -165,8 +165,6 @@ public class IIIFServlet extends HttpServlet {
                 report_error(resp, 400, "malformed request", "unknown");
             }
         } catch (IIIFException e) {
-            //System.err.println(e);
-            
             String param = e.getParameter() == null ? "unknown" : e
                     .getParameter();
             int code = 400;

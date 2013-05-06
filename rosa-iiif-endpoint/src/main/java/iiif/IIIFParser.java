@@ -100,14 +100,23 @@ public class IIIFParser {
         }
         
         req.setRegion(parseRegion(parts[1]));
-        req.setSize(parseScale(parts[2]));
+        req.setSize(parseSize(parts[2]));
 
+        double rotation;
+        
         try {
-            req.setRotation(Double.parseDouble(parts[3]));
+            rotation = Double.parseDouble(parts[3]);
         } catch (NumberFormatException e) {
             throw new IIIFException("Malformed rotation: " + e.getMessage(),
                     "rotation");
         }
+        
+        if (rotation < 0 || rotation > 360) {
+            throw new IIIFException("Invalid rotation: " + rotation,
+                    "rotation");  
+        }
+        
+        req.setRotation(rotation);
 
         String[] last = parts[4].split("\\.");
 
@@ -132,62 +141,62 @@ public class IIIFParser {
         }
     }
 
-    private Size parseScale(String s) throws IIIFException {
-        Size scale = new Size();
+    private Size parseSize(String s) throws IIIFException {
+        Size size = new Size();
 
         try {
 
             if (s.equals("full")) {
-                scale.setType(Size.Type.FULL);
-                return scale;
+                size.setType(Size.Type.FULL);
+                return size;
             }
 
             if (s.endsWith(",")) {
                 s = s.substring(0, s.length() - 1);
-                scale.setType(Size.Type.EXACT_WIDTH);
+                size.setType(Size.Type.EXACT_WIDTH);
 
-                scale.setWidth(Integer.parseInt(s));
-                return scale;
+                size.setWidth(Integer.parseInt(s));
+                return size;
             }
 
             if (s.startsWith(",")) {
                 s = s.substring(1);
-                scale.setType(Size.Type.EXACT_HEIGHT);
+                size.setType(Size.Type.EXACT_HEIGHT);
 
-                scale.setHeight(Integer.parseInt(s));
-                return scale;
+                size.setHeight(Integer.parseInt(s));
+                return size;
             }
 
             if (s.startsWith("pct:")) {
                 s = s.substring(4);
 
-                scale.setType(Size.Type.PERCENTAGE);
+                size.setType(Size.Type.PERCENTAGE);
 
-                scale.setPercentage(Double.parseDouble(s));
+                size.setPercentage(Double.parseDouble(s));
 
-                return scale;
+                return size;
             }
 
             if (s.startsWith("!")) {
                 s = s.substring(1);
-                scale.setType(Size.Type.BEST_FIT);
+                size.setType(Size.Type.BEST_FIT);
             } else {
-                scale.setType(Size.Type.EXACT);
+                size.setType(Size.Type.EXACT);
             }
 
             String[] parts = s.split(",");
 
             if (parts.length != 2) {
-                throw new IIIFException("Malformed scale", "scale");
+                throw new IIIFException("Malformed size", "size");
             }
 
-            scale.setWidth(Integer.parseInt(parts[0]));
-            scale.setHeight(Integer.parseInt(parts[1]));
+            size.setWidth(Integer.parseInt(parts[0]));
+            size.setHeight(Integer.parseInt(parts[1]));
 
-            return scale;
+            return size;
         } catch (NumberFormatException e) {
             throw new IIIFException("Malformed number: " + e.getMessage(),
-                    "scale");
+                    "size");
         }
     }
 
@@ -211,7 +220,7 @@ public class IIIFParser {
             String[] parts = s.split(",");
 
             if (parts.length != 4) {
-                throw new IIIFException("Malformed region", "scale");
+                throw new IIIFException("Malformed region", "region");
             }
 
             if (s.startsWith("pct:")) {
