@@ -1,6 +1,5 @@
 package rosa.scanvas.demo.website.client.view;
 
-import rosa.scanvas.demo.website.client.disparea.DisplayArea;
 import rosa.scanvas.demo.website.client.disparea.Html5DisplayAreaView;
 import rosa.scanvas.demo.website.client.presenter.CanvasPanelPresenter;
 
@@ -14,12 +13,11 @@ public class CanvasView extends Composite implements CanvasPanelPresenter.Displa
     private final Label title;
     private final Html5DisplayAreaView area_view;
 
-    public CanvasView(int width, int height, int vp_width, int vp_height) {
+    public CanvasView() {
         this.main = new FlowPanel();
         this.title = new Label();
 
-        DisplayArea area = new DisplayArea(width, height, vp_width, vp_height);
-        this.area_view = new Html5DisplayAreaView(area);
+        this.area_view = new Html5DisplayAreaView();
 
         main.add(title);
         main.add(area_view);

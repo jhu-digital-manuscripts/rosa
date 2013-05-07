@@ -15,8 +15,8 @@ import java.util.Map;
  * 
  * The area can be zoomed at discrete levels. Changing the zoom maintains the
  * same relative dimensions and positions of the elements. Changing the zoom
- * preservers the current size and center of the viewport, but its base
- * dimensions and position change.
+ * preserves the current size and center of the viewport, but its base
+ * dimensions change.
  * 
  */
 public class DisplayArea implements Iterable<DisplayElement> {
@@ -81,6 +81,19 @@ public class DisplayArea implements Iterable<DisplayElement> {
     public void setViewportBaseCenter(int x, int y) {
         this.vp_base_center_x = x;
         this.vp_base_center_y = y;
+    }
+
+    public void setViewportCenter(int x, int y) {
+        this.vp_base_center_x = (int) (x / zoom);
+        this.vp_base_center_y = (int) (y / zoom);
+    }
+
+    /**
+     * Pan the viewport by a distance at the current zoom.
+     */
+    public void panViewport(int dx, int dy) {
+        this.vp_base_center_x += (dx / zoom);
+        this.vp_base_center_y += (dy / zoom);
     }
 
     public int baseWidth() {
@@ -203,5 +216,39 @@ public class DisplayArea implements Iterable<DisplayElement> {
 
     public int viewportLeft() {
         return (int) ((vp_base_center_x * zoom) - (vp_width / 2));
+    }
+
+    public int viewportCenterX() {
+        return (int) (vp_base_center_x * zoom);
+    }
+
+    public int viewportCenterY() {
+        return (int) (vp_base_center_y * zoom);
+    }
+
+    public boolean atMaxZoom() {
+        return zoom_level == zoom_levels.size() - 1;
+    }
+
+    public int maxZoomLevel() {
+        return zoom_levels.size() - 1;
+    }
+
+    public boolean zoomIn() {
+        if (zoom_level < zoom_levels.size() - 1) {
+            zoom_level++;
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean zoomOut() {
+        if (zoom_level > 0) {
+            zoom_level--;
+            return true;
+        }
+
+        return false;
     }
 }

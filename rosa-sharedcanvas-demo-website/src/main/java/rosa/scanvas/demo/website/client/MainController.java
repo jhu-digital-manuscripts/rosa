@@ -123,8 +123,7 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
     private PanelPresenter create_panel_presenter(PanelView view, int panel_id) {
         switch (view) {
         case CANVAS:
-            return new CanvasPanelPresenter(new CanvasView(panel_width,
-                    panel_height, panel_width, panel_height), event_bus, panel_id);
+            return new CanvasPanelPresenter(new CanvasView(), event_bus, panel_id);
         case HOME:
             return new HomePanelPresenter(new HomeView(), event_bus, panel_id);
 

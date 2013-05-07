@@ -1,6 +1,5 @@
 package rosa.scanvas.demo.website.client.dynimg;
 
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.user.client.ui.FocusWidget;
 
@@ -15,6 +14,7 @@ public class WebImage extends FocusWidget {
     private final int height;
     private final ImageElement img;
     private boolean viewable;
+    private OnLoadCallback callback;
 
     public interface OnLoadCallback {
         void onLoad();
@@ -24,7 +24,7 @@ public class WebImage extends FocusWidget {
         this.url = url;
         this.width = width;
         this.height = height;
-        this.img = Document.get().createImageElement();
+        this.img = createImageElement();
         this.viewable = false;
 
         setElement(img);
@@ -36,6 +36,25 @@ public class WebImage extends FocusWidget {
 
     public WebImage(String url) {
         this(url, -1, -1);
+    }
+
+    // Have to use a javascript Image object to get set onload callback.
+    private native ImageElement createImageElement() /*-{
+      var self = this;
+      var img = new Image();
+                                                     
+      img.onload = function() {
+        self.@rosa.scanvas.demo.website.client.dynimg.WebImage::invokeCallback()();
+        img.onload = null;
+      }
+                                              
+      return img;
+    }-*/;
+
+    private void invokeCallback() {
+        if (callback != null) {
+            callback.onLoad();
+        }
     }
 
     public int width() {
@@ -51,18 +70,14 @@ public class WebImage extends FocusWidget {
     }
 
     public void makeViewable() {
-        if (!viewable) {
-            img.setSrc(url);
-            viewable = true;
-        }
+       makeViewable(null);
     }
 
     public void makeViewable(OnLoadCallback cb) {
         if (!viewable) {
-            setOnloadCallback(cb);
-
-            img.setSrc(url);
+            callback = cb;
             viewable = true;
+            img.setSrc(url);
         }
     }
 
@@ -70,20 +85,6 @@ public class WebImage extends FocusWidget {
         return img;
     }
 
-    /**
-     * Callback when the image data is loaded.
-     * 
-     * @param cb
-     */
-    
-    // TODO can use this here?
-    private native void setOnloadCallback(OnLoadCallback cb) /*-{
-      var img = this.@rosa.scanvas.demo.website.client.dynimg.WebImage::getImageElement()();
-      img.onload = function() {        
-        cb.@rosa.scanvas.demo.website.client.dynimg.WebImage.OnLoadCallback::onLoad();
-      };
-    }-*/;
-    
     public boolean isViewable() {
         return viewable;
     }
