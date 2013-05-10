@@ -20,9 +20,12 @@ public class PolygonDrawable extends DisplayElement {
     @Override
     public void draw() {
         Context2d context = view.context();
-        double zoom = view.area().zoom();
+        DisplayArea area = view.area();
+        
+        double zoom = area.zoom();
 
         context.save();
+        context.translate(-area.viewportLeft(), -area.viewportTop());
         context.scale(zoom, zoom);
 
         context.beginPath();

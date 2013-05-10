@@ -58,6 +58,6 @@ public class ZoomLevels {
     }
 
     public double zoom(int level) {
-        return zooms[level - 1];
+        return zooms[level];
     }
 }

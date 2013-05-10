@@ -69,3 +69,10 @@
 .SidebarItem {
   margin-bottom: 40px;
 }
+
+/** ------ */
+
+.Canvas {
+	border-width: 1px;
+	border-style: solid;
+}

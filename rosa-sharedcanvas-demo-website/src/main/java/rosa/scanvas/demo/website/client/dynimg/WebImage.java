@@ -37,7 +37,7 @@ public class WebImage extends FocusWidget {
     public WebImage(String url) {
         this(url, -1, -1);
     }
-
+    
     // Have to use a javascript Image object to get set onload callback.
     private native ImageElement createImageElement() /*-{
       var self = this;

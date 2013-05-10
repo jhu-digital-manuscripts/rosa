@@ -1,5 +1,8 @@
 package rosa.scanvas.demo.website.client.presenter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import rosa.scanvas.demo.website.client.PanelData;
 import rosa.scanvas.demo.website.client.disparea.AnnotationUtil;
 import rosa.scanvas.demo.website.client.disparea.DisplayArea;
@@ -9,13 +12,14 @@ import rosa.scanvas.demo.website.client.event.AnnotationSelectionEvent;
 import rosa.scanvas.demo.website.client.event.AnnotationSelectionHandler;
 import rosa.scanvas.demo.website.client.event.PanelDisplayedEvent;
 import rosa.scanvas.model.client.Annotation;
+import rosa.scanvas.model.client.AnnotationList;
 import rosa.scanvas.model.client.Canvas;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
-
+import com.google.gwt.user.client.Window;
 public class CanvasPanelPresenter implements PanelPresenter {
     public interface Display extends IsWidget {
         Label getLabel();
@@ -28,6 +32,8 @@ public class CanvasPanelPresenter implements PanelPresenter {
     private final HandlerManager event_bus;
     private Canvas canvas;
     private int width, height;
+    
+    private List<DisplayElement> els = new ArrayList<DisplayElement>();
 
     public CanvasPanelPresenter(Display display, HandlerManager eventBus, int panel_id) {
         this.display = display;
@@ -68,7 +74,7 @@ public class CanvasPanelPresenter implements PanelPresenter {
             el.setVisible(status);
         }
 
-        da.redraw();
+        da.redraw(false);
     }
     
     @Override
@@ -79,9 +85,18 @@ public class CanvasPanelPresenter implements PanelPresenter {
     @Override
     public void display(PanelData data) {
         this.canvas = data.getCanvas();
+        els.clear();
 
         // TODO display.getDisplayAreaWidget().area().setContent(els);
-        
+/*        for (AnnotationList list : data.getAnnotationLists()) {
+        	for (Annotation ann : list) {
+        		DisplayElement el = AnnotationUtil.annotationToDisplayElement(
+        				ann, this.canvas, display.getDisplayAreaWidget());
+        		els.add(el);
+        	}
+        }*/
+//        display.getDisplayAreaWidget().area().setContent(els);
+   
         update();
 
         PanelDisplayedEvent event = new PanelDisplayedEvent(panel_id, data);
@@ -108,6 +123,7 @@ public class CanvasPanelPresenter implements PanelPresenter {
         Html5DisplayAreaView da = display.getDisplayAreaWidget();
         DisplayArea area = new DisplayArea(canvas.width(), canvas.height(),
                 width, height);
+        area.setContent(els);
         da.display(area);
     }
 }

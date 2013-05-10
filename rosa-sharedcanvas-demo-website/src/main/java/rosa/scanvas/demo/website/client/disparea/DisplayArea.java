@@ -18,6 +18,12 @@ import java.util.Map;
  * preserves the current size and center of the viewport, but its base
  * dimensions change.
  * 
+ * There are three different dimensions being tracked by this DisplayArea. The
+ * dimensions of the area itself (canvas), called the "base" dimensions. The 
+ * dimensions of the viewport in relation to the pixel dimensions of the browser, 
+ * called the "viewport" dimensions, which are constant. And the dimensions of 
+ * the viewport in relation to the display area itself (the base).
+ * 
  */
 public class DisplayArea implements Iterable<DisplayElement> {
     private final int base_width, base_height;
@@ -30,7 +36,9 @@ public class DisplayArea implements Iterable<DisplayElement> {
     private List<DisplayElement> content_list;
 
     private ZoomLevels zoom_levels;
+    //Index representing how far the DisplayArea zoomed
     private int zoom_level;
+    //The scaling factor of the current zoom
     private double zoom;
 
     private int vp_base_center_x;
@@ -51,7 +59,7 @@ public class DisplayArea implements Iterable<DisplayElement> {
         this.zoom_levels = ZoomLevels.guess(base_width, base_height, vp_width,
                 vp_height);
 
-        setZoomLevel(1);
+        setZoomLevel(0);
     }
 
     public int viewportBaseCenterX() {
@@ -78,14 +86,20 @@ public class DisplayArea implements Iterable<DisplayElement> {
         return (int) (vp_height / zoom);
     }
 
+    /**
+     * Set the center of the viewport in canvas space
+     */
     public void setViewportBaseCenter(int x, int y) {
-        this.vp_base_center_x = x;
-        this.vp_base_center_y = y;
+        this.vp_base_center_x += x-viewportBaseWidth()/2;
+        this.vp_base_center_y += y-viewportBaseHeight()/2;
     }
 
+    /**
+     * Set the center of the viewport in browser space
+     */
     public void setViewportCenter(int x, int y) {
-        this.vp_base_center_x = (int) (x / zoom);
-        this.vp_base_center_y = (int) (y / zoom);
+        this.vp_base_center_x += (int) (x / zoom) - viewportBaseWidth()/2;
+        this.vp_base_center_y += (int) (y / zoom) - viewportBaseHeight()/2;
     }
 
     /**
@@ -148,19 +162,31 @@ public class DisplayArea implements Iterable<DisplayElement> {
         return content_list.iterator();
     }
 
+    /**
+     * Returns index of current zoom level
+     */
     public int zoomLevel() {
         return zoom_level;
     }
 
+    /**
+     * Set current zoom level to a desired index
+     */
     public void setZoomLevel(int level) {
         zoom_level = level;
         this.zoom = zoom_levels.zoom(zoom_level);
     }
 
+    /**
+     * Returns the total number of zoom levels
+     */
     public int numZoomLevels() {
         return zoom_levels.size();
     }
 
+    /**
+     * Returns the scaling factor of the current zoom level
+     */
     public double zoom() {
         return zoom;
     }
@@ -236,7 +262,7 @@ public class DisplayArea implements Iterable<DisplayElement> {
 
     public boolean zoomIn() {
         if (zoom_level < zoom_levels.size() - 1) {
-            zoom_level++;
+            setZoomLevel(++zoom_level);
             return true;
         }
 
@@ -245,7 +271,7 @@ public class DisplayArea implements Iterable<DisplayElement> {
 
     public boolean zoomOut() {
         if (zoom_level > 0) {
-            zoom_level--;
+            setZoomLevel(--zoom_level);
             return true;
         }
 
