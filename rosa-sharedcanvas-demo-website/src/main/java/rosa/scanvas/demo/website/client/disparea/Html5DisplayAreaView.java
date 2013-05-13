@@ -1,6 +1,9 @@
 package rosa.scanvas.demo.website.client.disparea;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
@@ -42,14 +45,12 @@ public class Html5DisplayAreaView extends Composite {
     private final Canvas overview;
     private final Context2d context;
     private DisplayArea area;
-
+    
     private boolean locked;
     private boolean drag_may_start;
     private boolean dragging;
     private int canvas_drag_x, canvas_drag_y;
     private int overview_width, overview_height;
-
-    private HashMap<String, DisplayElement> drawQueue;
     
     public Html5DisplayAreaView() {
         this.canvas = Canvas.createIfSupported();
@@ -58,7 +59,6 @@ public class Html5DisplayAreaView extends Composite {
         this.drag_may_start = false;
         this.dragging = false;
         this.locked = true;
-        this.drawQueue = new HashMap<String, DisplayElement>();
 
         this.canvas.setStylePrimaryName("canvas");
         
@@ -79,19 +79,23 @@ public class Html5DisplayAreaView extends Composite {
                     return;
                 }
 
-                int x = event.getRelativeX(canvas.getElement());
-                int y = event.getRelativeY(canvas.getElement());
-
+                int click_x = event.getRelativeX(canvas.getElement());
+                int click_y = event.getRelativeY(canvas.getElement());
+                
                 // Don't allow clicking outside of the canvas
-
-                if (x < 0 || y < 0 || x > canvas.getOffsetWidth()
-                        || y > canvas.getOffsetHeight()) {
+                if (click_x < 0 || click_y < 0 || click_x > canvas.getOffsetWidth()
+                        || click_y > canvas.getOffsetHeight()) {
                     return;
                 }
-
+                
+                // transform click broswer coordinates into canvas coordinates
+                click_x += area.viewportLeft();
+                click_y += area.viewportTop();
+               
+                area.setViewportCenter(click_x, click_y);
                 area.zoomIn();
-                area.setViewportCenter(x, y);
-                redraw(true);
+                
+                redraw();
             }
         });
 
@@ -175,11 +179,11 @@ public class Html5DisplayAreaView extends Composite {
 
                 if (v < 0) {
                     if (area.zoomIn()) {
-                        redraw(false);
+                        redraw();
                     }
                 } else {
                     if (area.zoomOut()) {
-                        redraw(false);
+                        redraw();
                     }
                 }
             }
@@ -278,7 +282,7 @@ public class Html5DisplayAreaView extends Composite {
 
                     area.setViewportCenter(x, y);
                     area.zoomIn();
-                    redraw(true);
+                    redraw();
                 }
 
                 drag_may_start = false;
@@ -316,11 +320,11 @@ public class Html5DisplayAreaView extends Composite {
 
                 if (scale > 1.0) {
                     if (area.zoomIn()) {
-                        redraw(false);
+                        redraw();
                     }
                 } else {
                     if (area.zoomOut()) {
-                        redraw(false);
+                        redraw();
                     }
                 }
             }
@@ -362,12 +366,12 @@ public class Html5DisplayAreaView extends Composite {
         overview_width = OVERVIEW_SIZE;
         overview_height = (overview_width * area.baseHeight() / area
                 .baseWidth());
-
+        
         overview.setPixelSize(overview_width, overview_height);
         overview.setCoordinateSpaceWidth(overview_width);
         overview.setCoordinateSpaceHeight(overview_height);
-
-        redraw(false);
+        
+        redraw();
     }
 
     // TODO Better to draw into buffer of whole area and then copy that to
@@ -376,26 +380,18 @@ public class Html5DisplayAreaView extends Composite {
     /**
      * Clear contents of viewport and redraw any visible display elements
      */
-    public void redraw(final boolean viewport_moved) {
+    public void redraw() {
         context.clearRect(0, 0, area.viewportWidth(), area.viewportHeight());
-
-/*        context.save();
-        if (viewport_moved){
-        	context.translate(-area.viewportLeft(), -area.viewportTop());
-        }*/
-
+        
         for (DisplayElement el : area.findInViewport()) {
         	if (el.isVisible()) {
                 el.draw();
             }
         }
-
-//        context.restore();
-
         // TODO Grab overview when zoom level is 0...
     }
     
-// changed from protected
+// this was originally protected, but changed to public for the test dialog box
     public Context2d context() {
         return context;
     }
@@ -409,19 +405,17 @@ public class Html5DisplayAreaView extends Composite {
      */
     public void resetDisplay() {
         area.setZoomLevel(0);
-        //area.setViewportBaseCenter(-area.baseWidth() / 2, -area.baseHeight() / 2);
-        area.setViewportBaseCenter(-area.viewportBaseCenterX()+area.viewportBaseWidth(),
-        		-area.viewportBaseCenterY()+area.viewportBaseHeight());
-        redraw(true);
+        area.setViewportBaseCenter(area.baseWidth() / 2, area.baseHeight() / 2);
+        redraw();
     }
 
     public void pan(int canvas_dx, int canvas_dy) {
         area.panViewport(canvas_dx, canvas_dy);
-        redraw(true);
+        redraw();
     }
 
     public void center(int base_x, int base_y) {
         area.setViewportBaseCenter(base_x, base_y);
-        redraw(true);
+        redraw();
     }
 }

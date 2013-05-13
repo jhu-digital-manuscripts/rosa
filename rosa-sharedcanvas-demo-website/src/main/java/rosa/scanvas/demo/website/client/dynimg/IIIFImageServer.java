@@ -120,8 +120,8 @@ public class IIIFImageServer extends AbstractImageServer {
         if (crop.length == 0) {
             region = "full";
         } else {
-        	region = crop[0] + "," + crop[1] + "," + (crop[2] - crop[0]*2) + ","
-                    + (crop[3] - crop[1]*2);
+        	region = crop[0] + "," + crop[1] + "," + (crop[2] - crop[0]/* * 2*/) + ","
+                    + (crop[3] - crop[1]/* * 2*/);
         }
 
         String size = width + "," + height;

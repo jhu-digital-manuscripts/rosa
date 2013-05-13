@@ -2,15 +2,20 @@ package rosa.scanvas.demo.website.client.disparea;
 
 import com.google.gwt.canvas.dom.client.Context2d;
 
-public class PolygonDrawable extends DisplayElement {
+/**
+ * A line of text with a drawn polygon bounding box
+ */
+public class TextDrawable extends PolygonDrawable {
     private final Html5DisplayAreaView view;
     private final int[][] coords;
+    private final String text;
 
-    public PolygonDrawable(String id, int x, int y, int width, int height,
-            Html5DisplayAreaView view, int[][] coords) {
-        super(id, x, y, width, height);
+    public TextDrawable(String id, int x, int y, int width, int height,
+            Html5DisplayAreaView view, int[][] coords, String text) {
+        super(id, x, y, width, height, view, coords);
 
         this.view = view;
+        this.text = text;
         this.coords = coords;
     }
 
@@ -19,25 +24,20 @@ public class PolygonDrawable extends DisplayElement {
 
     @Override
     public void draw() {
+    	super.draw();
+    	
         Context2d context = view.context();
         DisplayArea area = view.area();
         
         double zoom = area.zoom();
-
+        
         context.save();
         context.translate(-area.viewportLeft(), -area.viewportTop());
         context.scale(zoom, zoom);
-
-        context.beginPath();
-        context.moveTo(coords[0][0], coords[0][1]);
-
-        for (int i = 1; i < coords.length; i++) {
-            context.lineTo(coords[i][0], coords[i][1]);
-        }
         
-        context.setLineWidth(6);
-        context.stroke();
-        context.closePath();
+        context.setFont("bold 60px sans-serif");
+        context.setTextBaseline("top");
+        context.fillText(text, baseLeft(), baseTop(), baseWidth());
 
         context.restore();
     }

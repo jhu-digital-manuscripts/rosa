@@ -74,7 +74,7 @@ public class CanvasPanelPresenter implements PanelPresenter {
             el.setVisible(status);
         }
 
-        da.redraw(false);
+        da.redraw();
     }
     
     @Override
@@ -86,19 +86,22 @@ public class CanvasPanelPresenter implements PanelPresenter {
     public void display(PanelData data) {
         this.canvas = data.getCanvas();
         els.clear();
+        
+//        display.getLabel().setText(manifest.label() + ": " + canvas.label());
+        update();
 
         // TODO display.getDisplayAreaWidget().area().setContent(els);
-/*        for (AnnotationList list : data.getAnnotationLists()) {
+        for (AnnotationList list : data.getAnnotationLists()) {
         	for (Annotation ann : list) {
         		DisplayElement el = AnnotationUtil.annotationToDisplayElement(
         				ann, this.canvas, display.getDisplayAreaWidget());
-        		els.add(el);
+        		if (el != null) {
+        			els.add(el);
+        		}
         	}
-        }*/
-//        display.getDisplayAreaWidget().area().setContent(els);
-   
-        update();
-
+        }
+        display.getDisplayAreaWidget().area().setContent(els);
+     
         PanelDisplayedEvent event = new PanelDisplayedEvent(panel_id, data);
         event_bus.fireEvent(event);
     }
@@ -111,7 +114,7 @@ public class CanvasPanelPresenter implements PanelPresenter {
 
         this.width = width;
         this.height = height;
-
+        
         update();
     }
 
@@ -119,11 +122,12 @@ public class CanvasPanelPresenter implements PanelPresenter {
         if (canvas == null || width < 0 || height < 0) {
             return;
         }
-
+        
         Html5DisplayAreaView da = display.getDisplayAreaWidget();
         DisplayArea area = new DisplayArea(canvas.width(), canvas.height(),
                 width, height);
         area.setContent(els);
         da.display(area);
+        da.lockDisplay(false);
     }
 }

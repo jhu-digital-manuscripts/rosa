@@ -36,10 +36,11 @@ public class AnnotationUtil {
 
             // TODO the case of images with selector
 
-            el = new MasterImageDrawable(ann.uri(), 0, 0, display.area(),
-                    display.context(), iiif_server, master);
+            el = new MasterImageDrawable(ann.uri(), 0, 0, display,
+            		iiif_server, master);
+            el.setStackingOrder(5);
 
-        } else if (body.isText()) {
+        } else if (body.isText() && isSpecificResource(ann)) {
 
             AnnotationSelector selector = getSelector(ann);
 
@@ -48,8 +49,12 @@ public class AnnotationUtil {
                 int[][] coords = findCoordinates(content);
                 int[] bounds = findBounds(coords);
 
-                el = new PolygonDrawable(ann.uri(), bounds[0], bounds[1],
-                        bounds[2], bounds[3], display, coords);
+                /*el = new PolygonDrawable(ann.uri(), bounds[0], bounds[1],
+                        bounds[2], bounds[3], display, coords);*/
+                el = new TextDrawable(ann.uri(), bounds[0], bounds[1],
+                        bounds[2], bounds[3], display, coords, body.textContent());
+                el.setStackingOrder(1);
+                
             }
         }
 
@@ -70,7 +75,7 @@ public class AnnotationUtil {
         String[] points = svgContent.substring(points_start + 1, points_end)
                 .split(" ");
 
-        int[][] coords = new int[points.length][2];
+        int[][] coords = new int[points.length + 1][2];
         for (int i = 0; i < points.length; i++) {
             String[] point = points[i].split(",");
 
@@ -85,6 +90,8 @@ public class AnnotationUtil {
                         + "coordinates:\n" + svgContent);
             }
         }
+        coords[points.length][0] = coords[0][0];
+        coords[points.length][1] = coords[0][1];
 
         return coords;
     }
@@ -98,11 +105,13 @@ public class AnnotationUtil {
      * @return array: { left, top, width, height }
      */
     private static int[] findBounds(int[][] coords) {
+    	// set initial values. these do not have to be the correct points
         int left = coords[0][0];
         int top = coords[0][1];
         int right = coords[0][0];
-        int bottom = coords[0][0];
+        int bottom = coords[0][1];
 
+        // iterate through all points to find correct points
         for (int i = 0; i < coords.length; i++) {
             if (coords[i][0] < left) {
                 left = coords[i][0];

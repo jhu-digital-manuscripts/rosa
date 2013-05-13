@@ -113,7 +113,7 @@ public class MainPresenter {
     	
     	els.add(el);
     	view.area().setContent(els);
-    	view.redraw(false);  	
+    	view.redraw();  	
     }
     
     /**
@@ -132,13 +132,13 @@ public class MainPresenter {
     			DispAreaTestViewable.height);
     	
     	DisplayElement el = new MasterImageDrawable("img"+(num_img++),
-    			0, 0, view.area(), view.context(), iiif_server, master);
+    			0, 0, view, iiif_server, master);
     	el.setVisible(true);
     	el.setStackingOrder(1);
     	
     	els.add(el);
     	view.area().setContent(els);
-    	view.redraw(false);
+    	view.redraw();
     }
     
     /**
@@ -149,7 +149,7 @@ public class MainPresenter {
     	els.clear();
     	
     	view.area().setContent(els);
-    	view.redraw(false);
+    	view.redraw();
     }
     
     /**

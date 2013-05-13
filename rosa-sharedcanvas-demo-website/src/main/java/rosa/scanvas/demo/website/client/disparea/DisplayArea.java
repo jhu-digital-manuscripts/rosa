@@ -90,16 +90,20 @@ public class DisplayArea implements Iterable<DisplayElement> {
      * Set the center of the viewport in canvas space
      */
     public void setViewportBaseCenter(int x, int y) {
-        this.vp_base_center_x += x-viewportBaseWidth()/2;
-        this.vp_base_center_y += y-viewportBaseHeight()/2;
+        /*this.vp_base_center_x += x-viewportBaseWidth()/2;
+        this.vp_base_center_y += y-viewportBaseHeight()/2;*/
+    	this.vp_base_center_x = x;
+    	this.vp_base_center_y = y;
     }
 
     /**
      * Set the center of the viewport in browser space
      */
     public void setViewportCenter(int x, int y) {
-        this.vp_base_center_x += (int) (x / zoom) - viewportBaseWidth()/2;
-        this.vp_base_center_y += (int) (y / zoom) - viewportBaseHeight()/2;
+        /*this.vp_base_center_x += (int) (x / zoom) - viewportBaseWidth()/2;
+        this.vp_base_center_y += (int) (y / zoom) - viewportBaseHeight()/2;*/
+    	this.vp_base_center_x = (int) (x / zoom);
+    	this.vp_base_center_y = (int) (y / zoom);
     }
 
     /**

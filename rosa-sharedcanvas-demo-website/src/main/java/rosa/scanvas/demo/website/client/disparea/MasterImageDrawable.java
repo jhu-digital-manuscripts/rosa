@@ -18,12 +18,12 @@ public class MasterImageDrawable extends DisplayElement {
     private final HashMap<String, WebImage> drawQueue;
     private final WebImage[][][] tile_cache;
 
-    public MasterImageDrawable(String id, int x, int y, DisplayArea area,
-            Context2d context, ImageServer server, MasterImage master) {
+    public MasterImageDrawable(String id, int x, int y, Html5DisplayAreaView view,
+    		ImageServer server, MasterImage master) {
         super(id, x, y, master.width(), master.height());
 
-        this.area = area;
-        this.context = context;
+        this.area = view.area();
+        this.context = view.context();
         this.server = server;
         this.master = master;
         this.drawQueue = new HashMap<String, WebImage>();
@@ -70,7 +70,7 @@ public class MasterImageDrawable extends DisplayElement {
                     
                     context.save();
                     context.translate(-area.viewportLeft(), -area.viewportTop());
-                    //context.translate(baseLeft() * zoom, baseTop() * zoom);
+                    context.translate(baseLeft() * zoom, baseTop() * zoom);
                     context.drawImage(img, tile_left, tile_top, 
                     		tile.width(), tile.height());
                     context.restore();
@@ -87,7 +87,7 @@ public class MasterImageDrawable extends DisplayElement {
 	                        
 	                        context.save();
 	                        context.translate(-area.viewportLeft(), -area.viewportTop());
-	                        //context.translate(baseLeft() * zoom, baseTop() * zoom);
+	                        context.translate(baseLeft() * zoom, baseTop() * zoom);
 	                        // TODO Only draw if in viewport
 	                        context.drawImage(img, tile_left, tile_top, 
 	                        		tile.width(), tile.height());

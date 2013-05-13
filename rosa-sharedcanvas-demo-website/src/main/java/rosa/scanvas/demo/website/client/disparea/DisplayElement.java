@@ -19,6 +19,7 @@ public abstract class DisplayElement {
         this.base_width = width;
         this.base_height = height;
         this.stack_order = 0;
+        this.visible = false;
     }
 
     public String id() {
