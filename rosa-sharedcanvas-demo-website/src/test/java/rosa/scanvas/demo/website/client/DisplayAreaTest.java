@@ -1,23 +1,18 @@
 package rosa.scanvas.demo.website.client;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
-
-import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Test;
+
 import rosa.scanvas.demo.website.client.disparea.DisplayArea;
-import rosa.scanvas.demo.website.client.disparea.DisplayAreaWidget;
 import rosa.scanvas.demo.website.client.disparea.DisplayElement;
-import rosa.scanvas.demo.website.client.disparea.MasterImageDrawable;
 import rosa.scanvas.demo.website.client.disparea.ZoomLevels;
-import rosa.scanvas.demo.website.client.dynimg.IIIFImageServer;
-import rosa.scanvas.demo.website.client.dynimg.MasterImage;
-import rosa.scanvas.demo.website.client.dynimg.WebImage;
 
 public class DisplayAreaTest {
 	private final int WIDTH = 5000, HEIGHT = 5000;
@@ -42,8 +37,8 @@ public class DisplayAreaTest {
 		assertEquals(11, zl.size());
 		
 		ZoomLevels zoom = ZoomLevels.guess(WIDTH, HEIGHT, VP_WIDTH, VP_HEIGHT);
-		assertNotNull(zl);
-		assertTrue(zl.size() > 0);
+		assertNotNull(zoom);
+		assertTrue(zoom.size() > 0);
 	}
 	
 	@Test
