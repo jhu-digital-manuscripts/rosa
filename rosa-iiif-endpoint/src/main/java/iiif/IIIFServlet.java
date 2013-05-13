@@ -1,7 +1,10 @@
 package iiif;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Enumeration;
 
 import javax.servlet.ServletConfig;
@@ -24,11 +27,11 @@ import org.w3c.dom.Element;
 
 public class IIIFServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    
+
     private ImageServer server;
     private IIIFParser parser;
     private IIIFSerializer serializer;
-    
+
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
 
@@ -42,24 +45,25 @@ public class IIIFServlet extends HttpServlet {
         parser = new IIIFParser();
         serializer = new IIIFSerializer();
         server = new FSIServer(fsi_url);
-                
+
         Enumeration<?> params = config.getInitParameterNames();
-        
+
         while (params.hasMoreElements()) {
             String param = (String) params.nextElement();
-            
+
             if (param.startsWith("alias.")) {
-                String alias = param.substring("alias.".length());                
-                parser.getImageAliases().put(alias, config.getInitParameter(param));
+                String alias = param.substring("alias.".length());
+                parser.getImageAliases().put(alias,
+                        config.getInitParameter(param));
             }
         }
-     }
+    }
 
     private void report_error(HttpServletResponse resp, int code,
             String message, String param) throws ServletException, IOException {
         resp.setStatus(code);
         resp.setContentType("application/xml");
-        
+
         DocumentBuilderFactory docFactory = DocumentBuilderFactory
                 .newInstance();
         try {
@@ -92,12 +96,22 @@ public class IIIFServlet extends HttpServlet {
         }
     }
 
+    private static void copy(InputStream in, OutputStream out)
+            throws IOException {
+        byte[] buf = new byte[16 * 1024];
+        int n = 0;
+
+        while ((n = in.read(buf)) != -1) {
+            out.write(buf, 0, n);
+        }
+    }
+
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
         resp.addHeader(
                 "Link",
-                "<http://library.stanford.edu/iiif/image-api/compliance.html#level0>;rel=\"compliesTo\"");
+                "<http://library.stanford.edu/iiif/image-api/compliance.html#level0>;rel=\"profile\"");
 
         // Hack to get undecoded path;
 
@@ -110,7 +124,7 @@ public class IIIFServlet extends HttpServlet {
         }
 
         String path = sb.substring(i + context.length());
-        
+
         IIIFRequestType type = parser.determineRequestType(path);
 
         try {
@@ -122,18 +136,18 @@ public class IIIFServlet extends HttpServlet {
                     report_error(resp, 404, "not found", "identifier");
                 } else {
                     OutputStream os = resp.getOutputStream();
-                    
+
                     try {
                         if (inforeq.getFormat() == InfoFormat.XML) {
                             serializer.toXML(info, os);
                         } else if (inforeq.getFormat() == InfoFormat.JSON) {
                             String callback = req.getParameter("callback");
-                            
+
                             if (callback != null) {
                                 os.write(callback.getBytes("UTF-8"));
                                 os.write('(');
                             }
-                            
+
                             serializer.toJSON(info, os);
                             if (callback != null) {
                                 os.write(')');
@@ -159,7 +173,7 @@ public class IIIFServlet extends HttpServlet {
                 if (imgurl == null) {
                     report_error(resp, 404, "not found", "identifier");
                 } else {
-                    resp.sendRedirect(imgurl);
+                    forward(imgurl, resp);
                 }
             } else {
                 report_error(resp, 400, "malformed request", "unknown");
@@ -179,5 +193,29 @@ public class IIIFServlet extends HttpServlet {
         }
 
         resp.flushBuffer();
+    }
+
+    private void set_header_if_exists(String header, URLConnection from,
+            HttpServletResponse to) {
+        String value = from.getHeaderField(header);
+
+        if (value != null) {
+            to.setHeader(header, value);
+        }
+    }
+
+    private void forward(String url, HttpServletResponse resp)
+            throws IOException {
+        URLConnection con = new URL(url).openConnection();
+        con.connect();
+
+        set_header_if_exists("Last-Modified", con, resp);
+        set_header_if_exists("Content-Type", con, resp);
+        set_header_if_exists("Content-Length", con, resp);
+
+        InputStream is = con.getInputStream();
+        OutputStream os = resp.getOutputStream();
+
+        copy(is, os);
     }
 }

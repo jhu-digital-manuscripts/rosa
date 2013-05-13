@@ -13,7 +13,7 @@ public class FsiImageServerTest extends TestCase {
         assertTrue(info.getWidth() > 0);
         assertTrue(info.getHeight() > 0);
 
-        System.out.println(info.getWidth() + " " + info.getHeight());
+        //System.out.println(info.getWidth() + " " + info.getHeight());
 
         info = server.lookupImage("moo/moo.tif");
 
@@ -35,8 +35,8 @@ public class FsiImageServerTest extends TestCase {
         region.setType(Region.Type.FULL);
 
         String url = server.constructURL(req);
-        // new URL(url).openStream().close();
-        System.out.println(url);
+        //new URL(url).openStream().close();
+        //System.out.println(url);
 
         req.setFormat(ImageFormat.JPG);
         req.setQuality(Quality.COLOR);
@@ -53,7 +53,7 @@ public class FsiImageServerTest extends TestCase {
 
         url = server.constructURL(req);
         // new URL(url).openStream().close();
-        System.out.println(url);
+        //System.out.println(url);
 
         scale.setType(Size.Type.PERCENTAGE);
         scale.setPercentage(0.5);
@@ -66,7 +66,7 @@ public class FsiImageServerTest extends TestCase {
 
         url = server.constructURL(req);
         // new URL(url).openStream().close();
-        System.out.println(url);
+        //System.out.println(url);
 
         scale.setType(Size.Type.EXACT_WIDTH);
         scale.setWidth(200);
@@ -84,7 +84,7 @@ public class FsiImageServerTest extends TestCase {
 
         url = server.constructURL(req);
         // new URL(url).openStream().close();
-        System.out.println(url);
+        //System.out.println(url);
 
         scale.setType(Size.Type.BEST_FIT);
         scale.setWidth(200);
@@ -94,7 +94,7 @@ public class FsiImageServerTest extends TestCase {
 
         url = server.constructURL(req);
         // new URL(url).openStream().close();
-        System.out.println(url);
+        //System.out.println(url);
 
     }
 }

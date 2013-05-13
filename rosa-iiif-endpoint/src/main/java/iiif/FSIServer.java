@@ -31,12 +31,17 @@ public class FSIServer implements ImageServer {
         this.image_info_cache = new ConcurrentHashMap<String, ImageInfo>();
     }
 
+    // TODO always lookup image?
+
     public String constructURL(IIIFImageRequest req) throws IIIFException {
         String url = baseurl + "?type=image";
         url += "&" + param("source", req.getImage());
 
-        // Lookup if needed
-        ImageInfo info = null;
+        ImageInfo info = lookupImage(req.getImage());
+
+        if (info == null) {
+            return null;
+        }
 
         if (req.getFormat() == ImageFormat.PNG) {
             url += "&" + param("profile", "png");
@@ -57,14 +62,6 @@ public class FSIServer implements ImageServer {
             right = 1.0;
             bottom = 1.0;
         } else if (reg.getType() == Region.Type.ABSOLUTE) {
-            if (info == null) {
-                info = lookupImage(req.getImage());
-
-                if (info == null) {
-                    return null;
-                }
-            }
-
             double width = (double) info.getWidth();
             double height = (double) info.getHeight();
 
@@ -82,8 +79,12 @@ public class FSIServer implements ImageServer {
             throw new IIIFException("region unsupported", "region");
         }
 
+        // FSI docs say this should be left,top,right,bottom but it actually
+        // needs left,top,width,height all as percentages
+
         url += "&"
-                + param("rect", left + "," + top + "," + right + "," + bottom);
+                + param("rect", left + "," + top + "," + (right - left) + ","
+                        + (bottom - top));
 
         Size scale = req.getSize();
 
@@ -102,29 +103,11 @@ public class FSIServer implements ImageServer {
             width = scale.getWidth();
             height = -1;
         } else if (scale.getType() == Size.Type.FULL) {
-            if (info == null) {
-                info = lookupImage(req.getImage());
-
-                if (info == null) {
-                    return null;
-                }
-            }
-
-            width = info.getWidth();
-            height = info.getHeight();
         } else if (scale.getType() == Size.Type.PERCENTAGE) {
-            if (info == null) {
-                info = lookupImage(req.getImage());
-
-                if (info == null) {
-                    return null;
-                }
-            }
-
-            width = (int) ((right - left) * info.getWidth() * scale
-                    .getPercentage());
-            height = (int) ((bottom - top) * info.getHeight() * scale
-                    .getPercentage());
+            width = (int) ((right - left) * info.getWidth() * (scale
+                    .getPercentage() / 100));
+            height = (int) ((bottom - top) * info.getHeight() * (scale
+                    .getPercentage() / 100));
         } else {
             throw new IIIFException("scale unsupported", "scale");
         }

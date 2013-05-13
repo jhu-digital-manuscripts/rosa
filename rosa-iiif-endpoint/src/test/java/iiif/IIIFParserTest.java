@@ -156,4 +156,15 @@ public class IIIFParserTest extends TestCase {
                 .parseImageRequest("/image-service/moo/pct:10.0,20.0,50.0,60.0/full/0/grey");
         assertEquals(img, test);
     }
+    
+    public void testImageIdDecoding() throws IIIFException {
+        IIIFImageRequest test;
+        
+        test = parser.parseImageRequest("/image-service/moo%2Fcow/full/full/0/grey");
+        assertEquals("moo/cow", test.getImage());
+
+        test = parser.parseImageRequest("/image-service/f23dc590%252D8736%252D11e2%252Da400%252D0050569b3c3f/full/full/0/grey");
+        
+        assertEquals("f23dc590%2D8736%2D11e2%2Da400%2D0050569b3c3f", test.getImage());
+    }
 }
