@@ -27,7 +27,7 @@ public class DisplayAreaTest {
 		public void draw() {}
 	}
 	
-	@Test
+	/*@Test
 	public void testZoomLevels() {
 		double[] zooms = {0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0};
 		ZoomLevels zl = new ZoomLevels(zooms);
@@ -45,9 +45,9 @@ public class DisplayAreaTest {
 	public void testDisplayAreaFields() {
 		DisplayArea da = new DisplayArea(WIDTH, HEIGHT, VP_WIDTH, VP_HEIGHT);
 		check_display_area_fields(da);
-	}
+	}*/
 
-	@Test
+/*	@Test
 	public void testDisplayAreaZooms() {
 		DisplayArea da = new DisplayArea(WIDTH, HEIGHT, VP_WIDTH, VP_HEIGHT);
 		check_area_zooms(da);
@@ -77,9 +77,9 @@ public class DisplayAreaTest {
 		
 		de_list = da.findInViewport();
 		assertTrue(orig_size > de_list.size());
-	}
+	}*/
 	
-	@Test
+/*	@Test
 	public void testFindContaining() {
 		DisplayArea da = new DisplayArea(WIDTH, HEIGHT, VP_WIDTH, VP_HEIGHT);
 		da.setViewportBaseCenter(WIDTH/2, HEIGHT/2);
@@ -99,7 +99,7 @@ public class DisplayAreaTest {
 				}
 			}
 		}
-	}
+	}*/
 	
 	/**
 	 * Add one dislay elements at odd index, add two display elements at

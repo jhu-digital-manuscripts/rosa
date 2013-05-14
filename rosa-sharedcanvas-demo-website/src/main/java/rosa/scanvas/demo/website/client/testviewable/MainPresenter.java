@@ -113,6 +113,7 @@ public class MainPresenter {
     	
     	els.add(el);
     	view.area().setContent(els);
+    	//view.area().initZoomLevels();
     	view.redraw();  	
     }
     
@@ -138,6 +139,7 @@ public class MainPresenter {
     	
     	els.add(el);
     	view.area().setContent(els);
+    	//view.area().initZoomLevels();
     	view.redraw();
     }
     

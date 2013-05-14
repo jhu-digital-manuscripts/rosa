@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
+import com.google.gwt.user.client.Window;
 /**
  * Represents a rectangular area where elements can be drawn. Each element has a
  * unique id. Elements do not change size or position. A viewport in the area
@@ -98,8 +98,6 @@ public class DisplayArea implements Iterable<DisplayElement> {
      * Set the center of the viewport in canvas space
      */
     public void setViewportBaseCenter(int x, int y) {
-        /*this.vp_base_center_x += x-viewportBaseWidth()/2;
-        this.vp_base_center_y += y-viewportBaseHeight()/2;*/
     	this.vp_base_center_x = x;
     	this.vp_base_center_y = y;
     }
@@ -108,8 +106,6 @@ public class DisplayArea implements Iterable<DisplayElement> {
      * Set the center of the viewport in browser space
      */
     public void setViewportCenter(int x, int y) {
-        /*this.vp_base_center_x += (int) (x / zoom) - viewportBaseWidth()/2;
-        this.vp_base_center_y += (int) (y / zoom) - viewportBaseHeight()/2;*/
     	this.vp_base_center_x = (int) (x / zoom);
     	this.vp_base_center_y = (int) (y / zoom);
     }
@@ -147,6 +143,7 @@ public class DisplayArea implements Iterable<DisplayElement> {
         }
 
         stackingOrderChanged();
+        initZoomLevels();
     }
 
     /**
@@ -248,6 +245,36 @@ public class DisplayArea implements Iterable<DisplayElement> {
         return result;
     }
 
+    /**
+     * Set the ZoomLevels based off of current DisplayElements
+     */
+    public void initZoomLevels() {
+    	int[] bounding_box = findLargestBoundingBox();
+        this.zoom_levels = ZoomLevels.guess(bounding_box[0], bounding_box[1],
+        		vp_width, vp_height);
+        setZoomLevel(0);
+    }
+    
+    /**
+     * Returns the {width, height} of the largest DisplayElement as an array 
+     */
+    private int[] findLargestBoundingBox() {
+    	int max_width = 0, max_height = 0;
+    	
+    	for (DisplayElement el : content_list) {
+    		if (el.baseWidth() > max_width) {
+    			max_width = el.baseWidth();
+    		}
+    		
+    		if (el.baseHeight() > max_height) {
+    			max_height = el.baseHeight();
+    		}
+    	}
+    	
+    	int[] bounds = {max_width, max_height};
+    	return bounds;
+    }
+    
     public int viewportTop() {
         return (int) ((vp_base_center_y * zoom) - (vp_height / 2));
     }

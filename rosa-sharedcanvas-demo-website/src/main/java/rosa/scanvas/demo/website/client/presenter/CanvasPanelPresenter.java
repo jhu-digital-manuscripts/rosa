@@ -101,6 +101,7 @@ public class CanvasPanelPresenter implements PanelPresenter {
         	}
         }
         display.getDisplayAreaWidget().area().setContent(els);
+        update();
      
         PanelDisplayedEvent event = new PanelDisplayedEvent(panel_id, data);
         event_bus.fireEvent(event);
@@ -126,6 +127,7 @@ public class CanvasPanelPresenter implements PanelPresenter {
         Html5DisplayAreaView da = display.getDisplayAreaWidget();
         DisplayArea area = new DisplayArea(canvas.width(), canvas.height(),
                 width, height);
+        
         area.setContent(els);
         da.display(area);
         da.lockDisplay(false);

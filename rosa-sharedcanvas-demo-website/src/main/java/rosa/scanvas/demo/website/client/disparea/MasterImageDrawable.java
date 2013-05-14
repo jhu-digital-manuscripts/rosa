@@ -10,10 +10,9 @@ import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.user.client.Window;
 public class MasterImageDrawable extends DisplayElement {
-    private final DisplayArea area;
-    private final Context2d context;
     private final ImageServer server;
     private final MasterImage master;
+    private final Html5DisplayAreaView view;
 
     private final HashMap<String, WebImage> drawQueue;
     private final WebImage[][][] tile_cache;
@@ -22,16 +21,18 @@ public class MasterImageDrawable extends DisplayElement {
     		ImageServer server, MasterImage master) {
         super(id, x, y, master.width(), master.height());
 
-        this.area = view.area();
-        this.context = view.context();
         this.server = server;
         this.master = master;
+        this.view = view;
         this.drawQueue = new HashMap<String, WebImage>();
-        this.tile_cache = new WebImage[area.numZoomLevels()][][];
+        this.tile_cache = new WebImage[view.area().numZoomLevels()][][];
     }
 
     @Override
     public void draw() {
+    	final DisplayArea area = view.area();
+    	final Context2d context = view.context();
+    	
     	drawQueue.clear();
         WebImage[][] tiles = tile_cache[area.zoomLevel()];
 
@@ -41,7 +42,7 @@ public class MasterImageDrawable extends DisplayElement {
 
         if (tiles == null) {
             tiles = server.renderToTiles(master, width, height);
-            tile_cache[area.zoomLevel()] = tiles;
+//            tile_cache[area.zoomLevel()] = tiles;
         }
 
         int vp_left = area.viewportLeft();
@@ -59,11 +60,11 @@ public class MasterImageDrawable extends DisplayElement {
                 final int tile_top = top;
                 final int tile_right = tile_left + tiles[row][col].width();
                 final int tile_bottom= tile_top + tiles[row][col].height();
-                
-                if (tile_right < vp_left || tile_left > vp_right ||
+                // only load tiles if they are within the viewport
+                /*if (tile_right < vp_left || tile_left > vp_right ||
                 		tile_bottom < vp_top || tile_top > vp_bottom) {
                 	continue;
-                }
+                }*/
                 
                 if (tile.isViewable()) {
                     ImageElement img = tile.getImageElement();
@@ -71,6 +72,7 @@ public class MasterImageDrawable extends DisplayElement {
                     context.save();
                     context.translate(-area.viewportLeft(), -area.viewportTop());
                     context.translate(baseLeft() * zoom, baseTop() * zoom);
+                    //context.scale(zoom, zoom);
                     context.drawImage(img, tile_left, tile_top, 
                     		tile.width(), tile.height());
                     context.restore();
@@ -88,6 +90,7 @@ public class MasterImageDrawable extends DisplayElement {
 	                        context.save();
 	                        context.translate(-area.viewportLeft(), -area.viewportTop());
 	                        context.translate(baseLeft() * zoom, baseTop() * zoom);
+	                        //context.scale(zoom, zoom);
 	                        // TODO Only draw if in viewport
 	                        context.drawImage(img, tile_left, tile_top, 
 	                        		tile.width(), tile.height());
