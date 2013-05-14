@@ -7,20 +7,24 @@ import rosa.scanvas.demo.website.client.dynimg.WebImage;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTMLTable.Cell;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 
-public class PageTurner extends Composite {
+public class PageTurner extends Composite implements HasClickHandlers {
     private final Grid display;
     private final ImageServer image_server;
 
     private int position;
     private List<Opening> openings;
     private int page_width, page_height;
+    private boolean clicked_verso;
 
     public PageTurner(ImageServer image_server) {
         this.image_server = image_server;
@@ -55,6 +59,14 @@ public class PageTurner extends Composite {
             }
         });
 
+        display.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                Cell cell = display.getCellForEvent(event);
+                clicked_verso = cell.getCellIndex() == 0;
+            }
+        });
+
         toolbar.add(prev_button);
         toolbar.add(goto_textbox);
         toolbar.add(goto_button);
@@ -64,7 +76,7 @@ public class PageTurner extends Composite {
         main.add(toolbar);
 
         main.setStylePrimaryName("PageTurner");
-        
+
         initWidget(main);
     }
 
@@ -115,5 +127,18 @@ public class PageTurner extends Composite {
         } else {
             display.setWidget(1, 1, new Label(opening.getRectoLabel()));
         }
+    }
+
+    public boolean clickedVerso() {
+        return clicked_verso;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    @Override
+    public HandlerRegistration addClickHandler(ClickHandler handler) {
+        return display.addClickHandler(handler);
     }
 }

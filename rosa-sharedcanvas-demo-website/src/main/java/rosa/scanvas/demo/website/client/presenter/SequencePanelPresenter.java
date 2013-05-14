@@ -83,6 +83,21 @@ public class SequencePanelPresenter implements PanelPresenter {
                         }
                     }
                 });
+        
+        final PageTurner turner = display.getPageTurner();
+        
+        turner.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                int canvas_index = turner.getPosition() * 2;
+                
+                if (!turner.clickedVerso()) {
+                    canvas_index++;
+                }
+                
+                gotoCanvasView(canvas_index);
+            }
+        });
     }
 
     /**
@@ -223,7 +238,7 @@ public class SequencePanelPresenter implements PanelPresenter {
         } else if (tab == 1) {
             setup_thumb_browser();
         }
-
+        
         PanelDisplayedEvent event = new PanelDisplayedEvent(panel_id, data);
         eventBus.fireEvent(event);
     }

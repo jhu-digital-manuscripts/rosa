@@ -65,7 +65,15 @@ public class DisplayArea implements Iterable<DisplayElement> {
     public int viewportBaseCenterX() {
         return vp_base_center_x;
     }
-
+    
+    public int viewportBaseLeft() {
+        return (int) (vp_base_center_x - ((vp_width / zoom) / 2));
+    }
+    
+    public int viewportBaseTop() {
+        return (int) (vp_base_center_y - ((vp_height / zoom) / 2));
+    }
+    
     public int viewportBaseCenterY() {
         return vp_base_center_y;
     }

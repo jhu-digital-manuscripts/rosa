@@ -28,7 +28,6 @@ import com.google.gwt.event.dom.client.TouchMoveEvent;
 import com.google.gwt.event.dom.client.TouchMoveHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 
 /**
@@ -363,8 +362,8 @@ public class Html5DisplayAreaView extends Composite {
         canvas.setCoordinateSpaceHeight(area.viewportHeight());
 
         int overview_width = OVERVIEW_SIZE;
-        int overview_height = (overview_width * area.baseHeight() / area
-                .baseWidth());
+        int overview_height = (overview_width * area.baseHeight())
+                / area.baseWidth();
 
         overview.setPixelSize(overview_width, overview_height);
         overview.setCoordinateSpaceWidth(overview_width);
@@ -376,8 +375,7 @@ public class Html5DisplayAreaView extends Composite {
         grab_overview = true;
         // TODO hack, must be at zoom level 0 to grab overview
         area.setZoomLevel(0);
-        
-        
+
         redraw();
     }
 
@@ -387,18 +385,20 @@ public class Html5DisplayAreaView extends Composite {
     public void redraw() {
         // Grab overview when going from zoom 0 to zoom 1
         if (grab_overview && area.zoomLevel() == 1) {
-            Context2d overview_context =overview.getContext2d(); 
-            overview_context.drawImage(context.getCanvas(), 0, 0,
-                    overview.getCoordinateSpaceWidth(),
-                    overview.getCoordinateSpaceHeight());
+            Context2d overview_context = overview.getContext2d();
+
+            int width = overview.getCoordinateSpaceWidth();
+            int height = overview.getCoordinateSpaceHeight();
+
+            overview_context
+                    .drawImage(context.getCanvas(), 0, 0, width, height);
             overview_context.beginPath();
-            overview_context.rect(0, 0, overview.getCoordinateSpaceWidth() - 1, overview.getCoordinateSpaceHeight() -1);
+            overview_context.rect(0, 0, width - 1, height - 1);
             overview_context.setStrokeStyle("red");
             overview_context.stroke();
             overview_context.closePath();
-            
+
             grab_overview = false;
-            Window.alert("Got overview");
         }
 
         context.clearRect(0, 0, area.viewportWidth(), area.viewportHeight());
@@ -412,6 +412,25 @@ public class Html5DisplayAreaView extends Composite {
         if (area.zoomLevel() > 0) {
             context.drawImage(overview.getCanvasElement(), overview_x,
                     overview_y);
+
+            // Draw selection on top of overview
+
+            int sel_left = (area.viewportLeft() * overview
+                    .getCoordinateSpaceWidth()) / area.viewportWidth();
+            int sel_top = (area.viewportTop() * overview
+                    .getCoordinateSpaceHeight()) / area.viewportHeight();
+            int sel_width = (area.viewportWidth() * overview
+                    .getCoordinateSpaceWidth()) / area.width();
+            int sel_height = (area.viewportHeight() * overview
+                    .getCoordinateSpaceHeight()) / area.height();
+
+            sel_left += overview_x;
+            sel_top += overview_y;
+
+            context.setGlobalAlpha(0.3);
+            context.setFillStyle("blue");
+            context.fillRect(sel_left, sel_top, sel_width, sel_height);
+            context.setGlobalAlpha(1.0);
         }
     }
 
