@@ -6,7 +6,7 @@ import java.util.List;
 import rosa.scanvas.demo.website.client.PanelData;
 import rosa.scanvas.demo.website.client.disparea.AnnotationUtil;
 import rosa.scanvas.demo.website.client.disparea.DisplayArea;
-import rosa.scanvas.demo.website.client.disparea.Html5DisplayAreaView;
+import rosa.scanvas.demo.website.client.disparea.DisplayAreaView;
 import rosa.scanvas.demo.website.client.disparea.DisplayElement;
 import rosa.scanvas.demo.website.client.event.AnnotationSelectionEvent;
 import rosa.scanvas.demo.website.client.event.AnnotationSelectionHandler;
@@ -24,7 +24,7 @@ public class CanvasPanelPresenter implements PanelPresenter {
     public interface Display extends IsWidget {
         Label getLabel();
 
-        Html5DisplayAreaView getDisplayAreaWidget();
+        DisplayAreaView getDisplayAreaWidget();
     }
 
     private final Display display;
@@ -67,7 +67,7 @@ public class CanvasPanelPresenter implements PanelPresenter {
     		return;
     	}
     	
-        Html5DisplayAreaView da = display.getDisplayAreaWidget();
+        DisplayAreaView da = display.getDisplayAreaWidget();
         DisplayElement el = da.area().get(ann.uri());
 
         if (el != null) {
@@ -94,7 +94,7 @@ public class CanvasPanelPresenter implements PanelPresenter {
         for (AnnotationList list : data.getAnnotationLists()) {
         	for (Annotation ann : list) {
         		DisplayElement el = AnnotationUtil.annotationToDisplayElement(
-        				ann, this.canvas, display.getDisplayAreaWidget());
+        				ann, this.canvas);
         		if (el != null) {
         			els.add(el);
         		}
@@ -124,7 +124,7 @@ public class CanvasPanelPresenter implements PanelPresenter {
             return;
         }
         
-        Html5DisplayAreaView da = display.getDisplayAreaWidget();
+        DisplayAreaView da = display.getDisplayAreaWidget();
         DisplayArea area = new DisplayArea(canvas.width(), canvas.height(),
                 width, height);
         

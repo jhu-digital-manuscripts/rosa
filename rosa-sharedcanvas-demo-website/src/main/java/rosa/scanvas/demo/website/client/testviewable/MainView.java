@@ -1,7 +1,7 @@
 package rosa.scanvas.demo.website.client.testviewable;
 
 import rosa.scanvas.demo.website.client.disparea.DisplayArea;
-import rosa.scanvas.demo.website.client.disparea.Html5DisplayAreaView;
+import rosa.scanvas.demo.website.client.disparea.DisplayAreaView;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
@@ -21,14 +21,14 @@ public class MainView extends Composite implements MainPresenter.Display {
 	private final Button resetButton = new Button("Reset");
 	private final Button closeButton = new Button("Close");
 	
-	private final Html5DisplayAreaView area_view;
+	private final DisplayAreaView area_view;
 	
 	public MainView(int width, int height, int vp_width, int vp_height) {
 		this.main = new FlowPanel();
 		this.label = new Label();
 		
 		DisplayArea area = new DisplayArea(width, height, vp_width, vp_height);
-		this.area_view = new Html5DisplayAreaView();
+		this.area_view = new DisplayAreaView();
 		this.area_view.display(area);
 		this.area_view.lockDisplay(false);
 		
@@ -62,6 +62,6 @@ public class MainView extends Composite implements MainPresenter.Display {
 	public Button getCloseButton() { return closeButton; }
 	
 	@Override
-	public Html5DisplayAreaView getDisplayAreaWidget() { return area_view; }
+	public DisplayAreaView getDisplayAreaWidget() { return area_view; }
 	
 }

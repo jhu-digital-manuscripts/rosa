@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import com.google.gwt.user.client.Window;
 /**
  * Represents a rectangular area where elements can be drawn. Each element has a
  * unique id. Elements do not change size or position. A viewport in the area

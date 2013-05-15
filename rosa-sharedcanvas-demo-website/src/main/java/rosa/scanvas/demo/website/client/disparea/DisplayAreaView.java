@@ -33,12 +33,12 @@ import com.google.gwt.user.client.ui.Composite;
 /**
  * Display the viewport of a display area using a HTML 5 canvas.
  */
-public class Html5DisplayAreaView extends Composite {
+public class DisplayAreaView extends Composite {
     private static final int OVERVIEW_SIZE = 128;
 
-    private final Canvas canvas;
+    private final Canvas viewport;
     private final Canvas overview;
-    private final Context2d context;
+    private final Context2d viewport_context;
     private DisplayArea area;
 
     private boolean locked;
@@ -48,18 +48,16 @@ public class Html5DisplayAreaView extends Composite {
     private int overview_x, overview_y;
     private boolean grab_overview;
 
-    public Html5DisplayAreaView() {
-        this.canvas = Canvas.createIfSupported();
+    public DisplayAreaView() {
+        this.viewport = Canvas.createIfSupported();
         this.overview = Canvas.createIfSupported();
-        this.context = canvas.getContext2d();
+        this.viewport_context = viewport.getContext2d();
         this.drag_may_start = false;
         this.dragging = false;
         this.locked = true;
         this.grab_overview = false;
 
-        this.canvas.setStylePrimaryName("canvas");
-
-        canvas.addClickHandler(new ClickHandler() {
+        viewport.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 event.preventDefault();
@@ -76,13 +74,13 @@ public class Html5DisplayAreaView extends Composite {
                     return;
                 }
 
-                int click_x = event.getRelativeX(canvas.getElement());
-                int click_y = event.getRelativeY(canvas.getElement());
+                int click_x = event.getRelativeX(viewport.getElement());
+                int click_y = event.getRelativeY(viewport.getElement());
 
                 // Don't allow clicking outside of the canvas
                 if (click_x < 0 || click_y < 0
-                        || click_x > canvas.getOffsetWidth()
-                        || click_y > canvas.getOffsetHeight()) {
+                        || click_x > viewport.getOffsetWidth()
+                        || click_y > viewport.getOffsetHeight()) {
                     return;
                 }
 
@@ -98,7 +96,7 @@ public class Html5DisplayAreaView extends Composite {
         });
 
         // pan when mouse down
-        canvas.addMouseDownHandler(new MouseDownHandler() {
+        viewport.addMouseDownHandler(new MouseDownHandler() {
             public void onMouseDown(MouseDownEvent event) {
                 if (locked) {
                     return;
@@ -111,11 +109,11 @@ public class Html5DisplayAreaView extends Composite {
 
                 // Don't start dragging outside the canvas
 
-                int x = event.getRelativeX(canvas.getElement());
-                int y = event.getRelativeY(canvas.getElement());
+                int x = event.getRelativeX(viewport.getElement());
+                int y = event.getRelativeY(viewport.getElement());
 
-                if (x < 0 || y < 0 || x > canvas.getOffsetWidth()
-                        || y > canvas.getOffsetHeight()) {
+                if (x < 0 || y < 0 || x > viewport.getOffsetWidth()
+                        || y > viewport.getOffsetHeight()) {
                     return;
                 }
 
@@ -129,14 +127,14 @@ public class Html5DisplayAreaView extends Composite {
             }
         });
 
-        canvas.addMouseOutHandler(new MouseOutHandler() {
+        viewport.addMouseOutHandler(new MouseOutHandler() {
             public void onMouseOut(MouseOutEvent event) {
                 drag_may_start = false;
                 dragging = false;
             }
         });
 
-        canvas.addMouseMoveHandler(new MouseMoveHandler() {
+        viewport.addMouseMoveHandler(new MouseMoveHandler() {
             public void onMouseMove(MouseMoveEvent event) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -161,7 +159,7 @@ public class Html5DisplayAreaView extends Composite {
             }
         });
 
-        canvas.addMouseWheelHandler(new MouseWheelHandler() {
+        viewport.addMouseWheelHandler(new MouseWheelHandler() {
             public void onMouseWheel(MouseWheelEvent event) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -189,7 +187,7 @@ public class Html5DisplayAreaView extends Composite {
 
         // TODO double tap to zoom out, use timeouts
 
-        canvas.addTouchStartHandler(new TouchStartHandler() {
+        viewport.addTouchStartHandler(new TouchStartHandler() {
             public void onTouchStart(TouchStartEvent event) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -206,11 +204,11 @@ public class Html5DisplayAreaView extends Composite {
 
                 // Don't start dragging outside the canvas
 
-                int x = touch.getRelativeX(canvas.getElement());
-                int y = touch.getRelativeY(canvas.getElement());
+                int x = touch.getRelativeX(viewport.getElement());
+                int y = touch.getRelativeY(viewport.getElement());
 
-                if (x < 0 || y < 0 || x > canvas.getOffsetWidth()
-                        || y > canvas.getOffsetHeight()) {
+                if (x < 0 || y < 0 || x > viewport.getOffsetWidth()
+                        || y > viewport.getOffsetHeight()) {
                     return;
                 }
 
@@ -222,7 +220,7 @@ public class Html5DisplayAreaView extends Composite {
             }
         });
 
-        canvas.addTouchMoveHandler(new TouchMoveHandler() {
+        viewport.addTouchMoveHandler(new TouchMoveHandler() {
             public void onTouchMove(TouchMoveEvent event) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -255,7 +253,7 @@ public class Html5DisplayAreaView extends Composite {
             }
         });
 
-        canvas.addTouchEndHandler(new TouchEndHandler() {
+        viewport.addTouchEndHandler(new TouchEndHandler() {
             public void onTouchEnd(TouchEndEvent event) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -270,11 +268,11 @@ public class Html5DisplayAreaView extends Composite {
                     Touch touch = event.getChangedTouches().get(0);
                     // Don't allow click outside the canvas
 
-                    int x = touch.getRelativeX(canvas.getElement());
-                    int y = touch.getRelativeY(canvas.getElement());
+                    int x = touch.getRelativeX(viewport.getElement());
+                    int y = touch.getRelativeY(viewport.getElement());
 
-                    if (x < 0 || y < 0 || x > canvas.getOffsetWidth()
-                            || y > canvas.getOffsetHeight()) {
+                    if (x < 0 || y < 0 || x > viewport.getOffsetWidth()
+                            || y > viewport.getOffsetHeight()) {
                         return;
                     }
 
@@ -288,7 +286,7 @@ public class Html5DisplayAreaView extends Composite {
             }
         });
 
-        canvas.addGestureStartHandler(new GestureStartHandler() {
+        viewport.addGestureStartHandler(new GestureStartHandler() {
             public void onGestureStart(GestureStartEvent event) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -302,7 +300,7 @@ public class Html5DisplayAreaView extends Composite {
             }
         });
 
-        canvas.addGestureChangeHandler(new GestureChangeHandler() {
+        viewport.addGestureChangeHandler(new GestureChangeHandler() {
             public void onGestureChange(GestureChangeEvent event) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -328,7 +326,7 @@ public class Html5DisplayAreaView extends Composite {
             }
         });
 
-        canvas.addGestureEndHandler(new GestureEndHandler() {
+        viewport.addGestureEndHandler(new GestureEndHandler() {
             public void onGestureEnd(GestureEndEvent event) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -338,14 +336,14 @@ public class Html5DisplayAreaView extends Composite {
             }
         });
 
-        canvas.addTouchCancelHandler(new TouchCancelHandler() {
+        viewport.addTouchCancelHandler(new TouchCancelHandler() {
             public void onTouchCancel(TouchCancelEvent event) {
                 drag_may_start = false;
                 dragging = false;
             }
         });
 
-        initWidget(canvas);
+        initWidget(viewport);
     }
 
     public void lockDisplay(boolean status) {
@@ -357,9 +355,17 @@ public class Html5DisplayAreaView extends Composite {
     public void display(DisplayArea area) {
         this.area = area;
 
-        canvas.setPixelSize(area.viewportWidth(), area.viewportHeight());
-        canvas.setCoordinateSpaceWidth(area.viewportWidth());
-        canvas.setCoordinateSpaceHeight(area.viewportHeight());
+        viewport.setPixelSize(area.viewportWidth(), area.viewportHeight());
+        viewport.setCoordinateSpaceWidth(area.viewportWidth());
+        viewport.setCoordinateSpaceHeight(area.viewportHeight());
+
+        // TODO hack, must be at zoom level 0 to grab overview
+
+        area.setZoomLevel(0);
+
+        // TODO problem is that viewport contains whole canvas at zoom level 0
+        // somewhere
+        // Could disable panning at zoom 0 and figure out where canvas is...
 
         int overview_width = OVERVIEW_SIZE;
         int overview_height = (overview_width * area.baseHeight())
@@ -373,8 +379,6 @@ public class Html5DisplayAreaView extends Composite {
         overview_x = area.viewportWidth() - overview_width;
         overview_y = area.viewportHeight() - overview_height;
         grab_overview = true;
-        // TODO hack, must be at zoom level 0 to grab overview
-        area.setZoomLevel(0);
 
         redraw();
     }
@@ -391,7 +395,7 @@ public class Html5DisplayAreaView extends Composite {
             int height = overview.getCoordinateSpaceHeight();
 
             overview_context
-                    .drawImage(context.getCanvas(), 0, 0, width, height);
+                    .drawImage(viewport_context.getCanvas(), 0, 0, width, height);
             overview_context.beginPath();
             overview_context.rect(0, 0, width - 1, height - 1);
             overview_context.setStrokeStyle("red");
@@ -401,16 +405,16 @@ public class Html5DisplayAreaView extends Composite {
             grab_overview = false;
         }
 
-        context.clearRect(0, 0, area.viewportWidth(), area.viewportHeight());
+        viewport_context.clearRect(0, 0, area.viewportWidth(), area.viewportHeight());
 
         for (DisplayElement el : area.findInViewport()) {
             if (el.isVisible()) {
-                el.draw();
+                el.drawable().draw(viewport_context, area);
             }
         }
 
         if (area.zoomLevel() > 0) {
-            context.drawImage(overview.getCanvasElement(), overview_x,
+            viewport_context.drawImage(overview.getCanvasElement(), overview_x,
                     overview_y);
 
             // Draw selection on top of overview
@@ -427,16 +431,11 @@ public class Html5DisplayAreaView extends Composite {
             sel_left += overview_x;
             sel_top += overview_y;
 
-            context.setGlobalAlpha(0.3);
-            context.setFillStyle("blue");
-            context.fillRect(sel_left, sel_top, sel_width, sel_height);
-            context.setGlobalAlpha(1.0);
+            viewport_context.setGlobalAlpha(0.3);
+            viewport_context.setFillStyle("blue");
+            viewport_context.fillRect(sel_left, sel_top, sel_width, sel_height);
+            viewport_context.setGlobalAlpha(1.0);
         }
-    }
-
-    // changed from protected
-    public Context2d context() {
-        return context;
     }
 
     public DisplayArea area() {

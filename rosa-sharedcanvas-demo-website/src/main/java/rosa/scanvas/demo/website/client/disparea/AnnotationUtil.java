@@ -23,9 +23,8 @@ public class AnnotationUtil {
      * @return a DisplayElement that can be drawn on an HTML canvas
      */
     public static DisplayElement annotationToDisplayElement(Annotation ann,
-            Canvas canvas, Html5DisplayAreaView display) {
+            Canvas canvas) {
         AnnotationBody body = ann.body();
-        DisplayElement el = null;
 
         if (body.isImage()) {
             // only applicable if the image fills entire canvas
@@ -36,10 +35,12 @@ public class AnnotationUtil {
 
             // TODO the case of images with selector
 
-            el = new MasterImageDrawable(ann.uri(), 0, 0, display,
-            		iiif_server, master);
+            MasterImageDisplayElement el = new MasterImageDisplayElement(ann.uri(), 0, 0, iiif_server,
+                    master);
             el.setStackingOrder(5);
-
+            el.setDrawable(new MasterImageDrawable(el));
+            
+            return el;
         } else if (body.isText() && isSpecificResource(ann)) {
 
             AnnotationSelector selector = getSelector(ann);
@@ -49,16 +50,15 @@ public class AnnotationUtil {
                 int[][] coords = findCoordinates(content);
                 int[] bounds = findBounds(coords);
 
-                /*el = new PolygonDrawable(ann.uri(), bounds[0], bounds[1],
-                        bounds[2], bounds[3], display, coords);*/
-                el = new TextDrawable(ann.uri(), bounds[0], bounds[1],
-                        bounds[2], bounds[3], display, coords, body.textContent());
+
+                TextDisplayElement el = new TextDisplayElement(ann.uri(), bounds[0], bounds[1],
+                        bounds[2], bounds[3], body.textContent(), coords);
                 el.setStackingOrder(1);
-                
+                el.setDrawable(new TextDrawable(el));
             }
         }
 
-        return el;
+        return null;
     }
 
     /**
@@ -105,7 +105,7 @@ public class AnnotationUtil {
      * @return array: { left, top, width, height }
      */
     private static int[] findBounds(int[][] coords) {
-    	// set initial values. these do not have to be the correct points
+        // set initial values. these do not have to be the correct points
         int left = coords[0][0];
         int top = coords[0][1];
         int right = coords[0][0];

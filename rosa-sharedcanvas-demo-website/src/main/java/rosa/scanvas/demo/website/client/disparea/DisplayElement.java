@@ -11,8 +11,9 @@ public abstract class DisplayElement {
 
     private int stack_order;
     private boolean visible;
+    private DisplayAreaDrawable drawable;
 
-    public DisplayElement(String id, int x, int y, int width, int height) {
+    protected DisplayElement(String id, int x, int y, int width, int height) {
         this.id = id;
         this.base_x = x;
         this.base_y = y;
@@ -70,8 +71,6 @@ public abstract class DisplayElement {
                 && y <= base_y + base_height;
     }
 
-    public abstract void draw();
-
     public boolean inRectangle(int rect_x, int rect_y, int rect_width,
             int rect_height) {
         if (base_x + base_width < rect_x || base_x > rect_x + rect_width) {
@@ -85,6 +84,14 @@ public abstract class DisplayElement {
         return true;
     }
 
+    public void setDrawable(DisplayAreaDrawable drawable) {
+        this.drawable = drawable;
+    }
+    
+    public DisplayAreaDrawable drawable() {
+        return drawable;
+    }
+    
     @Override
     public int hashCode() {
         return id.hashCode();

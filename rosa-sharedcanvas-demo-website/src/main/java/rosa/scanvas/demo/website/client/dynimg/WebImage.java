@@ -17,7 +17,7 @@ public class WebImage extends FocusWidget {
     private OnLoadCallback callback;
 
     public interface OnLoadCallback {
-        void onLoad();
+        void onLoad(WebImage image);
     }
 
     public WebImage(String url, int width, int height) {
@@ -53,7 +53,7 @@ public class WebImage extends FocusWidget {
 
     private void invokeCallback() {
         if (callback != null) {
-            callback.onLoad();
+            callback.onLoad(this);
         }
     }
 

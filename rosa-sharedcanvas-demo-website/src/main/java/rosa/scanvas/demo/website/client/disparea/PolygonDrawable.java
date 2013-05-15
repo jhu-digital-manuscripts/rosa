@@ -2,29 +2,21 @@ package rosa.scanvas.demo.website.client.disparea;
 
 import com.google.gwt.canvas.dom.client.Context2d;
 
-public class PolygonDrawable extends DisplayElement {
-    private final Html5DisplayAreaView view;
+public class PolygonDrawable implements DisplayAreaDrawable {
     private final int[][] coords;
 
-    public PolygonDrawable(String id, int x, int y, int width, int height,
-            Html5DisplayAreaView view, int[][] coords) {
-        super(id, x, y, width, height);
-
-        this.view = view;
-        this.coords = coords;
+    public PolygonDrawable(PolygonDisplayElement polygon) {
+        this.coords = polygon.coordinates();
     }
 
-    // TODO Override contains. Implement by drawing on another canvas and
-    // testing pixel color
-
     @Override
-    public void draw() {
-        Context2d context = view.context();
-        DisplayArea area = view.area();
-        
+    public void draw(Context2d context, DisplayArea area) {
+        // DisplayArea area = view.area();
+
         double zoom = area.zoom();
 
         context.save();
+
         context.translate(-area.viewportLeft(), -area.viewportTop());
         context.scale(zoom, zoom);
 
@@ -34,12 +26,11 @@ public class PolygonDrawable extends DisplayElement {
         for (int i = 1; i < coords.length; i++) {
             context.lineTo(coords[i][0], coords[i][1]);
         }
-        
+
         context.setLineWidth(6);
         context.stroke();
         context.closePath();
 
         context.restore();
     }
-
 }
