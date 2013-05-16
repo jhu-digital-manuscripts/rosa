@@ -29,7 +29,7 @@ import com.google.gwt.event.dom.client.TouchMoveHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.user.client.ui.Composite;
-
+import com.google.gwt.user.client.Window;
 /**
  * Display the viewport of a display area using a HTML 5 canvas.
  */
@@ -87,10 +87,21 @@ public class DisplayAreaView extends Composite {
                 // transform click broswer coordinates into canvas coordinates
                 click_x += area.viewportLeft();
                 click_y += area.viewportTop();
-
+                
+                for (DisplayElement el : area.findInViewport()) {
+                	int el_x = (int) (click_x / area.zoom());
+                    int el_y = (int) (click_y / area.zoom());
+                    
+                	if (!(el instanceof MasterImageDisplayElement)
+                			&& el.contains(el_x, el_y)) {
+                		Window.alert("Element " + el.id() + " contains point ("
+                				+ click_x + ", " + click_y + ")");
+                	}
+                }
+                
                 area.setViewportCenter(click_x, click_y);
                 area.zoomIn();
-
+                
                 redraw();
             }
         });
@@ -428,13 +439,14 @@ public class DisplayAreaView extends Composite {
             int sel_height = (area.viewportHeight() * overview
                     .getCoordinateSpaceHeight()) / area.height();
 
-            sel_left += overview_x;
-            sel_top += overview_y;
+            sel_left += overview_x - overview.getCoordinateSpaceWidth() / 2;
+            sel_top += overview_y - overview.getCoordinateSpaceHeight() / 2;
 
             viewport_context.setGlobalAlpha(0.3);
             viewport_context.setFillStyle("blue");
             viewport_context.fillRect(sel_left, sel_top, sel_width, sel_height);
             viewport_context.setGlobalAlpha(1.0);
+            viewport_context.setFillStyle("black");
         }
     }
 
@@ -447,11 +459,10 @@ public class DisplayAreaView extends Composite {
      */
     public void resetDisplay() {
         area.setZoomLevel(0);
-        // area.setViewportBaseCenter(-area.baseWidth() / 2, -area.baseHeight()
-        // / 2);
-        area.setViewportBaseCenter(
+        area.setViewportBaseCenter(area.baseWidth() / 2, area.baseHeight() / 2);
+/*        area.setViewportBaseCenter(
                 -area.viewportBaseCenterX() + area.viewportBaseWidth(),
-                -area.viewportBaseCenterY() + area.viewportBaseHeight());
+                -area.viewportBaseCenterY() + area.viewportBaseHeight());*/
         redraw();
     }
 

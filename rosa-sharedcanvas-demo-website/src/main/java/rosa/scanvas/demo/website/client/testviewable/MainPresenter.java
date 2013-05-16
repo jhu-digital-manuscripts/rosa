@@ -9,6 +9,8 @@ import rosa.scanvas.demo.website.client.disparea.MasterImageDisplayElement;
 import rosa.scanvas.demo.website.client.disparea.MasterImageDrawable;
 import rosa.scanvas.demo.website.client.disparea.PolygonDisplayElement;
 import rosa.scanvas.demo.website.client.disparea.PolygonDrawable;
+import rosa.scanvas.demo.website.client.disparea.TextDisplayElement;
+import rosa.scanvas.demo.website.client.disparea.TextDrawable;
 import rosa.scanvas.demo.website.client.dynimg.IIIFImageServer;
 import rosa.scanvas.demo.website.client.dynimg.MasterImage;
 
@@ -36,6 +38,8 @@ public class MainPresenter {
         Button getResetButton();
         
         Button getCloseButton();
+        
+        Button getTextButton();
         
         DisplayAreaView getDisplayAreaWidget();
     }
@@ -81,6 +85,12 @@ public class MainPresenter {
     			doClear();
     		}
     	});
+    	
+    	display.getTextButton().addClickHandler(new ClickHandler() {
+    		public void onClick(ClickEvent event) {
+    			drawText();
+    		}
+    	});
     }
     
     public Button getCloseButton() {
@@ -94,9 +104,12 @@ public class MainPresenter {
     	// create PolygonDrawable
     	DisplayAreaView view = display.getDisplayAreaWidget();
     	
-    	final int[][] coords = 
+    	/*final int[][] coords = 
     		{ {300, 400}, {400, 300}, {500, 400}, {450, 500}, {350, 500}, {300, 400} };
-    	final int[] bounds = { 300, 300, 500, 500 };
+    	final int[] bounds = { 300, 300, 500, 500 };*/
+    	final int[][] coords = 
+    		{ {800, 900}, {900, 800}, {1000, 900}, {950, 1000}, {850, 1000}, {800, 900} };
+    	final int[] bounds = { 800, 800, 1000, 1000 };
     	
     	PolygonDisplayElement el = new PolygonDisplayElement("poly"+(num_poly++), bounds[0],
     			bounds[1], bounds[2], bounds[3], coords);
@@ -134,6 +147,28 @@ public class MainPresenter {
     	els.add(el);
     	view.area().setContent(els);
     	//view.area().initZoomLevels();
+    	view.redraw();
+    }
+    
+    /**
+     * Create a text drawable with predefined data
+     */
+    private void drawText() {
+    	DisplayAreaView view = display.getDisplayAreaWidget();
+    	
+    	String text = "Dont j'ay este moult deceuz.";
+    	int[][] coords_txt = 
+    		{ {1703, 578}, {2752, 558}, {2752, 634}, {1703, 658}, {1703, 578} };
+    	int[] bounds_txt = { 1703, 578, 1049, 80 };
+    	
+    	TextDisplayElement el3 = new TextDisplayElement("txt", bounds_txt[0],
+    			bounds_txt[1], bounds_txt[2], bounds_txt[3], text, coords_txt);
+    	el3.setVisible(true);
+    	el3.setStackingOrder(0);
+    	el3.setDrawable(new TextDrawable(el3));
+    	els.add(el3);
+    	
+    	view.area().setContent(els);
     	view.redraw();
     }
     

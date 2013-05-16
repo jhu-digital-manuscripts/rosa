@@ -55,6 +55,8 @@ public class AnnotationUtil {
                         bounds[2], bounds[3], body.textContent(), coords);
                 el.setStackingOrder(1);
                 el.setDrawable(new TextDrawable(el));
+                
+                return el;
             }
         }
 
@@ -90,6 +92,7 @@ public class AnnotationUtil {
                         + "coordinates:\n" + svgContent);
             }
         }
+        // copy the first point to close the path
         coords[points.length][0] = coords[0][0];
         coords[points.length][1] = coords[0][1];
 

@@ -142,7 +142,7 @@ public class DisplayArea implements Iterable<DisplayElement> {
         }
 
         stackingOrderChanged();
-        initZoomLevels();
+//        initZoomLevels();
     }
 
     /**

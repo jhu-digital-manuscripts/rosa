@@ -25,6 +25,10 @@ public class CanvasPanelPresenter implements PanelPresenter {
         Label getLabel();
 
         DisplayAreaView getDisplayAreaWidget();
+        
+        void showDialogBox(String label, String text);
+        
+        void hideDialogBox(String label);
     }
 
     private final Display display;
@@ -63,7 +67,12 @@ public class CanvasPanelPresenter implements PanelPresenter {
     private void setAnnotationVisible(Annotation ann, boolean status) {
     	if (!AnnotationUtil.isSpecificResource(ann) &&
     			ann.body().isText()) {
-    	// nontargeted text annotations are not displayed on the canvas
+    		// nontargeted text annotations are not displayed on the canvas
+    		if (status) {
+    			display.showDialogBox(ann.label(), ann.body().textContent());
+    		} else {
+    			display.hideDialogBox(ann.label());
+    		}
     		return;
     	}
     	
@@ -90,7 +99,6 @@ public class CanvasPanelPresenter implements PanelPresenter {
 //        display.getLabel().setText(manifest.label() + ": " + canvas.label());
         update();
 
-        // TODO display.getDisplayAreaWidget().area().setContent(els);
         for (AnnotationList list : data.getAnnotationLists()) {
         	for (Annotation ann : list) {
         		DisplayElement el = AnnotationUtil.annotationToDisplayElement(

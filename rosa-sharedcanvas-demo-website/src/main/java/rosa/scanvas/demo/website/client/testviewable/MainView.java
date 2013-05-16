@@ -20,6 +20,7 @@ public class MainView extends Composite implements MainPresenter.Display {
 	private final Button clearButton = new Button("Clear");
 	private final Button resetButton = new Button("Reset");
 	private final Button closeButton = new Button("Close");
+	private final Button txtButton = new Button("Text");
 	
 	private final DisplayAreaView area_view;
 	
@@ -36,6 +37,7 @@ public class MainView extends Composite implements MainPresenter.Display {
 		main.add(label);
 		main.add(polyButton);
 		main.add(imgButton);
+		main.add(txtButton);
 		main.add(clearButton);
 		main.add(resetButton);
 		main.add(closeButton);
@@ -63,5 +65,8 @@ public class MainView extends Composite implements MainPresenter.Display {
 	
 	@Override
 	public DisplayAreaView getDisplayAreaWidget() { return area_view; }
+	
+	@Override
+	public Button getTextButton() { return txtButton; }
 	
 }
