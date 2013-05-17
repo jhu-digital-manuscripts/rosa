@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 
 public class CanvasView extends Composite implements CanvasPanelPresenter.Display {
@@ -19,10 +20,11 @@ public class CanvasView extends Composite implements CanvasPanelPresenter.Displa
     private final Label title;
     private final DisplayAreaView area_view;
     
-    private DialogBox top;
-    private TabLayoutPanel tab_panel;
+    private static DialogBox top = new DialogBox(false, false);
+    private TabLayoutPanel tab_panel = new TabLayoutPanel(
+    		40, Style.Unit.PX);
 
-    private HashMap<String, HTML> tabs = new HashMap<String, HTML>();
+    private HashMap<String, ScrollPanel> tabs = new HashMap<String, ScrollPanel>();
     
     public CanvasView() {
         this.main = new FlowPanel();
@@ -37,12 +39,11 @@ public class CanvasView extends Composite implements CanvasPanelPresenter.Displa
         
         initWidget(main);
         
-        this.top = new DialogBox(false, false);
-        this.tab_panel = new TabLayoutPanel(40, Style.Unit.PX);
+        top.clear();
         top.setPopupPosition(0, 0);
         top.add(tab_panel);
         top.setText("Text Annotations");
-        tab_panel.setSize(300 + "px", 150 + "px");
+        tab_panel.setSize(350 + "px", 200 + "px");
     }
 
     @Override
@@ -65,10 +66,20 @@ public class CanvasView extends Composite implements CanvasPanelPresenter.Displa
      */
     @Override
     public void showDialogBox(String label, String text) {
+    	ScrollPanel scroll = new ScrollPanel();
     	HTML content = new HTML(text);
     	
-    	tab_panel.add(content, label);
-    	tabs.put(label, content);
+    	scroll.setWidth("96%");
+    	scroll.setHeight("100%");
+    	scroll.add(content);
+    	
+    	// if this content already exists, do not add it
+    	if (tabs.containsKey(label)) {
+    		return;
+    	}
+    	
+    	tab_panel.add(scroll, label);
+    	tabs.put(label, scroll);
     	
     	if (tab_panel.getWidgetCount() == 1) {
     		top.show();
@@ -77,7 +88,7 @@ public class CanvasView extends Composite implements CanvasPanelPresenter.Displa
     
     @Override
     public void hideDialogBox(String label) {
-    	HTML content = tabs.get(label);
+    	ScrollPanel content = tabs.get(label);
     	
     	if (top == null || content == null) {
     		return;

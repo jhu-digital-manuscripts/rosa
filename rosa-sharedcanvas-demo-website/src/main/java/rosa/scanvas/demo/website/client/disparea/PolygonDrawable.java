@@ -29,6 +29,12 @@ public class PolygonDrawable implements DisplayAreaDrawable {
 
         context.setLineWidth(6);
         context.stroke();
+        
+        context.setGlobalAlpha(0.3);
+        context.setFillStyle("white");
+        context.fill();
+        context.setGlobalAlpha(1.0);
+        
         context.closePath();
 
         context.restore();

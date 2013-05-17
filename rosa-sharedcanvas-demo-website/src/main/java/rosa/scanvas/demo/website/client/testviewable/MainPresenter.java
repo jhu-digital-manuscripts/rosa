@@ -119,7 +119,6 @@ public class MainPresenter {
     	
     	els.add(el);
     	view.area().setContent(els);
-    	//view.area().initZoomLevels();
     	view.redraw();  	
     }
     
@@ -146,7 +145,6 @@ public class MainPresenter {
     	
     	els.add(el);
     	view.area().setContent(els);
-    	//view.area().initZoomLevels();
     	view.redraw();
     }
     
@@ -159,7 +157,7 @@ public class MainPresenter {
     	String text = "Dont j'ay este moult deceuz.";
     	int[][] coords_txt = 
     		{ {1703, 578}, {2752, 558}, {2752, 634}, {1703, 658}, {1703, 578} };
-    	int[] bounds_txt = { 1703, 578, 1049, 80 };
+    	int[] bounds_txt = { 1703, 558, 1049, 100 };
     	
     	TextDisplayElement el3 = new TextDisplayElement("txt", bounds_txt[0],
     			bounds_txt[1], bounds_txt[2], bounds_txt[3], text, coords_txt);

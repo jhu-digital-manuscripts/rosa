@@ -10,7 +10,7 @@ public class PolygonDisplayElement extends DisplayElement {
     private final ImageData image_data;
 
     // Green
-    private final CssColor color_fill = CssColor.make(0, 255, 0);
+    private final CssColor fill_color = CssColor.make(0, 255, 0);
     
     public PolygonDisplayElement(String id, int x, int y, int width,
             int height, int[][] coords) {
@@ -30,12 +30,10 @@ public class PolygonDisplayElement extends DisplayElement {
         	context.lineTo(coords[i][0] - baseLeft(), coords[i][1] - baseTop());
         }
     	context.closePath();
-        context.setFillStyle(color_fill);
+        context.setFillStyle(fill_color);
         context.fill();
        
         this.image_data = context.getImageData(0, 0, baseWidth(), baseHeight());
-        
-        context.clearRect(0, 0, baseWidth(), baseHeight());
     }
 
     public int[][] coordinates() {

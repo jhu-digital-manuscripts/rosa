@@ -136,6 +136,15 @@ public class CanvasPanelPresenter implements PanelPresenter {
         DisplayArea area = new DisplayArea(canvas.width(), canvas.height(),
                 width, height);
         
+        DisplayArea old_area = da.area();
+        if (old_area != null) {
+	        if (old_area.zoomLevel() < area.numZoomLevels()) {
+	        	area.setZoomLevel(old_area.zoomLevel());
+	        }
+	        area.setViewportBaseCenter(old_area.viewportBaseCenterX(),
+	        		old_area.viewportBaseCenterY());
+    	}
+        
         area.setContent(els);
         da.display(area);
         da.lockDisplay(false);

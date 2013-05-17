@@ -7,6 +7,7 @@ import java.util.List;
 
 import rosa.scanvas.demo.website.client.PanelData;
 import rosa.scanvas.demo.website.client.PanelState;
+import rosa.scanvas.demo.website.client.disparea.AnnotationUtil;
 import rosa.scanvas.demo.website.client.event.AnnotationSelectionEvent;
 import rosa.scanvas.demo.website.client.event.AnnotationSelectionHandler;
 import rosa.scanvas.demo.website.client.event.PanelDisplayedEvent;
@@ -60,6 +61,7 @@ public class SidebarPresenter implements IsWidget {
 
 	private HashMap<Integer, PanelData> dataMap = new HashMap<Integer, PanelData>();
 	int currentIndex = 0;
+	private boolean default_image;
 	
 	public SidebarPresenter(Display display, HandlerManager eventBus) {
 		this.display = display;
@@ -188,9 +190,6 @@ public class SidebarPresenter implements IsWidget {
 	private void doPanelRequest(PanelAction action, int panelId) {
 
 		if (action == PanelAction.ADD) {
-			// if there is more than 0 items before adding to the list, 
-			// resulting in more than 1 items after adding to the list,
-			// enable the Remove button
 			if (!display.getRemovePanelEnabler().isEnabled() && 
 					display.getPanelList().getItemCount() > 0) {
 				display.getRemovePanelEnabler().setEnabled(true);
@@ -310,9 +309,7 @@ public class SidebarPresenter implements IsWidget {
 			newData.setCanvas(data.getCanvas());
 		}
 		
-		if (data.getAnnotationLists() != null/* && 
-				data.getAnnotationLists().size() != 
-				newData.getAnnotationLists().size()*/) {
+		if (data.getAnnotationLists() != null) {
 			newData.getAnnotationLists().clear();
 			newData.getAnnotationLists().addAll(data.getAnnotationLists());
 		}
@@ -324,38 +321,18 @@ public class SidebarPresenter implements IsWidget {
 	 * Place data from selected panel in appropriate place in sidebar
 	 */
 	public void setData(PanelData data) {
-
-		// Window.alert(String.valueOf(!this.data.getCollection().uri().equals(data.getCollection().uri())));
-
-		/*
-		 * if (this.data.getCollection() == null ||
-		 * !this.data.getCollection().uri().equals(data.getCollection().uri()))
-		 * { this.data.setCollection(data.getCollection()); } if
-		 * (this.data.getManifest() == null ||
-		 * !this.data.getManifest().uri().equals(data.getManifest().uri())) {
-		 * this.data.setManifest(data.getManifest());
-		 * this.data.getAnnotationLists().addAll(data.getAnnotationLists());
-		 * this.data.getImageAnnotations().addAll(data.getImageAnnotations()); }
-		 * if (this.data.getSequence() == null ||
-		 * !this.data.getSequence().uri().equals(data.getSequence().uri())) {
-		 * this.data.setSequence(data.getSequence()); } if
-		 * (this.data.getCanvas() == null ||
-		 * !this.data.getCanvas().uri().equals(data.getCanvas().uri())) {
-		 * this.data.setCanvas(data.getCanvas()); }
-		 * 
-		 * setMetadata(); setAnnotations();
-		 */
-		
 		display.getMetaListWidget().setMetadata(data);
 		setAnnotations(data);
 	}
-
+	
+// TODO: move this to AnnotationListWidget, plus messy
 	/**
 	 * Displays all annotations into the AnnotationListWidget
 	 */
 	private void setAnnotations(PanelData data) {
+		default_image = false;
 		display.getAnnoListWidget().clearLists();
-	
+		
 		List<AnnotationList> list = data.getAnnotationLists();
 		if (list.size() > 0) {
 			// iterate through the list of annotation lists
@@ -367,6 +344,21 @@ public class SidebarPresenter implements IsWidget {
 					
 					if (anno.body().isImage()) {
 						
+						// send the first image that targets the whole canvas to be displayed
+						if (!AnnotationUtil.isSpecificResource(anno)
+								&& !default_image) {
+							try {
+								int panel_id = Integer.parseInt(display.getPanelList()
+										.getValue(display.getPanelList()
+												.getSelectedIndex()));
+								eventBus.fireEvent(new AnnotationSelectionEvent(
+										anno, true, panel_id));
+								checkbox.setValue(true, false);
+								
+								default_image = true;
+							} catch (NumberFormatException e) {}
+						}
+						
 						display.getAnnoListWidget().getImageAnnoList()
 							.setWidget(i, 0, checkbox);
 						display.getAnnoListWidget().getImageAnnoList()
@@ -375,14 +367,7 @@ public class SidebarPresenter implements IsWidget {
 						
 					} else if (anno.body().isText()) {
 						// check if the text annotation is targeted
-						boolean isTargeted = false;
-						for (AnnotationTarget target : anno.targets()) {
-							if (target.isSpecificResource()) {
-								isTargeted = true;
-							}
-						}
-						
-						if (isTargeted) {
+						if (AnnotationUtil.isSpecificResource(anno)) {
 							display.getAnnoListWidget().getTargetedTextAnnoList()
 									.setWidget(k, 0, checkbox);
 							display.getAnnoListWidget().getTargetedTextAnnoList()

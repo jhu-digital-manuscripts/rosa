@@ -8,6 +8,9 @@ import rosa.scanvas.demo.website.client.dynimg.WebImage;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -34,10 +37,10 @@ public class PageTurner extends Composite implements HasClickHandlers {
 
         FlowPanel toolbar = new FlowPanel();
 
-        Button prev_button = new Button("Prev");
-        TextBox goto_textbox = new TextBox();
-        Button goto_button = new Button("Goto");
-        Button next_button = new Button("Next");
+        final Button prev_button = new Button("Prev");
+        final TextBox goto_textbox = new TextBox();
+        final Button goto_button = new Button("Goto");
+        final Button next_button = new Button("Next");
 
         next_button.addClickHandler(new ClickHandler() {
             @Override
@@ -57,6 +60,38 @@ public class PageTurner extends Composite implements HasClickHandlers {
                     display(openings.get(position));
                 }
             }
+        });
+        
+        goto_button.addClickHandler(new ClickHandler() {
+        	@Override
+        	public void onClick(ClickEvent event) {
+        		String text = goto_textbox.getValue();
+        		int new_position = findPositionOfOpening(text);
+        		
+        		if (text == null || new_position == -1) {
+        			return;
+        		}
+        		
+        		position = new_position;
+        		display(openings.get(position));
+        	}
+        });
+        
+        goto_textbox.addKeyPressHandler(new KeyPressHandler() {
+        	@Override
+        	public void onKeyPress(KeyPressEvent event) {
+        		if(event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+	        		String text = goto_textbox.getValue();
+	        		int new_position = findPositionOfOpening(text);
+	        		
+	        		if (text == null || new_position == -1) {
+	        			return;
+	        		}
+	        		
+	        		position = new_position;
+	        		display(openings.get(position));
+        		}
+        	}
         });
 
         display.addClickHandler(new ClickHandler() {
@@ -140,5 +175,25 @@ public class PageTurner extends Composite implements HasClickHandlers {
     @Override
     public HandlerRegistration addClickHandler(ClickHandler handler) {
         return display.addClickHandler(handler);
+    }
+    
+    /**
+     * Find the index of the opening that contains a specified string as
+     * a page label
+     * 
+     * @param label
+     * @return the index of the opening. If no opening exists that contains
+     * 			the specified string, -1 is returned
+     */
+    private int findPositionOfOpening(String label) {
+    	for (int i = 0; i < openings.size(); i++ ) {
+    		Opening op = openings.get(i);
+    		if (op.getVersoLabel().equals(label) 
+    				|| op.getRectoLabel().equals(label)) {
+    			return i;
+    		}
+    	}
+    	
+    	return -1;
     }
 }
