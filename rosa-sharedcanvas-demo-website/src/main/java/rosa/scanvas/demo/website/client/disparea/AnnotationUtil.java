@@ -8,6 +8,7 @@ import rosa.scanvas.model.client.AnnotationSelector;
 import rosa.scanvas.model.client.AnnotationTarget;
 import rosa.scanvas.model.client.Canvas;
 
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.Window;
 
 /**
@@ -63,6 +64,21 @@ public class AnnotationUtil {
         return null;
     }
 
+    /**
+     * Is this annotation a specific resource, indicating that it has a
+     * selector?
+     * 
+     * @param annotation
+     */
+    public static boolean isSpecificResource(Annotation annotation) {
+        for (AnnotationTarget target : annotation.targets()) {
+            if (target.isSpecificResource()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     /**
      * Parses an SVG selector to find the points that define a polygon
      * 
@@ -153,19 +169,10 @@ public class AnnotationUtil {
         return null;
     }
 
-    /**
-     * Is this annotation a specific resource, indicating that it has a
-     * selector?
-     * 
-     * @param annotation
-     */
-    public static boolean isSpecificResource(Annotation annotation) {
-        for (AnnotationTarget target : annotation.targets()) {
-            if (target.isSpecificResource()) {
-                return true;
-            }
-        }
-        return false;
+    public static HTML nonTargetedText(Annotation ann) {
+    	HTML text = new HTML();
+    	
+    	return text;
     }
-
+    
 }

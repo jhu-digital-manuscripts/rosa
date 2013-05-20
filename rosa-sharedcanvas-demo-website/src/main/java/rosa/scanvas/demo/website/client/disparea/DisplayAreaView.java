@@ -156,7 +156,7 @@ public class DisplayAreaView extends Composite {
 			public void onMouseMove(MouseMoveEvent event) {
 				event.preventDefault();
 				event.stopPropagation();
-
+				
 				if (locked) {
 					return;
 				}
@@ -629,7 +629,7 @@ public class DisplayAreaView extends Composite {
 		overview_context.setGlobalAlpha(1.0);
 		overview_context.setFillStyle("black");
 	}
-
+	
 	/**
 	 * Clear contents of viewport and redraw any visible display elements
 	 */
@@ -637,6 +637,9 @@ public class DisplayAreaView extends Composite {
 		// Grab overview on redraw
 		if (grab_overview && area.zoomLevel() > 0) {
 			draw_overview();
+			overview.setVisible(true);
+		} else if (area.zoomLevel() == 0) {
+			overview.setVisible(false);
 		}
 
 		// Draw all visible display elements
@@ -645,13 +648,6 @@ public class DisplayAreaView extends Composite {
 			if (el.isVisible()) {
 				el.drawable().draw(viewport_context, area);
 			}
-		}
-
-		// Draw overview if needed
-		if (area.zoomLevel() == 0) {
-			overview.setVisible(false);
-		} else if (area.zoomLevel() > 0) {
-			overview.setVisible(true);
 		}
 
 		grab_overview = true;

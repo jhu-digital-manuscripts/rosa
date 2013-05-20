@@ -23,16 +23,19 @@ public class PolygonDisplayElement extends DisplayElement {
         sub_canvas.setCoordinateSpaceHeight(baseHeight());
         
         Context2d context = sub_canvas.getContext2d();
+        
+        context.save();
         context.beginPath();
         context.moveTo(coords[0][0] - baseLeft(), coords[0][1] - baseTop());
-
+        
         for (int i = 1; i < coords.length; i++) {
         	context.lineTo(coords[i][0] - baseLeft(), coords[i][1] - baseTop());
         }
     	context.closePath();
         context.setFillStyle(fill_color);
         context.fill();
-       
+        context.restore();
+        
         this.image_data = context.getImageData(0, 0, baseWidth(), baseHeight());
     }
 
@@ -46,13 +49,16 @@ public class PolygonDisplayElement extends DisplayElement {
      * @param x
      * @param y
      */
-    @Override
+/*    @Override
     public boolean contains(int x, int y) {
     	// the zoom cannot be known at this point, so the clicked (x, y) point must
     	// be transformed before this method call
     	x -= baseLeft();
     	y -= baseTop();
-        
+    	Window.alert("Element " + id() + ": (" + baseLeft() + ", " + baseTop() 
+    			+ ", " + baseWidth() + ", " + baseHeight() 
+    			+ ")\nPoint: (" + x + ", " + y + "): Green = " 
+    			+ image_data.getGreenAt(x, y));       
     	return image_data.getGreenAt(x, y) == 255;
-    }
+    }*/
 }

@@ -15,7 +15,10 @@ import rosa.scanvas.model.client.Annotation;
 import rosa.scanvas.model.client.AnnotationList;
 import rosa.scanvas.model.client.Canvas;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -26,9 +29,15 @@ public class CanvasPanelPresenter implements PanelPresenter {
 
         DisplayAreaView getDisplayAreaWidget();
         
-        void showDialogBox(String label, String text);
+        Button getZoomInButton();
         
-        void hideDialogBox(String label);
+        Button getZoomOutButton();
+        
+        Button getResetButton();
+        
+        void showDialogBox(String label, String text, boolean tei);
+        
+        void hideDialogBox(String label, String text, boolean tei);
     }
 
     private final Display display;
@@ -50,7 +59,7 @@ public class CanvasPanelPresenter implements PanelPresenter {
     }
 
     /**
-     * Bind event handlers to the event bus
+     * Bind event handlers to the event bus and the DOM
      */
     private void bind() {
     	event_bus.addHandler(AnnotationSelectionEvent.TYPE, 
@@ -61,6 +70,32 @@ public class CanvasPanelPresenter implements PanelPresenter {
     			}
     		}
     	});
+    	
+    	display.getZoomInButton().addClickHandler(new ClickHandler() {
+    		@Override
+    		public void onClick(ClickEvent event) {
+    			DisplayAreaView view = display.getDisplayAreaWidget();
+    			view.area().zoomIn();
+    			view.redraw();
+    		}
+    	});
+    	
+    	display.getZoomOutButton().addClickHandler(new ClickHandler() {
+    		@Override
+    		public void onClick(ClickEvent event) {
+    			DisplayAreaView view = display.getDisplayAreaWidget();
+    			view.area().zoomOut();
+    			view.redraw();
+    		}
+    	});
+    	
+    	display.getResetButton().addClickHandler(new ClickHandler() {
+    		@Override
+    		public void onClick(ClickEvent event) {
+    			DisplayAreaView view = display.getDisplayAreaWidget();
+    			view.resetDisplay();
+    		}
+    	});
     }
     
     // TODO Can save display elements and operate on them for efficiency
@@ -68,11 +103,14 @@ public class CanvasPanelPresenter implements PanelPresenter {
     	if (!AnnotationUtil.isSpecificResource(ann) &&
     			ann.body().isText()) {
     		// nontargeted text annotations are not displayed on the canvas
+    		boolean tei = ann.body().format().endsWith("xml");
+    		
     		if (status) {
-    			display.showDialogBox(ann.label(), ann.body().textContent());
+    			display.showDialogBox(ann.label(), ann.body().textContent(), tei);
     		} else {
-    			display.hideDialogBox(ann.label());
+    			display.hideDialogBox(ann.label(), ann.body().textContent(), tei);
     		}
+    		
     		return;
     	}
     	
@@ -96,7 +134,8 @@ public class CanvasPanelPresenter implements PanelPresenter {
         this.canvas = data.getCanvas();
         els.clear();
         
-//        display.getLabel().setText(manifest.label() + ": " + canvas.label());
+        display.getLabel().setText(data.getManifest().label() 
+        		+ ": " + canvas.label());
         update();
 
         for (AnnotationList list : data.getAnnotationLists()) {
@@ -134,7 +173,7 @@ public class CanvasPanelPresenter implements PanelPresenter {
         
         DisplayAreaView da = display.getDisplayAreaWidget();
         DisplayArea area = new DisplayArea(canvas.width(), canvas.height(),
-                width, height);
+                width, height-50);
         
         DisplayArea old_area = da.area();
         if (old_area != null) {

@@ -142,7 +142,6 @@ public class DisplayArea implements Iterable<DisplayElement> {
         }
 
         stackingOrderChanged();
-//        initZoomLevels();
     }
 
     /**
@@ -242,36 +241,6 @@ public class DisplayArea implements Iterable<DisplayElement> {
         }
 
         return result;
-    }
-
-    /**
-     * Set the ZoomLevels based off of current DisplayElements
-     */
-    public void initZoomLevels() {
-    	int[] bounding_box = findLargestBoundingBox();
-        this.zoom_levels = ZoomLevels.guess(bounding_box[0], bounding_box[1],
-        		vp_width, vp_height);
-        setZoomLevel(0);
-    }
-    
-    /**
-     * Returns the {width, height} of the largest DisplayElement as an array 
-     */
-    private int[] findLargestBoundingBox() {
-    	int max_width = 0, max_height = 0;
-    	
-    	for (DisplayElement el : content_list) {
-    		if (el.baseWidth() > max_width) {
-    			max_width = el.baseWidth();
-    		}
-    		
-    		if (el.baseHeight() > max_height) {
-    			max_height = el.baseHeight();
-    		}
-    	}
-    	
-    	int[] bounds = {max_width, max_height};
-    	return bounds;
     }
     
     public int viewportTop() {
