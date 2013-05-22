@@ -1,5 +1,8 @@
 package rosa.scanvas.demo.website.client.disparea;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.dom.client.NativeEvent;
@@ -43,6 +46,7 @@ public class DisplayAreaView extends Composite {
 	private final Canvas viewport;
 	private final Canvas overview;
 	private final Context2d viewport_context;
+	private final Context2d overview_context;
 	private DisplayArea area;
 
 	private boolean locked;
@@ -51,11 +55,15 @@ public class DisplayAreaView extends Composite {
 	private int canvas_drag_x, canvas_drag_y;
 	private int overview_x, overview_y;
 	private boolean grab_overview;
+	
+	private int draw_index = 0;
+	List<DisplayElement> draw_queue = new ArrayList<DisplayElement> ();
 
 	public DisplayAreaView() {
 		this.viewport = Canvas.createIfSupported();
 		this.overview = Canvas.createIfSupported();
 		this.viewport_context = viewport.getContext2d();
+		this.overview_context = overview.getContext2d();
 		this.drag_may_start = false;
 		this.dragging = false;
 		this.locked = true;
@@ -286,15 +294,18 @@ public class DisplayAreaView extends Composite {
 					Touch touch = event.getChangedTouches().get(0);
 					// Don't allow click outside the canvas
 
-					int x = touch.getRelativeX(viewport.getElement());
-					int y = touch.getRelativeY(viewport.getElement());
+					int touch_x = touch.getRelativeX(viewport.getElement());
+					int touch_y = touch.getRelativeY(viewport.getElement());
 
-					if (x < 0 || y < 0 || x > viewport.getOffsetWidth()
-							|| y > viewport.getOffsetHeight()) {
+					if (touch_x < 0 || touch_y < 0 || touch_x > viewport.getOffsetWidth()
+							|| touch_y > viewport.getOffsetHeight()) {
 						return;
 					}
 
-					area.setViewportCenter(x, y);
+					touch_x += area.viewportLeft();
+					touch_y += area.viewportTop();
+					
+					area.setViewportCenter(touch_x, touch_y);
 					area.zoomIn();
 					redraw();
 				}
@@ -573,16 +584,35 @@ public class DisplayAreaView extends Composite {
 		// TODO 1px border
 		overview_x = area.viewportWidth() - overview_width;
 		overview_y = area.viewportHeight() - overview_height;
-		grab_overview = false;
+		grab_overview = true;
 
 		top.setWidgetPosition(overview, overview_x, overview_y);
 		redraw();
 	}
-
+	
+	/**
+	 * Callback that is called by any drawable when it completes its draw method
+	 */
+	DisplayAreaDrawable.OnDrawnCallback ondrawn_cb = 
+			new DisplayAreaDrawable.OnDrawnCallback() {
+		@Override
+		public void onDrawn() {
+			if (draw_queue == null || draw_queue.size() == 0
+					|| draw_index >= draw_queue.size()) {
+				return;
+			}
+			
+			DisplayElement el = draw_queue.get(draw_index++);
+			if (el.isVisible()) {
+				el.drawable().draw(viewport_context, area, ondrawn_cb);
+			}
+		}
+	};
+	
 	/**
 	 * Create the overview
 	 */
-	private void draw_overview() {
+	private void load_overview() {
 		// reset view, so it is centered in viewport at zoom 0
 		Context2d overview_context = overview.getContext2d();
 		int current_zoom = area.zoomLevel();
@@ -592,8 +622,9 @@ public class DisplayAreaView extends Composite {
 		int width = overview.getCoordinateSpaceWidth();
 		int height = overview.getCoordinateSpaceHeight();
 
-		double width_scale = (double) width / area.width();
-		double zoom = area.zoom() * width_scale;
+		/*double width_scale = (double) width / area.width();
+		double zoom = area.zoom() * width_scale;*/
+		double zoom = (double) width / area.baseWidth();
 
 		// do not redraw overview on this step
 		grab_overview = false;
@@ -614,7 +645,7 @@ public class DisplayAreaView extends Composite {
 		overview_context.stroke();
 		overview_context.closePath();
 
-		// reset view so it is at the correct center and zoom
+		// set view so it is at the correct center and zoom
 		area.setZoomLevel(current_zoom);
 		area.setViewportBaseCenter(current_base_center_x,
 				current_base_center_y);
@@ -636,17 +667,28 @@ public class DisplayAreaView extends Composite {
 	public void redraw() {
 		// Grab overview on redraw
 		if (grab_overview && area.zoomLevel() > 0) {
-			draw_overview();
+			load_overview();
 			overview.setVisible(true);
 		} else if (area.zoomLevel() == 0) {
 			overview.setVisible(false);
 		}
-
-		// Draw all visible display elements
+		
 		viewport_context.clearRect(0, 0, area.viewportWidth(), area.viewportHeight());
+		draw_index = 0;
+		draw_queue.clear();
+		
+		// remove all the elements that are not visible
 		for (DisplayElement el : area.findInViewport()) {
 			if (el.isVisible()) {
-				el.drawable().draw(viewport_context, area);
+				draw_queue.add(el);
+			}
+		}
+		
+		// draw the first element in the list
+		if (draw_queue != null && draw_queue.size() > 0) {
+			DisplayElement el = draw_queue.get(draw_index++);
+			if (el.isVisible()) {
+				el.drawable().draw(viewport_context, area, ondrawn_cb);
 			}
 		}
 

@@ -7,7 +7,7 @@ import rosa.scanvas.demo.website.client.dynimg.WebImage;
 
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.dom.client.ImageElement;
-
+import com.google.gwt.user.client.Window;
 public class MasterImageDrawable implements DisplayAreaDrawable {
     private final MasterImageDisplayElement el;
     
@@ -23,8 +23,8 @@ public class MasterImageDrawable implements DisplayAreaDrawable {
     }
 
     @Override
-    public void draw(final Context2d context, final DisplayArea area) {
-        if (area != last_area) {
+    public void draw(final Context2d context, final DisplayArea area, final OnDrawnCallback cb) {
+    	if (area != last_area) {
             last_area = area;
             tile_cache = new WebImage[area.numZoomLevels()][][];
         }
@@ -66,6 +66,10 @@ public class MasterImageDrawable implements DisplayAreaDrawable {
                     context.drawImage(img, xy[0], xy[1],
                             image.width(), image.height());
                     context.restore();
+                    
+                    if (pending_draws.isEmpty()) {
+                    	cb.onDrawn();
+                    }
                 }
             }
         };
@@ -103,6 +107,10 @@ public class MasterImageDrawable implements DisplayAreaDrawable {
                 pending_draws.put(tile.url(), new int[]{tile_left, tile_top});
                 tile.makeViewable(onload_cb);
             }
+        }
+        
+        if (pending_draws.isEmpty()) {
+        	cb.onDrawn();
         }
     }
 }

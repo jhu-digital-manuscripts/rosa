@@ -49,24 +49,33 @@ public class CanvasView extends Composite implements CanvasPanelPresenter.Displa
         this.resetButton = new Button("Reset");
         
         this.area_view = new DisplayAreaView();
+        
+        FlowPanel canvas_toolbar = new FlowPanel();
+        canvas_toolbar.setStylePrimaryName("CanvasToolbar");
 
         main.add(title);
         main.add(area_view);
-        main.add(zoomInButton);
-        main.add(zoomOutButton);
-        main.add(resetButton);
+        main.add(canvas_toolbar);
+        
+        canvas_toolbar.add(zoomInButton);
+        canvas_toolbar.add(zoomOutButton);
+        canvas_toolbar.add(resetButton);
 
         main.setStylePrimaryName("PanelView");
+        title.addStyleName("PanelTitle");
         
         initWidget(main);
         
-        top.setPopupPosition(0, 0);
+        //top.setPopupPosition(0, 0);
         top.setText("Text Annotations");
         top.add(tab_panel);
-        tab_panel.setSize(500+"px", 300+"px");
+        top.addStyleName("AnnotationDialog");
+        //tab_panel.setSize(500+"px", 300+"px");
+        tab_panel.addStyleName("TextAnnoTabPanel");
         
-        transcript.setPopupPosition(0, 0);
+        //transcript.setPopupPosition(0, 0);
         transcript.setText("Transcriptions");
+        transcript.addStyleName("AnnotationDialog");
     }
 
     @Override
@@ -119,7 +128,8 @@ public class CanvasView extends Composite implements CanvasPanelPresenter.Displa
     		tab = TranscriptionViewer.createTranscriptionViewer(
     				cont, name, 200, false);
     		
-    		tab.setSize(500+"px", 400+"px");
+    		//tab.setSize(500+"px", 400+"px");
+    		tab.addStyleName("TextAnnoTabPanel");
     		
     		transcript.add(tab);
     		transcript.show();

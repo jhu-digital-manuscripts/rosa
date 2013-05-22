@@ -10,7 +10,7 @@ public class PolygonDrawable implements DisplayAreaDrawable {
     }
 
     @Override
-    public void draw(Context2d context, DisplayArea area) {
+    public void draw(Context2d context, DisplayArea area, OnDrawnCallback cb) {
         // DisplayArea area = view.area();
 
         double zoom = area.zoom();
@@ -38,5 +38,7 @@ public class PolygonDrawable implements DisplayAreaDrawable {
         context.closePath();
 
         context.restore();
+        
+        cb.onDrawn();
     }
 }

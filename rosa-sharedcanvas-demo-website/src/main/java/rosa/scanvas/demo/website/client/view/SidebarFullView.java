@@ -47,6 +47,8 @@ public class SidebarFullView extends Composite implements SidebarPresenter.Displ
 	
 	public SidebarFullView() {
 		initWidget(mainPanel);
+		mainPanel.setStylePrimaryName("Sidebar");
+		
 		ScrollPanel metaScrollPanel = new ScrollPanel();
 		ScrollPanel annoScrollPanel = new ScrollPanel();
 		
@@ -57,26 +59,30 @@ public class SidebarFullView extends Composite implements SidebarPresenter.Displ
 		
 		tabPanel.add(metaScrollPanel, "Metadata");
 		tabPanel.add(annoScrollPanel, "Annotations");
+		tabPanel.addStyleName("TabPanel");
 		
 		metaScrollPanel.add(metaListWidget);
 		annoScrollPanel.add(annoListWidget);
+		metaScrollPanel.addStyleName("MetaScrollPanel");
+		annoScrollPanel.addStyleName("AnnoScrollPanel");
 		
 		panelChangePanel.add(panelList);
 		panelChangePanel.add(addPanelButton);
 		panelChangePanel.add(removePanelButton);
-		panelList.setWidth("50%");
+		panelChangePanel.addStyleName("PanelChangeToolbar");
+		// panelList.setWidth("50%");
 		addPanelButton.setText("Add");
 		removePanelButton.setText("Remove");
 		
-		setWidth("250px");
+		// setWidth("250px");
 //		panelChangePanel.setStyleName("horizontalFlowPanel");
 		
 //		linkPanel.add(new Label("this may be links"));
 		
-		panelChangePanel.setHeight("5%");
+		/*panelChangePanel.setHeight("5%");
 		tabPanel.setHeight("90%");
 		tabPanel.setWidth("100%");
-		linkPanel.setHeight("100%");
+		linkPanel.setHeight("100%");*/
 	}
 	
 	public void setSize(String width, String height) {

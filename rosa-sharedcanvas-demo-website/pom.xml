@@ -81,7 +81,7 @@
 						<goals>
 							<goal>compile</goal>
 							<goal>test</goal>
-							<goal>i18n</goal>
+							<!-- <goal>i18n</goal> -->
 							<goal>generateAsync</goal>
 						</goals>
 					</execution>
@@ -92,7 +92,7 @@
 				  <mode>htmlunit</mode>
 				  <runTarget>SharedCanvasDemoWebsite.html</runTarget>
 				  <hostedWebapp>${webappDirectory}</hostedWebapp>
-				  <i18nMessagesBundle>rosa.scanvas.demo.website.client.Messages</i18nMessagesBundle>
+				  <!-- <i18nMessagesBundle>rosa.scanvas.demo.website.client.resource.Labels</i18nMessagesBundle> -->
 				</configuration>
 			</plugin>
 

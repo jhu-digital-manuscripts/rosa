@@ -12,7 +12,7 @@ public abstract class DisplayElement {
     private int stack_order;
     private boolean visible;
     private DisplayAreaDrawable drawable;
-
+    
     protected DisplayElement(String id, int x, int y, int width, int height) {
         this.id = id;
         this.base_x = x;
@@ -22,7 +22,7 @@ public abstract class DisplayElement {
         this.stack_order = 0;
         this.visible = false;
     }
-
+    
     public String id() {
         return id;
     }

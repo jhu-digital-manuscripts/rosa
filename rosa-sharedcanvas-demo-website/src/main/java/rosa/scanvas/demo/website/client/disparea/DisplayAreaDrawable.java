@@ -12,5 +12,9 @@ public interface DisplayAreaDrawable {
      * @param context
      * @param area
      */
-    void draw(Context2d viewport_context, DisplayArea area);
+    void draw(Context2d viewport_context, DisplayArea area, OnDrawnCallback cb);
+    
+    public interface OnDrawnCallback {
+    	void onDrawn();
+    }
 }

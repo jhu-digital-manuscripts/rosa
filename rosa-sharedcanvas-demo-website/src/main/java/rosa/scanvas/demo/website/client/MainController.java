@@ -58,7 +58,7 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
         FlowPanel header = new FlowPanel();
         header.setStylePrimaryName("Header");
         Label app_header = new Label("JHU Prototype Shared Canvas Viewer");
-        app_header.setStylePrimaryName("HeaderText");
+        //app_header.setStylePrimaryName("HeaderText");
         header.add(app_header);
 
         main.addNorth(header, 100);
@@ -70,6 +70,10 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
         ScrollPanel sp = new ScrollPanel();
         sp.add(main_content);
         main.add(sp);
+        
+        main.getWidgetContainerElement(header).setClassName("AppHeader");
+        main.getWidgetContainerElement(sidebar_presenter.asWidget()).setClassName("SidebarContainer");
+        main.getWidgetContainerElement(sp).setClassName("Content");
 
         calculate_panel_size(Window.getClientWidth(), Window.getClientHeight());
         bind();

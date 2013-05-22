@@ -5,25 +5,22 @@ import com.google.gwt.canvas.dom.client.Context2d;
 /**
  * A line of text with a drawn polygon bounding box
  */
-public class TextDrawable /*implements DisplayAreaDrawable*/extends PolygonDrawable {
+public class TextDrawable implements DisplayAreaDrawable {
     private final TextDisplayElement el;
 
     public TextDrawable(TextDisplayElement el) {
-        super(el);
     	this.el = el;
-        
     }
 
     @Override
-    public void draw(Context2d context, DisplayArea area) {
+    public void draw(Context2d context, DisplayArea area, OnDrawnCallback cb) {
         double zoom = area.zoom();
-        super.draw(context, area);
         context.save();
 
         context.translate(-area.viewportLeft(), -area.viewportTop());
         context.scale(zoom, zoom);
 
-/*        // outline
+        // outline
 
         int[][] coords = el.coordinates();
 
@@ -42,15 +39,21 @@ public class TextDrawable /*implements DisplayAreaDrawable*/extends PolygonDrawa
         context.fill();
         context.setGlobalAlpha(1.0);
         
-        context.closePath();*/
+        context.closePath();
 
         // text
         context.setFillStyle("black");
         context.setFont("bold 60px sans-serif");
         context.setTextBaseline("top");
         context.fillText(el.text(), el.baseLeft(), el.baseTop(), el.baseWidth());
+        
+        // ----------------------
+        // context.drawImage(el.getCanvasElement(), el.baseLeft(), el.baseTop());
+        // ----------------------
 
         context.restore();
+        
+        cb.onDrawn();
     }
 
 }

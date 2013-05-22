@@ -173,8 +173,9 @@ public class CanvasPanelPresenter implements PanelPresenter {
         
         DisplayAreaView da = display.getDisplayAreaWidget();
         DisplayArea area = new DisplayArea(canvas.width(), canvas.height(),
-                width, height-50);
-        
+                width, height-70);
+        // Copy the zoom level and center position of the old display area into
+        // the new display area, so the view does not reset on browser resize
         DisplayArea old_area = da.area();
         if (old_area != null) {
 	        if (old_area.zoomLevel() < area.numZoomLevels()) {

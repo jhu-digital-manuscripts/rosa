@@ -4,23 +4,26 @@ import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.canvas.dom.client.ImageData;
+import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.Window;
 
-public class TextDisplayElement extends /*DisplayElement*/PolygonDisplayElement {
+public class TextDisplayElement extends DisplayElement {
     private final String text;
     private final int[][] coords;
-//    private final ImageData image_data;
-
+    private final ImageData image_data;
+    
     // Green
     private final CssColor color_fill = CssColor.make(0, 255, 0);
 
     public TextDisplayElement(String id, int x, int y, int width, int height,
             String text, int[][] coords) {
-        super(id, x, y, width, height, coords);
+        super(id, x, y, width, height);
         this.coords = coords;
         this.text = text;
         
      // Create a canvas containing the filled polygon with no border
-/*        Canvas sub_canvas = Canvas.createIfSupported();
+        Canvas sub_canvas = Canvas.createIfSupported();
         sub_canvas.setCoordinateSpaceWidth(width);
         sub_canvas.setCoordinateSpaceHeight(height);
         
@@ -39,7 +42,7 @@ public class TextDisplayElement extends /*DisplayElement*/PolygonDisplayElement 
         
         this.image_data = context.getImageData(0, 0, width, height);
         
-        context.clearRect(0, 0, width, height);*/
+        //context.clearRect(0, 0, width, height);
     }
 
     public String text() {
@@ -58,12 +61,15 @@ public class TextDisplayElement extends /*DisplayElement*/PolygonDisplayElement 
      * @param y
      * 			must be in the coordinates of the display element
      */
-/*    @Override
+    @Override
     public boolean contains(int x, int y) {
-    	final int red = image_data.getRedAt(x, y);
-        final int green = image_data.getGreenAt(x, y);
-        final int blue = image_data.getBlueAt(x, y);
+    	if (!super.contains(x, y)) {
+    		return false;
+    	}
+    	
+    	x -= baseLeft();
+    	y -= baseTop();
         
-    	return red == 0 && blue == 0 && green == 255;
-    }*/
+    	return image_data.getGreenAt(x, y) == 255;
+    }
 }

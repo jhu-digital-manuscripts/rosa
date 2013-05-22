@@ -31,6 +31,7 @@ public class ManifestListWidget extends Composite {
 	
 	public ManifestListWidget() {
 		initWidget(mainPanel);
+		mainPanel.addStyleName("ManifestList");
 		
 		mainPanel.add(collectionPanel);
 		mainPanel.add(manifestPanel);
@@ -40,21 +41,21 @@ public class ManifestListWidget extends Composite {
 		
 		collectionPanel.setContent(collectionTable);
 		collectionPanel.setHeader(new HTML("Collection: "));
-		collectionPanel.getHeader().setStylePrimaryName("MetadataTitle");
+		//collectionPanel.getHeader().setStylePrimaryName("MetadataTitle");
 		collectionPanel.setOpen(true);
-		collectionPanel.setStylePrimaryName("SidebarItem");
+		//collectionPanel.addStyleName("SidebarItem");
 		
 		manifestPanel.setContent(manifestTable);
 		manifestPanel.setHeader(new HTML("Manifest: "));
-		manifestPanel.getHeader().setStylePrimaryName("MetadataTitle");
+		//manifestPanel.getHeader().setStylePrimaryName("MetadataTitle");
 		manifestPanel.setOpen(true);
-		manifestPanel.setStylePrimaryName("SidebarItem");
+		//manifestPanel.addStyleName("SidebarItem");
 		
 		sequencePanel.setContent(sequenceTable);
 		sequencePanel.setHeader(new HTML("Sequence: "));
-		sequencePanel.getHeader().setStylePrimaryName("MetadataTitle");
+		//sequencePanel.getHeader().setStylePrimaryName("MetadataTitle");
 		sequencePanel.setOpen(true);
-		sequencePanel.setStylePrimaryName("SidebarItem");
+		//sequencePanel.addStyleName("SidebarItem");
 		
 		
 		manifestTable.setWidget(0, 0, new Label("Title: "));
@@ -66,8 +67,6 @@ public class ManifestListWidget extends Composite {
 		for (int i=0; i<manifestTable.getRowCount(); i++) {
 			manifestTable.getCellFormatter().setStylePrimaryName(i, 0, "MetadataSubtitle");
 		}
-		
-		sequencePickerBox.setWidth("75%");
 	}
 
 	public FlowPanel getMainPanel() { return mainPanel; }

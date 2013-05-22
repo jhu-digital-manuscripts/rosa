@@ -34,15 +34,20 @@ public class AnnotationListWidget extends Composite {
 	public AnnotationListWidget() {
 		initWidget(mainPanel);
 		
+		mainPanel.setStylePrimaryName("AnnotationList");
 		mainPanel.add(annoListPanel);
 		
 		/*annoListPanel.add(new Label("Search for annotations: "));
 		annoListPanel.add(searchBox);*/
-		annoListPanel.add(new Label("Images"));
+		Label image_label = new Label("Images: ");
+		Label tar_text_label = new Label("Text (targeted): ");
+		Label nontar_text_label = new Label("Text (non-targeted): ");
+		
+		annoListPanel.add(image_label);
 		annoListPanel.add(imageScrollPanel);
-		annoListPanel.add(new Label("Text (targeted)"));
+		annoListPanel.add(tar_text_label);
 		annoListPanel.add(targetedTextScrollPanel);
-		annoListPanel.add(new Label("Text (non-targeted)"));
+		annoListPanel.add(nontar_text_label);
 		annoListPanel.add(nontargetedTextScrollPanel);
 		annoListPanel.add(moveButtonPanel);
 		
@@ -56,14 +61,17 @@ public class AnnotationListWidget extends Composite {
 		moveButtonPanel.add(moveAnnoBottomButton);
 		moveButtonPanel.add(hideAnnoButton);
 		
-		imageScrollPanel.setSize("100%","10em");
-		targetedTextScrollPanel.setSize("100%", "10em");
-		nontargetedTextScrollPanel.setSize("100%", "10em");
-		imageAnnoList.getColumnFormatter().setWidth(0, "20px");
-		targetedTextAnnoList.getColumnFormatter().setWidth(0, "20px");
-		nontargetedTextAnnoList.getColumnFormatter().setWidth(0, "20px");
+		image_label.addStyleName("SectionLabel");
+		tar_text_label.addStyleName("SectionLabel");
+		nontar_text_label.addStyleName("SectionLabel");
 		
+		imageScrollPanel.addStyleName("ScrollPanel");
+		targetedTextScrollPanel.addStyleName("ScrollPanel");
+		nontargetedTextScrollPanel.addStyleName("ScrollPanel");
 		
+		imageAnnoList.getColumnFormatter().addStyleName(0, "CheckboxColumn");
+		targetedTextAnnoList.getColumnFormatter().addStyleName(0, "CheckboxColumn");
+		nontargetedTextAnnoList.getColumnFormatter().addStyleName(0, "CheckboxColumn");
 	}
 
 	public FlowPanel getMainPanel() { return mainPanel; }
