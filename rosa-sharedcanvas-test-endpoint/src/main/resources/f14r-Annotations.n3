@@ -39,6 +39,11 @@
 				rdfs:label "14r" ;
 				oa:hasTarget <${prefix}Canv-f14r> ;
 				oa:hasBody <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.014r.tif/full/300,/0/native.jpg> .
+<${prefix}ImgAnno-f14r-illus1> a oa:Annotation ;
+				oa:motivatedBy sc:painting ;
+				rdfs:label "illustration 1" ;
+				oa:hasTarget <${prefix}SubCanv-f14r-illus1> ;
+				oa:hasBody <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.014r.tif/426,2438,1059,1042/300,/0/grey.jpg> .
 				
 <${baseUrl}TxtAnnof14raln1>	a oa:Annotation ;
 				oa:motivatedBy oa:describing ;
@@ -61,6 +66,9 @@
 				oa:hasTarget <${baseUrl}SubCanv-f14rbln2> ;
 				oa:hasBody <${baseUrl}Txtf14rbln2> .
 				
+<${prefix}SubCanv-f14r-illus1> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSel-f14r-illus1> .
 <${baseUrl}SubCanv-f14raln1> a oa:SpecificResource ;
 				oa:hasSource <${baseUrl}Canv-f14r> ;
 				oa:hasSelector <${baseUrl}SvgSelf14raln1> .
@@ -74,6 +82,8 @@
 				oa:hasSource <${baseUrl}Canv-f14r> ;
 				oa:hasSelector <${baseUrl}SvgSelf14rbln2> .
 				
+<${baseUrl}SvgSel-f14r-illus1> a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='426,2448 1469,2438 442,2480 1485,3469'/>" .
 <${baseUrl}SvgSelf14raln1>	a oa:SvgSelector, cnt:ContentAsText ;
 				cnt:chars "<Svg:poly points='411,614 1456,582 1456,661 414,693'/>" .
 <${baseUrl}SvgSelf14raln2>	a oa:SvgSelector, cnt:ContentAsText ;
@@ -97,6 +107,12 @@
 				dcterms:conformsTo "IIIF" ;
 				exif:height 5429 ;
 				exif:width 3816 .
+				
+<http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.014r.tif/426,2438,1059,1042/300,/0/grey.jpg> a dctypes:Image;
+				dc:format "image/jpeg" ;
+				dcterms:comformsTo "IIIF" ;
+				exif:height 1059 ;
+				exif:width 1042 .
 				
 <${baseUrl}Txtf14raln1>	a dctypes:Text, cnt:ContentAsText ;
 				dc:format "text/plain" ;

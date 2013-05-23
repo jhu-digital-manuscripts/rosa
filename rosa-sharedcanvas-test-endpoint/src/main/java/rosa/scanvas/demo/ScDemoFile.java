@@ -99,6 +99,10 @@ public class ScDemoFile {
 					in = this.getClass().getClassLoader().getResourceAsStream(
 							"NormalSequence.n3");
 					JsonldJenaUtils.writeJsonldFromStream(in, o, "N3");
+				} else if (parts[2].equals("sequence2")) {
+					in = this.getClass().getClassLoader().getResourceAsStream(
+							"Sequence2.n3");
+					JsonldJenaUtils.writeJsonldFromStream(in, o, "N3");
 				} else {
 					throw new IOException("Invalid Path: " + path);
 				} 
