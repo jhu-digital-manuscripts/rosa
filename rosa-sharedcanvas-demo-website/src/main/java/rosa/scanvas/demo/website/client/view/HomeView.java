@@ -18,6 +18,9 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 public class HomeView extends Composite implements HomePanelPresenter.Display {
+	
+	private final FlowPanel main;
+	private final ScrollPanel top;
     private final ListBox col_listbox;
     private final Button load_button;
     private final TextBox user_textbox;
@@ -29,8 +32,8 @@ public class HomeView extends Composite implements HomePanelPresenter.Display {
         this.user_textbox = new TextBox();
         this.is_col_checkbox = new CheckBox("Collection");
 
-        FlowPanel main = new FlowPanel();
-        ScrollPanel top = new ScrollPanel(main);
+        main = new FlowPanel();
+        top = new ScrollPanel(main);
         top.setStylePrimaryName("PanelView");
 
         Label panel_title = new Label("Choose a collection to view.");
@@ -105,5 +108,14 @@ public class HomeView extends Composite implements HomePanelPresenter.Display {
     @Override
     public HasValue<Boolean> getUserUrlIsCollection() {
         return is_col_checkbox;
+    }
+    
+    @Override
+    public void selected(boolean is_selected) {
+    	if (is_selected) {
+    		top.addStyleName("PanelSelected");
+    	} else {
+    		top.removeStyleName("PanelSelected");
+    	}
     }
 }

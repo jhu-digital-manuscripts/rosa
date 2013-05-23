@@ -16,7 +16,7 @@ public class DispAreaTestViewable implements EntryPoint {
 	public final static int width = 3816;
 	public final static int height = 5429;
 	
-	private DialogBox top = new DialogBox();
+	private DialogBox top = new DialogBox(false, false);
 	
 	private MainPresenter presenter;
     //private MainView view = new MainView(width, height);

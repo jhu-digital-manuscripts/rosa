@@ -27,4 +27,11 @@ public interface PanelPresenter extends IsWidget {
      * @param height
      */
     void resize(int width, int height);
+    
+    /**
+     * Set the selection status of the panel. Useful for styling.
+     * 
+     * @param is_selected
+     */
+    void selected(boolean is_selected);
 }

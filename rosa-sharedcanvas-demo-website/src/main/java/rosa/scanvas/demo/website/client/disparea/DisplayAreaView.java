@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
+import com.google.gwt.dom.client.CanvasElement;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -584,7 +585,8 @@ public class DisplayAreaView extends Composite {
 		// TODO 1px border
 		overview_x = area.viewportWidth() - overview_width;
 		overview_y = area.viewportHeight() - overview_height;
-		grab_overview = true;
+		grab_overview = false;
+		overview_image = null;
 
 		top.setWidgetPosition(overview, overview_x, overview_y);
 		redraw();
@@ -608,7 +610,7 @@ public class DisplayAreaView extends Composite {
 			}
 		}
 	};
-	
+	private CanvasElement overview_image;
 	/**
 	 * Create the overview
 	 */
@@ -626,14 +628,17 @@ public class DisplayAreaView extends Composite {
 		double zoom = area.zoom() * width_scale;*/
 		double zoom = (double) width / area.baseWidth();
 
-		// do not redraw overview on this step
-		grab_overview = false;
-		area.setZoomLevel(0);
-		resetDisplay();
-
+//		if (overview_image == null && area.zoomLevel() == 1) {
+			// do not redraw overview on this step
+			grab_overview = false;
+			resetDisplay();
+			
+			overview_image = viewport_context.getCanvas();
+//		}
+		
 		overview_context.clearRect(0, 0, width, height);
 		overview_context
-		.drawImage(viewport_context.getCanvas(),
+		.drawImage(overview_image,
 				area.viewportWidth() / 2 - area.width() / 2,
 				0,
 				area.width(),

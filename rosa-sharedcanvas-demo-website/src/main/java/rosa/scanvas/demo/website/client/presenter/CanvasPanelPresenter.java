@@ -38,6 +38,8 @@ public class CanvasPanelPresenter implements PanelPresenter {
         void showDialogBox(String label, String text, boolean tei);
         
         void hideDialogBox(String label, String text, boolean tei);
+        
+        void selected(boolean is_selected);
     }
 
     private final Display display;
@@ -188,5 +190,10 @@ public class CanvasPanelPresenter implements PanelPresenter {
         area.setContent(els);
         da.display(area);
         da.lockDisplay(false);
+    }
+    
+    @Override
+    public void selected(boolean is_selected) {
+    	display.selected(is_selected);
     }
 }

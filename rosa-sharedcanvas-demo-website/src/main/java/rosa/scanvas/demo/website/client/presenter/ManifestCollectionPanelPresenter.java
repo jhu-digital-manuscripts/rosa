@@ -25,6 +25,8 @@ public class ManifestCollectionPanelPresenter implements PanelPresenter {
         int getSelectedManifest();
 
         void resize(int width, int height);
+        
+        void selected(boolean is_selected);
     }
 
     private final Display display;
@@ -79,5 +81,10 @@ public class ManifestCollectionPanelPresenter implements PanelPresenter {
     @Override
     public void resize(int width, int height) {
         display.resize(width, height);
+    }
+    
+    @Override
+    public void selected(boolean is_selected) {
+    	display.selected(is_selected);
     }
 }

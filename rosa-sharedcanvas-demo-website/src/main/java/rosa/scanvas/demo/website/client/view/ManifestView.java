@@ -16,12 +16,15 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class ManifestView extends Composite implements
         ManifestPanelPresenter.Display {
+	
+	private final Panel main;
+	private final ScrollPanel top;
     private final ListBox sequence_listbox;
     private final Label manifest_label;
 
     public ManifestView() {
-        Panel main = new FlowPanel();
-        ScrollPanel top = new ScrollPanel(main);
+        main = new FlowPanel();
+        top = new ScrollPanel(main);
         top.setStylePrimaryName("PanelView");
 
         Label panel_title = new Label("Choose a sequence to view.");
@@ -77,5 +80,14 @@ public class ManifestView extends Composite implements
     @Override
     public void resize(int width, int height) {
         setPixelSize(width, height);
+    }
+    
+    @Override
+    public void selected(boolean is_selected) {
+    	if (is_selected) {
+    		top.addStyleName("PanelSelected");
+    	} else {
+    		top.removeStyleName("PanelSelected");
+    	}
     }
 }

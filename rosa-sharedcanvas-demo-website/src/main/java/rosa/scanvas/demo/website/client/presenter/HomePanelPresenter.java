@@ -42,6 +42,8 @@ public class HomePanelPresenter implements PanelPresenter {
         HasValue<Boolean> getUserUrlIsCollection();
 
         void resize(int width, int height);
+        
+        void selected(boolean is_selected);
     }
 
     private static final List<String> col_titles;
@@ -144,5 +146,10 @@ public class HomePanelPresenter implements PanelPresenter {
     @Override
     public void resize(int width, int height) {
         display.resize(width, height);
+    }
+    
+    @Override
+    public void selected(boolean is_selected) {
+    	display.selected(is_selected);
     }
 }

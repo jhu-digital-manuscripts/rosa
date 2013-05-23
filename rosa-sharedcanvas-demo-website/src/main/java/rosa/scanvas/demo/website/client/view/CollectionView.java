@@ -18,12 +18,15 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class CollectionView extends Composite implements
         ManifestCollectionPanelPresenter.Display {
+	
+	private final Panel main;
+	private final ScrollPanel top;
     private Label collection_label;
     private ListBox collections_listbox;
 
     public CollectionView() {
-        Panel main = new FlowPanel();
-        ScrollPanel top = new ScrollPanel(main);
+        main = new FlowPanel();
+        top = new ScrollPanel(main);
         top.setStylePrimaryName("PanelView");
 
         Label panel_title = new Label("Choose a manifest to view.");
@@ -79,5 +82,14 @@ public class CollectionView extends Composite implements
         }
 
         collections_listbox.setVisibleItemCount(count);
+    }
+    
+    @Override
+    public void selected(boolean is_selected) {
+    	if (is_selected) {
+    		top.addStyleName("PanelSelected");
+    	} else {
+    		top.removeStyleName("PanelSelected");
+    	}
     }
 }

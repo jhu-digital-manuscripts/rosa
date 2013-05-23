@@ -25,6 +25,8 @@ public class ManifestPanelPresenter implements PanelPresenter {
         int getSelectedSequence();
 
         void resize(int width, int height);
+        
+        void selected(boolean is_selected);
     }
 
     private final Display display;
@@ -80,5 +82,10 @@ public class ManifestPanelPresenter implements PanelPresenter {
     @Override
     public void resize(int width, int height) {
         display.resize(width, height);
+    }
+    
+    @Override
+    public void selected(boolean is_selected) {
+    	display.selected(is_selected);
     }
 }

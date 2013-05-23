@@ -10,11 +10,15 @@ import rosa.scanvas.demo.website.client.PanelState;
 import rosa.scanvas.demo.website.client.disparea.AnnotationUtil;
 import rosa.scanvas.demo.website.client.event.AnnotationSelectionEvent;
 import rosa.scanvas.demo.website.client.event.AnnotationSelectionHandler;
+import rosa.scanvas.demo.website.client.event.PanelAddedEvent;
+import rosa.scanvas.demo.website.client.event.PanelAddedEventHandler;
 import rosa.scanvas.demo.website.client.event.PanelDisplayedEvent;
 import rosa.scanvas.demo.website.client.event.PanelDisplayedEventHandler;
 import rosa.scanvas.demo.website.client.event.PanelRequestEvent;
 import rosa.scanvas.demo.website.client.event.PanelRequestEvent.PanelAction;
 import rosa.scanvas.demo.website.client.event.PanelRequestEventHandler;
+import rosa.scanvas.demo.website.client.event.PanelSelectedEvent;
+import rosa.scanvas.demo.website.client.event.PanelSelectedEventHandler;
 import rosa.scanvas.demo.website.client.widgets.AnnotationListWidget;
 import rosa.scanvas.demo.website.client.widgets.ManifestListWidget;
 import rosa.scanvas.model.client.Annotation;
@@ -81,15 +85,14 @@ public class SidebarPresenter implements IsWidget {
 						event.getPanelData());
 			}
 		});
-// temporary		
-		eventBus.addHandler(AnnotationSelectionEvent.TYPE, 
-				new AnnotationSelectionHandler() {
-			public void onSelection(AnnotationSelectionEvent event) {
-				doAnnotationSelection(event.getAnnotation(), event.getStatus(),
-						event.getPanel());
+
+		eventBus.addHandler(PanelAddedEvent.TYPE,
+				new PanelAddedEventHandler() {
+			public void onPanelAdded(PanelAddedEvent event) {
+				addPanelToListBox(event.getPanelId());
 			}
 		});
-
+		
 		eventBus.addHandler(PanelRequestEvent.TYPE,
 				new PanelRequestEventHandler() {
 			public void onPanelRequest(PanelRequestEvent event) {
@@ -116,12 +119,6 @@ public class SidebarPresenter implements IsWidget {
 			}
 		});
 	}
-
-// temporary	
-	private void doAnnotationSelection(Annotation anno, boolean status, int panel) {
-/*		Window.alert("Annotation [" + anno.label() + "] has been "
-				+ (status ? "":"un") + "selected for Panel ID = " + panel);*/
-	}
 	
 	/**
 	 * Removes item at specified index from the list. Panels in list are renamed
@@ -142,12 +139,20 @@ public class SidebarPresenter implements IsWidget {
 	/**
 	 * Adds a new item to the list and sets it to be selected.
 	 */
-	private void addPanelToListBox() {
+	private void addPanelToListBox(int panel_id) {
+		if (!display.getRemovePanelEnabler().isEnabled() && 
+				display.getPanelList().getItemCount() > 0) {
+			display.getRemovePanelEnabler().setEnabled(true);
+		}
+		
 		currentIndex = display.getPanelList().getItemCount();
 		String item = "Panel " + (currentIndex + 1);
 		
 		display.getPanelList().addItem(item);
+		display.getPanelList().setValue(currentIndex, String.valueOf(panel_id));
 		display.getPanelList().setSelectedIndex(currentIndex);
+		
+		doPanelListChange();
 	}
 
 	/**
@@ -168,14 +173,12 @@ public class SidebarPresenter implements IsWidget {
 				// this will occur when a panel is added from a history token, so that
 				// it will start from an arbitrary View, with associated data
 				dataMap.put(panelId, data);
-				display.getPanelList().setValue(currentIndex, String.valueOf(panelId));
 			}
 		} else {
 			// this will happen when a new panel is added with the Add button
 			// on the sidebar. It will start at the HomeView, so it sends
 			// PanelData == null on display
 			dataMap.put(panelId, new PanelData());
-			display.getPanelList().setValue(currentIndex, String.valueOf(panelId));
 		}
 		setData(dataMap.get(panelId));
 	}
@@ -188,16 +191,8 @@ public class SidebarPresenter implements IsWidget {
 	 * @param panelId
 	 */
 	private void doPanelRequest(PanelAction action, int panelId) {
-
-		if (action == PanelAction.ADD) {
-			if (!display.getRemovePanelEnabler().isEnabled() && 
-					display.getPanelList().getItemCount() > 0) {
-				display.getRemovePanelEnabler().setEnabled(true);
-			}
-			
-			addPanelToListBox();
-			doPanelListChange();
-		} else if (action == PanelAction.REMOVE) {
+		// Panel add is ignored here
+		if (action == PanelAction.REMOVE) {
 			int index = findIndexById(panelId);
 			removePanelFromListBox(index);
 			
@@ -245,12 +240,12 @@ public class SidebarPresenter implements IsWidget {
 			if (dataMap.containsKey(id)) {
 				dataToLoad = dataMap.get(id);
 			}
+			eventBus.fireEvent(new PanelSelectedEvent(id));
 		} catch (NumberFormatException e) { dataToLoad = new PanelData(); }
 		
 		if (dataToLoad != null) {
 			setData(dataToLoad);
 		}
-		
 	}
 
 	// -------------- End DOM Event Actions --------------

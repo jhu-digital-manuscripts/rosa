@@ -27,14 +27,12 @@ public class AnnotationUtil {
             Canvas canvas) {
         AnnotationBody body = ann.body();
 
-        if (body.isImage()) {
+        if (body.isImage() && !isSpecificResource(ann)) {
             // only applicable if the image fills entire canvas
             IIIFImageServer iiif_server = IIIFImageServer.instance();
             String id = IIIFImageServer.parseIdentifier(body.uri());
             MasterImage master = new MasterImage(id, canvas.width(),
                     canvas.height());
-
-            // TODO the case of images with selector
 
             MasterImageDisplayElement el = new MasterImageDisplayElement(ann.uri(), 0, 0, iiif_server,
                     master);
@@ -42,6 +40,23 @@ public class AnnotationUtil {
             el.setDrawable(new MasterImageDrawable(el));
             
             return el;
+        } else if (body.isImage() && isSpecificResource(ann)) {
+        	IIIFImageServer iiif_server = IIIFImageServer.instance();
+        	String id = IIIFImageServer.parseIdentifier(body.uri());
+        	
+        	
+        	AnnotationSelector selector = getSelector(ann);
+        	if (selector.isSvgSelector() && selector.hasTextContent()) {
+        		String content = selector.textContent();
+        		int[] bounds = findBounds(findCoordinates(content));
+        		
+        		MasterImage master = new MasterImage(id, bounds[2], bounds[3]);
+        		MasterImageDisplayElement el = new MasterImageDisplayElement(ann.uri(), 
+        				bounds[0], bounds[1], iiif_server, master);
+        		
+        		return el;
+        	}
+        	
         } else if (body.isText() && isSpecificResource(ann)) {
 
             AnnotationSelector selector = getSelector(ann);

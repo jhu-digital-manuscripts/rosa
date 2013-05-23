@@ -25,7 +25,11 @@
 .PanelView {
   float: left;
   margin: 10px;
-  border: 1px solid black;
+  border: 3px solid rgb(208, 228, 246);
+}
+
+.PanelSelected {
+	border: 3px solid rgb(146, 193, 240);
 }
 
 .PanelTitle {

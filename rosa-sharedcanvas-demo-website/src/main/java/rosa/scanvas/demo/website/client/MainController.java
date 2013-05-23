@@ -3,9 +3,13 @@ package rosa.scanvas.demo.website.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import rosa.scanvas.demo.website.client.event.PanelAddedEvent;
+import rosa.scanvas.demo.website.client.event.PanelAddedEventHandler;
 import rosa.scanvas.demo.website.client.event.PanelRequestEvent;
 import rosa.scanvas.demo.website.client.event.PanelRequestEvent.PanelAction;
 import rosa.scanvas.demo.website.client.event.PanelRequestEventHandler;
+import rosa.scanvas.demo.website.client.event.PanelSelectedEvent;
+import rosa.scanvas.demo.website.client.event.PanelSelectedEventHandler;
 import rosa.scanvas.demo.website.client.presenter.CanvasPanelPresenter;
 import rosa.scanvas.demo.website.client.presenter.HomePanelPresenter;
 import rosa.scanvas.demo.website.client.presenter.ManifestCollectionPanelPresenter;
@@ -115,6 +119,13 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
                                 event.getPanelState());
                     }
                 });
+        
+        event_bus.addHandler(PanelSelectedEvent.TYPE,
+        		new PanelSelectedEventHandler() {
+        	public void onPanelSelected(PanelSelectedEvent event) {
+        		doPanelSelected(event.getPanelId());
+        	}
+        });
     }
 
     /**
@@ -158,6 +169,8 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
         panels.add(panel);
         main_content.add(panel.getPresenter());
 
+        event_bus.fireEvent(new PanelAddedEvent(panel_id));
+        
         update_panel_sizes(Window.getClientWidth(), Window.getClientHeight());
         panel.display(state);
     }
@@ -207,6 +220,7 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
             main_content.remove(index + 1);
 
             presenter.resize(panel_width, panel_height);
+            doPanelSelected(panel.getId());
             panel.display(state);
         }
     }
@@ -362,6 +376,22 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
         History.newItem(get_history_token(), false);
     }
 
+    /**
+     * Sets the style of selected or unselected panels
+     * 
+     * @param panel_id
+     */
+    private void doPanelSelected(int panel_id) {
+    	// set all panels as unselected except for the specified Id
+    	for (Panel p : panels) {
+    		if (p.getId() == panel_id) {
+    			p.getPresenter().selected(true);
+    		} else {
+    			p.getPresenter().selected(false);
+    		}
+    	}
+    }
+    
     private String get_history_token() {
         PanelState[] panel_states = new PanelState[panels.size()];
 

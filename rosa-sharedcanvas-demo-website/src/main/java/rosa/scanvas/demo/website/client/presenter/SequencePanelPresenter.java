@@ -42,6 +42,8 @@ public class SequencePanelPresenter implements PanelPresenter {
         HasSelectionHandlers<Integer> getTabPanelSelector();
 
         void resize(int width, int height);
+        
+        void selected(boolean is_selected);
     }
 
     private final HandlerManager eventBus;
@@ -254,5 +256,10 @@ public class SequencePanelPresenter implements PanelPresenter {
         // TODO scale thumb size
 
         display.resize(width, height);
+    }
+    
+    @Override
+    public void selected(boolean is_selected) {
+    	display.selected(is_selected);
     }
 }

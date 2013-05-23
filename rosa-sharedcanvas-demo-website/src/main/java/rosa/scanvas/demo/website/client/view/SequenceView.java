@@ -16,6 +16,7 @@ public class SequenceView extends Composite implements
         SequencePanelPresenter.Display {
 
     //private final Label seq_label;
+	private final FlowPanel main;
     private final TabLayoutPanel tab_panel;
     private final ThumbnailBrowser thumb_browser;
     private final PageTurner page_turner;
@@ -23,7 +24,7 @@ public class SequenceView extends Composite implements
     // TODO Way to set header
     
     public SequenceView() {
-        FlowPanel main = new FlowPanel();
+        main = new FlowPanel();
         main.setStylePrimaryName("PanelView");
 
         this.thumb_browser = new ThumbnailBrowser();
@@ -77,5 +78,14 @@ public class SequenceView extends Composite implements
     @Override
     public ThumbnailBrowser getThumbnailBrowser() {
         return thumb_browser;
+    }
+    
+    @Override
+    public void selected(boolean is_selected) {
+    	if (is_selected) {
+    		main.addStyleName("PanelSelected");
+    	} else {
+    		main.removeStyleName("PanelSelected");
+    	}
     }
 }

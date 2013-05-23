@@ -166,6 +166,14 @@ public class CanvasView extends Composite implements CanvasPanelPresenter.Displa
     			top.hide();
     		}
     	}
-    	
+    }
+    
+    @Override
+    public void selected(boolean is_selected) {
+    	if (is_selected) {
+    		main.addStyleName("PanelSelected");
+    	} else {
+    		main.removeStyleName("PanelSelected");
+    	}
     }
 }
