@@ -127,13 +127,13 @@ public class FSIServer implements ImageServer {
         } else if (req.getQuality() == Quality.COLOR) {
 
         } else if (req.getQuality() == Quality.GREY) {
-            effects += "desaturate(lightness),";
+            effects = "desaturate(lightness),";
         } else {
             throw new IIIFException("quality unsupported", "quality");
         }
 
         if (effects != null) {
-            url += "&" + param("effects", "effects");
+            url += "&" + param("effects", effects);
         }
 
         if (req.getRotation() != 0.0) {
