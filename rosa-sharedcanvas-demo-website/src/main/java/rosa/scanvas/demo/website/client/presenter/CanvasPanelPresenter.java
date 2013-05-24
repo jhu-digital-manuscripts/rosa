@@ -115,10 +115,10 @@ public class CanvasPanelPresenter implements PanelPresenter {
     		
     		return;
     	}
-    	
+
         DisplayAreaView da = display.getDisplayAreaWidget();
         DisplayElement el = da.area().get(ann.uri());
-
+Window.alert("Display element " + el);
         if (el != null) {
             el.setVisible(status);
         }

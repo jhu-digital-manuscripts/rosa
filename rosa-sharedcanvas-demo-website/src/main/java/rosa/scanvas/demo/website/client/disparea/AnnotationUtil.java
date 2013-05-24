@@ -27,35 +27,9 @@ public class AnnotationUtil {
             Canvas canvas) {
         AnnotationBody body = ann.body();
 
-        if (body.isImage() && !isSpecificResource(ann)) {
-            // only applicable if the image fills entire canvas
-            IIIFImageServer iiif_server = IIIFImageServer.instance();
-            String id = IIIFImageServer.parseIdentifier(body.uri());
-            MasterImage master = new MasterImage(id, canvas.width(),
-                    canvas.height());
-
-            MasterImageDisplayElement el = new MasterImageDisplayElement(ann.uri(), 0, 0, iiif_server,
-                    master);
-            el.setStackingOrder(5);
-            el.setDrawable(new MasterImageDrawable(el));
-            
-            return el;
-        } else if (body.isImage() && isSpecificResource(ann)) {
-        	IIIFImageServer iiif_server = IIIFImageServer.instance();
-        	String id = IIIFImageServer.parseIdentifier(body.uri());
+        if (body.isImage()) {
         	
-        	
-        	AnnotationSelector selector = getSelector(ann);
-        	if (selector.isSvgSelector() && selector.hasTextContent()) {
-        		String content = selector.textContent();
-        		int[] bounds = findBounds(findCoordinates(content));
-        		
-        		MasterImage master = new MasterImage(id, bounds[2], bounds[3]);
-        		MasterImageDisplayElement el = new MasterImageDisplayElement(ann.uri(), 
-        				bounds[0], bounds[1], iiif_server, master);
-        		
-        		return el;
-        	}
+        	return createImageElement(ann, canvas);
         	
         } else if (body.isText() && isSpecificResource(ann)) {
 
@@ -79,6 +53,68 @@ public class AnnotationUtil {
         return null;
     }
 
+    /**
+     * Creates DisplayElements for annotations that have images as the 
+     * annotation body.
+     * 
+     * @param ann
+     * @param canvas
+     */
+    private static DisplayElement createImageElement(Annotation ann, 
+    		Canvas canvas) {
+    	AnnotationBody body = ann.body();
+    	IIIFImageServer iiif_server = IIIFImageServer.instance();
+           String id = IIIFImageServer.parseIdentifier(body.uri());
+    	
+    	if (body.isImage() && !isSpecificResource(ann) 
+    			&& body.conformsTo().equals("IIIF")) {
+            // only applicable if the image fills entire canvas
+            MasterImage master = new MasterImage(id, canvas.width(),
+                    canvas.height());
+
+            MasterImageDisplayElement el = new MasterImageDisplayElement(ann.uri(), 
+            		0, 0, iiif_server, master);
+            el.setStackingOrder(5);
+            el.setDrawable(new MasterImageDrawable(el));
+            
+            return el;
+        } else if (body.isImage() && isSpecificResource(ann)
+        		&& body.conformsTo().equals("IIIF")) {
+        	
+        	AnnotationSelector selector = getSelector(ann);
+        	if (selector.isSvgSelector() && selector.hasTextContent()) {
+        		String content = selector.textContent();
+        		int[] bounds = findBounds(findCoordinates(content));
+        		
+        		MasterImage master = new MasterImage(id, bounds[2], bounds[3]);
+        		MasterImageDisplayElement el = new MasterImageDisplayElement(ann.uri(), 
+        				bounds[0], bounds[1], iiif_server, master);
+        		el.setStackingOrder(4);
+        		el.setDrawable(new MasterImageDrawable(el));
+        		
+        		return el;
+        	}
+        	
+        } else if (body.isImage() && isSpecificResource(ann)
+        		&& !body.conformsTo().equals("IIIF")) {
+        	
+        	AnnotationSelector selector = getSelector(ann);
+        	if (selector.isSvgSelector() && selector.hasTextContent()) {
+        		String content = selector.textContent();
+        		int[] bounds = findBounds(findCoordinates(content));
+  		
+        		StaticImageDisplayElement el = new StaticImageDisplayElement(ann.uri(),
+        				body.uri(), bounds[0], bounds[1], bounds[2], bounds[3]);    		
+        		el.setStackingOrder(4);
+        		el.setDrawable(new StaticImageDrawable(el));
+		
+        		return el;
+        	}
+        }
+    	
+    	return null;
+    }
+    
     /**
      * Is this annotation a specific resource, indicating that it has a
      * selector?

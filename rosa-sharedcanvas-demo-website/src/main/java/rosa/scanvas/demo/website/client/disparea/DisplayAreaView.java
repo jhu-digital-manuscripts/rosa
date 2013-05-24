@@ -605,11 +605,15 @@ public class DisplayAreaView extends Composite {
 			}
 			
 			DisplayElement el = draw_queue.get(draw_index++);
-			if (el.isVisible()) {
-				el.drawable().draw(viewport_context, area, ondrawn_cb);
-			}
+	if (el instanceof StaticImageDisplayElement) {
+		Window.alert("Static image will be drawn..."
+				+ "\n(" + el.baseLeft() + ", " + el.baseTop() + ", " + el.baseWidth() + ", " + el.baseHeight()
+				+ ")");
+	}
+			el.drawable().draw(viewport_context, area, ondrawn_cb);
 		}
 	};
+	
 	private CanvasElement overview_image;
 	/**
 	 * Create the overview
@@ -684,11 +688,11 @@ public class DisplayAreaView extends Composite {
 		
 		// remove all the elements that are not visible
 		for (DisplayElement el : area.findInViewport()) {
-			if (el.isVisible()) {
+			if (el != null && el.isVisible()) {
 				draw_queue.add(el);
 			}
 		}
-		
+	
 		// draw the first element in the list
 		if (draw_queue != null && draw_queue.size() > 0) {
 			DisplayElement el = draw_queue.get(draw_index++);
