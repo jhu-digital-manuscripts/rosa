@@ -13,6 +13,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.xml.sax.SAXException;
 
 import rosa.core.BookArchive;
+import rosa.core.BookDescription;
 import rosa.core.BookStructure;
 import rosa.core.CharacterNames;
 import rosa.core.IllustrationTitles;
@@ -134,7 +135,14 @@ public class MetadataDerivative extends Derivative {
 			List<String> errors = new ArrayList<String>();
 
 			try {
-				archive.description(lc).check(errors);
+			    BookDescription desc = archive.description(lc);
+			    
+			    if (desc == null) {
+			        report.println("Book description error (" + lc + "): Missing");
+			        continue;
+			    }
+			    
+			    desc.check(errors);
 
 				if (errors.size() > 0) {
 					success = false;
