@@ -2,7 +2,6 @@ package rosa.tool;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -31,6 +30,10 @@ import rosa.core.ManuscriptArchive;
 import rosa.core.NarrativeMapping;
 import rosa.core.ReducedTagging;
 import rosa.core.SceneMapping;
+import rosa.core.util.CSV;
+import rosa.core.util.CSVSpreadSheet;
+import rosa.core.util.FileUtil;
+import rosa.core.util.XMLUtil;
 import rosa.tool.deriv.BaseDerivative;
 import rosa.tool.deriv.CropDerivative;
 import rosa.tool.deriv.Derivative;
@@ -39,10 +42,6 @@ import rosa.tool.deriv.WebsiteDataDerivative;
 import rosa.tool.deriv.WebsiteFSIDerivative;
 import rosa.tool.deriv.WebsiteResourcesDerivative;
 import rosa.tool.deriv.WebsiteSearchIndexDerivative;
-import rosa.core.util.CSV;
-import rosa.core.util.CSVSpreadSheet;
-import rosa.core.util.FileUtil;
-import rosa.core.util.XMLUtil;
 
 public class Tool {
     private final Config site;

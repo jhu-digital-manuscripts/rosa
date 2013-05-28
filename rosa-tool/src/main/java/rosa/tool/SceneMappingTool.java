@@ -1,4 +1,4 @@
-package rose.tool;
+package rosa.tool;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -62,11 +62,9 @@ public class SceneMappingTool {
 			Set<String> foliocols = new HashSet<String>();
 
 			ArrayList<FolioData> foliodatalist = new ArrayList<FolioData>();
-			int n = 1;
 
 			while ((line = in.readLine()) != null) {
 				line = line.trim();
-				n++;
 
 				if (line.length() == 0) {
 					continue;
@@ -88,6 +86,8 @@ public class SceneMappingTool {
 				}
 			}
 
+			in.close();
+			
 			foliodata = foliodatalist.toArray(new FolioData[] {});
 		}
 	}
@@ -160,11 +160,10 @@ public class SceneMappingTool {
 		BufferedReader in = new BufferedReader(new FileReader(datafile));
 
 		String line = null;
-		int n = 0;
 
 		while ((line = in.readLine()) != null) {
 			line = line.trim();
-			n++;
+
 			if (line.length() == 0) {
 				continue;
 			}
@@ -828,6 +827,8 @@ public class SceneMappingTool {
 			System.out.println(toFolioCol(fromFolioCol(foliocol, 2), 2) + " "
 					+ num_miniatures + " " + num_rubrics);
 		}
+		
+		in.close();
 	}
 
 	public static String toFolioCol(int num, int cols) {

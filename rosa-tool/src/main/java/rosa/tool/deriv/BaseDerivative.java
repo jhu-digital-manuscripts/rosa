@@ -234,6 +234,7 @@ public class BaseDerivative extends Derivative {
 				int i = line.indexOf(' ');
 
 				if (i == -1) {
+				    in.close();
 					throw new IOException("Malformed checksum entry: " + line);
 				}
 
