@@ -33,6 +33,8 @@ public class SidebarFullView extends Composite implements SidebarPresenter.Displ
 	
 	private Label panelListLabel = new Label("Currently Selected Panel: ");
 	
+	private ScrollPanel metaScrollPanel = new ScrollPanel();
+	private ScrollPanel annoScrollPanel = new ScrollPanel();
 	private AnnotationListWidget annoListWidget = new AnnotationListWidget();
 	private ManifestListWidget metaListWidget = new ManifestListWidget();
 	
@@ -49,13 +51,9 @@ public class SidebarFullView extends Composite implements SidebarPresenter.Displ
 		initWidget(mainPanel);
 		mainPanel.setStylePrimaryName("Sidebar");
 		
-		ScrollPanel metaScrollPanel = new ScrollPanel();
-		ScrollPanel annoScrollPanel = new ScrollPanel();
-		
 		mainPanel.add(panelListLabel);
 		mainPanel.add(panelChangePanel);
 		mainPanel.add(tabPanel);
-//		mainPanel.add(linkPanel);
 		
 		tabPanel.add(metaScrollPanel, "Metadata");
 		tabPanel.add(annoScrollPanel, "Annotations");
@@ -70,20 +68,26 @@ public class SidebarFullView extends Composite implements SidebarPresenter.Displ
 		panelChangePanel.add(addPanelButton);
 		panelChangePanel.add(removePanelButton);
 		panelChangePanel.addStyleName("PanelChangeToolbar");
-		// panelList.setWidth("50%");
+		
 		addPanelButton.setText("Add");
 		removePanelButton.setText("Remove");
-		
-		// setWidth("250px");
-//		panelChangePanel.setStyleName("horizontalFlowPanel");
-		
-//		linkPanel.add(new Label("this may be links"));
-		
-		/*panelChangePanel.setHeight("5%");
-		tabPanel.setHeight("90%");
-		tabPanel.setWidth("100%");
-		linkPanel.setHeight("100%");*/
 	}
+	
+	@Override
+	public void addAnnoListTab() {
+		if (tabPanel.getWidgetIndex(annoScrollPanel) == -1) {
+			tabPanel.add(annoScrollPanel, "Annotations");
+		}
+	}
+	
+	@Override
+	public void removeAnnoListTab() {
+		if (tabPanel.getWidgetIndex(annoScrollPanel) != -1) {
+			annoScrollPanel.remove(annoScrollPanel);
+		}
+	}
+	
+	/*
 	
 	public void setSize(String width, String height) {
 		mainPanel.setWidth(width);
@@ -92,6 +96,6 @@ public class SidebarFullView extends Composite implements SidebarPresenter.Displ
 	
 	public void setWidth(String width) {
 		mainPanel.setWidth(width);
-	}
+	}*/
 
 }

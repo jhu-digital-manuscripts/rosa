@@ -118,7 +118,7 @@ public class CanvasPanelPresenter implements PanelPresenter {
 
         DisplayAreaView da = display.getDisplayAreaWidget();
         DisplayElement el = da.area().get(ann.uri());
-Window.alert("Display element " + el);
+
         if (el != null) {
             el.setVisible(status);
         }
@@ -140,6 +140,7 @@ Window.alert("Display element " + el);
         		+ ": " + canvas.label());
         update();
 
+        // convert annotations into display elements
         for (AnnotationList list : data.getAnnotationLists()) {
         	for (Annotation ann : list) {
         		DisplayElement el = AnnotationUtil.annotationToDisplayElement(

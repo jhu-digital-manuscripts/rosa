@@ -2,6 +2,7 @@ package rosa.scanvas.demo.website.client.disparea;
 
 /**
  * A DisplayElement is drawn within a bounding box on a DisplayArea.
+ * Anything to be displayed on a DisplayArea must be a DisplayElement.
  */
 
 public abstract class DisplayElement {

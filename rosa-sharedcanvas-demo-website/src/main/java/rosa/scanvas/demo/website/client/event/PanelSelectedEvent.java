@@ -5,8 +5,8 @@ import rosa.scanvas.demo.website.client.PanelState;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Represents a request to add a panel, remove a panel, or change the view of a
- * panel.
+ * Indicates that a panel has been selected, either by an action being performed
+ * on it, or it being selected in the sidebar.
  */
 public class PanelSelectedEvent extends GwtEvent<PanelSelectedEventHandler> {
     public static Type<PanelSelectedEventHandler> TYPE = new Type<PanelSelectedEventHandler>();

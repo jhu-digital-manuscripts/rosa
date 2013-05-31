@@ -11,6 +11,9 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 
+/**
+ * Provides the viewable elements of the DisplayArea test environment.
+ */
 public class MainView extends Composite implements MainPresenter.Display {
 	
 	private final Panel main;
@@ -21,6 +24,9 @@ public class MainView extends Composite implements MainPresenter.Display {
 	private final Button resetButton = new Button("Reset");
 	private final Button closeButton = new Button("Close");
 	private final Button txtButton = new Button("Text");
+	private final Button zoomInButton = new Button("Zoom In");
+	private final Button zoomOutButton = new Button("Zoom Out");
+	private final Button staticImgButton = new Button("Static Img");
 	
 	private final DisplayAreaView area_view;
 	
@@ -38,7 +44,10 @@ public class MainView extends Composite implements MainPresenter.Display {
 		main.add(polyButton);
 		main.add(imgButton);
 		main.add(txtButton);
+		main.add(staticImgButton);
 		main.add(clearButton);
+		main.add(zoomInButton);
+		main.add(zoomOutButton);
 		main.add(resetButton);
 		main.add(closeButton);
 		
@@ -68,5 +77,14 @@ public class MainView extends Composite implements MainPresenter.Display {
 	
 	@Override
 	public Button getTextButton() { return txtButton; }
+	
+	@Override
+	public Button getZoomInButton() { return zoomInButton; }
+	
+	@Override
+	public Button getZoomOutButton() { return zoomOutButton; }
+	
+	@Override
+	public Button getStaticImgButton() { return staticImgButton; }
 	
 }

@@ -21,6 +21,16 @@ import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.Window;
 public class CanvasView extends Composite implements CanvasPanelPresenter.Display {
 	
+	private static DialogBox transcript;
+	private static DialogBox top;
+	
+	private static DialogBox transcript_box() {
+		return transcript;
+	}
+	private static DialogBox top_box() {
+		return top;
+	}
+	
 	private final Panel main;
     private final Label title;
     private final DisplayAreaView area_view;
@@ -29,16 +39,10 @@ public class CanvasView extends Composite implements CanvasPanelPresenter.Displa
     private final Button zoomOutButton;
     private final Button resetButton;
     
-    private DialogBox transcript = new DialogBox(false, false);
-    private DialogBox top = new DialogBox(false, false);
     private TabLayoutPanel tab_panel = new TabLayoutPanel(
     		40, Style.Unit.PX);
 
     private HashMap<String, ScrollPanel> tabs = new HashMap<String, ScrollPanel>();
-/*    private HashMap<String, DialogBox> dialog_boxes = 
-    		new HashMap<String, DialogBox>();
-    private HashMap<String, Annotation> annotations = 
-    		new HashMap<String, Annotation>();*/
     
     public CanvasView() {
         this.main = new FlowPanel();
@@ -66,16 +70,20 @@ public class CanvasView extends Composite implements CanvasPanelPresenter.Displa
         
         initWidget(main);
         
-        //top.setPopupPosition(0, 0);
-        top.setText("Text Annotations");
-        top.add(tab_panel);
-        top.addStyleName("AnnotationDialog");
-        //tab_panel.setSize(500+"px", 300+"px");
         tab_panel.addStyleName("TextAnnoTabPanel");
+        if (top_box() == null) {
+        	top = new DialogBox(false, false);
+        	top_box().setText("Text Annotations");
+        	top_box().add(tab_panel);
+        	top_box().addStyleName("AnnotationDialog");
+        }
         
-        //transcript.setPopupPosition(0, 0);
-        transcript.setText("Transcriptions");
-        transcript.addStyleName("AnnotationDialog");
+        if (transcript_box() == null) {
+        	transcript = new DialogBox(false, false);
+        	transcript_box().setText("Transcriptions");
+        	transcript_box().addStyleName("AnnotationDialog");
+        }
+        
     }
 
     @Override
@@ -120,7 +128,7 @@ public class CanvasView extends Composite implements CanvasPanelPresenter.Displa
     	
     	TabLayoutPanel tab = null;
     	if (tei) {
-    		transcript.clear();
+    		transcript_box().clear();
     		
     		String[] cont = { text };
     		String[] name = { label };
@@ -131,20 +139,22 @@ public class CanvasView extends Composite implements CanvasPanelPresenter.Displa
     		//tab.setSize(500+"px", 400+"px");
     		tab.addStyleName("TextAnnoTabPanel");
     		
-    		transcript.add(tab);
-    		transcript.show();
+    		transcript_box().add(tab);
+    		transcript_box().show();
     	} else {
+    		top_box().clear();
     		ScrollPanel scroll = new ScrollPanel();
     		HTML content = new HTML(text);
     		
-    		scroll.setWidth("95%");
-    		scroll.setHeight("95%");
+    		/*scroll.setWidth("95%");
+    		scroll.setHeight("95%");*/
     		scroll.add(content);
     		
     		tab_panel.add(scroll, label);
     		tabs.put(label, scroll);
     		
-    		top.show();
+    		top_box().add(tab_panel);
+    		top_box().show();
     	}
     }
     
@@ -152,7 +162,7 @@ public class CanvasView extends Composite implements CanvasPanelPresenter.Displa
     public void hideDialogBox(String label, String text, boolean tei) {
     	
     	if (tei) {
-    		transcript.hide();
+    		transcript_box().hide();
     	} else {
     		ScrollPanel content = tabs.get(label);
     		if (content == null) {
@@ -163,7 +173,7 @@ public class CanvasView extends Composite implements CanvasPanelPresenter.Displa
     		tabs.remove(label);
     		
     		if (tab_panel.getWidgetCount() == 0) {
-    			top.hide();
+    			top_box().hide();
     		}
     	}
     }

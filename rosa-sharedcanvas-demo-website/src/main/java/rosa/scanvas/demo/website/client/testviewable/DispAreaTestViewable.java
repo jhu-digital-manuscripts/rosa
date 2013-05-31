@@ -9,7 +9,8 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
 /**
- * Entry point of application.
+ * Separate GWT module useful for testing the DisplayArea with
+ * predefined data.
  */
 public class DispAreaTestViewable implements EntryPoint {
 	

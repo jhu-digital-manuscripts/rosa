@@ -40,6 +40,9 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class MainController implements ValueChangeHandler<String>, IsWidget {
+	private static final int SIDEBAR_WIDTH = 275;
+	private static final int HEADER_HEIGHT = 100;
+	
     private static int next_panel_id = 0;
 
     private final DockLayoutPanel main;
@@ -62,14 +65,13 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
         FlowPanel header = new FlowPanel();
         header.setStylePrimaryName("Header");
         Label app_header = new Label("JHU Prototype Shared Canvas Viewer");
-        //app_header.setStylePrimaryName("HeaderText");
         header.add(app_header);
 
-        main.addNorth(header, 100);
+        main.addNorth(header, HEADER_HEIGHT);
 
         this.sidebar_presenter = new SidebarPresenter(new SidebarFullView(),
                 event_bus);
-        main.addWest(sidebar_presenter.asWidget(), 300);
+        main.addWest(sidebar_presenter.asWidget(), SIDEBAR_WIDTH);
 
         ScrollPanel sp = new ScrollPanel();
         sp.add(main_content);
@@ -95,7 +97,7 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
             }
         });
 
-        Window.addResizeHandler(new ResizeHandler() {
+        /*Window.addResizeHandler(new ResizeHandler() {
             int width = Window.getClientWidth();
             int height = Window.getClientHeight();
 
@@ -103,14 +105,14 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
                 int dx = event.getWidth() - width;
                 int dy = event.getHeight() - height;
 
-                if (Math.abs(dx) > 100 || Math.abs(dy) > 100) {
+                if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
                     width = event.getWidth();
                     height = event.getHeight();
 
                     doResize(width, height);
                 }
             }
-        });
+        });*/
 
         event_bus.addHandler(PanelRequestEvent.TYPE,
                 new PanelRequestEventHandler() {
@@ -294,8 +296,8 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
             count = 1;
         }
 
-        panel_width = (win_width - 300) - 50;
-        panel_height = (win_height - 100) - 20;
+        panel_width = (win_width - SIDEBAR_WIDTH) - 50;
+        panel_height = (win_height - HEADER_HEIGHT) - 20;
 
         if (count > 1) {
             panel_width /= 2;
@@ -402,6 +404,9 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
         return new HistoryState(panel_states).toToken();
     }
 
+    /**
+     * Called when the application starts running
+     */
     public void go() {
         if (History.getToken().isEmpty()) {
             PanelRequestEvent event = new PanelRequestEvent(

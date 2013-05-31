@@ -9,6 +9,8 @@ import rosa.scanvas.demo.website.client.disparea.MasterImageDisplayElement;
 import rosa.scanvas.demo.website.client.disparea.MasterImageDrawable;
 import rosa.scanvas.demo.website.client.disparea.PolygonDisplayElement;
 import rosa.scanvas.demo.website.client.disparea.PolygonDrawable;
+import rosa.scanvas.demo.website.client.disparea.StaticImageDisplayElement;
+import rosa.scanvas.demo.website.client.disparea.StaticImageDrawable;
 import rosa.scanvas.demo.website.client.disparea.TextDisplayElement;
 import rosa.scanvas.demo.website.client.disparea.TextDrawable;
 import rosa.scanvas.demo.website.client.dynimg.IIIFImageServer;
@@ -22,7 +24,8 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 
 /**
- * 
+ * Provides the logic behind the viewable elements of the DisplayArea
+ * test environment.
  */
 public class MainPresenter {
 	
@@ -41,6 +44,12 @@ public class MainPresenter {
         
         Button getTextButton();
         
+        Button getZoomInButton();
+        
+        Button getZoomOutButton();
+        
+        Button getStaticImgButton();
+        
         DisplayAreaView getDisplayAreaWidget();
     }
     
@@ -50,6 +59,7 @@ public class MainPresenter {
     private double zoom = 1.0;
     private int num_poly = 0;
     private int num_img = 0;
+    private int num_static_img = 0;
     
     private List<DisplayElement> els = new ArrayList<DisplayElement>();
     
@@ -74,6 +84,12 @@ public class MainPresenter {
     		}
     	});
     	
+    	display.getStaticImgButton().addClickHandler(new ClickHandler() {
+    		public void onClick(ClickEvent event) {
+    			drawStaticImg();
+    		}
+    	});
+    	
     	display.getResetButton().addClickHandler(new ClickHandler() {
     		public void onClick(ClickEvent event) {
     			doReset();
@@ -89,6 +105,18 @@ public class MainPresenter {
     	display.getTextButton().addClickHandler(new ClickHandler() {
     		public void onClick(ClickEvent event) {
     			drawText();
+    		}
+    	});
+    	
+    	display.getZoomInButton().addClickHandler(new ClickHandler() {
+    		public void onClick(ClickEvent event) {
+    			zoomIn();
+    		}
+    	});
+    	
+    	display.getZoomOutButton().addClickHandler(new ClickHandler() {
+    		public void onClick(ClickEvent event) {
+    			zoomOut();
     		}
     	});
     }
@@ -140,8 +168,29 @@ public class MainPresenter {
     	MasterImageDisplayElement el = new MasterImageDisplayElement("img"+(num_img++),
     			0, 0, iiif_server, master);
     	el.setVisible(true);
-    	el.setStackingOrder(1);
+    	el.setStackingOrder(5);
     	el.setDrawable(new MasterImageDrawable(el));
+    	
+    	els.add(el);
+    	view.area().setContent(els);
+    	view.redraw();
+    }
+    
+    /**
+     * Create a static image drawable with predefined url
+     */
+    private void drawStaticImg() {
+    	DisplayAreaView view = display.getDisplayAreaWidget();
+    	
+    	final String url = 
+    			"http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.014r.tif/426,2438,1059,1042/1000,/0/grey.jpg";
+    	final String id = "st-img" + (num_static_img++);
+    	
+    	StaticImageDisplayElement el = new StaticImageDisplayElement(
+    			id, url, 426, 2438, 1059, 1042);
+    	el.setVisible(true);
+    	el.setStackingOrder(2);
+    	el.setDrawable(new StaticImageDrawable(el));
     	
     	els.add(el);
     	view.area().setContent(els);
@@ -187,6 +236,18 @@ public class MainPresenter {
     private void doReset() {
     	DisplayAreaView view = display.getDisplayAreaWidget();
     	view.resetDisplay();
+    }
+    
+    private void zoomIn() {
+    	DisplayAreaView view = display.getDisplayAreaWidget();
+    	view.area().zoomIn();
+    	view.redraw();
+    }
+    
+    private void zoomOut() {
+    	DisplayAreaView view = display.getDisplayAreaWidget();
+    	view.area().zoomOut();
+    	view.redraw();
     }
     
 }

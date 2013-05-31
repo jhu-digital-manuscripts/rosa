@@ -36,6 +36,7 @@ public class CollectionView extends Composite implements
 
         this.collections_listbox = new ListBox(false);
         this.collections_listbox.setVisibleItemCount(10);
+        //this.collections_listbox.setWidth("100%");
 
         this.collection_label = new Label();
         collection_label.setStylePrimaryName("PanelHeader");
@@ -75,6 +76,7 @@ public class CollectionView extends Composite implements
     public void resize(int width, int height) {
         setPixelSize(width, height);
 
+        //collections_listbox.setHeight((height - 40) + "px");
         int count = height / 20;
 
         if (count < 10) {

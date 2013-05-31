@@ -16,6 +16,10 @@ import com.google.gwt.xml.client.impl.DOMParseException;
 // TODO update refactor this
 // Whenever text is added to the DOM, must normalize spacing
 
+/**
+ * Provides methods to decode TEI transcription data and embed the
+ * data in an on screen viewable format.
+ */
 public class TranscriptionViewer {
 	// Possible tags: note, rhyme, expan, add, rend, del, add
 

@@ -34,7 +34,6 @@ import com.google.gwt.event.dom.client.TouchMoveEvent;
 import com.google.gwt.event.dom.client.TouchMoveHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
-import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.Window;
 /**
@@ -42,13 +41,16 @@ import com.google.gwt.user.client.Window;
  */
 public class DisplayAreaView extends Composite {
 	private static final int OVERVIEW_SIZE = 128;
-	private AbsolutePanel top = new AbsolutePanel();
 	
 	private final Canvas viewport;
 	private final Canvas overview;
 	private final Context2d viewport_context;
 	private final Context2d overview_context;
 	private DisplayArea area;
+	
+	private int current_zoom_level;
+	private int current_base_center_x;
+	private int current_base_center_y;
 
 	private boolean locked;
 	private boolean drag_may_start;
@@ -56,6 +58,8 @@ public class DisplayAreaView extends Composite {
 	private int canvas_drag_x, canvas_drag_y;
 	private int overview_x, overview_y;
 	private boolean grab_overview;
+	private boolean in_overview;
+	private boolean drag_from_overview;
 	
 	private int draw_index = 0;
 	List<DisplayElement> draw_queue = new ArrayList<DisplayElement> ();
@@ -69,9 +73,8 @@ public class DisplayAreaView extends Composite {
 		this.dragging = false;
 		this.locked = true;
 		this.grab_overview = false;
-
-		top.add(viewport);
-		top.add(overview, overview_x, overview_y);
+		this.in_overview = false;
+		this.drag_from_overview = false;
 		
 		viewport.addClickHandler(new ClickHandler() {
 			@Override
@@ -89,6 +92,11 @@ public class DisplayAreaView extends Composite {
 					dragging = false;
 					return;
 				}
+				
+				if (drag_from_overview) {
+					drag_from_overview = false;
+					return;
+				}
 
 				int click_x = event.getRelativeX(viewport.getElement());
 				int click_y = event.getRelativeY(viewport.getElement());
@@ -99,12 +107,28 @@ public class DisplayAreaView extends Composite {
 						|| click_y > viewport.getOffsetHeight()) {
 					return;
 				}
+				
+				if (click_x > overview_x && click_y > overview_y) {
+					// If click is in overview, transform to overview coordinates
+					click_x = (click_x - overview_x) * area.width()
+							/ overview.getCoordinateSpaceWidth();
+					click_y = (click_y - overview_y) * area.height()
+							/ overview.getCoordinateSpaceHeight();
+					
+					area.setViewportCenter(click_x, click_y);
+					redraw();
+				} else {
+					// transform click broswer coordinates into canvas coordinates
+					click_x += area.viewportLeft();
+					click_y += area.viewportTop();
+					
+					area.setViewportCenter(click_x, click_y);
+					area.zoomIn();
+					redraw();
+				} 
 
-				// transform click broswer coordinates into canvas coordinates
-				click_x += area.viewportLeft();
-				click_y += area.viewportTop();
 // --------- DisplayElement.contains(x, y) method testing -----------------------               
-				for (DisplayElement el : area.findInViewport()) {
+/*				for (DisplayElement el : area.findInViewport()) {
 					int el_x = (int) (click_x / area.zoom());
 					int el_y = (int) (click_y / area.zoom());
 
@@ -113,12 +137,8 @@ public class DisplayAreaView extends Composite {
 						Window.alert("Element " + el.id() + " contains point ("
 								+ click_x + ", " + click_y + ")");
 					}
-				}
-// -------------------------------------------------------------------------------                
-				area.setViewportCenter(click_x, click_y);
-				area.zoomIn();
-
-				redraw();
+				}*/
+// -------------------------------------------------------------------------------
 			}
 		});
 
@@ -143,11 +163,22 @@ public class DisplayAreaView extends Composite {
 						|| y > viewport.getOffsetHeight()) {
 					return;
 				}
-
+				
 				if (event.getNativeButton() == NativeEvent.BUTTON_LEFT) {
 					drag_may_start = true;
 					canvas_drag_x = event.getClientX();
 					canvas_drag_y = event.getClientY();
+					
+					if (x > overview_x && y > overview_y) {
+						in_overview = true;
+						
+						x = (x - overview_x) * area.width()
+								/ overview.getCoordinateSpaceWidth();
+						y = (y - overview_y) * area.height()
+								/ overview.getCoordinateSpaceHeight();
+						
+						area.setViewportCenter(x, y);
+					}
 				} else {
 					drag_may_start = false;
 				}
@@ -156,6 +187,7 @@ public class DisplayAreaView extends Composite {
 
 		viewport.addMouseOutHandler(new MouseOutHandler() {
 			public void onMouseOut(MouseOutEvent event) {
+				drag_from_overview = false;
 				drag_may_start = false;
 				dragging = false;
 			}
@@ -173,11 +205,33 @@ public class DisplayAreaView extends Composite {
 				if (drag_may_start) {
 					dragging = true;
 				}
-
+				
 				if (dragging) {
 					int dx = canvas_drag_x - event.getClientX();
 					int dy = canvas_drag_y - event.getClientY();
-
+					
+					int click_x = event.getRelativeX(viewport.getElement());
+					int click_y = event.getRelativeY(viewport.getElement());
+					
+					if ((click_x < overview_x || click_y < overview_y)
+							&& in_overview) {
+						drag_may_start = false;
+						in_overview = false;
+						dragging = false;
+					}
+					
+					if (in_overview) {
+						drag_from_overview = true;
+						
+						int width_scale = area.width()
+								/ overview.getCoordinateSpaceWidth();
+						int height_scale = area.height()
+								/ overview.getCoordinateSpaceHeight();
+						
+						dx *= -width_scale;
+						dy *= -height_scale;
+					}
+					
 					canvas_drag_x = event.getClientX();
 					canvas_drag_y = event.getClientY();
 
@@ -213,7 +267,6 @@ public class DisplayAreaView extends Composite {
 		});
 
 		// TODO double tap to zoom out, use timeouts
-
 		viewport.addTouchStartHandler(new TouchStartHandler() {
 			public void onTouchStart(TouchStartEvent event) {
 				event.preventDefault();
@@ -230,7 +283,6 @@ public class DisplayAreaView extends Composite {
 				Touch touch = event.getTouches().get(0);
 
 				// Don't start dragging outside the canvas
-
 				int x = touch.getRelativeX(viewport.getElement());
 				int y = touch.getRelativeY(viewport.getElement());
 
@@ -238,12 +290,28 @@ public class DisplayAreaView extends Composite {
 						|| y > viewport.getOffsetHeight()) {
 					return;
 				}
-
+				
+				//area.setViewportCenter(x, y);
+				
 				dragging = false;
+				in_overview = false;
 				drag_may_start = true;
-
+				drag_from_overview = false;
+				
 				canvas_drag_x = touch.getClientX();
 				canvas_drag_y = touch.getClientY();
+				
+				if (x > overview_x && y > overview_y) {
+					in_overview = true;
+					drag_may_start = false;
+					
+					x = (x - overview_x) * area.width()
+							/ overview.getCoordinateSpaceWidth();
+					y = (y - overview_y) * area.height()
+							/ overview.getCoordinateSpaceHeight();
+					
+					area.setViewportCenter(x, y);
+				}
 			}
 		});
 
@@ -255,28 +323,41 @@ public class DisplayAreaView extends Composite {
 				if (locked) {
 					return;
 				}
-
-				if (event.getTouches().length() != 1) {
-					drag_may_start = false;
-					dragging = false;
-					return;
-				}
-
+				
 				Touch touch = event.getTouches().get(0);
-
-				if (drag_may_start) {
+				
+				int dx = canvas_drag_x - touch.getClientX();
+				int dy = canvas_drag_y - touch.getClientY();
+				
+				int touch_x = touch.getRelativeX(viewport.getElement());
+				int touch_y = touch.getRelativeY(viewport.getElement());
+				
+				if ((touch_x < overview_x || touch_y < overview_y)
+						&& in_overview) {
+					in_overview = false;
+					dragging = false;
+				}
+				
+				if (drag_may_start && !in_overview) {
 					dragging = true;
 				}
-
-				if (dragging) {
-					int dx = canvas_drag_x - touch.getClientX();
-					int dy = canvas_drag_y - touch.getClientY();
-
-					canvas_drag_x = touch.getClientX();
-					canvas_drag_y = touch.getClientY();
-
-					pan(dx, dy);
+				
+				if (in_overview) {
+					drag_from_overview = true;
+					
+					int width_scale = area.width()
+							/ overview.getCoordinateSpaceWidth();
+					int height_scale = area.height()
+							/ overview.getCoordinateSpaceHeight();
+					
+					dx *= -width_scale;
+					dy *= -height_scale;
 				}
+				
+				canvas_drag_x = touch.getClientX();
+				canvas_drag_y = touch.getClientY();
+
+				pan(dx, dy);
 			}
 		});
 
@@ -285,33 +366,43 @@ public class DisplayAreaView extends Composite {
 				event.preventDefault();
 				event.stopPropagation();
 
-				if (locked) {
+				if (locked || event.getChangedTouches().length() != 1) {
+					drag_from_overview = false;
+					drag_may_start = false;
+					in_overview = false;
+					dragging = false;
 					return;
 				}
-
-				if (event.getChangedTouches().length() == 1 && !dragging) {
-					// click
-
-					Touch touch = event.getChangedTouches().get(0);
-					// Don't allow click outside the canvas
-
-					int touch_x = touch.getRelativeX(viewport.getElement());
-					int touch_y = touch.getRelativeY(viewport.getElement());
-
-					if (touch_x < 0 || touch_y < 0 || touch_x > viewport.getOffsetWidth()
-							|| touch_y > viewport.getOffsetHeight()) {
-						return;
-					}
-
+				
+				Touch touch = event.getChangedTouches().get(0);
+				int touch_x = touch.getRelativeX(viewport.getElement());
+				int touch_y = touch.getRelativeY(viewport.getElement());
+				
+				if (touch_x < 0 || touch_y < 0 || touch_x > viewport.getOffsetWidth()
+						|| touch_y > viewport.getOffsetHeight()) {
+					return;
+				}
+				
+				if (!dragging && !drag_from_overview && !in_overview) {
 					touch_x += area.viewportLeft();
 					touch_y += area.viewportTop();
 					
 					area.setViewportCenter(touch_x, touch_y);
 					area.zoomIn();
 					redraw();
+				} else if (!dragging && !drag_from_overview && in_overview) {
+					touch_x = (touch_x - overview_x) * area.width()
+							/ overview.getCoordinateSpaceWidth();
+					touch_y = (touch_y - overview_y) * area.height()
+							/ overview.getCoordinateSpaceHeight();
+					
+					area.setViewportCenter(touch_x, touch_y);
+					redraw();
 				}
-
+				
+				drag_from_overview = false;
 				drag_may_start = false;
+				in_overview = false;
 				dragging = false;
 			}
 		});
@@ -372,183 +463,8 @@ public class DisplayAreaView extends Composite {
 				dragging = false;
 			}
 		});
-
-		bind_overview();
 		
-		initWidget(top);
-	}
-
-	/**
-	 * Add event handlers to the overview
-	 */
-	private void bind_overview() {
-		overview.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				event.preventDefault();
-				event.stopPropagation();
-				
-				if (locked) {
-					return;
-				}
-
-				drag_may_start = false;
-
-				if (dragging) {
-					dragging = false;
-					return;
-				}
-
-				int click_x = event.getRelativeX(overview.getElement());
-				int click_y = event.getRelativeY(overview.getElement());
-
-				// Don't allow clicking outside of the canvas
-				if (click_x < 0 || click_y < 0
-						|| click_x > overview.getOffsetWidth()
-						|| click_y > overview.getOffsetHeight()) {
-					return;
-				}
-
-				// transform click broswer coordinates into overview coordinates
-				click_x *= area.width() / overview.getCoordinateSpaceWidth();
-				click_y *= area.height() / overview.getCoordinateSpaceHeight();
-				
-				area.setViewportCenter(click_x, click_y);
-				redraw();
-			}
-		});
-		
-		overview.addMouseMoveHandler(new MouseMoveHandler() {
-			public void onMouseMove(MouseMoveEvent event) {
-				event.preventDefault();
-				event.stopPropagation();
-
-				if (drag_may_start) {
-					dragging = true;
-				}
-
-				if (dragging) {
-					int dx = event.getClientX() - canvas_drag_x;
-					int dy = event.getClientY() - canvas_drag_y;
-
-					canvas_drag_x = event.getClientX();
-					canvas_drag_y = event.getClientY();
-
-					dx *= area.width() / overview.getCoordinateSpaceWidth();
-					dy *= area.height() / overview.getCoordinateSpaceHeight();
-
-					pan(dx, dy);
-				}
-			}
-		});
-
-		overview.addMouseDownHandler(new MouseDownHandler() {
-			public void onMouseDown(MouseDownEvent event) {
-				event.preventDefault();
-				event.stopPropagation();
-
-				dragging = false;
-
-				if (event.getNativeButton() == NativeEvent.BUTTON_LEFT) {
-					drag_may_start = true;
-					canvas_drag_x = event.getClientX();
-					canvas_drag_y = event.getClientY();
-					
-					int click_x = event.getRelativeX(overview.getElement())
-							* area.width() / overview.getCoordinateSpaceWidth();
-					int click_y = event.getRelativeY(overview.getElement())
-							* area.height() / overview.getCoordinateSpaceHeight();
-					
-					area.setViewportCenter(click_x, click_y);
-					//redraw();
-				} else {
-					drag_may_start = false;
-				}
-			}
-		});
-
-		overview.addMouseUpHandler(new MouseUpHandler() {
-			public void onMouseUp(MouseUpEvent event) {
-				drag_may_start = false;
-				dragging = false;
-			}
-		});
-
-		overview.addMouseOutHandler(new MouseOutHandler() {
-			public void onMouseOut(MouseOutEvent event) {
-				drag_may_start = false;
-				dragging = false;
-			}
-		});
-
-/*		overview.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				event.preventDefault();
-				event.stopPropagation();
-			}
-		});*/
-
-		overview.addTouchStartHandler(new TouchStartHandler() {
-			public void onTouchStart(TouchStartEvent event) {
-				event.preventDefault();
-				event.stopPropagation();
-
-
-				if (event.getTouches().length() != 1) {
-					drag_may_start = false;
-					dragging = false;
-					return;
-				}
-
-				Touch touch = event.getTouches().get(0);
-
-				dragging = false;
-				drag_may_start = true;
-				canvas_drag_x = touch.getClientX();
-				canvas_drag_y = touch.getClientY();
-			}
-		});
-
-		overview.addTouchMoveHandler(new TouchMoveHandler() {
-			public void onTouchMove(TouchMoveEvent event) {
-				event.preventDefault();
-				event.stopPropagation();
-
-				if (event.getTouches().length() != 1) {
-					drag_may_start = false;
-					dragging = false;
-					return;
-				}
-
-				if (drag_may_start) {
-					dragging = true;
-				}
-
-				Touch touch = event.getTouches().get(0);
-
-				if (dragging) {
-					int dx = touch.getClientX() - canvas_drag_x;
-					int dy = touch.getClientY() - canvas_drag_y;
-
-					canvas_drag_x = touch.getClientX();
-					canvas_drag_y = touch.getClientY();
-
-					dx *= area.width() / overview.getCoordinateSpaceWidth();
-					dy *= area.height() / overview.getCoordinateSpaceHeight();
-
-					pan(dx, dy);
-				}
-			}
-		});
-
-		overview.addTouchEndHandler(new TouchEndHandler() {
-			public void onTouchEnd(TouchEndEvent event) {
-				event.preventDefault();
-				event.stopPropagation();
-
-				drag_may_start = false;
-				dragging = false;
-			}
-		});
+		initWidget(viewport);
 	}
 
 	/**
@@ -582,14 +498,17 @@ public class DisplayAreaView extends Composite {
 		overview.setCoordinateSpaceWidth(overview_width);
 		overview.setCoordinateSpaceHeight(overview_height);
 
-		// TODO 1px border
 		overview_x = area.viewportWidth() - overview_width;
 		overview_y = area.viewportHeight() - overview_height;
-		grab_overview = false;
-		overview_image = null;
-
-		top.setWidgetPosition(overview, overview_x, overview_y);
-		redraw();
+		grab_overview = true;
+		
+		// save zoom level and center position of new display area
+		current_zoom_level = area.zoomLevel();
+		current_base_center_x = area.viewportBaseCenterX();
+		current_base_center_y = area.viewportBaseCenterY();
+		// set zoom level to 0 and recenter display area in order
+		// to grab overview
+		resetDisplay();
 	}
 	
 	/**
@@ -599,90 +518,85 @@ public class DisplayAreaView extends Composite {
 			new DisplayAreaDrawable.OnDrawnCallback() {
 		@Override
 		public void onDrawn() {
-			if (draw_queue == null || draw_queue.size() == 0
-					|| draw_index >= draw_queue.size()) {
+			if (draw_queue == null || draw_queue.size() == 0) {
+				return;
+			} else if ( draw_index >= draw_queue.size()) {
+				if (grab_overview && area.zoomLevel() == 0) {
+					get_overview_image();
+				}
+				
+				if (area.zoomLevel() > 0) {
+					draw_overview();
+				}
 				return;
 			}
-			
+		
 			DisplayElement el = draw_queue.get(draw_index++);
-	if (el instanceof StaticImageDisplayElement) {
-		Window.alert("Static image will be drawn..."
-				+ "\n(" + el.baseLeft() + ", " + el.baseTop() + ", " + el.baseWidth() + ", " + el.baseHeight()
-				+ ")");
-	}
 			el.drawable().draw(viewport_context, area, ondrawn_cb);
 		}
 	};
 	
-	private CanvasElement overview_image;
 	/**
-	 * Create the overview
+	 * Draw the overview
 	 */
-	private void load_overview() {
-		// reset view, so it is centered in viewport at zoom 0
-		Context2d overview_context = overview.getContext2d();
-		int current_zoom = area.zoomLevel();
-		int current_base_center_x = area.viewportBaseCenterX();
-		int current_base_center_y = area.viewportBaseCenterY();
-
+	private void draw_overview() {
+		int width = overview.getCoordinateSpaceWidth();
+		int height = overview.getCoordinateSpaceHeight();
+		double zoom = (double) width / area.baseWidth();
+	
+		viewport_context.drawImage(overview.getCanvasElement(), 0, 0, 
+				width, height, overview_x, overview_y, width, height);
+		
+		viewport_context.setGlobalAlpha(0.3);
+		viewport_context.setFillStyle("blue");
+		viewport_context.fillRect(area.viewportBaseLeft() * zoom + overview_x,
+				area.viewportBaseTop() * zoom + overview_y,
+				area.viewportBaseWidth() * zoom,
+				area.viewportBaseHeight() * zoom);
+		viewport_context.setGlobalAlpha(1.0);
+		viewport_context.setFillStyle("black");
+	}
+	
+	/**
+	 * Get the base overview image
+	 */
+	private void get_overview_image() {
+		grab_overview = false;
+		
 		int width = overview.getCoordinateSpaceWidth();
 		int height = overview.getCoordinateSpaceHeight();
 
-		/*double width_scale = (double) width / area.width();
-		double zoom = area.zoom() * width_scale;*/
-		double zoom = (double) width / area.baseWidth();
-
-//		if (overview_image == null && area.zoomLevel() == 1) {
-			// do not redraw overview on this step
-			grab_overview = false;
-			resetDisplay();
-			
-			overview_image = viewport_context.getCanvas();
-//		}
-		
 		overview_context.clearRect(0, 0, width, height);
+		
+		// TODO the source values may need tweeking
 		overview_context
-		.drawImage(overview_image,
+		.drawImage(viewport_context.getCanvas(),
 				area.viewportWidth() / 2 - area.width() / 2,
 				0,
 				area.width(),
 				area.height(),
 				0, 0, width, height);
+		
 		overview_context.beginPath();
 		overview_context.rect(0, 0, width - 1, height - 1);
 		overview_context.setStrokeStyle("red");
 		overview_context.stroke();
 		overview_context.closePath();
-
-		// set view so it is at the correct center and zoom
-		area.setZoomLevel(current_zoom);
+		
+		// change zoom level and center position back to correct values
+		area.setZoomLevel(current_zoom_level);
 		area.setViewportBaseCenter(current_base_center_x,
 				current_base_center_y);
-
-		overview_context.setGlobalAlpha(0.3);
-		overview_context.setFillStyle("blue");
-		overview_context.fillRect(area.viewportBaseLeft() * zoom,
-				area.viewportBaseTop() * zoom,
-				area.viewportBaseWidth() * zoom,
-				area.viewportBaseHeight() * zoom);
-
-		overview_context.setGlobalAlpha(1.0);
-		overview_context.setFillStyle("black");
+		redraw();
 	}
 	
 	/**
 	 * Clear contents of viewport and redraw any visible display elements
 	 */
 	public void redraw() {
-		// Grab overview on redraw
-		if (grab_overview && area.zoomLevel() > 0) {
-			load_overview();
-			overview.setVisible(true);
-		} else if (area.zoomLevel() == 0) {
-			overview.setVisible(false);
-		}
+		viewport_context.clearRect(0, 0, area.viewportWidth(), 
+				area.viewportHeight());
 		
-		viewport_context.clearRect(0, 0, area.viewportWidth(), area.viewportHeight());
 		draw_index = 0;
 		draw_queue.clear();
 		
@@ -700,8 +614,6 @@ public class DisplayAreaView extends Composite {
 				el.drawable().draw(viewport_context, area, ondrawn_cb);
 			}
 		}
-
-		grab_overview = true;
 	}
 
 	public DisplayArea area() {

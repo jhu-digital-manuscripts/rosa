@@ -8,7 +8,8 @@ import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 
 /**
- * Provides useful methods for dealing with XML data
+ * Provides useful methods for dealing with XML data. Used for reading the
+ * TEI transcription data.
  */
 public class Util {
 

@@ -21,7 +21,16 @@ public class AnnotationSelectionEvent extends GwtEvent<AnnotationSelectionHandle
 	}
 	
 	public Annotation getAnnotation() { return annotation; }
+	
+	/**
+	 * The boolean status of the annotation: TRUE is visible, 
+	 * FALSE is hidden
+	 */
 	public boolean getStatus() { return status; }
+	
+	/**
+	 * The panel id
+	 */
 	public int getPanel() { return panel; }
 	
 	@Override

@@ -1,6 +1,7 @@
 package rosa.scanvas.demo.website.client;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import rosa.scanvas.model.client.Annotation;
@@ -13,7 +14,7 @@ import rosa.scanvas.model.client.Sequence;
 import rosa.scanvas.model.client.SharedCanvas;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-
+import com.google.gwt.user.client.Window;
 /**
  * A container holding data operated on by a panel view.
  */
@@ -26,6 +27,7 @@ public class PanelData {
 
     // TODO rethink this
     private List<Annotation> visibleAnnotations;
+    private HashSet<String> annotation_status;
     private List<Annotation> imageAnnotations;
 
     /**
@@ -280,6 +282,7 @@ public class PanelData {
         annotationLists = new ArrayList<AnnotationList>();
         visibleAnnotations = new ArrayList<Annotation>();
         imageAnnotations = new ArrayList<Annotation>();
+        annotation_status = new HashSet<String>();
     }
 
     public ManifestCollection getManifestCollection() {
@@ -300,6 +303,7 @@ public class PanelData {
         annotationLists.clear();
         visibleAnnotations.clear();
         imageAnnotations.clear();
+        annotation_status.clear();
     }
 
     public Sequence getSequence() {
@@ -324,5 +328,24 @@ public class PanelData {
 
     public List<Annotation> getVisibleAnnotations() {
         return visibleAnnotations;
+    }
+    
+    /**
+     * Set the boolean status of an annotation: visible or not visible 
+     * in the main content area.
+     * 
+     * @param ann
+     * @param status
+     */
+    public void setAnnotationStatus(Annotation ann, boolean status) {
+    	if (status) {
+    		annotation_status.add(ann.uri());
+    	} else {
+    		annotation_status.remove(ann.uri());
+    	}
+    }
+    
+    public boolean getAnnotationStatus(Annotation ann) {
+    	return annotation_status.contains(ann.uri());
     }
 }

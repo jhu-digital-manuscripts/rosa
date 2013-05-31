@@ -7,6 +7,7 @@ import java.util.List;
 
 import rosa.scanvas.demo.website.client.PanelData;
 import rosa.scanvas.demo.website.client.PanelState;
+import rosa.scanvas.demo.website.client.PanelView;
 import rosa.scanvas.demo.website.client.disparea.AnnotationUtil;
 import rosa.scanvas.demo.website.client.event.AnnotationSelectionEvent;
 import rosa.scanvas.demo.website.client.event.AnnotationSelectionHandler;
@@ -58,6 +59,10 @@ public class SidebarPresenter implements IsWidget {
 		AnnotationListWidget getAnnoListWidget();
 
 		ManifestListWidget getMetaListWidget();
+		
+		void addAnnoListTab();
+		
+		void removeAnnoListTab();
 	}
 	
 	private final Display display;
@@ -99,6 +104,14 @@ public class SidebarPresenter implements IsWidget {
 				doPanelRequest(event.getAction(), event.getPanelId());
 			}
 		});
+		
+		eventBus.addHandler(AnnotationSelectionEvent.TYPE,
+				new AnnotationSelectionHandler() {
+			public void onSelection(AnnotationSelectionEvent event) {
+				doAnnotationSelection(event.getPanel(), event.getAnnotation(),
+						event.getStatus());
+			}
+		});
 
 		// event handlers for the Panel List list and buttons
 		display.getAddPanelButton().addClickHandler(new ClickHandler() {
@@ -118,6 +131,28 @@ public class SidebarPresenter implements IsWidget {
 				doPanelListChange();
 			}
 		});
+		
+		display.getMetaListWidget().getSequencePickerBox().addChangeHandler(
+				new ChangeHandler() {
+					public void onChange(ChangeEvent event) {
+						doSequenceChange();
+					}
+				});
+	}
+	
+	private void doSequenceChange() {
+		ListBox picker = display.getMetaListWidget().getSequencePickerBox();
+		String uri = picker.getValue(picker.getSelectedIndex());
+		
+		int panel_id = Integer.parseInt(display.getPanelList()
+				.getValue(display.getPanelList().getSelectedIndex()));
+		Manifest manifest = dataMap.get(panel_id).getManifest();
+		
+		PanelState state = new PanelState(PanelView.SEQUENCE, 
+				uri, manifest.uri());
+		PanelRequestEvent event = new PanelRequestEvent(
+				PanelRequestEvent.PanelAction.CHANGE, panel_id, state);
+		eventBus.fireEvent(event);
 	}
 	
 	/**
@@ -156,7 +191,7 @@ public class SidebarPresenter implements IsWidget {
 	}
 
 	/**
-	 * Adds new data associated with a particular panel to the sidebar
+	 * Adds new data that is associated with a particular panel to the sidebar
 	 * 
 	 * @param panelId
 	 * 			id number identifying the associated panel
@@ -209,6 +244,20 @@ public class SidebarPresenter implements IsWidget {
 		}
 	}
 
+	/**
+	 * Sets the status of an annotation on a specified panel
+	 * 
+	 * @param panel_id
+	 * @param ann
+	 * @param status
+	 * 			whether or not an annotation is selected
+	 */
+	private void doAnnotationSelection(int panel_id, Annotation ann,
+			boolean status) {
+		PanelData data = dataMap.get(panel_id);
+		data.setAnnotationStatus(ann, status);
+	}
+	
 	// -------------- DOM Event Actions --------------
 
 	private void doAddPanel() {
@@ -313,11 +362,18 @@ public class SidebarPresenter implements IsWidget {
 	}
 
 	/**
-	 * Place data from selected panel in appropriate place in sidebar
+	 * Place data from selected panel in appropriate place in sidebar.
+	 * The Annotation List is displayed only when appropriate.
 	 */
 	public void setData(PanelData data) {
 		display.getMetaListWidget().setMetadata(data);
 		setAnnotations(data);
+		
+		if (data.getCanvas() == null) {
+			display.removeAnnoListTab();
+		} else {
+			display.addAnnoListTab();
+		}
 	}
 	
 // TODO: move this to AnnotationListWidget, plus messy
@@ -336,12 +392,15 @@ public class SidebarPresenter implements IsWidget {
 				// for each list, put each annotation in appropriate area
 				for (Annotation anno : al) {
 					CheckBox checkbox = new CheckBox();
-					
+					checkbox.setValue(data.getAnnotationStatus(anno), false);
+				
 					if (anno.body().isImage()) {
 						
 						// send the first image that targets the whole canvas to be displayed
 						if (!AnnotationUtil.isSpecificResource(anno)
 								&& !default_image) {
+							// the boolean variable  'default_image' is used ensure that only
+							// a single image is used in this way
 							try {
 								int panel_id = Integer.parseInt(display.getPanelList()
 										.getValue(display.getPanelList()

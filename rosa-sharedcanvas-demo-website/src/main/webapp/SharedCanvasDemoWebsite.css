@@ -175,6 +175,8 @@
 	margin-left: 4px;
 }
 
+/** ------ Non-targeted Text Annotations ------ */
+
 .AnnotationDialog {
 	top: 20px;
 	left: 20px;
@@ -182,7 +184,7 @@
 
 .TextAnnoTabPanel {
 	height: 200px;
-	width: 300px;
+	width: 350px;
 }
 
 .TextAnnoTabPanel .gwt-TabPanelContent {
@@ -190,6 +192,27 @@
 	height: 100%;
 } 
 
+.TextAnnoTabPanel .TranscriptionInitial {
+	font-size: larger;
+	font-weight: bold;
+}
 
+.TextAnnoTabPanel .TranscriptionExpan {
+	font-style: italic;
+}
+
+.TextAnnoTabPanel .Tooltip {
+	position: relative;
+	font-weight: bold;
+	text-decoration: none;
+	color: rgb(0, 128, 0);
+}
+
+.TextAnnoTabPanel .TranscriptionExtra {
+}
+
+.TextAnnoTabPanel .TranscriptionExtraHeader {
+	font-weight: bold;
+}
 
 

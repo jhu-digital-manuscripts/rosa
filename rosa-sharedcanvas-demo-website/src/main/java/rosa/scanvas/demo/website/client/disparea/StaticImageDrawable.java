@@ -46,8 +46,6 @@ public class StaticImageDrawable implements DisplayAreaDrawable {
         final int img_right = (int) (img_left + el.baseWidth() * zoom);
         final int img_bottom = (int) (img_top + el.baseHeight() * zoom);
 
-Window.alert("Image {left, top, right, bottom}: {" + img_left + ", " + img_top + ", "
-		+ img_right + ", " + img_bottom + "}");
         if (img_right < vp_left || img_left > vp_right || img_bottom < vp_top
         		|| img_top > vp_bottom) {
         	// Do not draw anything if image is out of viewport
@@ -62,7 +60,7 @@ Window.alert("Image {left, top, right, bottom}: {" + img_left + ", " + img_top +
 
                 context.save();
                 context.translate(-area.viewportLeft(), -area.viewportTop());
-                context.drawImage(img, img_left, img_right,
+                context.drawImage(img, img_left, img_top,
                 		image.width(), image.height());
                 context.restore();
                     

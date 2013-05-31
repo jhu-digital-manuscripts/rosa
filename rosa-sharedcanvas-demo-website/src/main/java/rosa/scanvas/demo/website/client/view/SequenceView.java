@@ -70,8 +70,7 @@ public class SequenceView extends Composite implements
 
     @Override
     public void resize(int width, int height) {
-        // TODO
-        tab_panel.setPixelSize(width - 10, height - 40);
+        tab_panel.setPixelSize(width - 0, height - 38);
         setPixelSize(width, height);
     }
 

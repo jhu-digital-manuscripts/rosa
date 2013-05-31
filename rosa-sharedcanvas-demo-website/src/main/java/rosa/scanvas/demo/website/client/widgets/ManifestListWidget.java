@@ -130,12 +130,16 @@ public class ManifestListWidget extends Composite {
 		if (sequence != null) {
 			sequenceTable.setWidget(0, 1, new HTML(sequence.label()));
 			sequenceTable.setWidget(1, 1, new HTML("Images: " + sequence.size()));
-			
-			sequencePickerBox.addItem(sequence.label());
+
+			int index = 0;
 			for (Reference<Sequence> ref : manifest.sequences()) {
-				if (!ref.label().equals(sequence.label())) {
-					sequencePickerBox.addItem(ref.label());
+				sequencePickerBox.addItem(ref.label());
+				sequencePickerBox.setValue(index, ref.uri());
+				
+				if (ref.uri().equals(sequence.uri())) {
+					sequencePickerBox.setSelectedIndex(index);
 				}
+				index++;
 			}
 		}
 	}
