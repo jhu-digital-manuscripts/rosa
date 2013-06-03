@@ -8,10 +8,9 @@ import com.google.gwt.http.client.URL;
 public class FSIService {
     // TODO config
     public static final String SERVER_URL = "http://fsiserver.library.jhu.edu/";
-    private static final String SHARE = "rose";
 
-    public static String embedStaticImage(String image, int width, int height) {
-        String path = SHARE + "/" + Book.bookIDFromImage(image) + "/" + image;
+    public static String embedStaticImage(String share, String image, int width, int height) {
+        String path = share + "/" + Book.bookIDFromImage(image) + "/" + image;
         String params = "source=" + URL.encodeQueryString(path) + "&width="
                 + width + "&height=" + height;
         String url = SERVER_URL + "server?type=image&" + params;
@@ -30,9 +29,9 @@ public class FSIService {
         }
     }
 
-    public static String embedDynamicImage(String image, String width,
+    public static String embedDynamicImage(String share, String image, String width,
 					   String height, String lc) {
-        String path = SHARE + "/" + Book.bookIDFromImage(image) + "/" + image;
+        String path = share + "/" + Book.bookIDFromImage(image) + "/" + image;
 
         String params = "FPXSrc=" + URL.encodeQueryString(path) + langparam(lc);
         String url = SERVER_URL + "viewer/fsi.swf?" + params;

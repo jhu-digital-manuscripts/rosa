@@ -6,16 +6,13 @@ import rosa.gwt.common.client.Util;
 import com.google.gwt.core.client.GWT;
 
 // TODO handle missing image
-
 // TODO  handle cropping, could crop dynamically???
-
-// TODO add missing image
 
 public class RoseBook {
     private final RoseImage[] images;
     private int opening_end;
 
-    public static void load(String bookid,
+    public static void load(final String fsi_collection, String bookid,
             final HttpGet.Callback<RoseBook> topcb) {
         HttpGet.Callback<String> cb = new HttpGet.Callback<String>() {
             public void failure(String error) {
@@ -23,7 +20,7 @@ public class RoseBook {
             }
 
             public void success(String result) {
-                topcb.success(new RoseBook(result));
+                topcb.success(new RoseBook(fsi_collection, result));
             }
         };
 
@@ -33,11 +30,11 @@ public class RoseBook {
         HttpGet.request(url, cb);
     }
 
-    public RoseBook(String csv) {
-        this(Util.parseCSVTable(csv));
+    public RoseBook(String fsi_collection, String csv) {
+        this(fsi_collection, Util.parseCSVTable(csv));
     }
 
-    public RoseBook(String[][] table) {
+    public RoseBook(String fsi_collection, String[][] table) {
         this.images = new RoseImage[table.length];
 
         opening_end = -1;
@@ -48,7 +45,7 @@ public class RoseBook {
             if (row[0].startsWith("*")) {
                 images[i] = new RoseImage(row[0]);
             } else {
-                images[i] = new RoseImage(row[0], Integer.parseInt(row[1]),
+                images[i] = new RoseImage(fsi_collection, row[0], Integer.parseInt(row[1]),
                         Integer.parseInt(row[2]));
             }
 
@@ -62,14 +59,16 @@ public class RoseBook {
         return image.substring(0, image.indexOf('.'));
     }
 
-    private static String getFsiId(String image) {
+    private static String getFsiId(String prefix, String image) {
         if (image.startsWith("*")) {
             image = image.substring(1);
         }
 
         String bookid = getBookIdFromImage(image);
 
-        return "rose/" + bookid + "/" + image;
+        // TODO
+        
+        return prefix + "/" + bookid + "/" + image;
     }
 
     private static String getLabel(String name) {
@@ -123,9 +122,9 @@ public class RoseBook {
         private final int height;
         private boolean missing;
 
-        public RoseImage(String name, int width, int height) {
+        public RoseImage(String fsi_collection, String name, int width, int height) {
             this.name = name;
-            this.id = getFsiId(name);
+            this.id = getFsiId(fsi_collection, name);
             this.width = width;
             this.height = height;
             this.missing = false;
