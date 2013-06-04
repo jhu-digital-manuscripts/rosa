@@ -106,6 +106,7 @@ public class PageTurner extends Composite implements HasClickHandlers {
         toolbar.add(goto_textbox);
         toolbar.add(goto_button);
         toolbar.add(next_button);
+        toolbar.setStylePrimaryName("CanvasToolbar");
 
         main.add(display);
         main.add(toolbar);
@@ -125,7 +126,7 @@ public class PageTurner extends Composite implements HasClickHandlers {
 
     public void resize(int page_width, int page_height) {
         this.page_width = page_width;
-        this.page_height = page_height;
+        this.page_height = page_height - 10;
 
         if (openings != null) {
             display(openings.get(position));

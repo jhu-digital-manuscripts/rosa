@@ -102,6 +102,7 @@ public class CanvasPanelPresenter implements PanelPresenter {
     
     // TODO Can save display elements and operate on them for efficiency
     private void setAnnotationVisible(Annotation ann, boolean status) {
+
     	if (!AnnotationUtil.isSpecificResource(ann) &&
     			ann.body().isText()) {
     		// nontargeted text annotations are not displayed on the canvas

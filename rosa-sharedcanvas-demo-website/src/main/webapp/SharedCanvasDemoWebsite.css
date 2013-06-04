@@ -1,12 +1,12 @@
 /** Add css rules here for your application. */
 .Header {
 	background-color: rgb(115, 186, 255);
-	font-size: 34px;
+	font-size: 30px;
 }
 
 .Header .gwt-Label {
-	margin-top: 25px;
-	margin-left: 20px;
+	margin-top: 10px;
+	margin-left: 10px;
 }
 
 .Thumbnail {
@@ -59,17 +59,27 @@
   font-weight: bold;
 }
 
+.PanelView .gwt-TabLayoutPanel .gwt-TabLayoutPanelTabs {
+	width: 100%;
+}
+
+.PanelView .gwt-TabLayoutPanel .gwt-TabLayoutPanelTab {
+	margin-left: 0px;
+	font-size: larger;
+}
+
+.PageTurner .WebImage {
+	cursor: pointer;
+}
+
 .SidebarContainer {
-	
 }
 
 .AppHeader {
-	
 }
 
 .Content {
 	left: 00px;
-	width: 80%;
 }
 
 /** ------ Sidebar ------*/
@@ -79,12 +89,12 @@
 }
 
 .Sidebar .PanelChangeToolbar {
-	height: 5%;
+	height: 20px;
 	margin-top: 5px;
 }
 
 .Sidebar .PanelChangeToolbar .gwt-ListBox {
-	width: 50%;
+	width: 40%;
 	margin-left: 5px;
 }
 
@@ -130,6 +140,10 @@
 	color: rgb(26, 72, 255);
 }
 
+.ManifestList .gwt-DisclosurePanel .gwt-HTML {
+	vertical-align: top;
+}
+
 .MetadataSubtitle {
   font-style: italic;
   vertical-align: top;
@@ -172,7 +186,7 @@
 }
 
 .CanvasToolbar .gwt-Button {
-	margin-left: 4px;
+	margin-right: 4px;
 }
 
 /** ------ Non-targeted Text Annotations ------ */

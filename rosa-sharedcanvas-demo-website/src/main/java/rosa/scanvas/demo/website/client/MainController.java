@@ -41,7 +41,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class MainController implements ValueChangeHandler<String>, IsWidget {
 	private static final int SIDEBAR_WIDTH = 275;
-	private static final int HEADER_HEIGHT = 100;
+	private static final int HEADER_HEIGHT = 60;
 	
     private static int next_panel_id = 0;
 
@@ -91,13 +91,13 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
     private void bind() {
         History.addValueChangeHandler(this);
 
-        Window.addResizeHandler(new ResizeHandler() {
+        /*Window.addResizeHandler(new ResizeHandler() {
             public void onResize(ResizeEvent event) {
                 doResize(event.getWidth(), event.getHeight());
             }
-        });
+        });*/
 
-        /*Window.addResizeHandler(new ResizeHandler() {
+        Window.addResizeHandler(new ResizeHandler() {
             int width = Window.getClientWidth();
             int height = Window.getClientHeight();
 
@@ -112,7 +112,7 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
                     doResize(width, height);
                 }
             }
-        });*/
+        });
 
         event_bus.addHandler(PanelRequestEvent.TYPE,
                 new PanelRequestEventHandler() {
@@ -296,16 +296,16 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
             count = 1;
         }
 
-        panel_width = (win_width - SIDEBAR_WIDTH) - 50;
-        panel_height = (win_height - HEADER_HEIGHT) - 20;
+        panel_width = (win_width - SIDEBAR_WIDTH) - 40;
+        panel_height = (win_height - HEADER_HEIGHT) - 28;
 
         if (count > 1) {
             panel_width /= 2;
-            panel_width -= 20;
+            panel_width -= 15;
 
             if (count > 2) {
                 panel_height /= 2;
-                panel_height -= 20;
+                panel_height -= 15;
             }
         }
 

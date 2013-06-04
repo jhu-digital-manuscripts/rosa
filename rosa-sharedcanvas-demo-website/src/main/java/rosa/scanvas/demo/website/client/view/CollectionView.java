@@ -77,7 +77,7 @@ public class CollectionView extends Composite implements
         setPixelSize(width, height);
 
         //collections_listbox.setHeight((height - 40) + "px");
-        int count = height / 20;
+        int count = height / 22;
 
         if (count < 10) {
             count = 10;

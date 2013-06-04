@@ -318,7 +318,7 @@ public class SidebarPresenter implements IsWidget {
 	}
 	
 	/**
-	 * Updates the data associated with a particular panel
+	 * Updates the displayed data associated with a particular panel
 	 * 
 	 * @param id
 	 * 			number identifying the associated panel
@@ -395,7 +395,7 @@ public class SidebarPresenter implements IsWidget {
 					checkbox.setValue(data.getAnnotationStatus(anno), false);
 				
 					if (anno.body().isImage()) {
-						
+					
 						// send the first image that targets the whole canvas to be displayed
 						if (!AnnotationUtil.isSpecificResource(anno)
 								&& !default_image) {
