@@ -78,6 +78,7 @@ public class GwtTestSCTestData extends AbstractGwtTest {
             assertTrue(aggregates.contains(canv.uri()));
             
             assertNotNull(canv.hasAnnotations());
+            assertTrue(canv.hasAnnotations().size() > 0);
         }
 	}
 	
@@ -128,7 +129,17 @@ public class GwtTestSCTestData extends AbstractGwtTest {
                 assertNull(body.defaultItem());
                 assertTrue(body.otherItems().isEmpty());
                 assertTrue(body.format().startsWith("image"));
-                assertEquals("IIIF", body.conformsTo());
+                
+                boolean isSpecificResource = false;
+                for (AnnotationTarget target : anno.targets()) {
+                	if (target.isSpecificResource()) {
+                		isSpecificResource = true;
+                	}
+                }
+                
+                if (!isSpecificResource) {
+                	assertEquals("IIIF", body.conformsTo());
+                }
             } else if (body.isText()) {
                 assertNull(body.defaultItem());
                 assertTrue(body.otherItems().isEmpty());
