@@ -1,5 +1,3 @@
-# J. Paul Getty Museum - Ludwig XV7 - 13v-16r - Sequence 2
-
 @prefix sc:			<http://www.shared-canvas.org/ns/> .
 @prefix exif: 		<http://www.w3.org/2003/12/exif/ns/>.
 #		@prefix foaf: <http://xmlns.com/foaf/0.1/>.
@@ -43,7 +41,6 @@
 				oa:hasAnnotations <${baseUrl}canvas/16r/annotations> .
 
 <${baseUrl}sequence/sequence2>	dc:format "text/n3" ;
-				dcterms:modified "timestamp" ;			# ex: "2011-07-21T16:09:58Z"
 				ore:describes <${prefix}Sequence2> ;
 				a ore:ResourceMap .
 <${prefix}Sequence2> a sc:Sequence, ore:Aggregation ;

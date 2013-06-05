@@ -21,9 +21,10 @@
 				<${baseUrl}TxtAnnof14rbln1> ,
 				<${baseUrl}TxtAnnof14rbln2> ,
 				<${prefix}IllusAnno-f14r> ,
+				<${prefix}ImgAnno-f14r-illus1> ,
 				<${prefix}ImgAnno-f14r> ;
 				ore:isDescribedBy <${baseUrl}canvas/14r/annotations> ;
-				sc:hasOrder ( <${prefix}IllusAnno-f14r> <${prefix}ImgAnno-f14r> <${baseUrl}TxtAnnof14raln1> <${baseUrl}TxtAnnof14raln2> <${baseUrl}TxtAnnof14rbln1> <${baseUrl}TxtAnnof14rbln2> ) ;
+				sc:hasOrder ( <${prefix}IllusAnno-f14r> <${prefix}ImgAnno-f14r> <${prefix}ImgAnno-f14r-illus1> <${baseUrl}TxtAnnof14raln1> <${baseUrl}TxtAnnof14raln2> <${baseUrl}TxtAnnof14rbln1> <${baseUrl}TxtAnnof14rbln2> ) ;
 				a sc:AnnotationList, ore:Aggregation .
 				
 <${baseUrl}Canv-f14r>		a sc:Canvas .
@@ -43,7 +44,7 @@
 				oa:motivatedBy sc:painting ;
 				rdfs:label "illustration 1" ;
 				oa:hasTarget <${prefix}SubCanv-f14r-illus1> ;
-				oa:hasBody <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.014r.tif/426,2438,1059,1042/300,/0/grey.jpg> .
+				oa:hasBody <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.014r.tif/426,2438,1059,1042/1000,/0/grey.jpg> .
 				
 <${baseUrl}TxtAnnof14raln1>	a oa:Annotation ;
 				oa:motivatedBy oa:describing ;
@@ -83,7 +84,7 @@
 				oa:hasSelector <${baseUrl}SvgSelf14rbln2> .
 				
 <${baseUrl}SvgSel-f14r-illus1> a oa:SvgSelector, cnt:ContentAsText ;
-				cnt:chars "<Svg:poly points='426,2448 1469,2438 442,2480 1485,3469'/>" .
+				cnt:chars "<Svg:poly points='426,2438 1485,2438 1485,3480 426,3480'/>" .
 <${baseUrl}SvgSelf14raln1>	a oa:SvgSelector, cnt:ContentAsText ;
 				cnt:chars "<Svg:poly points='411,614 1456,582 1456,661 414,693'/>" .
 <${baseUrl}SvgSelf14raln2>	a oa:SvgSelector, cnt:ContentAsText ;
@@ -108,9 +109,8 @@
 				exif:height 5429 ;
 				exif:width 3816 .
 				
-<http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.014r.tif/426,2438,1059,1042/300,/0/grey.jpg> a dctypes:Image;
+<http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.014r.tif/426,2438,1059,1042/1000,/0/grey.jpg> a dctypes:Image;
 				dc:format "image/jpeg" ;
-				dcterms:comformsTo "IIIF" ;
 				exif:height 1059 ;
 				exif:width 1042 .
 				

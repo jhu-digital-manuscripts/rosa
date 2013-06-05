@@ -38,12 +38,12 @@
 				oa:motivatedBy oa:describing ;
 				rdfs:label "Transcription: Column C, Line 1" ;
 				oa:hasTarget <${prefix}SubCanv-f13v-c-ln1> ;
-				oa:hasBody <${prefix}Txt-f13vc-ln1> .
+				oa:hasBody <${prefix}Txt-f13v-c-ln1> .
 <${prefix}TxtAnno-f13v-c-ln2>	a oa:Annotation ;
 				oa:motivatedBy oa:describing ;
 				rdfs:label "Transcription: Column C, Line 2" ;
 				oa:hasTarget <${prefix}SubCanv-f13v-c-ln2> ;
-				oa:hasBody <${prefix}Txt-f13vc-ln2> .
+				oa:hasBody <${prefix}Txt-f13v-c-ln2> .
 <${prefix}TxtAnno-f13v-d-ln1>	a oa:Annotation ;
 				oa:motivatedBy oa:describing ;
 				rdfs:label "Transcription: Column D, Line 1" ;

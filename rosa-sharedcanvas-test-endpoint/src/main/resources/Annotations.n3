@@ -27,6 +27,7 @@
 					<${prefix}ImgAnno-f15r> ,
 					<${prefix}ImgAnno-f15v> ,
 					<${prefix}ImgAnno-f16r> ,
+					<${prefix}ImgAnno-f14r-illus1> ,
 					<${prefix}IllusAnno-f14r> ,
 					<${prefix}IllusAnno-f15r> ,
 					<${prefix}TxtAnno-f13v-c-ln1> ,
@@ -54,7 +55,7 @@
 					<${prefix}TxtAnno-f16r-b-ln1> ,
 					<${prefix}TxtAnno-f16r-b-ln2> ;
 				ore:isDescribedBy <${baseUrl}annotations> ;
-				sc:hasOrder ( <${prefix}ImgAnno-f13v> <${prefix}ImgAnno-f14r> <${prefix}ImgAnno-f14v> <${prefix}ImgAnno-f15r> <${prefix}ImgAnno-f15v> <${prefix}ImgAnno-f16r> <${prefix}IllusAnno-f14r> <${prefix}IllusAnno-f15r> <${prefix}TxtAnno-f13v-c-ln1> <${prefix}TxtAnno-f13v-c-ln2> <${prefix}TxtAnno-f13v-d-ln1> <${prefix}TxtAnno-f13v-d-ln2> <${baseUrl}TxtAnnof14raln1> <${baseUrl}TxtAnnof14raln2> <${baseUrl}TxtAnnof14rbln1> <${baseUrl}TxtAnnof14rbln2> <${prefix}TxtAnno-f14v-c-ln1> <${prefix}TxtAnno-f14v-c-ln2> <${prefix}TxtAnno-f14v-d-ln1> <${prefix}TxtAnno-f14v-d-ln2> <${prefix}TxtAnno-f15r-a-ln1> <${prefix}TxtAnno-f15r-a-ln2> <${prefix}TxtAnno-f15r-b-ln1> <${prefix}TxtAnno-f15r-b-ln2> <${prefix}TxtAnno-f15v-c-ln1> <${prefix}TxtAnno-f15v-c-ln2> <${prefix}TxtAnno-f15v-d-ln1> <${prefix}TxtAnno-f15v-d-ln2> <${prefix}TxtAnno-f16r-a-ln1> <${prefix}TxtAnno-f16r-a-ln2> <${prefix}TxtAnno-f16r-b-ln1> <${prefix}TxtAnno-f16r-b-ln2> ) ;
+				sc:hasOrder ( <${prefix}ImgAnno-f13v> <${prefix}ImgAnno-f14r> <${prefix}ImgAnno-f14v> <${prefix}ImgAnno-f15r> <${prefix}ImgAnno-f15v> <${prefix}ImgAnno-f16r> <${prefix}ImgAnno-f14r-illus1> <${prefix}IllusAnno-f14r> <${prefix}IllusAnno-f15r> <${prefix}TxtAnno-f13v-c-ln1> <${prefix}TxtAnno-f13v-c-ln2> <${prefix}TxtAnno-f13v-d-ln1> <${prefix}TxtAnno-f13v-d-ln2> <${baseUrl}TxtAnnof14raln1> <${baseUrl}TxtAnnof14raln2> <${baseUrl}TxtAnnof14rbln1> <${baseUrl}TxtAnnof14rbln2> <${prefix}TxtAnno-f14v-c-ln1> <${prefix}TxtAnno-f14v-c-ln2> <${prefix}TxtAnno-f14v-d-ln1> <${prefix}TxtAnno-f14v-d-ln2> <${prefix}TxtAnno-f15r-a-ln1> <${prefix}TxtAnno-f15r-a-ln2> <${prefix}TxtAnno-f15r-b-ln1> <${prefix}TxtAnno-f15r-b-ln2> <${prefix}TxtAnno-f15v-c-ln1> <${prefix}TxtAnno-f15v-c-ln2> <${prefix}TxtAnno-f15v-d-ln1> <${prefix}TxtAnno-f15v-d-ln2> <${prefix}TxtAnno-f16r-a-ln1> <${prefix}TxtAnno-f16r-a-ln2> <${prefix}TxtAnno-f16r-b-ln1> <${prefix}TxtAnno-f16r-b-ln2> ) ;
 				a sc:AnnotationList, ore:Aggregation .	
 				
 <${prefix}TxtAnno-f16r-a-ln1>	a oa:Annotation ;
@@ -530,3 +531,18 @@
 				dcterms:conformsTo "IIIF" ;
 				exif:height 5451 ;
 				exif:width 3920 .
+<${prefix}ImgAnno-f14r-illus1> a oa:Annotation ;
+				oa:motivatedBy sc:painting ;
+				rdfs:label "illustration 1" ;
+				oa:hasTarget <${prefix}SubCanv-f14r-illus1> ;
+				oa:hasBody <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.014r.tif/426,2438,1059,1042/1000,/0/grey.jpg> .
+				
+<${prefix}SubCanv-f14r-illus1> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSel-f14r-illus1> .
+<${baseUrl}SvgSel-f14r-illus1> a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='426,2438 1485,2438 1485,3480 426,3480'/>" .
+<http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.014r.tif/426,2438,1059,1042/1000,/0/grey.jpg> a dctypes:Image;
+				dc:format "image/jpeg" ;
+				exif:height 1059 ;
+				exif:width 1042 .

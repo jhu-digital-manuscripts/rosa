@@ -29,9 +29,10 @@
 					<${prefix}ImgAnno-f14v> ,
 					<${prefix}ImgAnno-f15r> ,
 					<${prefix}ImgAnno-f15v> ,
-					<${prefix}ImgAnno-f16r> ;
+					<${prefix}ImgAnno-f16r> ,
+					<${prefix}ImgAnno-f14r-illus1> ;
 				ore:isDescribedBy <${baseUrl}annotations/image> ;
-				sc:hasOrder ( <${prefix}ImgAnno-f13v> <${prefix}ImgAnno-f14r> <${prefix}ImgAnno-f14v> <${prefix}ImgAnno-f15r> <${prefix}ImgAnno-f15v> <${prefix}ImgAnno-f16r> ) ;
+				sc:hasOrder ( <${prefix}ImgAnno-f13v> <${prefix}ImgAnno-f14r> <${prefix}ImgAnno-f14v> <${prefix}ImgAnno-f15r> <${prefix}ImgAnno-f15v> <${prefix}ImgAnno-f16r> <${prefix}ImgAnno-f14r-illus1>) ;
 				a sc:AnnotationList, ore:Aggregation .		
 				
 <${prefix}ImgAnno-f13v>	a oa:Annotation ;
@@ -95,3 +96,19 @@
 				dcterms:conformsTo "IIIF" ;
 				exif:height 5451 ;
 				exif:width 3920 .
+				
+<${prefix}ImgAnno-f14r-illus1> a oa:Annotation ;
+				oa:motivatedBy sc:painting ;
+				rdfs:label "illustration 1" ;
+				oa:hasTarget <${prefix}SubCanv-f14r-illus1> ;
+				oa:hasBody <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.014r.tif/426,2438,1059,1042/1000,/0/grey.jpg> .
+				
+<${prefix}SubCanv-f14r-illus1> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSel-f14r-illus1> .
+<${baseUrl}SvgSel-f14r-illus1> a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='426,2438 1485,2438 1485,3480 426,3480'/>" .
+<http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.014r.tif/426,2438,1059,1042/1000,/0/grey.jpg> a dctypes:Image;
+				dc:format "image/jpeg" ;
+				exif:height 1059 ;
+				exif:width 1042 .

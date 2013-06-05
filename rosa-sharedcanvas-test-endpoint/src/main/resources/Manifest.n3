@@ -30,8 +30,10 @@
 				ore:isDescribedBy <${baseUrl}manifest> ;
 				a sc:Manifest, ore:Aggregation .
 
-<${baseUrl}sequence/read> a sc:Sequence .
-<${baseUrl}sequence/sequence2> a sc:Sequence .
+<${baseUrl}sequence/read> a sc:Sequence ;
+				rdfs:label "Reading order" .
+<${baseUrl}sequence/sequence2> a sc:Sequence ;
+				rdfs:label "Illustrations first" .
 <${baseUrl}annotations/image> a sc:AnnotationList .
 <${baseUrl}annotations/illustration> a sc:AnnotationList .
 <${baseUrl}canvas/13v/transcriptions> a sc:AnnotationList .

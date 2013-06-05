@@ -59,13 +59,8 @@ public class ScDemoFile {
 		};
 		String[] parts = parse(path);
 		Model model = ModelFactory.createDefaultModel();
-		/*if (parts.length == 0) {
-			
-			in = this.getClass().getClassLoader().getResourceAsStream(
-					"ManifestCollection.n3");
-			JsonldJenaUtils.writeJsonldFromStream(in, o, "N3");
-			
-		} else */if (parts.length == 1) {
+		
+		if (parts.length == 1) {
 			if (parts[0].equals("manifest")) {
 				in = this.getClass().getClassLoader().getResourceAsStream(
 						"Manifest.n3");
@@ -75,13 +70,6 @@ public class ScDemoFile {
 						"NormalSequence.n3");
 				JsonldJenaUtils.writeJsonldFromStream(in, o, "N3");
 			} else if (parts[0].equals("annotations")) {
-				/*String[] agr = new String[aggregate.length+2];
-				System.arraycopy(aggregate, 0, agr, 0, aggregate.length);
-				agr[agr.length-1] = "ImageAnnotations.n3";
-				agr[agr.length-2] = "IllustrationDescription.n3";
-				
-				model = JsonldJenaUtils.generateAggregateModel(agr, "N3");
-				JsonldJenaUtils.writeJsonldFromModel(model, o);*/
 				in = this.getClass().getClassLoader().getResourceAsStream(
 						"Annotations.n3");
 				JsonldJenaUtils.writeJsonldFromStream(in, o, "N3");
@@ -99,7 +87,7 @@ public class ScDemoFile {
 					in = this.getClass().getClassLoader().getResourceAsStream(
 							"NormalSequence.n3");
 					JsonldJenaUtils.writeJsonldFromStream(in, o, "N3");
-				} else if (parts[2].equals("sequence2")) {
+				} else if (parts[1].equals("sequence2")) {
 					in = this.getClass().getClassLoader().getResourceAsStream(
 							"Sequence2.n3");
 					JsonldJenaUtils.writeJsonldFromStream(in, o, "N3");
