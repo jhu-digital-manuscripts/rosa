@@ -186,7 +186,11 @@
 }
 
 .CanvasToolbar .gwt-Button {
-	margin-right: 4px;
+	margin-left: 4px;
+}
+
+.CanvasToolbar .gwt-TextBox {
+	margin-left: 50px;
 }
 
 /** ------ Non-targeted Text Annotations ------ */

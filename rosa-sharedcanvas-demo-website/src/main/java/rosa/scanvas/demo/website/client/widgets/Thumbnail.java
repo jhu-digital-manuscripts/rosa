@@ -15,9 +15,11 @@ import com.google.gwt.user.client.ui.Label;
 public class Thumbnail extends Composite implements HasClickHandlers {
     private final Grid grid;
     private final WebImage image;
+    private final int canvas_index;
 
-    public Thumbnail(WebImage image, String label) {
+    public Thumbnail(WebImage image, String label, int canvas_index) {
         this.image = image;
+        this.canvas_index = canvas_index;
         this.grid = new Grid(2, 1);
         grid.setStylePrimaryName("Thumbnail");        
         
@@ -33,5 +35,9 @@ public class Thumbnail extends Composite implements HasClickHandlers {
 
     public HandlerRegistration addClickHandler(ClickHandler handler) {
         return grid.addClickHandler(handler);
+    }
+    
+    public int canvasIndex() {
+    	return canvas_index;
     }
 }

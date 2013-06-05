@@ -27,11 +27,14 @@ public class PageTurner extends Composite implements HasClickHandlers {
     private int position;
     private List<Opening> openings;
     private int page_width, page_height;
-    private boolean clicked_verso;
+//    private boolean clicked_verso;
+    
+    private int clicked_index;
 
     public PageTurner(ImageServer image_server) {
         this.image_server = image_server;
         this.display = new Grid(2, 2);
+        this.clicked_index = 0;
 
         FlowPanel main = new FlowPanel();
 
@@ -41,6 +44,8 @@ public class PageTurner extends Composite implements HasClickHandlers {
         final TextBox goto_textbox = new TextBox();
         final Button goto_button = new Button("Goto");
         final Button next_button = new Button("Next");
+        
+        prev_button.setEnabled(false);
 
         next_button.addClickHandler(new ClickHandler() {
             @Override
@@ -48,6 +53,14 @@ public class PageTurner extends Composite implements HasClickHandlers {
                 if (position + 1 < openings.size()) {
                     position++;
                     display(openings.get(position));
+                }
+                
+                if (position >= openings.size()) {
+                	next_button.setEnabled(false);
+                }
+                
+                if (position > 0 && !prev_button.isEnabled()) {
+                	prev_button.setEnabled(true);
                 }
             }
         });
@@ -58,6 +71,14 @@ public class PageTurner extends Composite implements HasClickHandlers {
                 if (position > 0) {
                     position--;
                     display(openings.get(position));
+                }
+                
+                if (position == 0) {
+                	prev_button.setEnabled(false);
+                }
+                
+                if (position < openings.size() && !next_button.isEnabled()) {
+                	next_button.setEnabled(true);
                 }
             }
         });
@@ -74,6 +95,14 @@ public class PageTurner extends Composite implements HasClickHandlers {
         		
         		position = new_position;
         		display(openings.get(position));
+        		
+        		if (position > 0 && !prev_button.isEnabled()) {
+        			prev_button.setEnabled(true);
+        		}
+        		
+        		if (position < openings.size() && !next_button.isEnabled()) {
+        			next_button.setEnabled(true);
+        		}
         	}
         });
         
@@ -90,6 +119,14 @@ public class PageTurner extends Composite implements HasClickHandlers {
 	        		
 	        		position = new_position;
 	        		display(openings.get(position));
+	        		
+	        		if (position > 0 && !prev_button.isEnabled()) {
+	        			prev_button.setEnabled(true);
+	        		}
+	        		
+	        		if (position < openings.size() && !next_button.isEnabled()) {
+	        			next_button.setEnabled(true);
+	        		}
         		}
         	}
         });
@@ -98,14 +135,18 @@ public class PageTurner extends Composite implements HasClickHandlers {
             @Override
             public void onClick(ClickEvent event) {
                 Cell cell = display.getCellForEvent(event);
-                clicked_verso = cell.getCellIndex() == 0;
+//                clicked_verso = cell.getCellIndex() == 0;
+                
+                clicked_index = (cell.getCellIndex() == 0) ? 
+                		openings.get(position).getVersoIndex() :
+                	openings.get(position).getRectoIndex();
             }
         });
 
         toolbar.add(prev_button);
+        toolbar.add(next_button);
         toolbar.add(goto_textbox);
         toolbar.add(goto_button);
-        toolbar.add(next_button);
         toolbar.setStylePrimaryName("CanvasToolbar");
 
         main.add(display);
@@ -165,12 +206,16 @@ public class PageTurner extends Composite implements HasClickHandlers {
         }
     }
 
-    public boolean clickedVerso() {
+/*    public boolean clickedVerso() {
         return clicked_verso;
-    }
+    }*/
 
-    public int getPosition() {
+/*    public int getPosition() {
         return position;
+    }*/
+    
+    public int getClickedIndex() {
+    	return clicked_index;
     }
 
     @Override
