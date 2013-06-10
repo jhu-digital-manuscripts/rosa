@@ -1,17 +1,37 @@
 /** Add css rules here for your application. */
 .Header {
 	background-color: rgb(115, 186, 255);
+	float: left;
 	font-size: 30px;
 }
 
 .Header .gwt-Label {
 	margin-top: 10px;
 	margin-left: 10px;
+	cursor: pointer;
+}
+
+.Opening {
+	float: left;
+	border-spacing: 2px;
+	margin-bottom: 10px;
 }
 
 .Thumbnail {
   float: left;
-  margin: 5px
+  border-spacing: 0px;
+}
+
+.Verso {
+	text-align: right;
+	margin-left: 15px;
+	margin-right: 0px;
+}
+
+.Recto {
+	text-align: left;
+	margin-left: 0px;
+	margin-right: 15px;
 }
 
 .Thumbnail:hover {
@@ -20,6 +40,7 @@
 
 .Thumbnail .gwt-Label {
   font-weight: bold;
+  text-align: center;
 }
 
 .PanelView {
@@ -50,6 +71,42 @@
 .PanelToolbar {
   margin-top: 1em;
 }
+
+/* ------ */
+
+.PanelTitleBar {
+}
+
+.PanelTitleBar .Context {
+	background-color: rgb(115, 186, 255);
+	float: left;
+}
+
+.PanelTitleBar .gwt-ToggleButton {
+	float: left;
+}
+
+.TitleHeader {
+	font-weight: bold;
+}
+
+.Options {
+	border-collapse:collapse;
+}
+
+/* .Options .OptionsRow {
+	border: 1px solid black;
+	margin: 5px 0px;
+	cursor: pointer;
+} */
+
+.Options .gwt-Label {
+	border-top: 1px solid black;
+	margin: 5px 0px;
+	cursor: pointer;
+}
+
+/* ------ */
 
 .PanelToolbar .gwt-Button {
   margin-left: 1em;
@@ -147,6 +204,10 @@
 .MetadataSubtitle {
   font-style: italic;
   vertical-align: top;
+}
+
+.ManifestList .Sequence .gwt-Label {
+	margin-top: 10px;
 }
 
 .ManifestList .gwt-ListBox {

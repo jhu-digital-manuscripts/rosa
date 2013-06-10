@@ -24,13 +24,15 @@ import rosa.scanvas.model.client.Sequence;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.TouchEndEvent;
+import com.google.gwt.event.dom.client.TouchEndHandler;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.Window;
+
 public class SequencePanelPresenter implements PanelPresenter {
     public interface Display extends IsWidget {
         PageTurner getPageTurner();
@@ -103,24 +105,19 @@ public class SequencePanelPresenter implements PanelPresenter {
         turner.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                /*int canvas_index = turner.getPosition() * 2;
-                
-                if (!turner.clickedVerso()) {
-                    canvas_index++;
-                }
-                
-                if (canvas_index > frontmatter_pastedown) {
-                	canvas_index -= before_frontmatter;
-                }
-                
-                if (canvas_index > endmatter_pastedown) {
-                	canvas_index -= after_endmatter;
-                }*/
-                
             	int canvas_index = turner.getClickedIndex();
-            	
                 gotoCanvasView(canvas_index);
             }
+        });
+        
+        turner.addTouchEndHandler(new TouchEndHandler() {
+        	public void onTouchEnd(TouchEndEvent event) {
+        		if (!turner.isDragging() 
+        				&& event.getChangedTouches().length() == 1) {
+        			int canvas_index = turner.getClickedIndex();
+        			gotoCanvasView(canvas_index);
+        		}
+        	}
         });
     }
 
@@ -132,8 +129,6 @@ public class SequencePanelPresenter implements PanelPresenter {
         for (final Thumbnail thumb : thumbs) {
             thumb.addClickHandler(new ClickHandler() {
                 public void onClick(ClickEvent event) {
-                    /*gotoCanvasView(display.getThumbnailBrowser()
-                            .getThumbnailIndex(thumb));*/
                 	gotoCanvasView(thumb.canvasIndex());
                 }
             });
@@ -190,6 +185,7 @@ public class SequencePanelPresenter implements PanelPresenter {
     				thumb_size);
     			Thumbnail thumb_v = new Thumbnail(image_v, opening.getVersoLabel(),
     				opening.getVersoIndex());
+    			thumb_v.addStyleName("Verso");
     			
     			result.add(thumb_v);
     		}
@@ -199,6 +195,7 @@ public class SequencePanelPresenter implements PanelPresenter {
     				thumb_size);
     			Thumbnail thumb_r = new Thumbnail(image_r, opening.getRectoLabel(),
     				opening.getRectoIndex());
+    			thumb_r.addStyleName("Recto");
     			
     			result.add(thumb_r);
     		}
@@ -229,6 +226,15 @@ public class SequencePanelPresenter implements PanelPresenter {
         return result;
     }
     
+    /**
+     * From the canvases and image annotations, construct openings for
+     * the manuscript consisting of two pages.  Any "openings" that consist 
+     * of a single image/page are represented as an opening with only a 
+     * Verso side.
+     * 
+     * @param sequence
+     * @param annotations
+     */
     private List<Opening> build_openings(Sequence sequence, 
     		List<Annotation> annotations) {
     	List<Opening> openings = new ArrayList<Opening>();
@@ -324,42 +330,6 @@ public class SequencePanelPresenter implements PanelPresenter {
     	return openings;
     	
     }
-    
-    /*private List<Opening> construct_openings(Sequence sequence,
-            List<Annotation> annotations) {
-        List<Opening> openings = new ArrayList<Opening>();
-
-        Map<String, Annotation> targets = map_targets(annotations);
-
-        int seq_size = sequence.size();
-
-        for (int i = 0; i < seq_size;) {
-            Canvas c1 = sequence.canvas(i++);
-            Canvas c2 = i + 1 < seq_size ? sequence.canvas(i++) : null;
-
-            Annotation a1 = targets.get(c1.uri());
-            Annotation a2 = c2 == null ? null : targets.get(c2.uri());
-
-            MasterImage verso = null;
-            String verso_label = null;
-            MasterImage recto = null;
-            String recto_label = null;
-
-            if (a1 != null) {
-                verso = as_master_image(a1, c1);
-                verso_label = a1.label();
-            }
-
-            if (a2 != null) {
-                recto = as_master_image(a2, c2);
-                recto_label = a2.label();
-            }
-            
-            openings.add(new Opening(verso, verso_label, recto, recto_label));
-        }
-
-        return openings;
-    }*/
 
     // Assume annotation is image covering whole canvas using iiif
     private MasterImage as_master_image(Annotation a, Canvas canvas) {
@@ -368,8 +338,6 @@ public class SequencePanelPresenter implements PanelPresenter {
     }
 
     private void setup_thumb_browser() {
-        /*List<Thumbnail> thumbs = construct_thumbs(data.getSequence(),
-                data.getImageAnnotations());*/
     	List<Thumbnail> thumbs = construct_thumbs_from_openings();
         display.getThumbnailBrowser().setThumbnails(thumbs);
         bindThumbnails(thumbs);
@@ -377,13 +345,8 @@ public class SequencePanelPresenter implements PanelPresenter {
     }
 
     private void setup_page_turner() {
-        /*List<Opening> openings = construct_openings(data.getSequence(),
-                data.getImageAnnotations());*/
-    	/*List<Opening> */openings = build_openings(data.getSequence(),
-                data.getImageAnnotations());
-
+        openings = build_openings(data.getSequence(), data.getImageAnnotations());
         display.getPageTurner().setOpenings(openings, page_width, page_height);
-
         page_turner_setup = true;
     }
 

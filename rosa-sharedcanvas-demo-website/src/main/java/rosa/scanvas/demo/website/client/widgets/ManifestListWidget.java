@@ -23,6 +23,8 @@ public class ManifestListWidget extends Composite {
 	private DisclosurePanel manifestPanel = new DisclosurePanel();
 	private DisclosurePanel sequencePanel = new DisclosurePanel();
 	
+	private FlowPanel seq = new FlowPanel();
+	
 	private FlexTable collectionTable = new FlexTable();
 	private FlexTable manifestTable = new FlexTable();
 	private FlexTable sequenceTable = new FlexTable();
@@ -36,26 +38,23 @@ public class ManifestListWidget extends Composite {
 		mainPanel.add(collectionPanel);
 		mainPanel.add(manifestPanel);
 		mainPanel.add(sequencePanel);
-		mainPanel.add(new Label("Pick a different sequence: "));
-		mainPanel.add(sequencePickerBox);
 		
 		collectionPanel.setContent(collectionTable);
 		collectionPanel.setHeader(new HTML("Collection: "));
-		//collectionPanel.getHeader().setStylePrimaryName("MetadataTitle");
 		collectionPanel.setOpen(true);
-		//collectionPanel.addStyleName("SidebarItem");
 		
 		manifestPanel.setContent(manifestTable);
 		manifestPanel.setHeader(new HTML("Manifest: "));
-		//manifestPanel.getHeader().setStylePrimaryName("MetadataTitle");
 		manifestPanel.setOpen(true);
-		//manifestPanel.addStyleName("SidebarItem");
 		
-		sequencePanel.setContent(sequenceTable);
+		sequencePanel.setContent(seq);
 		sequencePanel.setHeader(new HTML("Sequence: "));
-		//sequencePanel.getHeader().setStylePrimaryName("MetadataTitle");
 		sequencePanel.setOpen(true);
-		//sequencePanel.addStyleName("SidebarItem");
+		
+		seq.addStyleName("Sequence");
+		seq.add(sequenceTable);
+		seq.add(new Label("Pick a different sequence: "));
+		seq.add(sequencePickerBox);
 		
 		
 		manifestTable.setWidget(0, 0, new Label("Title: "));
@@ -100,19 +99,32 @@ public class ManifestListWidget extends Composite {
 		sequencePickerBox.clear();
 	}
 	
+	/**
+	 * Displays metadata
+	 */
 	public void setMetadata(PanelData data) {
+		if (data == null) {
+			collectionPanel.setVisible(false);
+			manifestPanel.setVisible(false);
+			sequencePanel.setVisible(false);
+			return;
+		}
 		// TODO emit event when a new sequence is selected from 'sequence picker'
 		clearLabels();
 
 		ManifestCollection collection = data.getManifestCollection();
 		if (collection != null) {
+			collectionPanel.setVisible(true);
 			collectionTable.setWidget(0, 1, new HTML(collection.label()));
 			collectionTable.setWidget(1, 1, new HTML(
 					"Items: " + collection.manifests().size()));
+		} else {
+			collectionPanel.setVisible(false);
 		}
 
 		Manifest manifest = data.getManifest();
 		if (manifest != null) {
+			manifestPanel.setVisible(true);
 			manifestTable.setWidget(0, 1, new HTML(manifest.label()));
 			manifestTable.setWidget(1, 1, new HTML(
 					((manifest.agent() != null) ? manifest.agent() : "" )));
@@ -124,10 +136,13 @@ public class ManifestListWidget extends Composite {
 					((manifest.description() != null) ? manifest.description() : "")));
 			manifestTable.setWidget(5, 1, new HTML(
 					((manifest.rights() != null) ? manifest.rights() : "")));
+		} else {
+			manifestPanel.setVisible(false);
 		}
 
 		Sequence sequence = data.getSequence();
 		if (sequence != null) {
+			sequencePanel.setVisible(true);
 			sequenceTable.setWidget(0, 1, new HTML(sequence.label()));
 			sequenceTable.setWidget(1, 1, new HTML("Images: " + sequence.size()));
 
@@ -141,6 +156,8 @@ public class ManifestListWidget extends Composite {
 				}
 				index++;
 			}
+		} else {
+			sequencePanel.setVisible(false);
 		}
 	}
 	

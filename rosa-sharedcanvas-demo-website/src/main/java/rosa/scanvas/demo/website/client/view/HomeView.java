@@ -3,9 +3,11 @@ package rosa.scanvas.demo.website.client.view;
 import java.util.List;
 
 import rosa.scanvas.demo.website.client.presenter.HomePanelPresenter;
+import rosa.scanvas.demo.website.client.widgets.TitleBar;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyUpHandlers;
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
@@ -25,12 +27,15 @@ public class HomeView extends Composite implements HomePanelPresenter.Display {
     private final Button load_button;
     private final TextBox user_textbox;
     private final CheckBox is_col_checkbox;
+    
+    private TitleBar title_bar;
 
-    public HomeView() {
+    public HomeView(int panel_id) {
         this.col_listbox = new ListBox();
         this.load_button = new Button("Load");
         this.user_textbox = new TextBox();
         this.is_col_checkbox = new CheckBox("Collection");
+        this.title_bar = new TitleBar(panel_id);
 
         main = new FlowPanel();
         top = new ScrollPanel(main);
@@ -39,6 +44,7 @@ public class HomeView extends Composite implements HomePanelPresenter.Display {
         Label panel_title = new Label("Choose a collection to view.");
         panel_title.setStylePrimaryName("PanelTitle");
 
+        main.add(title_bar);
         main.add(panel_title);
         main.add(col_listbox);
 
@@ -79,6 +85,7 @@ public class HomeView extends Composite implements HomePanelPresenter.Display {
     @Override
     public void resize(int width, int height) {
         setPixelSize(width, height);
+        title_bar.resize(width, height);
     }
 
     @Override
@@ -117,5 +124,10 @@ public class HomeView extends Composite implements HomePanelPresenter.Display {
     	} else {
     		top.removeStyleName("PanelSelected");
     	}
+    }
+    
+    @Override
+    public void setEventBus(HandlerManager event_bus) {
+    	title_bar.setEventBus(event_bus);
     }
 }

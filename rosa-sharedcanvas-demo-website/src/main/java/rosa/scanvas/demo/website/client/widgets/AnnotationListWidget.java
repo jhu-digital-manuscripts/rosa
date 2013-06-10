@@ -13,7 +13,7 @@ public class AnnotationListWidget extends Composite {
 	
 	private FlowPanel mainPanel = new FlowPanel();
 	private FlowPanel annoListPanel = new FlowPanel();
-	private FlowPanel moveButtonPanel = new FlowPanel();
+	private FlowPanel annoControlPanel = new FlowPanel();
 	
 	private ScrollPanel imageScrollPanel = new ScrollPanel();
 	private ScrollPanel targetedTextScrollPanel = new ScrollPanel();
@@ -25,11 +25,12 @@ public class AnnotationListWidget extends Composite {
 	
 	private TextBox searchBox = new TextBox();
 	
-	private Button moveAnnoUpButton = new Button("^");
+	/*private Button moveAnnoUpButton = new Button("^");
 	private Button moveAnnoDownButton = new Button("v");
 	private Button moveAnnoTopButton = new Button("^^");
-	private Button moveAnnoBottomButton = new Button("vv");
-	private Button hideAnnoButton = new Button("Hide");
+	private Button moveAnnoBottomButton = new Button("vv");*/
+	private Button showAnnoButton = new Button("Show All");
+	private Button hideAnnoButton = new Button("Hide All");
 	
 	public AnnotationListWidget() {
 		initWidget(mainPanel);
@@ -49,17 +50,18 @@ public class AnnotationListWidget extends Composite {
 		annoListPanel.add(targetedTextScrollPanel);
 		annoListPanel.add(nontar_text_label);
 		annoListPanel.add(nontargetedTextScrollPanel);
-		annoListPanel.add(moveButtonPanel);
+		annoListPanel.add(annoControlPanel);
 		
 		imageScrollPanel.add(imageAnnoList);
 		targetedTextScrollPanel.add(targetedTextAnnoList);
 		nontargetedTextScrollPanel.add(nontargetedTextAnnoList);
 		
-		moveButtonPanel.add(moveAnnoTopButton);
-		moveButtonPanel.add(moveAnnoUpButton);
-		moveButtonPanel.add(moveAnnoDownButton);
-		moveButtonPanel.add(moveAnnoBottomButton);
-		moveButtonPanel.add(hideAnnoButton);
+		/*annoControlPanel.add(moveAnnoTopButton);
+		annoControlPanel.add(moveAnnoUpButton);
+		annoControlPanel.add(moveAnnoDownButton);
+		annoControlPanel.add(moveAnnoBottomButton);*/
+		annoControlPanel.add(showAnnoButton);
+		annoControlPanel.add(hideAnnoButton);
 		
 		image_label.addStyleName("SectionLabel");
 		tar_text_label.addStyleName("SectionLabel");
@@ -76,15 +78,16 @@ public class AnnotationListWidget extends Composite {
 
 	public FlowPanel getMainPanel() { return mainPanel; }
 	public FlowPanel getAnnoListPanel() { return annoListPanel; }
-	public FlowPanel getMoveButtonPanel() { return moveButtonPanel; }
+	public FlowPanel getannoControlPanel() { return annoControlPanel; }
 	public TextBox getSearchBox() { return searchBox; }
 	public FlexTable getImageAnnoList() { return imageAnnoList; }
 	public FlexTable getTargetedTextAnnoList() { return targetedTextAnnoList; }
 	public FlexTable getNontargetedTextAnnoList() { return nontargetedTextAnnoList; }
-	public Button getMoveAnnoUpButton() { return moveAnnoUpButton; }
+/*	public Button getMoveAnnoUpButton() { return moveAnnoUpButton; }
 	public Button getMoveAnnoDownButton() { return moveAnnoDownButton; }
 	public Button getMoveAnnoTopButton() { return moveAnnoTopButton; }
-	public Button getMoveAnnoBottomButton() { return moveAnnoBottomButton; }
+	public Button getMoveAnnoBottomButton() { return moveAnnoBottomButton; }*/
+	public Button getShowAnnoButton() { return showAnnoButton; }
 	public Button getHideAnnoButton() { return hideAnnoButton; }
 	
 	/*public List<Integer> getSelectedRows(ClickEvent event) {

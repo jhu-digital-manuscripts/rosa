@@ -38,6 +38,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
@@ -136,6 +137,20 @@ public class SidebarPresenter implements IsWidget {
 				new ChangeHandler() {
 					public void onChange(ChangeEvent event) {
 						doSequenceChange();
+					}
+				});
+		
+		display.getAnnoListWidget().getShowAnnoButton().addClickHandler(
+				new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						select_all_annotations(true);
+					}
+				});
+		
+		display.getAnnoListWidget().getHideAnnoButton().addClickHandler(
+				new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						select_all_annotations(false);
 					}
 				});
 	}
@@ -295,6 +310,30 @@ public class SidebarPresenter implements IsWidget {
 		if (dataToLoad != null) {
 			setData(dataToLoad);
 		}
+	}
+	
+	/**
+	 * Display or hide all annotations, excluding nontargeted text annotations
+	 * 
+	 * @param status
+	 */
+	private void select_all_annotations(boolean status) {
+		FlexTable image_list = display.getAnnoListWidget().getImageAnnoList();
+		FlexTable text_list = display.getAnnoListWidget().getTargetedTextAnnoList();
+		
+		for (int i = 0; i < image_list.getRowCount(); i++) {
+			CheckBox check = (CheckBox) image_list.getWidget(i, 0);
+			
+			// check the checkbox, emitting a ValueChangeEvent if 
+			// previously unchecked
+			check.setValue(status, true);
+		}
+		
+		for (int i = 0; i < text_list.getRowCount(); i++) {
+			CheckBox check = (CheckBox) text_list.getWidget(i, 0);
+			check.setValue(status, true);
+		}
+		
 	}
 
 	// -------------- End DOM Event Actions --------------

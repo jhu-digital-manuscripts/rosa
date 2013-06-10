@@ -25,6 +25,8 @@ import rosa.scanvas.demo.website.client.view.ManifestView;
 import rosa.scanvas.demo.website.client.view.SidebarFullView;
 
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -83,6 +85,12 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
 
         calculate_panel_size(Window.getClientWidth(), Window.getClientHeight());
         bind();
+        
+        ((Label)header.getWidget(0)).addClickHandler(new ClickHandler() {
+        	public void onClick(ClickEvent event) {
+        		History.newItem("home", true);
+        	}
+        });
     }
 
     /**
@@ -142,7 +150,8 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
         case CANVAS:
             return new CanvasPanelPresenter(new CanvasView(), event_bus, panel_id);
         case HOME:
-            return new HomePanelPresenter(new HomeView(), event_bus, panel_id);
+            return new HomePanelPresenter(new HomeView(panel_id), event_bus,
+            		panel_id);
 
         case MANIFEST:
             return new ManifestPanelPresenter(new ManifestView(), event_bus,

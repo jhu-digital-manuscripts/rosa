@@ -44,6 +44,8 @@ public class HomePanelPresenter implements PanelPresenter {
         void resize(int width, int height);
         
         void selected(boolean is_selected);
+        
+        void setEventBus(HandlerManager event_bus);
     }
 
     private static final List<String> col_titles;
@@ -73,6 +75,7 @@ public class HomePanelPresenter implements PanelPresenter {
         bind();
 
         display.setData(col_titles);
+        display.setEventBus(event_bus);
     }
 
     private void bind() {

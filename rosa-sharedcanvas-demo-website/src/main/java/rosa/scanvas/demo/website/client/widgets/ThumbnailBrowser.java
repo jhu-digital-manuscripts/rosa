@@ -50,8 +50,27 @@ public class ThumbnailBrowser extends Composite {
     public void setThumbnails(List<Thumbnail> thumbs) {
         content.clear();
 
-        for (Thumbnail thumb : thumbs) {
-            content.add(thumb);
+        for (int i = 0; i < thumbs.size(); ) {
+        	Thumbnail thumb1 = thumbs.get(i++);
+        	Thumbnail thumb2 = i + 1 < thumbs.size() ? thumbs.get(i++) : null;
+        	
+        	FlowPanel opening_panel = new FlowPanel();
+        	opening_panel.addStyleName("Opening");
+        	
+        	if (thumb1 != null && thumb1.getStyleName().contains("Verso")) {
+        		opening_panel.add(thumb1);
+        	}
+        	
+        	if (thumb2 != null && thumb2.getStyleName().contains("Recto")) {
+    			opening_panel.add(thumb2);
+    		} else if ((thumb2 != null 
+    				&& !thumb2.getStyleName().contains("Recto"))){
+    			i--;
+    		}
+        	
+        	if (opening_panel.getWidgetCount() > 0) {
+        		content.add(opening_panel);
+        	}
         }
 
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
@@ -71,21 +90,29 @@ public class ThumbnailBrowser extends Composite {
         // viewable because an ancestor might be a ScrollPanel.
 
         // TODO Use scroll panel vertical scroll position
-
         for (int i = 0, n = content.getWidgetCount(); i < n; i++) {
-            Thumbnail thumb = (Thumbnail) content.getWidget(i);
-
-            int thumb_left = thumb.getAbsoluteLeft();
-            int thumb_top = thumb.getAbsoluteTop();
-
-            if (thumb_left >= left && thumb_top >= top && thumb_left < right
-                    && thumb_top < bottom) {
-                thumb.makeViewable();
-            }
+        	FlowPanel opening = (FlowPanel) content.getWidget(i);
+        	
+        	int opening_left = opening.getAbsoluteLeft();
+        	int opening_top = opening.getAbsoluteTop();
+  	
+        	if (opening_left >= left && opening_top >= top 
+        			&& opening_left < right && opening_top < bottom) {
+        		int widgets = opening.getWidgetCount();
+        		
+        		Thumbnail thumb_v = widgets > 0 ? 
+        				(Thumbnail) opening.getWidget(0) : null;
+        		Thumbnail thumb_r = widgets > 1 
+        				? (Thumbnail) opening.getWidget(1) : null;
+        		
+        		if (thumb_v != null) {
+        			thumb_v.makeViewable();
+        		}
+        		
+        		if (thumb_r != null) {
+        			thumb_r.makeViewable();
+        		}
+        	}
         }
-    }
-
-    public int getThumbnailIndex(Thumbnail thumb) {
-        return content.getWidgetIndex(thumb);
     }
 }
