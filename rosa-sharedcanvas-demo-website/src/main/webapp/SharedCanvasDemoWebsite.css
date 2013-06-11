@@ -75,15 +75,18 @@
 /* ------ */
 
 .PanelTitleBar {
+	
 }
 
 .PanelTitleBar .Context {
-	background-color: rgb(115, 186, 255);
 	float: left;
+	background-color: rgb(115, 186, 255);
 }
 
 .PanelTitleBar .gwt-ToggleButton {
 	float: left;
+	width: 20px;
+	height: 20px;
 }
 
 .TitleHeader {

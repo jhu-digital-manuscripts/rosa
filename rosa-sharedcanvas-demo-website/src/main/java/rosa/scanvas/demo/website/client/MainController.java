@@ -12,6 +12,7 @@ import rosa.scanvas.demo.website.client.event.PanelSelectedEvent;
 import rosa.scanvas.demo.website.client.event.PanelSelectedEventHandler;
 import rosa.scanvas.demo.website.client.presenter.CanvasPanelPresenter;
 import rosa.scanvas.demo.website.client.presenter.HomePanelPresenter;
+import rosa.scanvas.demo.website.client.presenter.HomePresenter;
 import rosa.scanvas.demo.website.client.presenter.ManifestCollectionPanelPresenter;
 import rosa.scanvas.demo.website.client.presenter.ManifestPanelPresenter;
 import rosa.scanvas.demo.website.client.presenter.PanelPresenter;
@@ -21,6 +22,7 @@ import rosa.scanvas.demo.website.client.view.SequenceView;
 import rosa.scanvas.demo.website.client.view.CanvasView;
 import rosa.scanvas.demo.website.client.view.CollectionView;
 import rosa.scanvas.demo.website.client.view.HomeView;
+import rosa.scanvas.demo.website.client.view.HomePanelView;
 import rosa.scanvas.demo.website.client.view.ManifestView;
 import rosa.scanvas.demo.website.client.view.SidebarFullView;
 
@@ -150,9 +152,8 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
         case CANVAS:
             return new CanvasPanelPresenter(new CanvasView(), event_bus, panel_id);
         case HOME:
-            return new HomePanelPresenter(new HomeView(panel_id), event_bus,
-            		panel_id);
-
+            return new HomePanelPresenter(new HomeView(), event_bus, panel_id);
+        	
         case MANIFEST:
             return new ManifestPanelPresenter(new ManifestView(), event_bus,
                     panel_id);

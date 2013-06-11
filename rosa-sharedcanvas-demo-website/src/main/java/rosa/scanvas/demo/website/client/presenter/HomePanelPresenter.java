@@ -25,7 +25,7 @@ import com.google.gwt.user.client.ui.Widget;
  * Presents a list of manifest collections which a user can select. The user can
  * entire the url to a manifest collection or a manifest directly.
  */
-public class HomePanelPresenter implements PanelPresenter {
+public class HomePanelPresenter extends BasePanelPresenter {
     public interface Display extends IsWidget {
         HasClickHandlers getCollectionList();
 
@@ -40,12 +40,6 @@ public class HomePanelPresenter implements PanelPresenter {
         HasKeyUpHandlers getUserUrlKeyUpHandlers();
 
         HasValue<Boolean> getUserUrlIsCollection();
-
-        void resize(int width, int height);
-        
-        void selected(boolean is_selected);
-        
-        void setEventBus(HandlerManager event_bus);
     }
 
     private static final List<String> col_titles;
@@ -63,19 +57,15 @@ public class HomePanelPresenter implements PanelPresenter {
     }
 
     private final Display display;
-    private final HandlerManager event_bus;
-    private final int panel_id;
 
     public HomePanelPresenter(Display display, HandlerManager eventBus,
             int panel_id) {
+    	super((BasePanelPresenter.Display)display, eventBus, panel_id);
         this.display = display;
-        this.event_bus = eventBus;
-        this.panel_id = panel_id;
 
         bind();
 
         display.setData(col_titles);
-        display.setEventBus(event_bus);
     }
 
     private void bind() {
@@ -109,8 +99,8 @@ public class HomePanelPresenter implements PanelPresenter {
         PanelState state = new PanelState(PanelView.MANIFEST_COLLECTION,
                 col_urls.get(sel));
         PanelRequestEvent event = new PanelRequestEvent(
-                PanelRequestEvent.PanelAction.CHANGE, panel_id, state);
-        event_bus.fireEvent(event);
+                PanelRequestEvent.PanelAction.CHANGE, panelId(), state);
+        eventBus().fireEvent(event);
     }
 
     private void doUserLoad() {
@@ -131,8 +121,8 @@ public class HomePanelPresenter implements PanelPresenter {
         }
 
         PanelRequestEvent event = new PanelRequestEvent(
-                PanelRequestEvent.PanelAction.CHANGE, panel_id, state);
-        event_bus.fireEvent(event);
+                PanelRequestEvent.PanelAction.CHANGE, panelId(), state);
+        eventBus().fireEvent(event);
     }
 
     @Override
@@ -142,17 +132,7 @@ public class HomePanelPresenter implements PanelPresenter {
 
     @Override
     public void display(PanelData data) {
-        PanelDisplayedEvent event = new PanelDisplayedEvent(panel_id, data);
-        event_bus.fireEvent(event);
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        display.resize(width, height);
-    }
-    
-    @Override
-    public void selected(boolean is_selected) {
-    	display.selected(is_selected);
+        PanelDisplayedEvent event = new PanelDisplayedEvent(panelId(), data);
+        eventBus().fireEvent(event);
     }
 }
