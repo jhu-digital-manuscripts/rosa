@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ManifestView extends Composite implements
+public class ManifestView extends BasePanelView implements
         ManifestPanelPresenter.Display {
 	
 	private final Panel main;
@@ -40,7 +40,8 @@ public class ManifestView extends Composite implements
         main.add(manifest_label);
         main.add(sequence_listbox);
 
-        initWidget(top);
+        //initWidget(top);
+        addContent(top);
     }
 
     public int getSelectedSequence() {
@@ -79,9 +80,10 @@ public class ManifestView extends Composite implements
 
     @Override
     public void resize(int width, int height) {
-        setPixelSize(width, height);
+        super.resize(width, height);
+        top.setSize((width - 22) + "px", (height - 50) + "px");
     }
-    
+/*    
     @Override
     public void selected(boolean is_selected) {
     	if (is_selected) {
@@ -89,5 +91,5 @@ public class ManifestView extends Composite implements
     	} else {
     		top.removeStyleName("PanelSelected");
     	}
-    }
+    }*/
 }

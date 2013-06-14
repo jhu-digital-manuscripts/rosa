@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class CollectionView extends Composite implements
+public class CollectionView extends BasePanelView implements
         ManifestCollectionPanelPresenter.Display {
 	
 	private final Panel main;
@@ -36,7 +36,6 @@ public class CollectionView extends Composite implements
 
         this.collections_listbox = new ListBox(false);
         this.collections_listbox.setVisibleItemCount(10);
-        //this.collections_listbox.setWidth("100%");
 
         this.collection_label = new Label();
         collection_label.setStylePrimaryName("PanelHeader");
@@ -44,7 +43,8 @@ public class CollectionView extends Composite implements
         main.add(collection_label);
         main.add(collections_listbox);
 
-        initWidget(top);
+//        initWidget(top);
+        addContent(top);
     }
 
     public void setCollection(ManifestCollection col) {
@@ -74,10 +74,10 @@ public class CollectionView extends Composite implements
 
     @Override
     public void resize(int width, int height) {
-        setPixelSize(width, height);
-
-        //collections_listbox.setHeight((height - 40) + "px");
-        int count = height / 22;
+    	super.resize(width, height);
+    	top.setSize((width - 22) + "px", (height - 50) + "px");
+    	
+        int count = height / 25;
 
         if (count < 10) {
             count = 10;
@@ -86,12 +86,12 @@ public class CollectionView extends Composite implements
         collections_listbox.setVisibleItemCount(count);
     }
     
-    @Override
+/*    @Override
     public void selected(boolean is_selected) {
     	if (is_selected) {
     		top.addStyleName("PanelSelected");
     	} else {
     		top.removeStyleName("PanelSelected");
     	}
-    }
+    }*/
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import rosa.scanvas.demo.website.client.presenter.BasePanelPresenter;
 import rosa.scanvas.demo.website.client.widgets.AnnotationListWidget;
 import rosa.scanvas.demo.website.client.widgets.ManifestListWidget;
+import rosa.scanvas.demo.website.client.widgets.ScrolledTabLayoutPanel;
 
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -16,6 +17,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -23,9 +25,12 @@ import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 
+import com.google.gwt.user.client.Window;
+
 public class BasePanelView extends Composite implements BasePanelPresenter.Display {
 	private final FlowPanel main;
 	private final FlowPanel title_bar;
+	private final FlowPanel context_bar;
 	
 	private AnnotationListWidget annoListWidget;
 	private ManifestListWidget metaListWidget;
@@ -44,18 +49,42 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 	private final Label swap_v;
 	private final Label swap_h;
 	private final Label dupl;
-	private final Label context_label;
+	
+	private final ScrolledTabLayoutPanel tab_panel;
 
     public BasePanelView() {
         main = new FlowPanel();
-        main.setStylePrimaryName("PanelView");
         title_bar = new FlowPanel();
+        context_bar = new FlowPanel();
+        main.setStylePrimaryName("PanelView");
         title_bar.setStylePrimaryName("PanelTitleBar");
+        context_bar.setStylePrimaryName("ContextBar");
         
-        options_button = new ToggleButton("Op");
-        anno_button = new ToggleButton("A");
-        meta_button = new ToggleButton("I");
-        text_button = new ToggleButton("T");
+        tab_panel = new ScrolledTabLayoutPanel(24, Style.Unit.PX, 300);
+        
+        annoListWidget = new AnnotationListWidget();
+        metaListWidget = new ManifestListWidget();
+        
+        Image options_image_up = new Image("icons/cog_grey.png");
+        Image options_image_down = new Image("icons/cog_black.png");
+        options_button = new ToggleButton(options_image_up, options_image_down);
+        
+        Image anno_image_up = new Image("icons/list grey.png");
+        Image anno_image_down = new Image("icons/list black.png");
+        anno_button = new ToggleButton(anno_image_up, anno_image_down);
+        
+        Image meta_image_up = new Image("icons/i grey.png");
+        Image meta_image_down = new Image("icons/i black.png");
+        meta_button = new ToggleButton(meta_image_up, meta_image_down);
+        
+        Image text_image_up = new Image("icons/asterisk grey.png");
+        Image text_image_down = new Image("icons/asterisk black.png");
+        text_button = new ToggleButton(text_image_up, text_image_down);
+        
+        options_button.addStyleName("OptionsButton");
+        anno_button.addStyleName("AnnotationsButton");
+        meta_button.addStyleName("MetadataButton");
+        text_button.addStyleName("TextAnnotationsButton");
         
         text_popup = new PopupPanel(false, false);
 		meta_popup = new PopupPanel(false, false);
@@ -67,11 +96,8 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
         swap_h = new Label("Swap <>");
         dupl = new Label("Duplicate Panel");
         
-        context_label = new Label("Context Information...");
-        context_label.addStyleName("Context");
-        
         main.add(title_bar);
-        title_bar.add(context_label);
+        title_bar.add(context_bar);
         title_bar.add(text_button);
         title_bar.add(anno_button);
         title_bar.add(meta_button);
@@ -80,12 +106,23 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
         initWidget(main);
         
         setup_options();
-/*        setup_annotations_list();
+        setup_annotations_list();
         setup_meta_list();
-        setup_text_annotations();*/
+        setup_text_annotations();
+        
+        this.addAttachHandler(new AttachEvent.Handler() {
+        	public void onAttachOrDetach(AttachEvent event) {
+        		if (!event.isAttached()) {
+        			anno_popup.hide();
+        			meta_popup.hide();
+        			text_popup.hide();
+        			options_popup.hide();
+        		}
+        	}
+        });
     }
     
-/*    private void setup_annotations_list() {
+    private void setup_annotations_list() {
 		ScrollPanel top = new ScrollPanel();
 		FlowPanel main = new FlowPanel();
 		
@@ -98,6 +135,16 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 		main.add(annoListWidget);
 		
 		anno_popup.setWidget(top);
+		
+		anno_popup.addAttachHandler(new AttachEvent.Handler() {
+			public void onAttachOrDetach(AttachEvent event) {
+				anno_popup.setPopupPosition(options_button.getAbsoluteLeft() 
+						+ options_button.getOffsetWidth()
+						- anno_popup.getOffsetWidth(), 
+						anno_button.getAbsoluteTop() 
+						+ anno_button.getOffsetHeight());
+			}
+		});
 	}
 	
 	private void setup_meta_list() {
@@ -114,14 +161,19 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 		
 		meta_popup.setWidget(top);
 		
-//		metaListWidget.setMetadata(data);
+		meta_popup.addAttachHandler(new AttachEvent.Handler() {
+			public void onAttachOrDetach(AttachEvent event) {
+				meta_popup.setPopupPosition(options_button.getAbsoluteLeft() 
+						+ options_button.getOffsetWidth()
+						- meta_popup.getOffsetWidth(), 
+						meta_button.getAbsoluteTop() 
+						+ meta_button.getOffsetHeight());
+			}
+		});
 	}
 	
 	private void setup_text_annotations() {
 		FlowPanel main = new FlowPanel();
-		
-		TabLayoutPanel tab_panel = new TabLayoutPanel(30, Style.Unit.PX);
-		tab_panel.setSize(200+"px", 100+"px");
 		
 		Label header = new Label("non-targeted Text Annotations");
 		header.addStyleName("TitleHeader");
@@ -130,7 +182,19 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 		main.add(tab_panel);
 		
 		text_popup.setWidget(main);
-	}*/
+		
+		text_popup.addAttachHandler(new AttachEvent.Handler() {
+			public void onAttachOrDetach(AttachEvent event) {
+				if (event.isAttached()) {
+					text_popup.setPopupPosition(options_button.getAbsoluteLeft() 
+							+ options_button.getOffsetWidth()
+							- text_popup.getOffsetWidth(), 
+							text_button.getAbsoluteTop() 
+							+ text_button.getOffsetHeight());
+				}
+			}
+		});
+	}
     
     private void setup_options() {
     	FlowPanel main = new FlowPanel();
@@ -140,13 +204,9 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 		header.addStyleName("TitleHeader");
 		
 		Grid options_grid = new Grid(4,1);
-		Label dup = new Label("Duplicate Panel");
-		Label swap_h = new Label("Swap <>");
-		Label swap_v = new Label("Swap ^v");
-		Label close = new Label("Close Panel");
 		
 		options_grid.addStyleName("Options");
-		options_grid.setWidget(0, 0, dup);
+		options_grid.setWidget(0, 0, dupl);
 		options_grid.setWidget(1, 0, swap_h);
 		options_grid.setWidget(2, 0, swap_v);
 		options_grid.setWidget(3, 0, close);
@@ -161,16 +221,30 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 		options_popup.addAttachHandler(new AttachEvent.Handler() {
 			public void onAttachOrDetach(AttachEvent event) {
 				if (event.isAttached()) {
-					options_popup.setPopupPosition(options_button.getAbsoluteLeft()
-						+ options_button.getOffsetWidth()
-						- options_popup.getOffsetWidth(),
-						options_button.getAbsoluteTop() 
-						+ options_button.getOffsetHeight());
+					options_popup.setPopupPosition(options_button.getAbsoluteLeft() 
+							+ options_button.getOffsetWidth()
+							- options_popup.getOffsetWidth(),
+							options_button.getAbsoluteTop() 
+							+ options_button.getOffsetHeight());
 				}
 			}
 		});
     }
 
+    @Override
+    public Label addContextLabel(String text) {
+    	if (context_bar.getWidgetCount() > 0) {
+    		context_bar.add(new Label("  >  "));
+    	}
+    	
+    	Label context = new Label(text);
+    	context.addStyleName("Link");
+    	
+    	context_bar.add(context);
+    	
+    	return context;
+    }
+    
     /**
 	 * Adds a new widget to the content area
 	 * 
@@ -239,6 +313,16 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
     public HasClickHandlers getSwapVerticalButton() {
     	return swap_v;
     }
+    
+    @Override
+    public AnnotationListWidget getAnnoListWidget() {
+    	return annoListWidget;
+    }
+    
+    @Override
+    public ManifestListWidget getMetaListWidget() {
+    	return metaListWidget;
+    }
 	
     @Override
     public Widget asWidget() {
@@ -249,26 +333,47 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
     public void resize(int width, int height) {
         setPixelSize(width, height);
         
-        context_label.setWidth(width - text_button.getOffsetWidth()
+        context_bar.setWidth(width - text_button.getOffsetWidth()
         		- meta_button.getOffsetWidth() - anno_button.getOffsetWidth()
         		- options_button.getOffsetWidth() + "px");
-        context_label.setHeight(options_button.getOffsetHeight() + "px");
+        context_bar.setHeight(options_button.getOffsetHeight() + "px");
         
         int popup_top = options_button.getAbsoluteTop() + options_button.getOffsetHeight();
+        int right = options_button.getAbsoluteLeft() + options_button.getOffsetWidth();
 		
 		// set popup position
-/*		text_popup.setPopupPosition((text_button.getAbsoluteLeft() + text_button.getOffsetWidth()
-				- text_popup.getOffsetWidth()), popup_top);
-	
-		meta_popup.setPopupPosition((meta_button.getAbsoluteLeft() + meta_button.getOffsetWidth()
-				- meta_popup.getOffsetWidth()), popup_top);
-
+		text_popup.setPopupPosition((right - text_popup.getOffsetWidth()), popup_top);
+		meta_popup.setPopupPosition((right - meta_popup.getOffsetWidth()), popup_top);
+		anno_popup.setPopupPosition((right - anno_popup.getOffsetWidth()), popup_top);
+		options_popup.setPopupPosition((right - options_popup.getOffsetWidth()), popup_top);
 		
-		anno_popup.setPopupPosition((anno_button.getAbsoluteLeft() + anno_button.getOffsetWidth()
-				- anno_popup.getOffsetWidth()), popup_top);*/
+		width = (int) (width * 0.30);
+		if (width < 300) {
+			width = 300;
+		}
+		height = (int) (height * 0.85);
+		if (height < 300) {
+			height = 300;
+		}
 		
-		options_popup.setPopupPosition((options_button.getAbsoluteLeft() + options_button.getOffsetWidth()
-				- options_popup.getOffsetWidth()), popup_top);
+		if (text_popup.getWidget() != null) {
+			text_popup.getWidget().setWidth(width + "px");
+			text_popup.getWidget().setHeight(height + "px");
+		}
+		
+		if (meta_popup.getWidget() != null) {
+			meta_popup.getWidget().setWidth(width + "px");
+			meta_popup.getWidget().setHeight(height + "px");
+		}
+		
+		if (anno_popup.getWidget() != null) {
+			anno_popup.getWidget().setWidth(width + "px");
+			anno_popup.getWidget().setHeight(height + "px");
+		}
+    	
+/*    	tab_panel.setWidth((int) (width * 0.98) + "px");
+    	tab_panel.setHeight((int) (height - 20) + "px");*/
+    	tab_panel.resize(width, height);
     }
     
     @Override

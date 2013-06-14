@@ -6,20 +6,35 @@ import java.util.List;
 import rosa.scanvas.demo.website.client.PanelData;
 import rosa.scanvas.demo.website.client.PanelState;
 import rosa.scanvas.demo.website.client.PanelView;
+import rosa.scanvas.demo.website.client.disparea.AnnotationUtil;
+import rosa.scanvas.demo.website.client.disparea.TranscriptionViewer;
 import rosa.scanvas.demo.website.client.event.PanelDisplayedEvent;
 import rosa.scanvas.demo.website.client.event.PanelRequestEvent;
+import rosa.scanvas.demo.website.client.widgets.AnnotationListWidget;
+import rosa.scanvas.demo.website.client.widgets.ManifestListWidget;
+import rosa.scanvas.demo.website.client.widgets.ScrolledTabLayoutPanel;
+import rosa.scanvas.model.client.Annotation;
+import rosa.scanvas.model.client.AnnotationList;
+import rosa.scanvas.model.client.Canvas;
+import rosa.scanvas.model.client.Manifest;
+import rosa.scanvas.model.client.ManifestCollection;
+import rosa.scanvas.model.client.Sequence;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.HasKeyUpHandlers;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -50,6 +65,17 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     	HasClickHandlers getSwapHorizontalButton();
     	
     	HasClickHandlers getSwapVerticalButton();
+    	
+    	AnnotationListWidget getAnnoListWidget();
+    	
+    	ManifestListWidget getMetaListWidget();
+    	
+    	/**
+         * Adds a label to the titlebar and returns it so event handlers can be attached.
+         * 
+         * @param text
+         */
+    	Label addContextLabel(String text);
 
         void resize(int width, int height);
         
@@ -65,6 +91,9 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     private boolean anno_list_ready;
 	private boolean meta_list_ready;
 	private boolean text_list_ready;
+	private boolean default_image;
+	
+	//private TabLayoutPanel tab_panel;
     
     public BasePanelPresenter(Display display, HandlerManager event_bus,
             int panel_id) {
@@ -72,10 +101,12 @@ public abstract class BasePanelPresenter implements PanelPresenter {
         this.event_bus = event_bus;
         this.panel_id = panel_id;
 
-        bind_dom();
+        bind();
     }
 
-    private void bind_dom() {
+    private void bind() {
+    	// When one button is clicked, untoggle all other buttons and hide
+    	// all other menus
         display.getOptionsButton().addClickHandler(new ClickHandler() {
         	public void onClick(ClickEvent event) {
         		if (display.getOptionsButton().isDown()) {
@@ -93,6 +124,97 @@ public abstract class BasePanelPresenter implements PanelPresenter {
         	}
         });
         
+        display.getAnnotationsButton().addClickHandler(new ClickHandler() {
+        	public void onClick(ClickEvent event) {
+        		/*if (!anno_list_ready) {
+        			set_annotations_list();
+        		}*/
+        		
+        		if (display.getAnnotationsButton().isDown()) {
+        			display.getMetadataButton().setDown(false);
+        			display.getTextAnnotationsButton().setDown(false);
+        			display.getOptionsButton().setDown(false);
+        			
+        			display.getAnnotationsPopup().show();
+        			display.getMetadataPopup().hide();
+        			display.getTextAnnotationsPopup().hide();
+        			display.getOptionsPopup().hide();
+        		} else {
+        			display.getAnnotationsPopup().hide();
+        		}
+        	}
+        });
+        
+        display.getMetadataButton().addClickHandler(new ClickHandler() {
+        	public void onClick(ClickEvent event) {
+        		if (!meta_list_ready) {
+        			set_metadata_list();
+        		}
+        		
+        		if (display.getMetadataButton().isDown()) {
+        			display.getAnnotationsButton().setDown(false);
+        			display.getTextAnnotationsButton().setDown(false);
+        			display.getOptionsButton().setDown(false);
+        			
+        			display.getMetadataPopup().show();
+        			display.getAnnotationsPopup().hide();
+        			display.getTextAnnotationsPopup().hide();
+        			display.getOptionsPopup().hide();
+        		} else {
+        			display.getMetadataPopup().hide();
+        		}
+        	}
+        });
+        
+        display.getTextAnnotationsButton().addClickHandler(new ClickHandler() {
+        	public void onClick(ClickEvent event) {
+        		if (!text_list_ready) {
+        			set_text_annotations_list();
+        		}
+        		
+        		if (display.getTextAnnotationsButton().isDown()) {
+        			display.getAnnotationsButton().setDown(false);
+        			display.getMetadataButton().setDown(false);
+        			display.getOptionsButton().setDown(false);
+        			
+        			display.getTextAnnotationsPopup().show();
+        			display.getAnnotationsPopup().hide();
+        			display.getMetadataPopup().hide();
+        			display.getOptionsPopup().hide();
+        		} else {
+        			display.getTextAnnotationsPopup().hide();
+        		}
+        	}
+        });
+        
+        display.getCloseButton().addClickHandler(new ClickHandler() {
+        	public void onClick(ClickEvent event) {
+        		display.getOptionsPopup().hide();
+        		
+        		PanelRequestEvent req = new PanelRequestEvent(
+        				PanelRequestEvent.PanelAction.REMOVE, panel_id);
+        		event_bus.fireEvent(req);
+        	}
+        });
+        
+        display.getDuplicateButton().addClickHandler(new ClickHandler() {
+        	public void onClick(ClickEvent event) {
+        		
+        	}
+        });
+        
+        display.getSwapHorizontalButton().addClickHandler(new ClickHandler() {
+        	public void onClick(ClickEvent event) {
+        		
+        	}
+        });
+        
+        display.getSwapVerticalButton().addClickHandler(new ClickHandler() {
+        	public void onClick(ClickEvent event) {
+        		
+        	}
+        });
+        
     }
 
     public HandlerManager eventBus() {
@@ -103,12 +225,252 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     	return panel_id;
     }
     
-    public void setData(PanelData data) {
+    public PanelData data() {
+    	return data;
+    }
+    
+    @Override
+    public void display(PanelData data) {
     	this.data = data;
+    	
+    	display.getAnnotationsButton().setEnabled(true);
+    	display.getMetadataButton().setEnabled(true);
+    	display.getTextAnnotationsButton().setEnabled(true);
     	
     	anno_list_ready = false;
 		meta_list_ready = false;
 		text_list_ready = false;
+		default_image = false;
+    	
+    	if (data == null) {
+    		display.getAnnotationsButton().setEnabled(false);
+    		display.getMetadataButton().setEnabled(false);
+    		display.getTextAnnotationsButton().setEnabled(false);
+    		return;
+    	}
+    	
+    	if (data.getManifestCollection() == null 
+    			&& data.getManifest() == null && data.getSequence() == null) {
+    		display.getMetadataButton().setEnabled(false);
+    	}
+    	
+    	if (data.getCanvas() == null) {
+    		display.getAnnotationsButton().setEnabled(false);
+    		display.getTextAnnotationsButton().setEnabled(false);
+    	}
+    	
+    	set_context();
+    	set_annotations_list();
+    }
+    
+    /**
+     * Setup the Metadata menu and add data
+     */
+    private void set_metadata_list() {
+    	if (data == null) {
+    		return;
+    	}
+    	
+    	display.getMetaListWidget().setMetadata(data);
+    	meta_list_ready = true;
+    }
+    
+    /**
+     * Setup the List of Annotations menu and add data
+     */
+    private void set_annotations_list() {
+    	AnnotationListWidget anno_list = display.getAnnoListWidget();
+    	anno_list.clearLists();
+    	
+    	if (data == null) {
+    		return;
+    	}
+    	
+		List<AnnotationList> list = data.getAnnotationLists();
+		if (list == null || list.size() == 0) {
+			return;
+		}
+		
+		// iterate through the list of annotation lists
+		int i = 0, k = 0;
+		for (AnnotationList al : list) {
+			// for each list, put each annotation in appropriate area
+			for (final Annotation anno : al) {
+				final CheckBox checkbox = new CheckBox();
+				
+				if (anno.body().isImage()) {
+					
+					if (!default_image && !AnnotationUtil.isSpecificResource(anno)) {
+						Scheduler.get().scheduleDeferred(new ScheduledCommand() {    
+							@Override
+							public void execute() {
+								checkbox.setValue(true, true);
+							}
+						});
+						
+						default_image = true;
+					} 
+					
+					anno_list.getImageAnnoList().setWidget(i, 0, checkbox);
+					anno_list.getImageAnnoList().setWidget(i, 1, 
+							new Label(anno.label()));
+					
+					i++;
+					
+				} else if (anno.body().isText()) {
+					// check if the text annotation is targeted
+					if (AnnotationUtil.isSpecificResource(anno)) {
+						anno_list.getTargetedTextAnnoList().setWidget(k, 0, checkbox);
+						anno_list.getTargetedTextAnnoList().setWidget(k, 1, 
+								new Label(anno.label()));
+						k++;
+					}
+				}
+				
+				checkbox.setValue(data.getAnnotationStatus(anno), false);
+				bind_annotation_checkbox(checkbox, anno);
+			}
+		}
+		
+		anno_list_ready = true;
+    }
+    
+    // TODO change to StackLayoutPanel?
+    /**
+     * Setup the Text Annotations menu and add data
+     */
+    private void set_text_annotations_list() {
+    	if (data == null) {
+    		return;
+    	}
+    	
+    	PopupPanel text_popup = display.getTextAnnotationsPopup();
+    	FlowPanel main = (FlowPanel) text_popup.getWidget();
+    	ScrolledTabLayoutPanel tab_panel = (ScrolledTabLayoutPanel) main.getWidget(1);
+    	
+    	List<AnnotationList> annotation_lists = data.getAnnotationLists();
+    	if (annotation_lists.size() == 0) {
+    		return;
+    	}
+    	
+    	for (AnnotationList al : annotation_lists) {
+    		for (Annotation ann : al) {
+    			if (!ann.body().isText() || AnnotationUtil.isSpecificResource(ann)) {
+    				continue;
+    			}
+    			
+    			String text = ann.body().textContent();
+    			String label = ann.label();
+    			
+    			if (ann.body().format().endsWith("xml")) {
+    				String[] cont = { text };
+    				String[] name = { label };
+    				
+    				// Grab all tabs and put them into tab_panel
+    				TabLayoutPanel tab = TranscriptionViewer.createTranscriptionViewer(
+    						cont, name, 200, false);
+    				
+    				// Transfer all tabs to the Text Popup's TabLayoutPanel
+    				for (int i = 0; i < tab.getWidgetCount();) {
+    					Widget tab_widget = tab.getTabWidget(i);
+    					Widget content_widget = tab.getWidget(i);
+    					
+    					String tab_text = tab_widget.getElement().getInnerHTML();
+    					content_widget.addStyleName("TextAnnoTabPanel");
+    					tab_panel.add(content_widget, tab_text);
+    				}
+    				
+    			} else {
+    				ScrollPanel scroll = new ScrollPanel();
+    				HTML content = new HTML(text);
+    				
+    				scroll.setWidth("95%");
+    				scroll.setHeight("95%");
+    				scroll.add(content);
+    				
+    				tab_panel.add(scroll, label);
+    			}
+    		}
+    	}
+    	
+    	text_list_ready = true;
+    }
+    
+    /**
+     * Setup the title bar context, with clickable links
+     */
+    private void set_context() {
+    	final ManifestCollection collection = data.getManifestCollection();
+    	final Manifest manifest = data.getManifest();
+    	final Sequence seq = data.getSequence();
+    	final Canvas canvas = data.getCanvas();
+    	
+    	if (collection != null) {
+    		Label context = display.addContextLabel(collection.label());
+    		
+    		if (manifest != null) {
+	    		context.addClickHandler(new ClickHandler() {
+	    			public void onClick(ClickEvent event) {
+	    				PanelState state = new PanelState(PanelView.MANIFEST_COLLECTION,
+		    					collection.uri());
+		    			PanelRequestEvent req = new PanelRequestEvent(
+		    					PanelRequestEvent.PanelAction.CHANGE, panel_id,
+		    					state);
+		    			event_bus.fireEvent(req);
+	    			}
+	    		});
+    		}
+    	}
+    	
+    	if (manifest != null) {
+    		Label context = display.addContextLabel(manifest.label());
+    		
+    		if (seq != null) {
+	    		context.addClickHandler(new ClickHandler() {
+	    			public void onClick(ClickEvent event) {
+	    				PanelState state = new PanelState(PanelView.MANIFEST,
+	    						manifest.uri());
+	    				PanelRequestEvent req = new PanelRequestEvent(
+	    						PanelRequestEvent.PanelAction.CHANGE, panel_id,
+	    						state);
+	    				event_bus.fireEvent(req);
+	    			}
+	    		});
+    		}
+    	}
+    	
+    	if (seq != null) {
+    		Label context = display.addContextLabel(seq.label());
+    		
+    		if (canvas != null) {
+	    		context.addClickHandler(new ClickHandler() {
+	    			public void onClick(ClickEvent event) {
+	    				PanelState state = new PanelState(PanelView.SEQUENCE,
+	    						seq.uri(), manifest.uri());
+	    				PanelRequestEvent req = new PanelRequestEvent(
+	    						PanelRequestEvent.PanelAction.CHANGE, panel_id,
+	    						state);
+	    				event_bus.fireEvent(req);
+	    			}
+	    		});
+    		}
+    	}
+    	
+    	if (canvas != null) {
+    		Label context = display.addContextLabel(canvas.label());
+    	}
+    }
+    
+    /**
+     * Defines the behavior of the checkboxes in the List of Annotations. 
+     * By default, the checkboxes do nothing. This must be overridden in any
+     * class that uses the checkboxes.
+     * 
+     * @param checkbox
+     * @param ann
+     */
+    public void bind_annotation_checkbox(CheckBox checkbox, Annotation ann) {
+		
     }
     
     @Override

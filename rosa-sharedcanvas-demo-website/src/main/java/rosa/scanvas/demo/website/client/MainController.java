@@ -36,8 +36,10 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -51,8 +53,13 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
 
     private final DockLayoutPanel main;
     private final FlowPanel main_content;
+    private final FlowPanel header_space;
+    //private final Button add_panel_button;
+    private final Label app_header;
+    
+    private final Image add_image;
+    
     private final HandlerManager event_bus;
-    private final SidebarPresenter sidebar_presenter;
     private final ArrayList<Panel> panels;
 
     private int panel_width;
@@ -63,26 +70,37 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
         main.setStylePrimaryName("Main");
 
         this.main_content = new FlowPanel();
+        this.header_space = new FlowPanel();
+        
         this.event_bus = event_bus;
         this.panels = new ArrayList<Panel>();
-
+        
+        this.add_image = new Image("icons/add.png");
+        //this.add_panel_button = new Button(add_image.getElement().getInnerHTML());
+        
+        //this.add_panel_button = new Button("Add Panel");
+        
         FlowPanel header = new FlowPanel();
         header.setStylePrimaryName("Header");
-        Label app_header = new Label("JHU Prototype Shared Canvas Viewer");
+        app_header = new Label("JHU Prototype Shared Canvas Viewer");
+        app_header.addStyleName("HeaderTitle");
+        
         header.add(app_header);
-
+        header.add(header_space);
+        //header_space.add(add_panel_button);
+        header_space.add(add_image);
+        
+        header_space.setHeight(HEADER_HEIGHT + "px");
+        header_space.setWidth(Window.getClientWidth() + "px");
+        header_space.addStyleName("AddButton");
+        
         main.addNorth(header, HEADER_HEIGHT);
-
-        this.sidebar_presenter = new SidebarPresenter(new SidebarFullView(),
-                event_bus);
-        main.addWest(sidebar_presenter.asWidget(), SIDEBAR_WIDTH);
-
+        
         ScrollPanel sp = new ScrollPanel();
         sp.add(main_content);
         main.add(sp);
         
         main.getWidgetContainerElement(header).setClassName("AppHeader");
-        main.getWidgetContainerElement(sidebar_presenter.asWidget()).setClassName("SidebarContainer");
         main.getWidgetContainerElement(sp).setClassName("Content");
 
         calculate_panel_size(Window.getClientWidth(), Window.getClientHeight());
@@ -101,13 +119,13 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
     private void bind() {
         History.addValueChangeHandler(this);
 
-        /*Window.addResizeHandler(new ResizeHandler() {
+        Window.addResizeHandler(new ResizeHandler() {
             public void onResize(ResizeEvent event) {
                 doResize(event.getWidth(), event.getHeight());
             }
-        });*/
+        });
 
-        Window.addResizeHandler(new ResizeHandler() {
+        /*Window.addResizeHandler(new ResizeHandler() {
             int width = Window.getClientWidth();
             int height = Window.getClientHeight();
 
@@ -122,7 +140,7 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
                     doResize(width, height);
                 }
             }
-        });
+        });*/
 
         event_bus.addHandler(PanelRequestEvent.TYPE,
                 new PanelRequestEventHandler() {
@@ -136,6 +154,14 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
         		new PanelSelectedEventHandler() {
         	public void onPanelSelected(PanelSelectedEvent event) {
         		doPanelSelected(event.getPanelId());
+        	}
+        });
+        
+        add_image.addClickHandler(new ClickHandler() {
+        	public void onClick(ClickEvent event) {
+        		PanelRequestEvent req = new PanelRequestEvent(
+        				PanelRequestEvent.PanelAction.ADD, new PanelState());
+        		event_bus.fireEvent(req);
         	}
         });
     }
@@ -306,7 +332,7 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
             count = 1;
         }
 
-        panel_width = (win_width - SIDEBAR_WIDTH) - 40;
+        panel_width = (win_width/* - SIDEBAR_WIDTH*/) - 40;
         panel_height = (win_height - HEADER_HEIGHT) - 28;
 
         if (count > 1) {
@@ -349,6 +375,8 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
     }
 
     private void doResize(int win_width, int win_height) {
+    	header_space.setWidth(win_width + "px");
+    	
         update_panel_sizes(win_width, win_height);
     }
 
@@ -381,7 +409,7 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
             add_panel(panel_state);
         } else if (action == PanelAction.CHANGE) {
             change_panel_by_id(panel_state, panel_id);
-        } else if (action == PanelAction.REMOVE) {
+        } else if (action == PanelAction.REMOVE && panels.size() > 1) {
             remove_panel_by_id(panel_id);
         }
 

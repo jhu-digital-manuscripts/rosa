@@ -33,8 +33,8 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
-public class SequencePanelPresenter implements PanelPresenter {
-    public interface Display extends IsWidget {
+public class SequencePanelPresenter extends BasePanelPresenter {
+    public interface Display extends BasePanelPresenter.Display {
         PageTurner getPageTurner();
 
         ThumbnailBrowser getThumbnailBrowser();
@@ -43,14 +43,12 @@ public class SequencePanelPresenter implements PanelPresenter {
 
         HasSelectionHandlers<Integer> getTabPanelSelector();
 
-        void resize(int width, int height);
+        /*void resize(int width, int height);
         
-        void selected(boolean is_selected);
+        void selected(boolean is_selected);*/
     }
 
-    private final HandlerManager eventBus;
     private final Display display;
-    private final int panel_id;
     private int page_width, page_height;
     private int thumb_size;
     private int tab;
@@ -66,9 +64,8 @@ public class SequencePanelPresenter implements PanelPresenter {
 
     public SequencePanelPresenter(Display display, HandlerManager eventBus,
             int panel_id) {
-        this.eventBus = eventBus;
+    	super(display, eventBus, panel_id);
         this.display = display;
-        this.panel_id = panel_id;
         
         this.thumb_size = 128;
         this.page_width = 200;
@@ -139,8 +136,8 @@ public class SequencePanelPresenter implements PanelPresenter {
         PanelState state = new PanelState(PanelView.CANVAS, data.getSequence()
                 .uri(), data.getManifest().uri(), canvas_index);
         PanelRequestEvent event = new PanelRequestEvent(
-                PanelRequestEvent.PanelAction.CHANGE, panel_id, state);
-        eventBus.fireEvent(event);
+                PanelRequestEvent.PanelAction.CHANGE, panelId(), state);
+        eventBus().fireEvent(event);
     }
 
     @Override
@@ -352,6 +349,7 @@ public class SequencePanelPresenter implements PanelPresenter {
 
     @Override
     public void display(PanelData data) {
+        super.display(data);
         this.data = data;
 
         thumb_browser_setup = false;
@@ -363,15 +361,17 @@ public class SequencePanelPresenter implements PanelPresenter {
             setup_thumb_browser();
         }
         
-        PanelDisplayedEvent event = new PanelDisplayedEvent(panel_id, data);
-        eventBus.fireEvent(event);
+        PanelDisplayedEvent event = new PanelDisplayedEvent(panelId(), data);
+        eventBus().fireEvent(event);
     }
 
     @Override
     public void resize(int width, int height) {
+    	super.resize(width, height);
+    	
         page_width = (width / 2) - 20;
         // TODO
-        page_height = height - 120;
+        page_height = height - 132;
 
         display.getPageTurner().resize(page_width, page_height);
 
@@ -380,8 +380,8 @@ public class SequencePanelPresenter implements PanelPresenter {
         display.resize(width, height);
     }
     
-    @Override
+/*    @Override
     public void selected(boolean is_selected) {
     	display.selected(is_selected);
-    }
+    }*/
 }

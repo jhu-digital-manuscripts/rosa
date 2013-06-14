@@ -105,4 +105,10 @@ public class HomeView extends BasePanelView implements HomePanelPresenter.Displa
     public HasValue<Boolean> getUserUrlIsCollection() {
         return is_col_checkbox;
     }
+    
+    @Override
+    public void resize(int width, int height) {
+    	super.resize(width, height);
+    	top.setSize((width - 22)+"px", (height - 50)+"px");
+    }
 }

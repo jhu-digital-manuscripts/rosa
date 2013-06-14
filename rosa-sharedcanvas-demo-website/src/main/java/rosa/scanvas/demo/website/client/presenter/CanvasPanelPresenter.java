@@ -17,14 +17,19 @@ import rosa.scanvas.model.client.Canvas;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+
 import com.google.gwt.user.client.Window;
-public class CanvasPanelPresenter implements PanelPresenter {
-    public interface Display extends IsWidget {
+
+public class CanvasPanelPresenter extends BasePanelPresenter {
+    public interface Display extends BasePanelPresenter.Display {
         Label getLabel();
 
         DisplayAreaView getDisplayAreaWidget();
@@ -35,25 +40,22 @@ public class CanvasPanelPresenter implements PanelPresenter {
         
         Button getResetButton();
         
-        void showDialogBox(String label, String text, boolean tei);
+//        void showDialogBox(String label, String text, boolean tei);
         
-        void hideDialogBox(String label, String text, boolean tei);
+//        void hideDialogBox(String label, String text, boolean tei);
         
-        void selected(boolean is_selected);
+//        void selected(boolean is_selected);
     }
 
     private final Display display;
-    private final int panel_id;
-    private final HandlerManager event_bus;
     private Canvas canvas;
     private int width, height;
     
     private List<DisplayElement> els = new ArrayList<DisplayElement>();
 
     public CanvasPanelPresenter(Display display, HandlerManager eventBus, int panel_id) {
+    	super(display, eventBus, panel_id);
         this.display = display;
-        this.event_bus = eventBus;
-        this.panel_id = panel_id;
         this.width = -1;
         this.height = -1;
         
@@ -64,10 +66,10 @@ public class CanvasPanelPresenter implements PanelPresenter {
      * Bind event handlers to the event bus and the DOM
      */
     private void bind() {
-    	event_bus.addHandler(AnnotationSelectionEvent.TYPE, 
+    	eventBus().addHandler(AnnotationSelectionEvent.TYPE, 
     			new AnnotationSelectionHandler() {
     		public void onSelection(AnnotationSelectionEvent event) {
-    			if (event.getPanel() == panel_id) {
+    			if (event.getPanel() == panelId()) {
     				setAnnotationVisible(event.getAnnotation(), event.getStatus());
     			}
     		}
@@ -106,13 +108,13 @@ public class CanvasPanelPresenter implements PanelPresenter {
     	if (!AnnotationUtil.isSpecificResource(ann) &&
     			ann.body().isText()) {
     		// nontargeted text annotations are not displayed on the canvas
-    		boolean tei = ann.body().format().endsWith("xml");
+    		/*boolean tei = ann.body().format().endsWith("xml");
     		
     		if (status) {
     			display.showDialogBox(ann.label(), ann.body().textContent(), tei);
     		} else {
     			display.hideDialogBox(ann.label(), ann.body().textContent(), tei);
-    		}
+    		}*/
     		
     		return;
     	}
@@ -128,12 +130,24 @@ public class CanvasPanelPresenter implements PanelPresenter {
     }
     
     @Override
+    public void bind_annotation_checkbox(final CheckBox checkbox, final Annotation ann) {
+    	checkbox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+    		public void onValueChange(ValueChangeEvent<Boolean> event) {
+    			setAnnotationVisible(ann, event.getValue());
+    			data().setAnnotationStatus(ann, event.getValue());
+    		}
+    	});
+    	
+    }
+    
+    @Override
     public Widget asWidget() {
         return display.asWidget();
     }
 
     @Override
     public void display(PanelData data) {
+    	super.display(data);
         this.canvas = data.getCanvas();
         els.clear();
         
@@ -153,9 +167,9 @@ public class CanvasPanelPresenter implements PanelPresenter {
         }
         display.getDisplayAreaWidget().area().setContent(els);
         update();
-     
-        PanelDisplayedEvent event = new PanelDisplayedEvent(panel_id, data);
-        event_bus.fireEvent(event);
+        
+        PanelDisplayedEvent event = new PanelDisplayedEvent(panelId(), data);
+        eventBus().fireEvent(event);
     }
 
     @Override
@@ -163,9 +177,10 @@ public class CanvasPanelPresenter implements PanelPresenter {
         if (this.width == width && this.height == height) {
             return;
         }
+        super.resize(width, height);
 
-        this.width = width;
-        this.height = height;
+        this.width = width - 22;
+        this.height = height - 50;
         
         update();
     }

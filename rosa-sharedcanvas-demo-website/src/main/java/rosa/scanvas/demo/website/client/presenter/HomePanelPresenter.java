@@ -26,7 +26,7 @@ import com.google.gwt.user.client.ui.Widget;
  * entire the url to a manifest collection or a manifest directly.
  */
 public class HomePanelPresenter extends BasePanelPresenter {
-    public interface Display extends IsWidget {
+    public interface Display extends BasePanelPresenter.Display {
         HasClickHandlers getCollectionList();
 
         int getSelectedCollection();
@@ -60,7 +60,7 @@ public class HomePanelPresenter extends BasePanelPresenter {
 
     public HomePanelPresenter(Display display, HandlerManager eventBus,
             int panel_id) {
-    	super((BasePanelPresenter.Display)display, eventBus, panel_id);
+    	super(display, eventBus, panel_id);
         this.display = display;
 
         bind();
@@ -132,6 +132,8 @@ public class HomePanelPresenter extends BasePanelPresenter {
 
     @Override
     public void display(PanelData data) {
+    	super.display(data);
+    	
         PanelDisplayedEvent event = new PanelDisplayedEvent(panelId(), data);
         eventBus().fireEvent(event);
     }

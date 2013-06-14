@@ -19,17 +19,7 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.Window;
-public class CanvasView extends Composite implements CanvasPanelPresenter.Display {
-	
-	private static DialogBox transcript;
-	private static DialogBox top;
-	
-	private static DialogBox transcript_box() {
-		return transcript;
-	}
-	private static DialogBox top_box() {
-		return top;
-	}
+public class CanvasView extends BasePanelView implements CanvasPanelPresenter.Display {
 	
 	private final Panel main;
     private final Label title;
@@ -38,11 +28,6 @@ public class CanvasView extends Composite implements CanvasPanelPresenter.Displa
     private final Button zoomInButton;
     private final Button zoomOutButton;
     private final Button resetButton;
-    
-    private TabLayoutPanel tab_panel = new TabLayoutPanel(
-    		40, Style.Unit.PX);
-
-    private HashMap<String, ScrollPanel> tabs = new HashMap<String, ScrollPanel>();
     
     public CanvasView() {
         this.main = new FlowPanel();
@@ -68,22 +53,7 @@ public class CanvasView extends Composite implements CanvasPanelPresenter.Displa
         main.setStylePrimaryName("PanelView");
         title.addStyleName("PanelTitle");
         
-        initWidget(main);
-        
-        tab_panel.addStyleName("TextAnnoTabPanel");
-        if (top_box() == null) {
-        	top = new DialogBox(false, false);
-        	top_box().setText("Text Annotations");
-        	top_box().add(tab_panel);
-        	top_box().addStyleName("AnnotationDialog");
-        }
-        
-        if (transcript_box() == null) {
-        	transcript = new DialogBox(false, false);
-        	transcript_box().setText("Transcriptions");
-        	transcript_box().addStyleName("AnnotationDialog");
-        }
-        
+        addContent(main);
     }
 
     @Override
@@ -109,81 +79,5 @@ public class CanvasView extends Composite implements CanvasPanelPresenter.Displa
     @Override
     public Button getResetButton() {
     	return resetButton;
-    }
-    
-    /**
-     * Adds text to a dialog box and shows it if not visible
-     * 
-     * @param label
-     * 			title of the dialog box
-     * @param text
-     * 			text to be displayed in body of dialog box
-     */
-    @Override
-    public void showDialogBox(String label, String text, boolean tei) {  	
-    	// if this content already exists, do not add it
-    	if (tabs.containsKey(label)) {
-    		return;
-    	}
-    	
-    	TabLayoutPanel tab = null;
-    	if (tei) {
-    		transcript_box().clear();
-    		
-    		String[] cont = { text };
-    		String[] name = { label };
-    		
-    		tab = TranscriptionViewer.createTranscriptionViewer(
-    				cont, name, 200, false);
-    		
-    		//tab.setSize(500+"px", 400+"px");
-    		tab.addStyleName("TextAnnoTabPanel");
-    		
-    		transcript_box().add(tab);
-    		transcript_box().show();
-    	} else {
-    		top_box().clear();
-    		ScrollPanel scroll = new ScrollPanel();
-    		HTML content = new HTML(text);
-    		
-    		/*scroll.setWidth("95%");
-    		scroll.setHeight("95%");*/
-    		scroll.add(content);
-    		
-    		tab_panel.add(scroll, label);
-    		tabs.put(label, scroll);
-    		
-    		top_box().add(tab_panel);
-    		top_box().show();
-    	}
-    }
-    
-    @Override
-    public void hideDialogBox(String label, String text, boolean tei) {
-    	
-    	if (tei) {
-    		transcript_box().hide();
-    	} else {
-    		ScrollPanel content = tabs.get(label);
-    		if (content == null) {
-    			return;
-    		}
-    		
-    		tab_panel.remove(content);
-    		tabs.remove(label);
-    		
-    		if (tab_panel.getWidgetCount() == 0) {
-    			top_box().hide();
-    		}
-    	}
-    }
-    
-    @Override
-    public void selected(boolean is_selected) {
-    	if (is_selected) {
-    		main.addStyleName("PanelSelected");
-    	} else {
-    		main.removeStyleName("PanelSelected");
-    	}
     }
 }

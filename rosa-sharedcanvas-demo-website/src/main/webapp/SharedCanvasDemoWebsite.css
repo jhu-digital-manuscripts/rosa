@@ -5,10 +5,27 @@
 	font-size: 30px;
 }
 
-.Header .gwt-Label {
+.Header .HeaderTitle {
+	width: 525px;
 	margin-top: 10px;
 	margin-left: 10px;
+	float: left;
 	cursor: pointer;
+}
+
+.Header .gwt-Image {
+	margin-top: 10px;
+	margin-right: 10px;
+	width: 40px;
+	cursor: pointer;
+}
+
+.Header .gwt-Image:active {
+	opacity: 0.75;
+}
+
+.Header .AddButton {
+	text-align: right;
 }
 
 .Opening {
@@ -72,21 +89,48 @@
   margin-top: 1em;
 }
 
-/* ------ */
+/* ------ Panel Titlebar ------ */
 
 .PanelTitleBar {
 	
 }
 
-.PanelTitleBar .Context {
+.ContextBar {
 	float: left;
 	background-color: rgb(115, 186, 255);
+}
+
+.ContextBar .Link {
+	float: left;
+	font-size: 18px;
+	margin-right: 20px;
+	cursor: pointer;
+}
+
+.ContextBar .gwt-Label {
+	float: left;
+	font-size: 18px;
+	margin-right: 20px;
 }
 
 .PanelTitleBar .gwt-ToggleButton {
 	float: left;
 	width: 20px;
 	height: 20px;
+	background-repeat: no-repeat;
+	background-size: 29px 26px;
+}
+
+.PanelTitleBar .gwt-ToggleButton:focus {
+	outline: none;
+}
+
+.PanelTitleBar .gwt-ToggleButton .gwt-Image {
+	position: relative;
+	top: -5px;
+	left: -6px;
+	width: 34px;
+	height: 30px;
 }
 
 .TitleHeader {
@@ -97,16 +141,14 @@
 	border-collapse:collapse;
 }
 
-/* .Options .OptionsRow {
-	border: 1px solid black;
-	margin: 5px 0px;
-	cursor: pointer;
-} */
-
 .Options .gwt-Label {
 	border-top: 1px solid black;
 	margin: 5px 0px;
 	cursor: pointer;
+}
+
+.gwt-PopupPanel {
+	border: 3px solid black;
 }
 
 /* ------ */
@@ -142,51 +184,10 @@
 	left: 00px;
 }
 
-/** ------ Sidebar ------*/
-
-.Sidebar {
-	width: 250px;
-}
-
-.Sidebar .PanelChangeToolbar {
-	height: 20px;
-	margin-top: 5px;
-}
-
-.Sidebar .PanelChangeToolbar .gwt-ListBox {
-	width: 40%;
-	margin-left: 5px;
-}
-
-.Sidebar .PanelChangeToolbar .gwt-Button {
-	margin-left: 5px;
-}
-
-.Sidebar .MetaScrollPanel {
-}
-
-.Sidebar .AnnoScrollPanel {
-}
-
-.Sidebar .gwt-TabLayoutPanel {
-	width: 100%;
-	height: 90%;
-}
-
-.Sidebar .gwt-TabLayoutPanel .gwt-TabLayoutPanelTabs {
-	width: 100%;
-}
-
-.Sidebar .gwt-TabLayoutPanel .gwt-TabLayoutPanelTab {
-	/* width: 45%; */
-	width: 115px;
-	margin-left: 0px;
-	font-size: larger;
-}
-
 /** ------ Manifest list ------ */
 
 .ManifestList {
+	width: 350px;
 }
 
 .ManifestList .gwt-DisclosurePanel {
@@ -220,6 +221,7 @@
 /* ------- Annotation list ------ */
 
 .AnnotationList {
+	width: 350px;
 }
 
 .AnnotationList .ScrollPanel {
@@ -265,8 +267,8 @@
 }
 
 .TextAnnoTabPanel {
-	height: 200px;
-	width: 350px;
+	height: 95%;
+	width: 95%;
 }
 
 .TextAnnoTabPanel .gwt-TabPanelContent {

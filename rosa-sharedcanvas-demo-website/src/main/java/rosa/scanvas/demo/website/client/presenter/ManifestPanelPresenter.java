@@ -14,30 +14,27 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ManifestPanelPresenter implements PanelPresenter {
+public class ManifestPanelPresenter extends BasePanelPresenter {
     private PanelData data;
 
-    public interface Display extends IsWidget {
+    public interface Display extends BasePanelPresenter.Display {
         HasClickHandlers getSequenceList();
 
         void setManifest(Manifest manifest);
 
         int getSelectedSequence();
 
-        void resize(int width, int height);
+        /*void resize(int width, int height);
         
-        void selected(boolean is_selected);
+        void selected(boolean is_selected);*/
     }
 
     private final Display display;
-    private final HandlerManager event_bus;
-    private final int panel_id;
 
     public ManifestPanelPresenter(Display display, HandlerManager event_bus,
             int panel_id) {
+    	super(display, event_bus, panel_id);
         this.display = display;
-        this.event_bus = event_bus;
-        this.panel_id = panel_id;
 
         bind();
     }
@@ -56,9 +53,9 @@ public class ManifestPanelPresenter implements PanelPresenter {
                             sequence, manifest);
 
                     PanelRequestEvent req = new PanelRequestEvent(
-                            PanelRequestEvent.PanelAction.CHANGE, panel_id,
+                            PanelRequestEvent.PanelAction.CHANGE, panelId(),
                             state);
-                    event_bus.fireEvent(req);
+                    eventBus().fireEvent(req);
                 }
             }
         });
@@ -71,15 +68,16 @@ public class ManifestPanelPresenter implements PanelPresenter {
 
     @Override
     public void display(PanelData data) {
-        this.data = data;
+    	super.display(data);
+    	this.data = data;
 
         display.setManifest(data.getManifest());
 
-        PanelDisplayedEvent event = new PanelDisplayedEvent(panel_id, data);
-        event_bus.fireEvent(event);
+        PanelDisplayedEvent event = new PanelDisplayedEvent(panelId(), data);
+        eventBus().fireEvent(event);
     }
 
-    @Override
+/*    @Override
     public void resize(int width, int height) {
         display.resize(width, height);
     }
@@ -87,5 +85,5 @@ public class ManifestPanelPresenter implements PanelPresenter {
     @Override
     public void selected(boolean is_selected) {
     	display.selected(is_selected);
-    }
+    }*/
 }
