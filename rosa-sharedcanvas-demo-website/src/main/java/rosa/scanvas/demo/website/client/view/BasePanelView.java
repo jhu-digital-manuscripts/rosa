@@ -5,7 +5,6 @@ import java.util.List;
 import rosa.scanvas.demo.website.client.presenter.BasePanelPresenter;
 import rosa.scanvas.demo.website.client.widgets.AnnotationListWidget;
 import rosa.scanvas.demo.website.client.widgets.ManifestListWidget;
-import rosa.scanvas.demo.website.client.widgets.ScrolledTabLayoutPanel;
 
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.HasClickHandlers;

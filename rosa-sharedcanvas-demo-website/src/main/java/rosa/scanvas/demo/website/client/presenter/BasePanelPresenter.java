@@ -12,7 +12,6 @@ import rosa.scanvas.demo.website.client.event.PanelDisplayedEvent;
 import rosa.scanvas.demo.website.client.event.PanelRequestEvent;
 import rosa.scanvas.demo.website.client.widgets.AnnotationListWidget;
 import rosa.scanvas.demo.website.client.widgets.ManifestListWidget;
-import rosa.scanvas.demo.website.client.widgets.ScrolledTabLayoutPanel;
 import rosa.scanvas.model.client.Annotation;
 import rosa.scanvas.model.client.AnnotationList;
 import rosa.scanvas.model.client.Canvas;
@@ -28,6 +27,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -209,13 +209,6 @@ public abstract class BasePanelPresenter implements PanelPresenter {
         		
         	}
         });
-        
-        /*display.getSwapVerticalButton().addClickHandler(new ClickHandler() {
-        	public void onClick(ClickEvent event) {
-        		
-        	}
-        });*/
-        
     }
 
     public HandlerManager eventBus() {
@@ -321,9 +314,11 @@ public abstract class BasePanelPresenter implements PanelPresenter {
 				} else if (anno.body().isText()) {
 					// check if the text annotation is targeted
 					if (AnnotationUtil.isSpecificResource(anno)) {
+						Label text = new Label(anno.label());
+						text.setStylePrimaryName("AnnotationLabel");
+						
 						anno_list.getTargetedTextAnnoList().setWidget(k, 0, checkbox);
-						anno_list.getTargetedTextAnnoList().setWidget(k, 1, 
-								new Label(anno.label()));
+						anno_list.getTargetedTextAnnoList().setWidget(k, 1, text);
 						k++;
 					}
 				}
@@ -332,6 +327,20 @@ public abstract class BasePanelPresenter implements PanelPresenter {
 				bind_annotation_checkbox(checkbox, anno);
 			}
 		}
+		
+		display.getAnnoListWidget().getShowAnnoButton().addClickHandler(
+        		new ClickHandler() {
+        			public void onClick(ClickEvent event) {
+        				select_all_annotations(true);
+        			}
+        		});
+        
+        display.getAnnoListWidget().getHideAnnoButton().addClickHandler(
+        		new ClickHandler() {
+        			public void onClick(ClickEvent event) {
+        				select_all_annotations(false);
+        			}
+        		});
 		
 		anno_list_ready = true;
     }
@@ -485,6 +494,27 @@ public abstract class BasePanelPresenter implements PanelPresenter {
      */
     public void bind_annotation_checkbox(CheckBox checkbox, Annotation ann) {
 		
+    }
+    
+    /**
+     * Display or hide all annotations, excluding text annotations that target
+     * the canvas as a whole.
+     * 
+     * @param status
+     */
+    private void select_all_annotations(boolean status) {
+    	FlexTable image_list = display.getAnnoListWidget().getImageAnnoList();
+		FlexTable text_list = display.getAnnoListWidget().getTargetedTextAnnoList();
+		
+		for (int i = 0; i < image_list.getRowCount(); i++) {
+			CheckBox check = (CheckBox) image_list.getWidget(i, 0);
+			check.setValue(status, true);
+		}
+		
+		for (int i = 0; i < text_list.getRowCount(); i++) {
+			CheckBox check = (CheckBox) text_list.getWidget(i, 0);
+			check.setValue(status, true);
+		}
     }
     
     @Override

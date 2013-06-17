@@ -52,7 +52,6 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
     private final DockLayoutPanel main;
     private final FlowPanel main_content;
     private final FlowPanel header_space;
-    //private final Button add_panel_button;
     private final Label app_header;
     
     private final Image add_image;
@@ -74,9 +73,6 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
         this.panels = new ArrayList<Panel>();
         
         this.add_image = new Image("icons/add.png");
-        //this.add_panel_button = new Button(add_image.getElement().getInnerHTML());
-        
-        //this.add_panel_button = new Button("Add Panel");
         
         FlowPanel header = new FlowPanel();
         header.setStylePrimaryName("Header");
@@ -85,7 +81,6 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
         
         header.add(app_header);
         header.add(header_space);
-        //header_space.add(add_panel_button);
         header_space.add(add_image);
         
         header_space.setHeight(HEADER_HEIGHT + "px");
