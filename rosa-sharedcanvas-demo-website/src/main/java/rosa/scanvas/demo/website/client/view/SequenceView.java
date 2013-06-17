@@ -25,7 +25,7 @@ public class SequenceView extends BasePanelView implements
     
     public SequenceView() {
         main = new FlowPanel();
-        main.setStylePrimaryName("PanelView");
+        main.setStylePrimaryName("View");
 
         this.thumb_browser = new ThumbnailBrowser();
         this.page_turner = new PageTurner(IIIFImageServer.instance());

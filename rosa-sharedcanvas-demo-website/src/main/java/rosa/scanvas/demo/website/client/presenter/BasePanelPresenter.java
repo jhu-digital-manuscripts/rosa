@@ -34,6 +34,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.StackLayoutPanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
@@ -63,8 +64,6 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     	HasClickHandlers getDuplicateButton();
     	
     	HasClickHandlers getSwapHorizontalButton();
-    	
-    	HasClickHandlers getSwapVerticalButton();
     	
     	AnnotationListWidget getAnnoListWidget();
     	
@@ -199,7 +198,9 @@ public abstract class BasePanelPresenter implements PanelPresenter {
         
         display.getDuplicateButton().addClickHandler(new ClickHandler() {
         	public void onClick(ClickEvent event) {
-        		
+        		PanelRequestEvent req = new PanelRequestEvent(
+        				PanelRequestEvent.PanelAction.ADD, panel_id);
+        		event_bus.fireEvent(req);
         	}
         });
         
@@ -209,11 +210,11 @@ public abstract class BasePanelPresenter implements PanelPresenter {
         	}
         });
         
-        display.getSwapVerticalButton().addClickHandler(new ClickHandler() {
+        /*display.getSwapVerticalButton().addClickHandler(new ClickHandler() {
         	public void onClick(ClickEvent event) {
         		
         	}
-        });
+        });*/
         
     }
 
@@ -335,7 +336,6 @@ public abstract class BasePanelPresenter implements PanelPresenter {
 		anno_list_ready = true;
     }
     
-    // TODO change to StackLayoutPanel?
     /**
      * Setup the Text Annotations menu and add data
      */
@@ -346,12 +346,14 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     	
     	PopupPanel text_popup = display.getTextAnnotationsPopup();
     	FlowPanel main = (FlowPanel) text_popup.getWidget();
-    	ScrolledTabLayoutPanel tab_panel = (ScrolledTabLayoutPanel) main.getWidget(1);
+    	StackLayoutPanel tab_panel = (StackLayoutPanel) main.getWidget(1);
     	
     	List<AnnotationList> annotation_lists = data.getAnnotationLists();
     	if (annotation_lists.size() == 0) {
     		return;
     	}
+    	
+    	double header_size = 35;
     	
     	for (AnnotationList al : annotation_lists) {
     		for (Annotation ann : al) {
@@ -371,24 +373,33 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     						cont, name, 200, false);
     				
     				// Transfer all tabs to the Text Popup's TabLayoutPanel
-    				for (int i = 0; i < tab.getWidgetCount();) {
+    				for (int i = 0; i < tab.getWidgetCount(); i++) {
     					Widget tab_widget = tab.getTabWidget(i);
     					Widget content_widget = tab.getWidget(i);
     					
     					String tab_text = tab_widget.getElement().getInnerHTML();
-    					content_widget.addStyleName("TextAnnoTabPanel");
-    					tab_panel.add(content_widget, tab_text);
+    					HTML content = new HTML(
+    							content_widget.getElement().getInnerHTML());
+    					
+    					ScrollPanel scroll = new ScrollPanel();
+    					
+    					scroll.setWidth("97%");
+    					scroll.setHeight("97%");
+    					scroll.add(content);
+    					
+    					content.addStyleName("TextAnnoTabPanel");
+    					tab_panel.add(scroll, tab_text, header_size);
     				}
     				
     			} else {
     				ScrollPanel scroll = new ScrollPanel();
     				HTML content = new HTML(text);
     				
-    				scroll.setWidth("95%");
-    				scroll.setHeight("95%");
+    				scroll.setWidth("97%");
+    				scroll.setHeight("97%");
     				scroll.add(content);
     				
-    				tab_panel.add(scroll, label);
+    				tab_panel.add(scroll, label, header_size);
     			}
     		}
     	}
@@ -409,6 +420,7 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     		Label context = display.addContextLabel(collection.label());
     		
     		if (manifest != null) {
+    			context.addStyleName("Link");
 	    		context.addClickHandler(new ClickHandler() {
 	    			public void onClick(ClickEvent event) {
 	    				PanelState state = new PanelState(PanelView.MANIFEST_COLLECTION,
@@ -426,6 +438,7 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     		Label context = display.addContextLabel(manifest.label());
     		
     		if (seq != null) {
+    			context.addStyleName("Link");
 	    		context.addClickHandler(new ClickHandler() {
 	    			public void onClick(ClickEvent event) {
 	    				PanelState state = new PanelState(PanelView.MANIFEST,
@@ -443,6 +456,7 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     		Label context = display.addContextLabel(seq.label());
     		
     		if (canvas != null) {
+    			context.addStyleName("Link");
 	    		context.addClickHandler(new ClickHandler() {
 	    			public void onClick(ClickEvent event) {
 	    				PanelState state = new PanelState(PanelView.SEQUENCE,

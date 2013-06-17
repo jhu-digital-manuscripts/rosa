@@ -22,7 +22,7 @@ import com.google.gwt.user.client.Window;
 public class CanvasView extends BasePanelView implements CanvasPanelPresenter.Display {
 	
 	private final Panel main;
-    private final Label title;
+    //private final Label title;
     private final DisplayAreaView area_view;
     
     private final Button zoomInButton;
@@ -31,7 +31,7 @@ public class CanvasView extends BasePanelView implements CanvasPanelPresenter.Di
     
     public CanvasView() {
         this.main = new FlowPanel();
-        this.title = new Label();
+        //this.title = new Label();
         
         this.zoomInButton = new Button("Zoom In");
         this.zoomOutButton = new Button("Zoom Out");
@@ -42,7 +42,7 @@ public class CanvasView extends BasePanelView implements CanvasPanelPresenter.Di
         FlowPanel canvas_toolbar = new FlowPanel();
         canvas_toolbar.setStylePrimaryName("CanvasToolbar");
 
-        main.add(title);
+ //       main.add(title);
         main.add(area_view);
         main.add(canvas_toolbar);
         
@@ -50,16 +50,16 @@ public class CanvasView extends BasePanelView implements CanvasPanelPresenter.Di
         canvas_toolbar.add(zoomOutButton);
         canvas_toolbar.add(resetButton);
 
-        main.setStylePrimaryName("PanelView");
-        title.addStyleName("PanelTitle");
+        main.setStylePrimaryName("View");
+        //title.addStyleName("PanelTitle");
         
         addContent(main);
     }
 
-    @Override
+/*    @Override
     public Label getLabel() {
         return title;
-    }
+    }*/
 
     @Override
     public DisplayAreaView getDisplayAreaWidget() {

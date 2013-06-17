@@ -27,7 +27,7 @@ public class CollectionView extends BasePanelView implements
     public CollectionView() {
         main = new FlowPanel();
         top = new ScrollPanel(main);
-        top.setStylePrimaryName("PanelView");
+        top.setStylePrimaryName("View");
 
         Label panel_title = new Label("Choose a manifest to view.");
         panel_title.setStylePrimaryName("PanelTitle");

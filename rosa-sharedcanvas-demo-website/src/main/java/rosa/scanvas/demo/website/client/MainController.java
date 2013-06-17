@@ -8,8 +8,6 @@ import rosa.scanvas.demo.website.client.event.PanelAddedEventHandler;
 import rosa.scanvas.demo.website.client.event.PanelRequestEvent;
 import rosa.scanvas.demo.website.client.event.PanelRequestEvent.PanelAction;
 import rosa.scanvas.demo.website.client.event.PanelRequestEventHandler;
-import rosa.scanvas.demo.website.client.event.PanelSelectedEvent;
-import rosa.scanvas.demo.website.client.event.PanelSelectedEventHandler;
 import rosa.scanvas.demo.website.client.presenter.CanvasPanelPresenter;
 import rosa.scanvas.demo.website.client.presenter.HomePanelPresenter;
 import rosa.scanvas.demo.website.client.presenter.HomePresenter;
@@ -150,13 +148,6 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
                     }
                 });
         
-        event_bus.addHandler(PanelSelectedEvent.TYPE,
-        		new PanelSelectedEventHandler() {
-        	public void onPanelSelected(PanelSelectedEvent event) {
-        		doPanelSelected(event.getPanelId());
-        	}
-        });
-        
         add_image.addClickHandler(new ClickHandler() {
         	public void onClick(ClickEvent event) {
         		PanelRequestEvent req = new PanelRequestEvent(
@@ -212,6 +203,31 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
         update_panel_sizes(Window.getClientWidth(), Window.getClientHeight());
         panel.display(state);
     }
+    
+    /**
+     * Add a new panel that is a duplicate of another panel, specified by its id
+     * 
+     * @param old_panel_id
+     */
+    private void duplicate_panel(int old_panel_id) {
+    	int panel_id = next_panel_id++;
+    	
+    	PanelState old_state = panels.get(old_panel_id).getState();
+    	
+    	PanelState state = new PanelState(old_state.getView(), old_state.getObjectUri(),
+    			old_state.getManifestUri(), old_state.getCanvasIndex());
+    	Panel panel = new Panel(create_panel_presenter(state.getView(), panel_id),
+    			panel_id);
+    	
+    	panels.add(panel);
+    	main_content.add(panel.getPresenter());
+    	
+    	// TODO is this event used anymore?
+    	event_bus.fireEvent(new PanelAddedEvent(panel_id));
+    	
+    	update_panel_sizes(Window.getClientWidth(), Window.getClientHeight());
+    	panel.display(state);
+    }
 
     /**
      * Change the state of a panel
@@ -258,7 +274,6 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
             main_content.remove(index + 1);
 
             presenter.resize(panel_width, panel_height);
-            doPanelSelected(panel.getId());
             panel.display(state);
         }
     }
@@ -405,8 +420,10 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
      */
     private void doPanelRequest(PanelAction action, int panel_id,
             PanelState panel_state) {
-        if (action == PanelAction.ADD) {
+        if (action == PanelAction.ADD && panel_id == -1) {
             add_panel(panel_state);
+        } else if (action == PanelAction.ADD && panel_id != -1) {
+        	duplicate_panel(panel_id);
         } else if (action == PanelAction.CHANGE) {
             change_panel_by_id(panel_state, panel_id);
         } else if (action == PanelAction.REMOVE && panels.size() > 1) {
@@ -414,22 +431,6 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
         }
 
         History.newItem(get_history_token(), false);
-    }
-
-    /**
-     * Sets the style of selected or unselected panels
-     * 
-     * @param panel_id
-     */
-    private void doPanelSelected(int panel_id) {
-    	// set all panels as unselected except for the specified Id
-    	for (Panel p : panels) {
-    		if (p.getId() == panel_id) {
-    			p.getPresenter().selected(true);
-    		} else {
-    			p.getPresenter().selected(false);
-    		}
-    	}
     }
     
     private String get_history_token() {

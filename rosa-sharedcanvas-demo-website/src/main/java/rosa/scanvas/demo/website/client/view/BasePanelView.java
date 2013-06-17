@@ -21,6 +21,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.StackLayoutPanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
@@ -46,11 +47,13 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 	private final PopupPanel options_popup;
 	
 	private final Label close;
-	private final Label swap_v;
 	private final Label swap_h;
 	private final Label dupl;
+	private final Button move_up;
+	private final Button move_down;
 	
-	private final ScrolledTabLayoutPanel tab_panel;
+	//private final ScrolledTabLayoutPanel tab_panel;
+	private final StackLayoutPanel tab_panel;
 
     public BasePanelView() {
         main = new FlowPanel();
@@ -59,8 +62,11 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
         main.setStylePrimaryName("PanelView");
         title_bar.setStylePrimaryName("PanelTitleBar");
         context_bar.setStylePrimaryName("ContextBar");
+        move_up = new Button("^");
+        move_down = new Button("v");
         
-        tab_panel = new ScrolledTabLayoutPanel(24, Style.Unit.PX, 300);
+        tab_panel = new StackLayoutPanel(/*24, */Style.Unit.PX/*, 300*/);
+        tab_panel.setStylePrimaryName("StackLayoutPanel");
         
         annoListWidget = new AnnotationListWidget();
         metaListWidget = new ManifestListWidget();
@@ -90,9 +96,13 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 		meta_popup = new PopupPanel(false, false);
 		anno_popup = new PopupPanel(false, false);
 		options_popup = new PopupPanel(false, false);
+		
+		text_popup.setStylePrimaryName("PopupPanel");
+		meta_popup.setStylePrimaryName("PopupPanel");
+		anno_popup.setStylePrimaryName("PopupPanel");
+		options_popup.setStylePrimaryName("PopupPanel");
         
         close = new Label("Close Panel");
-        swap_v = new Label("Swap ^v");
         swap_h = new Label("Swap <>");
         dupl = new Label("Duplicate Panel");
         
@@ -203,6 +213,14 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 		Label header = new Label("Options");
 		header.addStyleName("TitleHeader");
 		
+		FlowPanel swap_v = new FlowPanel();
+		Label move = new Label("move");
+		move.addStyleName("Text");
+		
+		swap_v.add(move_down);
+		swap_v.add(move);
+		swap_v.add(move_up);
+		
 		Grid options_grid = new Grid(4,1);
 		
 		options_grid.addStyleName("Options");
@@ -221,6 +239,8 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 		options_popup.addAttachHandler(new AttachEvent.Handler() {
 			public void onAttachOrDetach(AttachEvent event) {
 				if (event.isAttached()) {
+					options_popup.setWidth(120 + "px");
+					
 					options_popup.setPopupPosition(options_button.getAbsoluteLeft() 
 							+ options_button.getOffsetWidth()
 							- options_popup.getOffsetWidth(),
@@ -238,8 +258,6 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
     	}
     	
     	Label context = new Label(text);
-    	context.addStyleName("Link");
-    	
     	context_bar.add(context);
     	
     	return context;
@@ -308,11 +326,6 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
     public HasClickHandlers getSwapHorizontalButton() {
     	return swap_h;
     }
-	
-    @Override
-    public HasClickHandlers getSwapVerticalButton() {
-    	return swap_v;
-    }
     
     @Override
     public AnnotationListWidget getAnnoListWidget() {
@@ -371,9 +384,9 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 			anno_popup.getWidget().setHeight(height + "px");
 		}
     	
-/*    	tab_panel.setWidth((int) (width * 0.98) + "px");
-    	tab_panel.setHeight((int) (height - 20) + "px");*/
-    	tab_panel.resize(width, height);
+    	tab_panel.setWidth((int) (width * 0.98) + "px");
+    	tab_panel.setHeight((int) (height - 20) + "px");
+    	//tab_panel.resize(width, height);
     }
     
     @Override

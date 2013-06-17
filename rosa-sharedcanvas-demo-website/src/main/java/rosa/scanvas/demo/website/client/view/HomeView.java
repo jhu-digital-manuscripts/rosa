@@ -35,7 +35,7 @@ public class HomeView extends BasePanelView implements HomePanelPresenter.Displa
 
         main = new FlowPanel();
         top = new ScrollPanel(main);
-        top.setStylePrimaryName("PanelView");
+        top.setStylePrimaryName("View");
 
         Label panel_title = new Label("Choose a collection to view.");
         panel_title.setStylePrimaryName("PanelTitle");

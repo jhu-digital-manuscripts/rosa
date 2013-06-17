@@ -30,7 +30,7 @@ import com.google.gwt.user.client.Window;
 
 public class CanvasPanelPresenter extends BasePanelPresenter {
     public interface Display extends BasePanelPresenter.Display {
-        Label getLabel();
+        //Label getLabel();
 
         DisplayAreaView getDisplayAreaWidget();
         
@@ -151,8 +151,8 @@ public class CanvasPanelPresenter extends BasePanelPresenter {
         this.canvas = data.getCanvas();
         els.clear();
         
-        display.getLabel().setText(data.getManifest().label() 
-        		+ ": " + canvas.label());
+        /*display.getLabel().setText(data.getManifest().label() 
+        		+ ": " + canvas.label());*/
         update();
 
         // convert annotations into display elements
@@ -180,7 +180,7 @@ public class CanvasPanelPresenter extends BasePanelPresenter {
         super.resize(width, height);
 
         this.width = width - 22;
-        this.height = height - 50;
+        this.height = height/* - 25*/;
         
         update();
     }
