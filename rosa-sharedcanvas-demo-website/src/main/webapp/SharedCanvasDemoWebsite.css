@@ -203,6 +203,10 @@
 	background: rgb(168, 142, 140);
 }
 
+.StackLayoutPanel .gwt-StackLayoutPanelHeader:active {
+	opacity: 0.75;
+}
+
 /* ------ */
 
 .PanelToolbar .gwt-Button {
@@ -301,6 +305,11 @@
 .AnnotationList .SectionLabel {
 	font-size: 110%;
 	font-weight: bold;
+}
+
+.AnnotationLabel {
+	font-size: 1.15em;
+	margin-bottom: 5px;
 }
 
 /** ------  */
