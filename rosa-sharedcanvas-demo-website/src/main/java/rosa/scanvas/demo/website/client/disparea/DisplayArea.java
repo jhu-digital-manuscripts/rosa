@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 /**
  * Represents a rectangular area where elements can be drawn. Each element has a
  * unique id. Elements do not change size or position. A viewport in the area
@@ -18,15 +19,15 @@ import java.util.Map;
  * dimensions change.
  * 
  * There are three different dimensions being tracked by this DisplayArea. The
- * dimensions of the area itself (canvas), called the "base" dimensions. The 
- * dimensions of the viewport in relation to the pixel dimensions of the browser, 
- * called the "viewport" dimensions, which are constant. And the dimensions of 
- * the viewport in relation to the display area itself (the base).
+ * dimensions of the area itself (canvas), called the "base" dimensions. The
+ * dimensions of the viewport in relation to the pixel dimensions of the
+ * browser, called the "viewport" dimensions, which are constant. And the
+ * dimensions of the viewport in relation to the display area itself (the base).
  * 
  */
 public class DisplayArea implements Iterable<DisplayElement> {
     private final int base_width, base_height;
-    private final int vp_width, vp_height;
+    private int vp_width, vp_height;
 
     // DisplayElement id -> DisplayElement
     private final Map<String, DisplayElement> content_map;
@@ -35,9 +36,9 @@ public class DisplayArea implements Iterable<DisplayElement> {
     private List<DisplayElement> content_list;
 
     private ZoomLevels zoom_levels;
-    //Index representing how far the DisplayArea zoomed
+    // Index representing how far the DisplayArea zoomed
     private int zoom_level;
-    //The scaling factor of the current zoom
+    // The scaling factor of the current zoom
     private double zoom;
 
     private int vp_base_center_x;
@@ -46,33 +47,49 @@ public class DisplayArea implements Iterable<DisplayElement> {
     public DisplayArea(int width, int height, int vp_width, int vp_height) {
         this.content_map = new HashMap<String, DisplayElement>();
         this.content_list = new ArrayList<DisplayElement>();
-
         this.base_width = width;
         this.base_height = height;
-
-        this.vp_width = vp_width;
-        this.vp_height = vp_height;
         this.vp_base_center_x = base_width / 2;
         this.vp_base_center_y = base_height / 2;
+        this.zoom_level = 0;
+        
+        resizeViewport(vp_width, vp_height);
+    }
+
+    /**
+     * Changes the size of the viewport and recalculates the zoom levels.
+     * 
+     * @param vp_width
+     * @param vp_height
+     */
+    public void resizeViewport(int vp_width, int vp_height) {
+        this.vp_width = vp_width;
+        this.vp_height = vp_height;
 
         this.zoom_levels = ZoomLevels.guess(base_width, base_height, vp_width,
                 vp_height);
 
-        setZoomLevel(0);
+        // Preserve zoom level if possible
+        
+        if (zoom_level < zoom_levels.size()) {
+            setZoomLevel(zoom_level);
+        } else {
+            setZoomLevel(zoom_levels.size() - 1);
+        }
     }
 
     public int viewportBaseCenterX() {
         return vp_base_center_x;
     }
-    
+
     public int viewportBaseLeft() {
         return (int) (vp_base_center_x - ((vp_width / zoom) / 2));
     }
-    
+
     public int viewportBaseTop() {
         return (int) (vp_base_center_y - ((vp_height / zoom) / 2));
     }
-    
+
     public int viewportBaseCenterY() {
         return vp_base_center_y;
     }
@@ -97,16 +114,16 @@ public class DisplayArea implements Iterable<DisplayElement> {
      * Set the center of the viewport in canvas space
      */
     public void setViewportBaseCenter(int x, int y) {
-    	this.vp_base_center_x = x;
-    	this.vp_base_center_y = y;
+        this.vp_base_center_x = x;
+        this.vp_base_center_y = y;
     }
 
     /**
      * Set the center of the viewport in browser space
      */
     public void setViewportCenter(int x, int y) {
-    	this.vp_base_center_x = (int) (x / zoom);
-    	this.vp_base_center_y = (int) (y / zoom);
+        this.vp_base_center_x = (int) (x / zoom);
+        this.vp_base_center_y = (int) (y / zoom);
     }
 
     /**
@@ -242,7 +259,7 @@ public class DisplayArea implements Iterable<DisplayElement> {
 
         return result;
     }
-    
+
     public int viewportTop() {
         return (int) ((vp_base_center_y * zoom) - (vp_height / 2));
     }
