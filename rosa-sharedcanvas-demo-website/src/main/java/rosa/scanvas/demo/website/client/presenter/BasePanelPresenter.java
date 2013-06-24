@@ -9,6 +9,7 @@ import rosa.scanvas.demo.website.client.PanelView;
 import rosa.scanvas.demo.website.client.disparea.AnnotationUtil;
 import rosa.scanvas.demo.website.client.disparea.TranscriptionViewer;
 import rosa.scanvas.demo.website.client.event.PanelDisplayedEvent;
+import rosa.scanvas.demo.website.client.event.PanelMoveEvent;
 import rosa.scanvas.demo.website.client.event.PanelRequestEvent;
 import rosa.scanvas.demo.website.client.widgets.AnnotationListWidget;
 import rosa.scanvas.demo.website.client.widgets.ManifestListWidget;
@@ -65,6 +66,10 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     	
     	HasClickHandlers getSwapHorizontalButton();
     	
+    	HasClickHandlers getMoveUpButton();
+    	
+    	HasClickHandlers getMoveDownButton();
+    	
     	AnnotationListWidget getAnnoListWidget();
     	
     	ManifestListWidget getMetaListWidget();
@@ -75,6 +80,8 @@ public abstract class BasePanelPresenter implements PanelPresenter {
          * @param text
          */
     	Label addContextLabel(String text);
+    	
+    	void clearContextLabels();
 
         void resize(int width, int height);
         
@@ -109,16 +116,9 @@ public abstract class BasePanelPresenter implements PanelPresenter {
         display.getOptionsButton().addClickHandler(new ClickHandler() {
         	public void onClick(ClickEvent event) {
         		if (display.getOptionsButton().isDown()) {
-        			display.getAnnotationsButton().setDown(false);
-        			display.getTextAnnotationsButton().setDown(false);
-        			display.getMetadataButton().setDown(false);
-        			
+        			display.getOptionsPopup().setPopupPosition(0, 0);
+        			display.getOptionsPopup().setVisible(false);
         			display.getOptionsPopup().show();
-        			display.getAnnotationsPopup().hide();
-        			display.getMetadataPopup().hide();
-        			display.getTextAnnotationsPopup().hide();
-        		} else {
-        			display.getOptionsPopup().hide();
         		}
         	}
         });
@@ -130,16 +130,9 @@ public abstract class BasePanelPresenter implements PanelPresenter {
         		}*/
         		
         		if (display.getAnnotationsButton().isDown()) {
-        			display.getMetadataButton().setDown(false);
-        			display.getTextAnnotationsButton().setDown(false);
-        			display.getOptionsButton().setDown(false);
-        			
+        			display.getAnnotationsPopup().setPopupPosition(0, 0);
+        			display.getAnnotationsPopup().setVisible(false);
         			display.getAnnotationsPopup().show();
-        			display.getMetadataPopup().hide();
-        			display.getTextAnnotationsPopup().hide();
-        			display.getOptionsPopup().hide();
-        		} else {
-        			display.getAnnotationsPopup().hide();
         		}
         	}
         });
@@ -151,16 +144,9 @@ public abstract class BasePanelPresenter implements PanelPresenter {
         		}
         		
         		if (display.getMetadataButton().isDown()) {
-        			display.getAnnotationsButton().setDown(false);
-        			display.getTextAnnotationsButton().setDown(false);
-        			display.getOptionsButton().setDown(false);
-        			
+        			display.getMetadataPopup().setPopupPosition(0, 0);
+        			display.getMetadataPopup().setVisible(false);
         			display.getMetadataPopup().show();
-        			display.getAnnotationsPopup().hide();
-        			display.getTextAnnotationsPopup().hide();
-        			display.getOptionsPopup().hide();
-        		} else {
-        			display.getMetadataPopup().hide();
         		}
         	}
         });
@@ -172,16 +158,9 @@ public abstract class BasePanelPresenter implements PanelPresenter {
         		}
         		
         		if (display.getTextAnnotationsButton().isDown()) {
-        			display.getAnnotationsButton().setDown(false);
-        			display.getMetadataButton().setDown(false);
-        			display.getOptionsButton().setDown(false);
-        			
+        			display.getTextAnnotationsPopup().setPopupPosition(0, 0);
+        			display.getTextAnnotationsPopup().setVisible(false);
         			display.getTextAnnotationsPopup().show();
-        			display.getAnnotationsPopup().hide();
-        			display.getMetadataPopup().hide();
-        			display.getOptionsPopup().hide();
-        		} else {
-        			display.getTextAnnotationsPopup().hide();
         		}
         	}
         });
@@ -206,7 +185,25 @@ public abstract class BasePanelPresenter implements PanelPresenter {
         
         display.getSwapHorizontalButton().addClickHandler(new ClickHandler() {
         	public void onClick(ClickEvent event) {
-        		
+        		PanelMoveEvent move = new PanelMoveEvent(
+        				PanelMoveEvent.PanelDirection.HORIZONTAL, panel_id);
+        		event_bus.fireEvent(move);
+        	}
+        });
+        
+        display.getMoveUpButton().addClickHandler(new ClickHandler() {
+        	public void onClick(ClickEvent event) {
+        		PanelMoveEvent move = new PanelMoveEvent(
+        				PanelMoveEvent.PanelDirection.UP, panel_id);
+        		event_bus.fireEvent(move);
+        	}
+        });
+        
+        display.getMoveDownButton().addClickHandler(new ClickHandler() {
+        	public void onClick(ClickEvent event) {
+        		PanelMoveEvent move = new PanelMoveEvent(
+        				PanelMoveEvent.PanelDirection.DOWN, panel_id);
+        		event_bus.fireEvent(move);
         	}
         });
     }
@@ -288,6 +285,11 @@ public abstract class BasePanelPresenter implements PanelPresenter {
 		// iterate through the list of annotation lists
 		int i = 0, k = 0;
 		for (AnnotationList al : list) {
+			// TODO: change the way default images are assigned based on annotation
+			//	targets. Currently, there is 1 default image assigned per
+			//	annotation list. While this may work for the Rose data, it will not
+			//	work correctly in general.
+			default_image = false;
 			// for each list, put each annotation in appropriate area
 			for (final Annotation anno : al) {
 				final CheckBox checkbox = new CheckBox();
@@ -357,6 +359,8 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     	FlowPanel main = (FlowPanel) text_popup.getWidget();
     	StackLayoutPanel tab_panel = (StackLayoutPanel) main.getWidget(1);
     	
+    	tab_panel.clear();
+    	
     	List<AnnotationList> annotation_lists = data.getAnnotationLists();
     	if (annotation_lists.size() == 0) {
     		return;
@@ -424,6 +428,8 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     	final Manifest manifest = data.getManifest();
     	final Sequence seq = data.getSequence();
     	final Canvas canvas = data.getCanvas();
+    	
+    	display.clearContextLabels();
     	
     	if (collection != null) {
     		Label context = display.addContextLabel(collection.label());

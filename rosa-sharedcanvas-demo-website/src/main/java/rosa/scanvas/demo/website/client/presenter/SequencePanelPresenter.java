@@ -22,6 +22,8 @@ import rosa.scanvas.model.client.AnnotationTarget;
 import rosa.scanvas.model.client.Canvas;
 import rosa.scanvas.model.client.Sequence;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.TouchEndEvent;
@@ -30,8 +32,11 @@ import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
+
+import com.google.gwt.user.client.Window;
 
 public class SequencePanelPresenter extends BasePanelPresenter {
     public interface Display extends BasePanelPresenter.Display {
@@ -42,10 +47,6 @@ public class SequencePanelPresenter extends BasePanelPresenter {
         void setSelectedTab(int index);
 
         HasSelectionHandlers<Integer> getTabPanelSelector();
-
-        /*void resize(int width, int height);
-        
-        void selected(boolean is_selected);*/
     }
 
     private final Display display;
@@ -61,6 +62,9 @@ public class SequencePanelPresenter extends BasePanelPresenter {
 
     private PanelData data;
     List<Opening> openings;
+    
+    private final double step;
+    private double scale;
 
     public SequencePanelPresenter(Display display, HandlerManager eventBus,
             int panel_id) {
@@ -70,6 +74,9 @@ public class SequencePanelPresenter extends BasePanelPresenter {
         this.thumb_size = 128;
         this.page_width = 200;
         this.page_height = 300;
+        
+        this.step = 0.1;
+        this.scale = 0.1;
         
         this.thumb_browser_setup = false;
         this.page_turner_setup = false;
@@ -113,6 +120,26 @@ public class SequencePanelPresenter extends BasePanelPresenter {
         				&& event.getChangedTouches().length() == 1) {
         			int canvas_index = turner.getClickedIndex();
         			gotoCanvasView(canvas_index);
+        		}
+        	}
+        });
+        
+        final ThumbnailBrowser browser = display.getThumbnailBrowser();
+        
+        browser.getZoomInButton().addClickHandler(new ClickHandler() {
+        	public void onClick(ClickEvent event) {
+        		if (scale + step <= 1.0) {
+        			scale += step;
+        			setup_thumb_browser();
+        		}
+        	}
+        });
+        
+        browser.getZoomOutButton().addClickHandler(new ClickHandler() {
+        	public void onClick(ClickEvent event) {
+        		if (scale - step >= step) {
+        			scale -= step;
+        			setup_thumb_browser();
         		}
         	}
         });
@@ -163,6 +190,11 @@ public class SequencePanelPresenter extends BasePanelPresenter {
         return targets;
     }
 
+    /**
+     * Thumbnails are generated based off of the openings in the Page Turner. This is
+     * used for formatting, giving the thumbnails the look of an opening in a
+     * manuscript.
+     */
     private List<Thumbnail> construct_thumbs_from_openings() {
     	if (openings == null) {
     		openings = build_openings(data.getSequence(), 
@@ -179,7 +211,7 @@ public class SequencePanelPresenter extends BasePanelPresenter {
     		
     		if (opening.getVerso() != null) {
     			WebImage image_v = iiif_server.renderToSquare(opening.getVerso(),
-    				thumb_size);
+    				(int) (thumb_size * scale));
     			Thumbnail thumb_v = new Thumbnail(image_v, opening.getVersoLabel(),
     				opening.getVersoIndex());
     			thumb_v.addStyleName("Verso");
@@ -189,7 +221,7 @@ public class SequencePanelPresenter extends BasePanelPresenter {
     		
     		if (opening.getRecto() != null) {
     			WebImage image_r = iiif_server.renderToSquare(opening.getRecto(),
-    				thumb_size);
+    				(int) (thumb_size * scale));
     			Thumbnail thumb_r = new Thumbnail(image_r, opening.getRectoLabel(),
     				opening.getRectoIndex());
     			thumb_r.addStyleName("Recto");
@@ -328,6 +360,28 @@ public class SequencePanelPresenter extends BasePanelPresenter {
     	
     }
 
+    /**
+     * Callback that lets this presenter know when a new opening is displayed
+     * in the Page Turner, so that data can be updated.
+     */
+    PageTurner.NewOpeningCallback opening_cb = new PageTurner.NewOpeningCallback() {
+    	@Override
+    	public void onNewOpening(PanelData opening) {
+    		
+    		data.setCanvas(opening.getCanvas());
+    		data.getAnnotationLists().clear();
+    		data.getAnnotationLists().addAll(opening.getAnnotationLists());
+   		
+    		// Update the titlebar with new annotations list
+    		SequencePanelPresenter.super.display(data);
+    	}
+    };
+    
+    @Override
+    public void bind_annotation_checkbox(CheckBox checkbox, Annotation ann) {
+    	display.getPageTurner().bindAnnotationCheckbox(checkbox, ann);
+    }
+    
     // Assume annotation is image covering whole canvas using iiif
     private MasterImage as_master_image(Annotation a, Canvas canvas) {
         String id = IIIFImageServer.parseIdentifier(a.body().uri());
@@ -343,7 +397,8 @@ public class SequencePanelPresenter extends BasePanelPresenter {
 
     private void setup_page_turner() {
         openings = build_openings(data.getSequence(), data.getImageAnnotations());
-        display.getPageTurner().setOpenings(openings, page_width, page_height);
+        display.getPageTurner().setOpenings(data.getSequence(), openings,
+        		page_width, page_height, opening_cb);
         page_turner_setup = true;
     }
 
@@ -373,15 +428,14 @@ public class SequencePanelPresenter extends BasePanelPresenter {
         // TODO
         page_height = height - 132;
 
+        thumb_size = page_width > page_height ? page_height : page_width;
+        
         display.getPageTurner().resize(page_width, page_height);
+        
+        display.getThumbnailBrowser().resize(width, height);
 
         // TODO scale thumb size
 
         display.resize(width, height);
     }
-    
-/*    @Override
-    public void selected(boolean is_selected) {
-    	display.selected(is_selected);
-    }*/
 }

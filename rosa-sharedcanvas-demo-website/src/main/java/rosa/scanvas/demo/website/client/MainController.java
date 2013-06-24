@@ -5,6 +5,9 @@ import java.util.List;
 
 import rosa.scanvas.demo.website.client.event.PanelAddedEvent;
 import rosa.scanvas.demo.website.client.event.PanelAddedEventHandler;
+import rosa.scanvas.demo.website.client.event.PanelMoveEvent;
+import rosa.scanvas.demo.website.client.event.PanelMoveEvent.PanelDirection;
+import rosa.scanvas.demo.website.client.event.PanelMoveEventHandler;
 import rosa.scanvas.demo.website.client.event.PanelRequestEvent;
 import rosa.scanvas.demo.website.client.event.PanelRequestEvent.PanelAction;
 import rosa.scanvas.demo.website.client.event.PanelRequestEventHandler;
@@ -139,6 +142,13 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
                     }
                 });
         
+        event_bus.addHandler(PanelMoveEvent.TYPE,
+        		new PanelMoveEventHandler() {
+        	public void onPanelMove(PanelMoveEvent event) {
+        		move_panel(event.getDirection(), event.getPanelId());
+        	}
+        });
+        
         add_image.addClickHandler(new ClickHandler() {
         	public void onClick(ClickEvent event) {
         		PanelRequestEvent req = new PanelRequestEvent(
@@ -201,9 +211,10 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
      * @param old_panel_id
      */
     private void duplicate_panel(int old_panel_id) {
+    	int index = find_panel_index(old_panel_id);
     	int panel_id = next_panel_id++;
     	
-    	PanelState old_state = panels.get(old_panel_id).getState();
+    	PanelState old_state = panels.get(index).getState();
     	
     	PanelState state = new PanelState(old_state.getView(), old_state.getObjectUri(),
     			old_state.getManifestUri(), old_state.getCanvasIndex());
@@ -286,6 +297,65 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
         main_content.remove(index);
 
         update_panel_sizes(Window.getClientWidth(), Window.getClientHeight());
+    }
+    
+    /**
+     * Moves a panel in the main content area.
+     * 
+     * @param direction
+     * @param panel_id
+     */
+    private void move_panel(PanelDirection direction, int panel_id) {
+    	int index = find_panel_index(panel_id);
+    	Panel panel = panels.get(index);
+    	
+    	// swap panels on the same row
+    	if (direction == PanelDirection.HORIZONTAL && index % 2 == 0) {
+    		if (panels.size() <= index + 1) {
+    			return;
+    		}
+    		panels.remove(index);
+    		main_content.remove(index);
+    		
+    		panels.add(index + 1, panel);
+    		main_content.insert(panel.getPresenter(), index + 1);
+    	} else if (direction == PanelDirection.HORIZONTAL && index % 2 == 1) {
+    		panels.remove(index);
+    		main_content.remove(index);
+    		
+    		panels.add(index - 1, panel);
+    		main_content.insert(panel.getPresenter(), index - 1);
+    	} else if (direction == PanelDirection.UP) {
+    		if (index < 2) {
+    			return;
+    		}
+    		Panel swap = panels.get(index - 2);
+    		
+    		panels.remove(panel);
+    		panels.remove(swap);
+    		main_content.remove(panel.getPresenter());
+    		main_content.remove(swap.getPresenter());
+    		
+    		panels.add(index - 2, panel);
+    		panels.add(index, swap);
+    		main_content.insert(panel.getPresenter(), index - 2);
+    		main_content.insert(swap.getPresenter(), index);
+    	} else if (direction == PanelDirection.DOWN) {
+    		if (panels.size() <= index + 2) {
+    			return;
+    		}
+    		Panel swap = panels.get(index + 2);
+    		
+    		panels.remove(panel);
+    		panels.remove(swap);
+    		main_content.remove(swap.getPresenter());
+    		main_content.remove(panel.getPresenter());
+    		
+    		panels.add(index, swap);
+    		panels.add(index + 2, panel);
+    		main_content.insert(swap.getPresenter(), index);
+    		main_content.insert(panel.getPresenter(), index + 2);
+    	}
     }
 
     /**

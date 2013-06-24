@@ -4,10 +4,14 @@ import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -17,8 +21,13 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 public class ThumbnailBrowser extends Composite {
     private final ScrollPanel container;
     private final FlowPanel content;
-
+    private final FlowPanel top;
+    
+    private final Button zoom_in = new Button("+");
+    private final Button zoom_out = new Button("-");
+    
     public ThumbnailBrowser() {
+    	this.top = new FlowPanel();
         this.content = new FlowPanel();
         this.container = new ScrollPanel(content);
 
@@ -41,9 +50,13 @@ public class ThumbnailBrowser extends Composite {
             }
         });
 
-        initWidget(container);
+        initWidget(top);
+        
+        top.add(zoom_out);
+        top.add(zoom_in);
+        top.add(container);
     }
-
+    
     /**
      * Set the thumbnails to display.
      */
@@ -114,5 +127,18 @@ public class ThumbnailBrowser extends Composite {
         		}
         	}
         }
+    }
+    
+    public void resize(int width, int height) {
+    	container.setWidth((width - 35) + "px");
+    	container.setHeight((height - 105) + "px");
+    }
+    
+    public HasClickHandlers getZoomInButton() {
+    	return zoom_in;
+    }
+    
+    public HasClickHandlers getZoomOutButton() {
+    	return zoom_out;
     }
 }

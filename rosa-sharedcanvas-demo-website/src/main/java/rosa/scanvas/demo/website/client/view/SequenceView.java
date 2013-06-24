@@ -28,7 +28,7 @@ public class SequenceView extends BasePanelView implements
         main.setStylePrimaryName("View");
 
         this.thumb_browser = new ThumbnailBrowser();
-        this.page_turner = new PageTurner(IIIFImageServer.instance());
+        this.page_turner = new PageTurner();
         this.tab_panel = new TabLayoutPanel(20, Unit.PX);
 
         tab_panel.add(page_turner, "Page Turner");

@@ -1,9 +1,20 @@
 package rosa.scanvas.demo.website.client.widgets;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
-import rosa.scanvas.demo.website.client.dynimg.ImageServer;
-import rosa.scanvas.demo.website.client.dynimg.WebImage;
+import rosa.scanvas.demo.website.client.PanelData;
+import rosa.scanvas.demo.website.client.disparea.AnnotationUtil;
+import rosa.scanvas.demo.website.client.disparea.DisplayArea;
+import rosa.scanvas.demo.website.client.disparea.DisplayAreaView;
+import rosa.scanvas.demo.website.client.disparea.DisplayElement;
+//import rosa.scanvas.demo.website.client.dynimg.ImageServer;
+//import rosa.scanvas.demo.website.client.dynimg.WebImage;
+import rosa.scanvas.model.client.Annotation;
+import rosa.scanvas.model.client.AnnotationList;
+import rosa.scanvas.model.client.Canvas;
+import rosa.scanvas.model.client.Sequence;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -20,31 +31,44 @@ import com.google.gwt.event.dom.client.TouchMoveEvent;
 import com.google.gwt.event.dom.client.TouchMoveHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.HTMLTable.Cell;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 
 public class PageTurner extends Composite implements HasClickHandlers, 
 		HasTouchEndHandlers {
+	
+	public interface NewOpeningCallback {
+		void onNewOpening(PanelData data);
+	}
+	
 	private static final int MIN_SWIPE_X = 30;
 	private static final int MAX_SWIPE_Y = 20;
 	
     private final Grid display;
-    private final ImageServer image_server;
+//    private final ImageServer image_server;
     private FlowPanel place_holder = new FlowPanel();
     private final FocusPanel focus;
 
     private int position;
     private List<Opening> openings;
     private int page_width, page_height;
+    
+    private Sequence sequence;
 //    private boolean clicked_verso;
     
     private int clicked_index;
@@ -52,11 +76,26 @@ public class PageTurner extends Composite implements HasClickHandlers,
     private boolean dragging;
     private boolean drag_may_start;
     private int drag_x, drag_y;
+    
+    private ArrayList<DisplayElement> verso_els;
+    private ArrayList<DisplayElement> recto_els;
+    private DisplayAreaView verso_view;
+    private DisplayAreaView recto_view;
+    private NewOpeningCallback cb;
+    
+    private PanelData opening_data;
+    private HashSet<Integer> to_draw;
 
-    public PageTurner(ImageServer image_server) {
-        this.image_server = image_server;
+    public PageTurner() {
         this.display = new Grid(2, 2);
         this.clicked_index = 0;
+        
+        this.verso_els = new ArrayList<DisplayElement>();
+        this.recto_els = new ArrayList<DisplayElement>();
+        this.verso_view = new DisplayAreaView();
+        this.recto_view = new DisplayAreaView();
+        
+        to_draw = new HashSet<Integer>();
 
         FlowPanel main = new FlowPanel();
 
@@ -216,17 +255,12 @@ public class PageTurner extends Composite implements HasClickHandlers,
                     if (Math.abs(dy) < MAX_SWIPE_Y
                             && Math.abs(dx) > MIN_SWIPE_X) {
                         if (dx > 0) {
-                            //ctrl.gotoNextOpening();
                         	next_button.click();
                         } else {
-                            //ctrl.gotoPreviousOpening();
                         	prev_button.click();
                         }
                     }
                 }
-
-//                drag_may_start = false;
-//                dragging = false;
             }
         });
 
@@ -252,10 +286,12 @@ public class PageTurner extends Composite implements HasClickHandlers,
         initWidget(main);
     }
 
-    public void setOpenings(List<Opening> openings, int page_width,
-            int page_height) {
+    public void setOpenings(Sequence sequence, List<Opening> openings,
+    		int page_width, int page_height, NewOpeningCallback cb) {
         this.position = 0;
         this.openings = openings;
+        this.sequence = sequence;
+        this.cb = cb;
 
         resize(page_width, page_height);
     }
@@ -271,71 +307,156 @@ public class PageTurner extends Composite implements HasClickHandlers,
         }
     }
     
+    /**
+     * Displays the contents of a page on a DisplayAreaView
+     */
+    private void asDisplayArea(final int canvas_index, 
+    		final DisplayAreaView view, final ArrayList<DisplayElement> els) {
+    	PanelData canvas_data = new PanelData();
+    	canvas_data.setCanvas(sequence.canvas(canvas_index));
+    	
+    	to_draw.add(canvas_index);
+    	
+    	final double aspect = (double)canvas_data.getCanvas().width() 
+    			/ canvas_data.getCanvas().height();
+    	
+    	final int img_width = page_width > page_height * aspect ? 
+    			(int) (page_height * aspect) : page_width;
+    	final int img_height = page_width > page_height * aspect ? 
+    			page_height : (int) (page_width / aspect);
+    	
+    	PanelData.loadAnnotationLists(canvas_data.getCanvas().hasAnnotations(),
+    			canvas_data, new AsyncCallback<PanelData>() {
+    		@Override
+    		public void onFailure(Throwable err) {
+    			Window.alert("Error getting annotation list: " + err.getMessage());
+    		}
+    		
+    		@Override
+    		public void onSuccess(PanelData result) {
+    			to_draw.remove(canvas_index);
+    			
+    			DisplayArea area = new DisplayArea(result.getCanvas().width(),
+    					result.getCanvas().height(), 
+    					/*(int) (page_height * aspect), page_height*/
+    					img_width, img_height);
+    			
+    			// Convert all annotations to DisplayElements
+    			for (AnnotationList al : result.getAnnotationLists()) {
+    				for (Annotation ann : al) {
+    					DisplayElement el = AnnotationUtil.annotationToDisplayElement(
+    							ann, result.getCanvas());
+    					if (el != null) {
+    						els.add(el);
+    					}
+    				}
+    			}
+    			area.setContent(els);
+    			
+    			view.display(area);
+    			view.lockDisplay(true);
+    			view.redraw();
+    			
+    			opening_data.getAnnotationLists().addAll(result.getAnnotationLists());
+    			opening_data.setCanvas(result.getCanvas());
+    			if (to_draw.isEmpty()) {
+    				cb.onNewOpening(opening_data);
+    			}
+    		}
+    	});
+    }
+    
     private void display(final Opening opening) {
     	FocusPanel verso_panel = new FocusPanel();
     	FocusPanel recto_panel = new FocusPanel();
     	
-        if (opening.getVerso() == null) {
-            display.setWidget(0, 0, place_holder);
-        } else {
-            WebImage image = image_server.renderToRectangle(opening.getVerso(),
-                    page_width, page_height);
-            image.makeViewable();
-            verso_panel.setWidget(image);
-            
-            verso_panel.addTouchEndHandler(new TouchEndHandler() {
+    	verso_panel.add(verso_view);
+    	recto_panel.add(recto_view);
+    	
+    	opening_data = new PanelData();
+    	verso_els.clear();
+    	recto_els.clear();
+    	
+    	if (opening.getVerso() == null) {
+    		display.setWidget(0, 0, place_holder);
+    	} else {
+    		asDisplayArea(opening.getVersoIndex(), verso_view, verso_els);
+    		display.setWidget(0, 0, verso_panel);
+    		
+    		verso_panel.addTouchEndHandler(new TouchEndHandler() {
             	public void onTouchEnd(TouchEndEvent event) {
             		if (!dragging && event.getChangedTouches().length() == 1) {
             			clicked_index = opening.getVersoIndex();
             		}
             	}
             });
-            
-            display.setWidget(0, 0, verso_panel);
-        }
-
-        if (opening.getVersoLabel() == null) {
-            display.setWidget(1, 0, new Label());
-        } else {
-            display.setWidget(1, 0, new Label(opening.getVersoLabel()));
-        }
-
-        if (opening.getRecto() == null) {
-            display.setWidget(0, 1, place_holder);
-        } else {
-            WebImage image = image_server.renderToRectangle(opening.getRecto(),
-                    page_width, page_height);
-            image.makeViewable();
-            recto_panel.setWidget(image);
-            
-            recto_panel.addTouchEndHandler(new TouchEndHandler() {
+    	}
+    	
+    	if (opening.getVersoLabel() != null) {
+    		display.setWidget(1, 0, new Label(opening.getVersoLabel()));
+    	} else {
+    		display.setWidget(1, 0, new Label());
+    	}
+    	
+    	if (opening.getRecto() == null) {
+    		display.setWidget(0, 1, place_holder);
+    	} else {
+    		asDisplayArea(opening.getRectoIndex(), recto_view, recto_els);
+    		display.setWidget(0, 1, recto_panel);
+    		
+    		recto_panel.addTouchEndHandler(new TouchEndHandler() {
             	public void onTouchEnd(TouchEndEvent event) {
             		if (!dragging && event.getChangedTouches().length() == 1) {
             			clicked_index = opening.getRectoIndex();
             		}
             	}
             });
-            
-            display.setWidget(0, 1, recto_panel);
-        }
-
-        if (opening.getRectoLabel() == null) {
-            display.setWidget(1, 1, new Label());
-        } else {
-            display.setWidget(1, 1, new Label(opening.getRectoLabel()));
-        }
+    	}
+    	
+    	if (opening.getRectoLabel() != null) {
+    		display.setWidget(1, 1, new Label(opening.getRectoLabel()));
+    	} else {
+    		display.setWidget(1, 1, new Label());
+    	}
+    }
+    
+    public void bindAnnotationCheckbox(final CheckBox checkbox, final Annotation ann) {
+    	checkbox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+    		public void onValueChange(ValueChangeEvent<Boolean> event) {
+    			set_annotation_visible(ann, event.getValue());
+    			opening_data.setAnnotationStatus(ann, event.getValue());
+    		}
+    	});
+    }
+    
+    /**
+     * Change the boolean status of an annotation. Both pages of an opening are checked.
+     * 
+     * @param ann
+     * @param status
+     */
+    private void set_annotation_visible(Annotation ann, boolean status) {
+    	if (!AnnotationUtil.isSpecificResource(ann) && ann.body().isText()) {
+    		return;
+    	}
+    	
+    	DisplayElement verso_el = verso_view.area().get(ann.uri());
+    	DisplayElement recto_el = recto_view.area().get(ann.uri());
+    	
+    	if (verso_el != null) {
+    		verso_el.setVisible(status);
+    		verso_view.redraw();
+    	}
+    	
+    	if (recto_el!= null) {
+    		recto_el.setVisible(status);
+    		recto_view.redraw();
+    	}
     }
 
     public boolean isDragging() {
     	return dragging;
     }
-/*    public boolean clickedVerso() {
-        return clicked_verso;
-    }*/
-
-/*    public int getPosition() {
-        return position;
-    }*/
     
     public int getClickedIndex() {
     	return clicked_index;
