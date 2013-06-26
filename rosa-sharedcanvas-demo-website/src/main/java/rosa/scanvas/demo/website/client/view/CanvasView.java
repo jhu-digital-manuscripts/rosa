@@ -3,6 +3,7 @@ package rosa.scanvas.demo.website.client.view;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import rosa.scanvas.demo.website.client.Messages;
 import rosa.scanvas.demo.website.client.disparea.DisplayAreaView;
 import rosa.scanvas.demo.website.client.disparea.TranscriptionViewer;
 import rosa.scanvas.demo.website.client.presenter.CanvasPanelPresenter;
@@ -33,9 +34,9 @@ public class CanvasView extends BasePanelView implements CanvasPanelPresenter.Di
         this.main = new FlowPanel();
         //this.title = new Label();
         
-        this.zoomInButton = new Button("Zoom In");
-        this.zoomOutButton = new Button("Zoom Out");
-        this.resetButton = new Button("Reset");
+        this.zoomInButton = new Button(Messages.INSTANCE.zoomIn());
+        this.zoomOutButton = new Button(Messages.INSTANCE.zoomOut());
+        this.resetButton = new Button(Messages.INSTANCE.reset());
         
         this.area_view = new DisplayAreaView();
         

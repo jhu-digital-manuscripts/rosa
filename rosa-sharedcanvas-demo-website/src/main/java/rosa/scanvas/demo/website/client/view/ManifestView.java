@@ -1,11 +1,14 @@
 package rosa.scanvas.demo.website.client.view;
 
-import rosa.scanvas.demo.website.client.presenter.ManifestPanelPresenter;
-import rosa.scanvas.model.client.Manifest;
-import rosa.scanvas.model.client.Reference;
-import rosa.scanvas.model.client.Sequence;
+import java.util.ArrayList;
+import java.util.List;
 
+import rosa.scanvas.demo.website.client.Messages;
+import rosa.scanvas.demo.website.client.presenter.ManifestPanelPresenter;
+
+import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -13,65 +16,58 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SingleSelectionModel;
 
 public class ManifestView extends BasePanelView implements
         ManifestPanelPresenter.Display {
 	
 	private final Panel main;
 	private final ScrollPanel top;
-    private final ListBox sequence_listbox;
     private final Label manifest_label;
+    
+    private final CellList<String> cell_list;
+    private final SingleSelectionModel<String> selection_model;
 
     public ManifestView() {
         main = new FlowPanel();
         top = new ScrollPanel(main);
         top.setStylePrimaryName("View");
+        
+        TextCell text_cell = new TextCell();
+        this.cell_list = new CellList<String>(text_cell);
+        this.selection_model = new SingleSelectionModel<String>();
+        
+        cell_list.addStyleName("CellList");
+        cell_list.setSelectionModel(selection_model);
 
-        Label panel_title = new Label("Choose a sequence to view.");
+        Label panel_title = new Label(Messages.INSTANCE.manifestInstruction());
         panel_title.setStylePrimaryName("PanelTitle");
-
-        this.sequence_listbox = new ListBox(false);
-        this.sequence_listbox.setVisibleItemCount(5);
 
         this.manifest_label = new Label();
         manifest_label.setStylePrimaryName("PanelHeader");
 
         main.add(panel_title);
         main.add(manifest_label);
-        main.add(sequence_listbox);
+        main.add(cell_list);
 
-        //initWidget(top);
         addContent(top);
     }
 
-    public int getSelectedSequence() {
-        return sequence_listbox.getSelectedIndex();
-    }
-
-    public void setManifest(Manifest manifest) {
-        sequence_listbox.clear();
-
-        String label = manifest.label();
-
-        if (label == null) {
-            label = "Unknown title";
-        }
-
+    public void setManifest(List<String> sequences, String label) {
         manifest_label.setText(label);
-
-        for (Reference<Sequence> ref : manifest.sequences()) {
-            String seq_label = ref.label();
-
-            if (seq_label == null) {
-                seq_label = "Sequence";
-            }
-
-            sequence_listbox.addItem(seq_label);
-        }
+        
+        cell_list.setPageSize(sequences.size());
+        cell_list.setRowCount(sequences.size(), true);
+        cell_list.setRowData(0, sequences);
     }
 
-    public HasClickHandlers getSequenceList() {
-        return sequence_listbox;
+    public String getSelectedSequence() {
+    	return selection_model.getSelectedObject();
+    }
+    
+    public void addSelectionChangeEventHandler(SelectionChangeEvent.Handler handler) {
+    	selection_model.addSelectionChangeHandler(handler);
     }
 
     public Widget asWidget() {

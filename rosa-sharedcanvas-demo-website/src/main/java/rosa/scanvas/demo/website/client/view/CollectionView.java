@@ -1,20 +1,20 @@
 package rosa.scanvas.demo.website.client.view;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import rosa.scanvas.demo.website.client.Messages;
 import rosa.scanvas.demo.website.client.presenter.ManifestCollectionPanelPresenter;
-import rosa.scanvas.model.client.Manifest;
-import rosa.scanvas.model.client.ManifestCollection;
-import rosa.scanvas.model.client.Reference;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.cell.client.TextCell;
+import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SingleSelectionModel;
 
 public class CollectionView extends BasePanelView implements
         ManifestCollectionPanelPresenter.Display {
@@ -22,50 +22,52 @@ public class CollectionView extends BasePanelView implements
 	private final Panel main;
 	private final ScrollPanel top;
     private Label collection_label;
-    private ListBox collections_listbox;
+    
+    private final CellList<String> cell_list;
+    private final SingleSelectionModel<String> selection_model;
 
     public CollectionView() {
         main = new FlowPanel();
-        top = new ScrollPanel(main);
+        top = new ScrollPanel();
         top.setStylePrimaryName("View");
+        
+        TextCell text_cell = new TextCell();
+        this.cell_list = new CellList<String>(text_cell);
+        this.selection_model = new SingleSelectionModel<String>();
+        
+        top.add(cell_list);
+        cell_list.addStyleName("CellList");
+        cell_list.setSelectionModel(selection_model);
 
-        Label panel_title = new Label("Choose a manifest to view.");
+        Label panel_title = new Label(Messages.INSTANCE.collectionInstruction());
         panel_title.setStylePrimaryName("PanelTitle");
 
         main.add(panel_title);
-
-        this.collections_listbox = new ListBox(false);
-        this.collections_listbox.setVisibleItemCount(10);
 
         this.collection_label = new Label();
         collection_label.setStylePrimaryName("PanelHeader");
 
         main.add(collection_label);
-        main.add(collections_listbox);
-
-//        initWidget(top);
-        addContent(top);
+        main.add(top);
+        
+        addContent(main);
     }
-
-    public void setCollection(ManifestCollection col) {
-        collections_listbox.clear();
-
-        String label = col.label() == null ? "Unknown collection" : col.label();
-        collection_label.setText(label);
-
-        List<Reference<Manifest>> manifests = col.manifests();
-
-        for (int i = 0; i < manifests.size(); i++) {
-            collections_listbox.addItem(manifests.get(i).label());
-        }
+    
+    public void setCollection(List<String> col, String label) {
+    	collection_label.setText(label);
+    	
+    	cell_list.setPageSize(col.size());
+    	cell_list.setRowCount(col.size(), true);
+    	cell_list.setRowData(0, col);
     }
-
-    public int getSelectedManifest() {
-        return collections_listbox.getSelectedIndex();
+    	
+    
+    public String getSelectedManifest() {
+    	return selection_model.getSelectedObject();
     }
-
-    public HasClickHandlers getManifestList() {
-        return collections_listbox;
+    
+    public void addSelectionChangeEventHandler(SelectionChangeEvent.Handler handler) {
+    	selection_model.addSelectionChangeHandler(handler);
     }
 
     public Widget asWidget() {
@@ -75,7 +77,8 @@ public class CollectionView extends BasePanelView implements
     @Override
     public void resize(int width, int height) {
     	super.resize(width, height);
-    	top.setSize((width - 22) + "px", (height - 50) + "px");
+    	//top.setSize((width - 22) + "px", (height - 50) + "px");
+    	top.setSize((width - 22) + "px", (height - 140) + "px");
     	
         int count = height / 25;
 
@@ -83,7 +86,6 @@ public class CollectionView extends BasePanelView implements
             count = 10;
         }
 
-        collections_listbox.setVisibleItemCount(count);
     }
     
 /*    @Override

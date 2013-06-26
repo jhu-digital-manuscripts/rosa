@@ -62,9 +62,15 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     	
     	HasClickHandlers getCloseButton();
     	
+    	HasClickHandlers getCloseLabel();
+    	
     	HasClickHandlers getDuplicateButton();
     	
+    	HasClickHandlers getDuplicateLabel();
+    	
     	HasClickHandlers getSwapHorizontalButton();
+    	
+    	HasClickHandlers getSwapHorizontalLabel();
     	
     	HasClickHandlers getMoveUpButton();
     	
@@ -116,8 +122,8 @@ public abstract class BasePanelPresenter implements PanelPresenter {
         display.getOptionsButton().addClickHandler(new ClickHandler() {
         	public void onClick(ClickEvent event) {
         		if (display.getOptionsButton().isDown()) {
-        			display.getOptionsPopup().setPopupPosition(0, 0);
         			display.getOptionsPopup().setVisible(false);
+        			display.getOptionsPopup().setPopupPosition(0, 0);
         			display.getOptionsPopup().show();
         		}
         	}
@@ -130,8 +136,8 @@ public abstract class BasePanelPresenter implements PanelPresenter {
         		}*/
         		
         		if (display.getAnnotationsButton().isDown()) {
-        			display.getAnnotationsPopup().setPopupPosition(0, 0);
         			display.getAnnotationsPopup().setVisible(false);
+        			display.getAnnotationsPopup().setPopupPosition(0, 0);
         			display.getAnnotationsPopup().show();
         		}
         	}
@@ -144,8 +150,8 @@ public abstract class BasePanelPresenter implements PanelPresenter {
         		}
         		
         		if (display.getMetadataButton().isDown()) {
-        			display.getMetadataPopup().setPopupPosition(0, 0);
         			display.getMetadataPopup().setVisible(false);
+        			display.getMetadataPopup().setPopupPosition(0, 0);
         			display.getMetadataPopup().show();
         		}
         	}
@@ -158,14 +164,24 @@ public abstract class BasePanelPresenter implements PanelPresenter {
         		}
         		
         		if (display.getTextAnnotationsButton().isDown()) {
-        			display.getTextAnnotationsPopup().setPopupPosition(0, 0);
         			display.getTextAnnotationsPopup().setVisible(false);
+        			display.getTextAnnotationsPopup().setPopupPosition(0, 0);
         			display.getTextAnnotationsPopup().show();
         		}
         	}
         });
         
         display.getCloseButton().addClickHandler(new ClickHandler() {
+        	public void onClick(ClickEvent event) {
+        		display.getOptionsPopup().hide();
+        		
+        		PanelRequestEvent req = new PanelRequestEvent(
+        				PanelRequestEvent.PanelAction.REMOVE, panel_id);
+        		event_bus.fireEvent(req);
+        	}
+        });
+        
+        display.getCloseLabel().addClickHandler(new ClickHandler() {
         	public void onClick(ClickEvent event) {
         		display.getOptionsPopup().hide();
         		
@@ -183,7 +199,23 @@ public abstract class BasePanelPresenter implements PanelPresenter {
         	}
         });
         
+        display.getDuplicateLabel().addClickHandler(new ClickHandler() {
+        	public void onClick(ClickEvent event) {
+        		PanelRequestEvent req = new PanelRequestEvent(
+        				PanelRequestEvent.PanelAction.ADD, panel_id);
+        		event_bus.fireEvent(req);
+        	}
+        });
+        
         display.getSwapHorizontalButton().addClickHandler(new ClickHandler() {
+        	public void onClick(ClickEvent event) {
+        		PanelMoveEvent move = new PanelMoveEvent(
+        				PanelMoveEvent.PanelDirection.HORIZONTAL, panel_id);
+        		event_bus.fireEvent(move);
+        	}
+        });
+        
+        display.getSwapHorizontalLabel().addClickHandler(new ClickHandler() {
         	public void onClick(ClickEvent event) {
         		PanelMoveEvent move = new PanelMoveEvent(
         				PanelMoveEvent.PanelDirection.HORIZONTAL, panel_id);
@@ -288,7 +320,8 @@ public abstract class BasePanelPresenter implements PanelPresenter {
 			// TODO: change the way default images are assigned based on annotation
 			//	targets. Currently, there is 1 default image assigned per
 			//	annotation list. While this may work for the Rose data, it will not
-			//	work correctly in general.
+			//	work correctly in general, as a single canvas may have multiple
+			//	annotation lists.
 			default_image = false;
 			// for each list, put each annotation in appropriate area
 			for (final Annotation anno : al) {
@@ -354,7 +387,7 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     	if (data == null) {
     		return;
     	}
-    	
+Window.alert("Setting up text annotations popup...");    	
     	PopupPanel text_popup = display.getTextAnnotationsPopup();
     	FlowPanel main = (FlowPanel) text_popup.getWidget();
     	StackLayoutPanel tab_panel = (StackLayoutPanel) main.getWidget(1);

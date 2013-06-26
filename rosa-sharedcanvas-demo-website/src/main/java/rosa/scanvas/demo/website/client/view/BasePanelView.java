@@ -2,12 +2,14 @@ package rosa.scanvas.demo.website.client.view;
 
 import java.util.List;
 
+import rosa.scanvas.demo.website.client.Messages;
 import rosa.scanvas.demo.website.client.presenter.BasePanelPresenter;
 import rosa.scanvas.demo.website.client.widgets.AnnotationListWidget;
 import rosa.scanvas.demo.website.client.widgets.ManifestListWidget;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyUpHandlers;
@@ -15,9 +17,9 @@ import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
@@ -25,6 +27,7 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.StackLayoutPanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
@@ -36,9 +39,13 @@ import com.google.gwt.user.client.Window;
 public class BasePanelView extends Composite implements BasePanelPresenter.Display {
 
 	private class MovingPopupPanel extends PopupPanel {
+		
+		private Widget parent_button;
 
-		public MovingPopupPanel(boolean autohide, boolean modal) {
+		public MovingPopupPanel(Widget parent_button, 
+				boolean autohide, boolean modal) {
 			super(autohide, modal);
+			this.parent_button = parent_button;
 			setPreviewingAllNativeEvents(true);
 		}
 
@@ -50,7 +57,7 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 				switch (event.getTypeInt()) {
 
 				// TODO OnScroll events are not previewable!
-				case Event.ONSCROLL:
+				/*case Event.ONSCROLL:
 					// TODO worry about event target?
 					setPopupPosition(options_button.getAbsoluteLeft() 
 							+ options_button.getOffsetWidth()
@@ -66,9 +73,9 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 					final int top = options_button.getAbsoluteTop() 
 							+ options_button.getOffsetHeight();
 					
-					/*if (top + getOffsetHeight() > Window.getClientHeight()) {
+					if (top + getOffsetHeight() > Window.getClientHeight()) {
 						return;
-					}*/
+					}
 					
 					Scheduler.get().scheduleDeferred(new ScheduledCommand() {    
 						@Override
@@ -77,10 +84,23 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 						}
 					});
 
+					return;*/
+					
+				case Event.ONMOUSEDOWN:
+					// Check to see if the target is the current popup
+					EventTarget target = event.getNativeEvent().getEventTarget();
+					Element parent_element = parent_button.getElement();
+					 
+					if (parent_element.isOrHasChild(Element.as(target))) {
+						event.cancel();
+						hide();
+						return;
+					}
+					super.onPreviewNativeEvent(event);
 					return;
 				}
+				super.onPreviewNativeEvent(event);
 			}
-			super.onPreviewNativeEvent(event);
 		}
 	}
 
@@ -107,8 +127,12 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 	private final Label close;
 	private final Label swap_h;
 	private final Label dupl;
-	private final Button move_up;
-	private final Button move_down;
+	
+	private final PushButton close_button;
+	private final PushButton swap_h_button;
+	private final PushButton dupl_button;
+	private final PushButton move_up;
+	private final PushButton move_down;
 
 	//private final ScrolledTabLayoutPanel tab_panel;
 	private final StackLayoutPanel tab_panel;
@@ -120,10 +144,8 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 		main.setStylePrimaryName("PanelView");
 		title_bar.setStylePrimaryName("PanelTitleBar");
 		context_bar.setStylePrimaryName("ContextBar");
-		move_up = new Button("^");
-		move_down = new Button("v");
-
-		tab_panel = new StackLayoutPanel(/*24, */Style.Unit.PX/*, 300*/);
+		
+		tab_panel = new StackLayoutPanel(Style.Unit.PX);
 		tab_panel.setStylePrimaryName("StackLayoutPanel");
 
 		annoListWidget = new AnnotationListWidget();
@@ -149,22 +171,27 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 		anno_button.addStyleName("AnnotationsButton");
 		meta_button.addStyleName("MetadataButton");
 		text_button.addStyleName("TextAnnotationsButton");
-
-		text_popup = new PopupPanel(true, false);
-		meta_popup = new PopupPanel(true, false);
-		anno_popup = new PopupPanel(true, false);
-		options_popup = new PopupPanel(true, false);
-		//options_popup = new MovingPopupPanel(true, false);
+		
+		text_popup = new MovingPopupPanel(text_button, true, false);
+		meta_popup = new MovingPopupPanel(meta_button, true, false);
+		anno_popup = new MovingPopupPanel(anno_button, true, false);
+		options_popup = new MovingPopupPanel(options_button, true, false);
 
 		text_popup.setStylePrimaryName("PopupPanel");
 		meta_popup.setStylePrimaryName("PopupPanel");
 		anno_popup.setStylePrimaryName("PopupPanel");
 		options_popup.setStylePrimaryName("PopupPanel");
 
-		close = new Label("Close Panel");
-		swap_h = new Label("Swap <>");
-		dupl = new Label("Duplicate Panel");
-
+		close = new Label(Messages.INSTANCE.close());
+		swap_h = new Label(Messages.INSTANCE.swap());
+		dupl = new Label(Messages.INSTANCE.duplicate());
+		
+		close_button = new PushButton(new Image("icons/close.png"));
+		swap_h_button = new PushButton(new Image("icons/swap lr.png"));
+		dupl_button = new PushButton(new Image("icons/duplicate.png"));
+		move_up = new PushButton(new Image("icons/up-arrow-inv.png"));
+		move_down = new PushButton(new Image("icons/down-arrow-inv.png"));
+		
 		main.add(title_bar);
 		title_bar.add(context_bar);
 		title_bar.add(text_button);
@@ -197,7 +224,7 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 
 		top.add(main);
 
-		Label header = new Label("List of Annotations");
+		Label header = new Label(Messages.INSTANCE.annotationsHeader());
 		header.addStyleName("TitleHeader");
 
 		main.add(header);
@@ -229,7 +256,7 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 
 		top.add(main);
 
-		Label header = new Label("Metadata");
+		Label header = new Label(Messages.INSTANCE.metadataHeader());
 		header.addStyleName("TitleHeader");
 
 		main.add(header);
@@ -258,7 +285,7 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 	private void setup_text_annotations() {
 		FlowPanel main = new FlowPanel();
 
-		Label header = new Label("non-targeted Text Annotations");
+		Label header = new Label(Messages.INSTANCE.textHeader());
 		header.addStyleName("TitleHeader");
 
 		main.add(header);
@@ -290,24 +317,39 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 		FlowPanel main = new FlowPanel();
 		options_popup.setWidget(main);
 
-		Label header = new Label("Options");
+		Label header = new Label(Messages.INSTANCE.optionsHeader());
 		header.addStyleName("TitleHeader");
 
 		FlowPanel swap_v = new FlowPanel();
-		Label move = new Label("move");
+		Label move = new Label(Messages.INSTANCE.move());
 		move.addStyleName("Text");
 
 		swap_v.add(move_down);
 		swap_v.add(move);
 		swap_v.add(move_up);
+		
+		FlowPanel close_panel = new FlowPanel();
+		close_panel.add(close_button);
+		close_panel.add(close);
+		close.addStyleName("Swap");
+		
+		FlowPanel dupl_panel = new FlowPanel();
+		dupl_panel.add(dupl_button);
+		dupl_panel.add(dupl);
+		dupl.addStyleName("Swap");
+		
+		FlowPanel swap_h_panel = new FlowPanel();
+		swap_h_panel.add(swap_h_button);
+		swap_h_panel.add(swap_h);
+		swap_h.addStyleName("Swap");
 
 		Grid options_grid = new Grid(4,1);
 
 		options_grid.addStyleName("Options");
-		options_grid.setWidget(0, 0, dupl);
-		options_grid.setWidget(1, 0, swap_h);
+		options_grid.setWidget(0, 0, dupl_panel);
+		options_grid.setWidget(1, 0, swap_h_panel);
 		options_grid.setWidget(2, 0, swap_v);
-		options_grid.setWidget(3, 0, close);
+		options_grid.setWidget(3, 0, close_panel);
 
 		for (int i = 0; i < options_grid.getRowCount(); i++) {
 			options_grid.getWidget(i, 0).addStyleName("OptionsRow");
@@ -319,7 +361,7 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 		options_popup.addAttachHandler(new AttachEvent.Handler() {
 			public void onAttachOrDetach(AttachEvent event) {
 				if (event.isAttached()) {
-					options_popup.setWidth(120 + "px");
+					options_popup.setWidth(135 + "px");
 					//options_popup.showRelativeTo(options_button);
 
 					options_popup.setPopupPosition(options_button.getAbsoluteLeft() 
@@ -338,15 +380,27 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 			}
 		});
 	}
-
+	
 	@Override
 	public Label addContextLabel(String text) {
 		if (context_bar.getWidgetCount() > 0) {
-			context_bar.add(new Label("  >  "));
+			context_bar.add(new Label(Messages.INSTANCE.contextSeparator()));
 		}
 
 		Label context = new Label(text);
 		context_bar.add(context);
+		
+/*		int label_width = 9999;
+		int font_size = 20;
+		while (label_width >= context_bar.getOffsetWidth()) {
+			label_width = 0;
+			font_size -= 2;
+			for (Widget w : context_bar) {
+				w.getElement().getStyle().setFontSize(font_size, Style.Unit.PX);
+				label_width += w.getOffsetWidth();
+			}
+			Window.alert("Font size: " + font_size + "\nLabel width = " + label_width);
+		}*/
 
 		return context;
 	}
@@ -407,16 +461,31 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 
 	@Override
 	public HasClickHandlers getCloseButton() {
+		return close_button;
+	}
+	
+	@Override
+	public HasClickHandlers getCloseLabel() {
 		return close;
 	}
 
 	@Override
 	public HasClickHandlers getDuplicateButton() {
+		return dupl_button;
+	}
+	
+	@Override
+	public HasClickHandlers getDuplicateLabel() {
 		return dupl;
 	}
 
 	@Override
 	public HasClickHandlers getSwapHorizontalButton() {
+		return swap_h_button;
+	}
+	
+	@Override
+	public HasClickHandlers getSwapHorizontalLabel() {
 		return swap_h;
 	}
 
@@ -464,13 +533,7 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 		options_popup.setPopupPosition((right - options_popup.getOffsetWidth()), popup_top);
 
 		width = (int) (width * 0.50);
-		/*if (width < 300) {
-			width = 300;
-		}*/
 		height = (int) (height - options_button.getOffsetHeight() - 15);
-		/*if (height < 300) {
-			height = 300;
-		}*/
 
 		if (text_popup.getWidget() != null) {
 			text_popup.getWidget().setWidth(width + "px");

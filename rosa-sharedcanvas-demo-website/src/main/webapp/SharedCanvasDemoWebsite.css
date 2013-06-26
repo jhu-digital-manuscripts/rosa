@@ -97,6 +97,11 @@
 .PanelToolbar {
   margin-top: 1em;
 }
+/* ------ Home Panel ------ */
+
+.CellList {
+	background-color: white;
+}
 
 /* ------ Panel Titlebar ------ */
 
@@ -113,14 +118,14 @@
 
 .ContextBar .Link {
 	float: left;
-	font-size: 18px;
+	/* font-size: 18px; */
 	margin-right: 10px;
 	cursor: pointer;
 }
 
 .ContextBar .gwt-Label {
 	float: left;
-	font-size: 18px;
+	/* font-size: 18px; */
 	margin-right: 10px;
 }
 
@@ -167,8 +172,30 @@
 	float: left;
 }
 
+.Options .gwt-PushButton {
+	width: 21px;
+	height: 25px;
+	float: left;
+}
+
+.Options .gwt-PushButton:focus {
+	outline: none;
+}
+
+.Options .gwt-PushButton .gwt-Image {
+	position: relative;
+	top: -4px;
+	left: -6px;
+	width: 33px;
+}
+
+.Options .Swap {
+	width: 100px;
+	float: left;
+}
+
 .Options .Text {
-	width: 70px;
+	width: 66px;
 	text-align: center;
 	cursor: default;
 	float: left;
@@ -273,7 +300,8 @@
 }
 
 .MetadataSubtitle {
-  font-style: italic;
+  /* font-style: italic; */
+  font-weight: bold;
   vertical-align: top;
 }
 

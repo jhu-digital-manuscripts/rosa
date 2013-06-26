@@ -1,6 +1,7 @@
 package rosa.scanvas.demo.website.client.presenter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import rosa.scanvas.demo.website.client.PanelData;
@@ -20,6 +21,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.SelectionChangeEvent;
 
 /**
  * Presents a list of manifest collections which a user can select. The user can
@@ -27,9 +29,9 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class HomePanelPresenter extends BasePanelPresenter {
     public interface Display extends BasePanelPresenter.Display {
-        HasClickHandlers getCollectionList();
-
-        int getSelectedCollection();
+        void addSelectionChangeEventHandler(SelectionChangeEvent.Handler handler);
+        
+        String getSelectedCollection();
 
         void setData(List<String> names);
 
@@ -43,17 +45,17 @@ public class HomePanelPresenter extends BasePanelPresenter {
     }
 
     private static final List<String> col_titles;
-    private static final List<String> col_urls;
+    private static final HashMap<String, String> collections;
 
     static {
         col_titles = new ArrayList<String>();
-        col_urls = new ArrayList<String>();
-
         col_titles.add("Roman de la Rose Digital library");
-        col_urls.add("http://rosetest.library.jhu.edu/sc");
-
         col_titles.add("Test data");
-        col_urls.add("http://rosetest.library.jhu.edu/sctest");
+        
+        collections = new HashMap<String, String>();
+        collections.put("Roman de la Rose Digital library",
+        		"http://rosetest.library.jhu.edu/sc");
+        collections.put("Test data", "http://rosetest.library.jhu.edu/sctest");
     }
 
     private final Display display;
@@ -69,12 +71,11 @@ public class HomePanelPresenter extends BasePanelPresenter {
     }
 
     private void bind() {
-        display.getCollectionList().addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                doCollectionLoad(display.getSelectedCollection());
-            }
-        });
+    	display.addSelectionChangeEventHandler(new SelectionChangeEvent.Handler() {
+    		public void onSelectionChange(SelectionChangeEvent event) {
+    			doCollectionLoad(display.getSelectedCollection());
+    		}
+    	});
 
         display.getLoadButton().addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
@@ -90,17 +91,17 @@ public class HomePanelPresenter extends BasePanelPresenter {
             }
         });
     }
-
-    private void doCollectionLoad(int sel) {
-        if (sel < 0) {
-            return;
-        }
-
-        PanelState state = new PanelState(PanelView.MANIFEST_COLLECTION,
-                col_urls.get(sel));
-        PanelRequestEvent event = new PanelRequestEvent(
-                PanelRequestEvent.PanelAction.CHANGE, panelId(), state);
-        eventBus().fireEvent(event);
+    
+    private void doCollectionLoad(String sel) {
+    	if (sel == null) {
+    		return;
+    	}
+    	
+    	PanelState state = new PanelState(PanelView.MANIFEST_COLLECTION,
+    			collections.get(sel));
+    	PanelRequestEvent event = new PanelRequestEvent(
+    			PanelRequestEvent.PanelAction.CHANGE, panelId(), state);
+    	eventBus().fireEvent(event);
     }
 
     private void doUserLoad() {

@@ -21,7 +21,7 @@
 
   <!-- Specify the app entry point class.                         -->
   <entry-point class='rosa.scanvas.demo.website.client.SharedCanvasDemoWebsite' />
-  <entry-point class='rosa.scanvas.demo.website.client.testviewable.DispAreaTestViewable' />
+  <!-- <entry-point class='rosa.scanvas.demo.website.client.testviewable.DispAreaTestViewable' /> -->
 
   <extend-property name='locale' values='fr'/>
   

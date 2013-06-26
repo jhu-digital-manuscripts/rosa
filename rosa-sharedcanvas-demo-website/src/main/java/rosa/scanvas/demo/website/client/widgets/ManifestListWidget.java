@@ -55,17 +55,6 @@ public class ManifestListWidget extends Composite {
 		seq.add(sequenceTable);
 		seq.add(new Label("Pick a different sequence: "));
 		seq.add(sequencePickerBox);
-		
-		
-		manifestTable.setWidget(0, 0, new Label("Title: "));
-		manifestTable.setWidget(1, 0, new Label("Agent: "));
-		manifestTable.setWidget(2, 0, new Label("Location: "));
-		manifestTable.setWidget(3, 0, new Label("Date: "));
-		manifestTable.setWidget(4, 0, new Label("Description: "));
-		manifestTable.setWidget(5, 0, new Label("Rights: "));
-		for (int i=0; i<manifestTable.getRowCount(); i++) {
-			manifestTable.getCellFormatter().setStylePrimaryName(i, 0, "MetadataSubtitle");
-		}
 	}
 
 	public FlowPanel getMainPanel() { return mainPanel; }
@@ -109,6 +98,7 @@ public class ManifestListWidget extends Composite {
 			sequencePanel.setVisible(false);
 			return;
 		}
+		int i = 0;
 		// TODO emit event when a new sequence is selected from 'sequence picker'
 		clearLabels();
 
@@ -121,21 +111,42 @@ public class ManifestListWidget extends Composite {
 		} else {
 			collectionPanel.setVisible(false);
 		}
-
+		
 		Manifest manifest = data.getManifest();
+		i = 0;
 		if (manifest != null) {
 			manifestPanel.setVisible(true);
-			manifestTable.setWidget(0, 1, new HTML(manifest.label()));
-			manifestTable.setWidget(1, 1, new HTML(
-					((manifest.agent() != null) ? manifest.agent() : "" )));
-			manifestTable.setWidget(2, 1, new HTML(
-					((manifest.location() != null) ? manifest.location() : "")));
-			manifestTable.setWidget(3, 1, new HTML(
-					((manifest.date() != null) ? manifest.date() : "")));
-			manifestTable.setWidget(4, 1, new HTML(
-					((manifest.description() != null) ? manifest.description() : "")));
-			manifestTable.setWidget(5, 1, new HTML(
-					((manifest.rights() != null) ? manifest.rights() : "")));
+			manifestTable.setWidget(i, 0, new Label("Title: "));
+			manifestTable.setWidget(i++, 1, new HTML(manifest.label()));
+			
+			if (manifest.agent() != null) {
+				manifestTable.setWidget(i, 0, new Label("Agent: "));
+				manifestTable.setWidget(i++, 1, new HTML(manifest.agent()));
+			}
+			
+			if (manifest.location() != null) {
+				manifestTable.setWidget(i, 0, new Label("Location:"));
+				manifestTable.setWidget(i++, 1, new HTML(manifest.location()));
+			}
+			
+			if (manifest.date() != null) {
+				manifestTable.setWidget(i, 0, new Label("Date: "));
+				manifestTable.setWidget(i++, 1, new HTML(manifest.date()));
+			}
+			
+			if (manifest.description() != null) {
+				manifestTable.setWidget(i, 0, new Label("Description:"));
+				manifestTable.setWidget(i++, 1, new HTML(manifest.description()));
+			}
+			
+			if (manifest.rights() != null) {
+				manifestTable.setWidget(i, 0, new Label("Rights: "));
+				manifestTable.setWidget(i++, 1, new HTML(manifest.rights()));
+			}
+			
+			for (int j = 0; j < manifestTable.getRowCount(); j++) {
+				manifestTable.getCellFormatter().setStylePrimaryName(j, 0, "MetadataSubtitle");
+			}
 		} else {
 			manifestPanel.setVisible(false);
 		}
