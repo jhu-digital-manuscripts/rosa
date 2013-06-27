@@ -387,7 +387,7 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     	if (data == null) {
     		return;
     	}
-Window.alert("Setting up text annotations popup...");    	
+    	
     	PopupPanel text_popup = display.getTextAnnotationsPopup();
     	FlowPanel main = (FlowPanel) text_popup.getWidget();
     	StackLayoutPanel tab_panel = (StackLayoutPanel) main.getWidget(1);

@@ -118,14 +118,15 @@
 
 .ContextBar .Link {
 	float: left;
-	/* font-size: 18px; */
+	font-size: 16px;
 	margin-right: 10px;
+	text-decoration: underline;
 	cursor: pointer;
 }
 
 .ContextBar .gwt-Label {
 	float: left;
-	/* font-size: 18px; */
+	font-size: 16px;
 	margin-right: 10px;
 }
 
@@ -242,6 +243,10 @@
 
 .PageTurner .gwt-Label {
   font-weight: bold;
+}
+
+.Loading {
+	
 }
 
 .View .gwt-TabLayoutPanel .gwt-TabLayoutPanelTabs {

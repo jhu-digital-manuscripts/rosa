@@ -6,6 +6,16 @@ import com.google.gwt.i18n.client.Constants;
 public interface Messages extends Constants {
 	public static final Messages INSTANCE = GWT.create(Messages.class);
 	
+	public String appHeader();
+	
+	public String unhandledView();
+	
+	public String errorOnView();
+	
+	public String failedToParseHistory();
+	
+	public String svgError();
+
 	public String load();
 	
 	public String collection();
@@ -48,5 +58,47 @@ public interface Messages extends Constants {
 	
 	public String contextSeparator();
 	
+	public String showAll();
 	
+	public String hideAll();
+	
+	public String images();
+	
+	public String text();
+	
+	public String collectionHtml();
+	
+	public String manifestHtml();
+	
+	public String sequenceHtml();
+	
+	public String sequencePicker();
+	
+	public String manifestTitle();
+	
+	public String manifestAgent();
+	
+	public String manifestLocation();
+	
+	public String manifestDate();
+	
+	public String manifestDescription();
+	
+	public String manifestRights();
+	
+	public String sequenceImages();
+	
+	public String manifestItems();
+	
+	public String plus();
+	
+	public String minus();
+	
+	public String prev();
+	
+	public String gotoButton();
+	
+	public String next();
+	
+	public String errorGettingList();
 }

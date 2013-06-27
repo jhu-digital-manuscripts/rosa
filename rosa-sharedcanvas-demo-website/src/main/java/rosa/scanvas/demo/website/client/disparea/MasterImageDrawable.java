@@ -7,8 +7,12 @@ import rosa.scanvas.demo.website.client.dynimg.WebImage;
 
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.dom.client.ImageElement;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Image;
+
 public class MasterImageDrawable implements DisplayAreaDrawable {
+	private final static Image loading= new Image(/*"images/qgztP.gif"*/
+			"http://jimpunk.net/Loading/wp-content/uploads/loading5.gif");
+	
     private final MasterImageDisplayElement el;
     
     // String tile url -> [left,top]
@@ -36,6 +40,9 @@ public class MasterImageDrawable implements DisplayAreaDrawable {
         final double zoom = area.zoom();
         int width = (int) (el.baseWidth() * zoom);
         int height = (int) (el.baseHeight() * zoom);
+        
+        loading.setWidth(width + "px");
+        loading.setHeight(height + "px");
 
         if (tiles == null) {
             tiles = el.imageServer().renderToTiles(el.masterImage(), width, height);
@@ -104,6 +111,13 @@ public class MasterImageDrawable implements DisplayAreaDrawable {
                     continue;
                 }
 
+                context.save();
+                context.translate(-area.viewportLeft(), -area.viewportTop());
+                context.drawImage(ImageElement.as(loading.getElement()),
+                		tile_left, tile_top, loading.getOffsetWidth(),
+                		loading.getOffsetHeight());
+                context.restore();
+                
                 pending_draws.put(tile.url(), new int[]{tile_left, tile_top});
                 tile.makeViewable(onload_cb);
             }

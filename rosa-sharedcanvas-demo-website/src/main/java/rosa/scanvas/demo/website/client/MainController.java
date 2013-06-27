@@ -3,6 +3,7 @@ package rosa.scanvas.demo.website.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import rosa.scanvas.demo.website.client.Messages;
 import rosa.scanvas.demo.website.client.event.PanelAddedEvent;
 import rosa.scanvas.demo.website.client.event.PanelAddedEventHandler;
 import rosa.scanvas.demo.website.client.event.PanelMoveEvent;
@@ -75,7 +76,7 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
         
         FlowPanel header = new FlowPanel();
         header.setStylePrimaryName("Header");
-        app_header = new Label("JHU Prototype Shared Canvas Viewer");
+        app_header = new Label(Messages.INSTANCE.appHeader());
         app_header.addStyleName("HeaderTitle");
         
         header.add(app_header);
@@ -182,7 +183,8 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
             return new SequencePanelPresenter(new SequenceView(), event_bus,
                     panel_id);
         default:
-            throw new RuntimeException("Unhandled view: " + view);
+            throw new RuntimeException(Messages.INSTANCE.unhandledView()
+            		+ view);
         }
     }
 
@@ -368,7 +370,7 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
                 .getValue());
 
         if (history_state == null) {
-            Window.alert("Failed to parse history state");
+            Window.alert(Messages.INSTANCE.failedToParseHistory());
             // TODO
             return;
         }

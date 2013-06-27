@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import rosa.scanvas.demo.website.client.Messages;
 import rosa.scanvas.demo.website.client.PanelData;
 import rosa.scanvas.demo.website.client.disparea.AnnotationUtil;
 import rosa.scanvas.demo.website.client.disparea.DisplayArea;
 import rosa.scanvas.demo.website.client.disparea.DisplayAreaView;
 import rosa.scanvas.demo.website.client.disparea.DisplayElement;
-//import rosa.scanvas.demo.website.client.dynimg.ImageServer;
-//import rosa.scanvas.demo.website.client.dynimg.WebImage;
 import rosa.scanvas.model.client.Annotation;
 import rosa.scanvas.model.client.AnnotationList;
 import rosa.scanvas.model.client.Canvas;
@@ -46,6 +45,7 @@ import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.HTMLTable.Cell;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 
@@ -60,7 +60,6 @@ public class PageTurner extends Composite implements HasClickHandlers,
 	private static final int MAX_SWIPE_Y = 20;
 	
     private final Grid display;
-//    private final ImageServer image_server;
     private FlowPanel place_holder = new FlowPanel();
     private final FocusPanel focus;
 
@@ -69,7 +68,6 @@ public class PageTurner extends Composite implements HasClickHandlers,
     private int page_width, page_height;
     
     private Sequence sequence;
-//    private boolean clicked_verso;
     
     private int clicked_index;
     
@@ -103,10 +101,10 @@ public class PageTurner extends Composite implements HasClickHandlers,
         
         this.focus = new FocusPanel();
 
-        final Button prev_button = new Button("Prev");
+        final Button prev_button = new Button(Messages.INSTANCE.prev());
         final TextBox goto_textbox = new TextBox();
-        final Button goto_button = new Button("Goto");
-        final Button next_button = new Button("Next");
+        final Button goto_button = new Button(Messages.INSTANCE.gotoButton());
+        final Button next_button = new Button(Messages.INSTANCE.next());
         
         prev_button.setEnabled(false);
 
@@ -156,6 +154,7 @@ public class PageTurner extends Composite implements HasClickHandlers,
         			return;
         		}
         		
+        		goto_textbox.setText("");
         		position = new_position;
         		display(openings.get(position));
         		
@@ -180,6 +179,7 @@ public class PageTurner extends Composite implements HasClickHandlers,
 	        			return;
 	        		}
 	        		
+	        		goto_textbox.setText("");
 	        		position = new_position;
 	        		display(openings.get(position));
 	        		
@@ -198,7 +198,6 @@ public class PageTurner extends Composite implements HasClickHandlers,
             @Override
             public void onClick(ClickEvent event) {
                 Cell cell = display.getCellForEvent(event);
-//                clicked_verso = cell.getCellIndex() == 0;
                 
                 clicked_index = (cell.getCellIndex() == 0) ? 
                 		openings.get(position).getVersoIndex() :
@@ -329,7 +328,7 @@ public class PageTurner extends Composite implements HasClickHandlers,
     			canvas_data, new AsyncCallback<PanelData>() {
     		@Override
     		public void onFailure(Throwable err) {
-    			Window.alert("Error getting annotation list: " + err.getMessage());
+    			Window.alert(Messages.INSTANCE.errorGettingList() + err.getMessage());
     		}
     		
     		@Override
@@ -337,9 +336,7 @@ public class PageTurner extends Composite implements HasClickHandlers,
     			to_draw.remove(canvas_index);
     			
     			DisplayArea area = new DisplayArea(result.getCanvas().width(),
-    					result.getCanvas().height(), 
-    					/*(int) (page_height * aspect), page_height*/
-    					img_width, img_height);
+    					result.getCanvas().height(), img_width, img_height);
     			
     			// Convert all annotations to DisplayElements
     			for (AnnotationList al : result.getAnnotationLists()) {
@@ -481,6 +478,19 @@ public class PageTurner extends Composite implements HasClickHandlers,
      * 			the specified string, -1 is returned
      */
     private int findPositionOfOpening(String label) {
+    	
+    	if (label.matches("\\d+")) {
+    		label += "r";
+    	} else if (label.matches("[a-zA-Z]\\d+")) {
+    		label = label.toUpperCase() + "r";
+    	}
+    	
+    	if (label.startsWith("00")) {
+    		label = label.substring(2);
+    	} else if (label.startsWith("0")) {
+    		label = label.substring(1);
+    	}
+    	
     	for (int i = 0; i < openings.size(); i++ ) {
     		Opening op = openings.get(i);
     		if (op.getVersoLabel().equals(label) 
@@ -488,6 +498,7 @@ public class PageTurner extends Composite implements HasClickHandlers,
     			return i;
     		}
     	}
+    	
     	
     	return -1;
     }

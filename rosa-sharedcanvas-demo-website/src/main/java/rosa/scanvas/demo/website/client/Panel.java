@@ -1,5 +1,6 @@
 package rosa.scanvas.demo.website.client;
 
+import rosa.scanvas.demo.website.client.Messages;
 import rosa.scanvas.demo.website.client.presenter.PanelPresenter;
 
 import com.google.gwt.user.client.Window;
@@ -31,7 +32,8 @@ public class Panel {
 
             @Override
             public void onFailure(Throwable err) {
-                Window.alert("Error displaying view: " + err.getMessage());
+                Window.alert(Messages.INSTANCE.errorOnView() 
+                		+ err.getMessage());
             }
         };
 
@@ -59,7 +61,8 @@ public class Panel {
                     state.getManifestUri(), state.getObjectUri(), data, cb);
             break;
         default:
-            throw new RuntimeException("Unhandled view: " + state.getView());
+            throw new RuntimeException(Messages.INSTANCE.unhandledView()
+            		+ state.getView());
         }
     }
 

@@ -1,5 +1,6 @@
 package rosa.scanvas.demo.website.client.disparea;
 
+import rosa.scanvas.demo.website.client.Messages;
 import rosa.scanvas.demo.website.client.dynimg.IIIFImageServer;
 import rosa.scanvas.demo.website.client.dynimg.MasterImage;
 import rosa.scanvas.model.client.Annotation;
@@ -152,11 +153,9 @@ public class AnnotationUtil {
                 coords[i][0] = Integer.parseInt(point[0]);
                 coords[i][1] = Integer.parseInt(point[1]);
             } catch (IndexOutOfBoundsException e) {
-                Window.alert("SVG selector has incorrectly formatted "
-                        + "coordinates:\n" + svgContent);
+                Window.alert(Messages.INSTANCE.svgError() + svgContent);
             } catch (NumberFormatException e) {
-                Window.alert("SVG selector has incorrectly formatted "
-                        + "coordinates:\n" + svgContent);
+                Window.alert(Messages.INSTANCE.svgError() + svgContent);
             }
         }
         // copy the first point to close the path

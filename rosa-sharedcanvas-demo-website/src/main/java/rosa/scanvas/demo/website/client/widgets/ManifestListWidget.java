@@ -1,5 +1,7 @@
 package rosa.scanvas.demo.website.client.widgets;
 
+import rosa.scanvas.demo.website.client.Messages;
+
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DisclosurePanel;
@@ -40,20 +42,20 @@ public class ManifestListWidget extends Composite {
 		mainPanel.add(sequencePanel);
 		
 		collectionPanel.setContent(collectionTable);
-		collectionPanel.setHeader(new HTML("Collection: "));
+		collectionPanel.setHeader(new HTML(Messages.INSTANCE.collectionHtml()));
 		collectionPanel.setOpen(true);
 		
 		manifestPanel.setContent(manifestTable);
-		manifestPanel.setHeader(new HTML("Manifest: "));
+		manifestPanel.setHeader(new HTML(Messages.INSTANCE.manifestHtml()));
 		manifestPanel.setOpen(true);
 		
 		sequencePanel.setContent(seq);
-		sequencePanel.setHeader(new HTML("Sequence: "));
+		sequencePanel.setHeader(new HTML(Messages.INSTANCE.sequenceHtml()));
 		sequencePanel.setOpen(true);
 		
 		seq.addStyleName("Sequence");
 		seq.add(sequenceTable);
-		seq.add(new Label("Pick a different sequence: "));
+		seq.add(new Label(Messages.INSTANCE.sequencePicker()));
 		seq.add(sequencePickerBox);
 	}
 
@@ -107,7 +109,7 @@ public class ManifestListWidget extends Composite {
 			collectionPanel.setVisible(true);
 			collectionTable.setWidget(0, 1, new HTML(collection.label()));
 			collectionTable.setWidget(1, 1, new HTML(
-					"Items: " + collection.manifests().size()));
+					Messages.INSTANCE.manifestItems() + collection.manifests().size()));
 		} else {
 			collectionPanel.setVisible(false);
 		}
@@ -116,31 +118,31 @@ public class ManifestListWidget extends Composite {
 		i = 0;
 		if (manifest != null) {
 			manifestPanel.setVisible(true);
-			manifestTable.setWidget(i, 0, new Label("Title: "));
+			manifestTable.setWidget(i, 0, new Label(Messages.INSTANCE.manifestTitle()));
 			manifestTable.setWidget(i++, 1, new HTML(manifest.label()));
 			
 			if (manifest.agent() != null) {
-				manifestTable.setWidget(i, 0, new Label("Agent: "));
+				manifestTable.setWidget(i, 0, new Label(Messages.INSTANCE.manifestAgent()));
 				manifestTable.setWidget(i++, 1, new HTML(manifest.agent()));
 			}
 			
 			if (manifest.location() != null) {
-				manifestTable.setWidget(i, 0, new Label("Location:"));
+				manifestTable.setWidget(i, 0, new Label(Messages.INSTANCE.manifestLocation()));
 				manifestTable.setWidget(i++, 1, new HTML(manifest.location()));
 			}
 			
 			if (manifest.date() != null) {
-				manifestTable.setWidget(i, 0, new Label("Date: "));
+				manifestTable.setWidget(i, 0, new Label(Messages.INSTANCE.manifestDate()));
 				manifestTable.setWidget(i++, 1, new HTML(manifest.date()));
 			}
 			
 			if (manifest.description() != null) {
-				manifestTable.setWidget(i, 0, new Label("Description:"));
+				manifestTable.setWidget(i, 0, new Label(Messages.INSTANCE.manifestDescription()));
 				manifestTable.setWidget(i++, 1, new HTML(manifest.description()));
 			}
 			
 			if (manifest.rights() != null) {
-				manifestTable.setWidget(i, 0, new Label("Rights: "));
+				manifestTable.setWidget(i, 0, new Label(Messages.INSTANCE.manifestRights()));
 				manifestTable.setWidget(i++, 1, new HTML(manifest.rights()));
 			}
 			
@@ -155,7 +157,8 @@ public class ManifestListWidget extends Composite {
 		if (sequence != null) {
 			sequencePanel.setVisible(true);
 			sequenceTable.setWidget(0, 1, new HTML(sequence.label()));
-			sequenceTable.setWidget(1, 1, new HTML("Images: " + sequence.size()));
+			sequenceTable.setWidget(1, 1, new HTML(Messages.INSTANCE.sequenceImages()
+					+ sequence.size()));
 
 			int index = 0;
 			for (Reference<Sequence> ref : manifest.sequences()) {

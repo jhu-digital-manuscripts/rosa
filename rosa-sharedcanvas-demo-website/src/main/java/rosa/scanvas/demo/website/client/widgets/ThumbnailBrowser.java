@@ -2,6 +2,8 @@ package rosa.scanvas.demo.website.client.widgets;
 
 import java.util.List;
 
+import rosa.scanvas.demo.website.client.Messages;
+
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -23,8 +25,8 @@ public class ThumbnailBrowser extends Composite {
     private final FlowPanel content;
     private final FlowPanel top;
     
-    private final Button zoom_in = new Button("+");
-    private final Button zoom_out = new Button("-");
+    private final Button zoom_in = new Button(Messages.INSTANCE.plus());
+    private final Button zoom_out = new Button(Messages.INSTANCE.minus());
     
     public ThumbnailBrowser() {
     	this.top = new FlowPanel();
