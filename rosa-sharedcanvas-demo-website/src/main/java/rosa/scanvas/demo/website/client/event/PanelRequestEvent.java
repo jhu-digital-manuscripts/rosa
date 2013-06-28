@@ -18,19 +18,30 @@ public class PanelRequestEvent extends GwtEvent<PanelRequestEventHandler> {
     private final PanelAction action;
     private final int panel_id;
     private final PanelState state;
+    private final int zoom_level;
+    private final int[] position = new int[2];
 
     public PanelRequestEvent(PanelAction action, int panel_id) {
-        this(action, panel_id, null);
+        this(action, panel_id, null, -1, -112, -112);
     }
 
     public PanelRequestEvent(PanelAction action, PanelState state) {
-        this(action, -1, state);
+        this(action, -1, state, -1);
     }
 
     public PanelRequestEvent(PanelAction action, int panel_id, PanelState state) {
-        this.action = action;
+        this(action, panel_id, state, -1);
+    }
+    
+    public PanelRequestEvent(PanelAction action, int panel_id, PanelState state, 
+    		int zoom_level, int... position) {
+    	this.action = action;
         this.panel_id = panel_id;
         this.state = state;
+        this.zoom_level = zoom_level;
+        
+        this.position[0] = position.length > 0 ? position[0] : -111;
+        this.position[1] = position.length > 1 ? position[1] : -111;
     }
 
     public PanelAction getAction() {
@@ -43,6 +54,14 @@ public class PanelRequestEvent extends GwtEvent<PanelRequestEventHandler> {
 
     public PanelState getPanelState() {
         return state;
+    }
+    
+    public int getZoomLevel() {
+    	return zoom_level;
+    }
+    
+    public int[] getPosition() {
+    	return position;
     }
 
     @Override

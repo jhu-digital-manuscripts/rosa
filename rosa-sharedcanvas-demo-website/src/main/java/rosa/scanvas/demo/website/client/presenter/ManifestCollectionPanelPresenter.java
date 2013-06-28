@@ -88,10 +88,5 @@ public class ManifestCollectionPanelPresenter extends BasePanelPresenter {
 /*    @Override
     public void resize(int width, int height) {
         display.resize(width, height);
-    }
-    
-    @Override
-    public void selected(boolean is_selected) {
-    	display.selected(is_selected);
     }*/
 }

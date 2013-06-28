@@ -90,8 +90,6 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     	void clearContextLabels();
 
         void resize(int width, int height);
-        
-        void selected(boolean is_selected);
     }
 
     private final Display display;
@@ -193,17 +191,13 @@ public abstract class BasePanelPresenter implements PanelPresenter {
         
         display.getDuplicateButton().addClickHandler(new ClickHandler() {
         	public void onClick(ClickEvent event) {
-        		PanelRequestEvent req = new PanelRequestEvent(
-        				PanelRequestEvent.PanelAction.ADD, panel_id);
-        		event_bus.fireEvent(req);
+        		doDuplicatePanel();
         	}
         });
         
         display.getDuplicateLabel().addClickHandler(new ClickHandler() {
         	public void onClick(ClickEvent event) {
-        		PanelRequestEvent req = new PanelRequestEvent(
-        				PanelRequestEvent.PanelAction.ADD, panel_id);
-        		event_bus.fireEvent(req);
+        		doDuplicatePanel();
         	}
         });
         
@@ -250,6 +244,12 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     
     public PanelData data() {
     	return data;
+    }
+    
+    protected void doDuplicatePanel() {
+    	PanelRequestEvent req = new PanelRequestEvent(
+				PanelRequestEvent.PanelAction.ADD, panel_id);
+		event_bus.fireEvent(req);
     }
     
     @Override
@@ -564,10 +564,5 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     @Override
     public void resize(int width, int height) {
         display.resize(width, height);
-    }
-    
-    @Override
-    public void selected(boolean is_selected) {
-    	display.selected(is_selected);
     }
 }

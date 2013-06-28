@@ -1,16 +1,13 @@
 package rosa.scanvas.demo.website.client.view;
 
 import rosa.scanvas.demo.website.client.Messages;
-import rosa.scanvas.demo.website.client.dynimg.IIIFImageServer;
 import rosa.scanvas.demo.website.client.presenter.SequencePanelPresenter;
 import rosa.scanvas.demo.website.client.widgets.PageTurner;
 import rosa.scanvas.demo.website.client.widgets.ThumbnailBrowser;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 
 public class SequenceView extends BasePanelView implements
@@ -64,13 +61,4 @@ public class SequenceView extends BasePanelView implements
     public ThumbnailBrowser getThumbnailBrowser() {
         return thumb_browser;
     }
-    /*
-    @Override
-    public void selected(boolean is_selected) {
-    	if (is_selected) {
-    		main.addStyleName("PanelSelected");
-    	} else {
-    		main.removeStyleName("PanelSelected");
-    	}
-    }*/
 }

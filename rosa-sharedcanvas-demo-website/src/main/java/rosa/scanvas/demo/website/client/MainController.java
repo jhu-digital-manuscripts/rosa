@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rosa.scanvas.demo.website.client.Messages;
-import rosa.scanvas.demo.website.client.event.PanelAddedEvent;
-import rosa.scanvas.demo.website.client.event.PanelAddedEventHandler;
 import rosa.scanvas.demo.website.client.event.PanelMoveEvent;
 import rosa.scanvas.demo.website.client.event.PanelMoveEvent.PanelDirection;
 import rosa.scanvas.demo.website.client.event.PanelMoveEventHandler;
@@ -34,7 +32,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -42,6 +39,8 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
+
+import com.google.gwt.user.client.Window;
 
 public class MainController implements ValueChangeHandler<String>, IsWidget {
 	private static final int SIDEBAR_WIDTH = 275;
@@ -139,7 +138,8 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
                 new PanelRequestEventHandler() {
                     public void onPanelRequest(PanelRequestEvent event) {
                         doPanelRequest(event.getAction(), event.getPanelId(),
-                                event.getPanelState());
+                                event.getPanelState(), event.getZoomLevel(), 
+                                event.getPosition());
                     }
                 });
         
@@ -200,8 +200,6 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
 
         panels.add(panel);
         main_content.add(panel.getPresenter());
-
-        event_bus.fireEvent(new PanelAddedEvent(panel_id));
         
         update_panel_sizes(Window.getClientWidth(), Window.getClientHeight());
         panel.display(state);
@@ -212,11 +210,12 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
      * 
      * @param old_panel_id
      */
-    private void duplicate_panel(int old_panel_id) {
+    private void duplicate_panel(int old_panel_id, int zoom_level, int[] position) {
     	int index = find_panel_index(old_panel_id);
     	int panel_id = next_panel_id++;
     	
     	PanelState old_state = panels.get(index).getState();
+    	PanelData old_data = panels.get(index).getData();
     	
     	PanelState state = new PanelState(old_state.getView(), old_state.getObjectUri(),
     			old_state.getManifestUri(), old_state.getCanvasIndex());
@@ -226,8 +225,8 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
     	panels.add(panel);
     	main_content.add(panel.getPresenter());
     	
-    	// TODO is this event used anymore?
-    	event_bus.fireEvent(new PanelAddedEvent(panel_id));
+    	panel.setCanvasZoomLevel(zoom_level);
+    	panel.setViewportPosition(position);
     	
     	update_panel_sizes(Window.getClientWidth(), Window.getClientHeight());
     	panel.display(state);
@@ -480,13 +479,17 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
      * 
      * @param action
      * @param panel_id
+     * @param panel_state
+     * @param zoom_level
+     * @param position
      */
     private void doPanelRequest(PanelAction action, int panel_id,
-            PanelState panel_state) {
+            PanelState panel_state, int zoom_level, int[] position) {
+    	
         if (action == PanelAction.ADD && panel_id == -1) {
             add_panel(panel_state);
         } else if (action == PanelAction.ADD && panel_id != -1) {
-        	duplicate_panel(panel_id);
+        	duplicate_panel(panel_id, zoom_level, position);
         } else if (action == PanelAction.CHANGE) {
             change_panel_by_id(panel_state, panel_id);
         } else if (action == PanelAction.REMOVE && panels.size() > 1) {

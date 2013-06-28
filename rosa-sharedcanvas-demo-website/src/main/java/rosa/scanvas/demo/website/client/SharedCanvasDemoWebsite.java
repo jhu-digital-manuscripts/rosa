@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
  */
 public class SharedCanvasDemoWebsite implements EntryPoint {
     public void onModuleLoad() {
-        MainController main = new MainController(new HandlerManager(null));
+    	MainController main = new MainController(new HandlerManager(null));
         RootLayoutPanel.get().add(main.asWidget());
 
         main.go();

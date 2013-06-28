@@ -15,6 +15,7 @@ public class Panel {
     public Panel(PanelPresenter presenter, int id) {
         this.id = id;
         this.presenter = presenter;
+        this.data = new PanelData();
     }
 
     /**
@@ -22,7 +23,6 @@ public class Panel {
      */
     public void display(PanelState state) {
         this.state = state;
-        this.data = new PanelData();
 
         AsyncCallback<PanelData> cb = new AsyncCallback<PanelData>() {
             @Override
@@ -76,6 +76,14 @@ public class Panel {
 
     public PanelData getData() {
         return data;
+    }
+    
+    public void setCanvasZoomLevel(int zoom_level) {
+    	data.setZoomLevel(zoom_level);
+    }
+    
+    public void setViewportPosition(int[] position) {
+    	data.setPosition(position);
     }
 
     public PanelPresenter getPresenter() {

@@ -11,6 +11,7 @@ import rosa.scanvas.demo.website.client.disparea.DisplayElement;
 import rosa.scanvas.demo.website.client.event.AnnotationSelectionEvent;
 import rosa.scanvas.demo.website.client.event.AnnotationSelectionHandler;
 import rosa.scanvas.demo.website.client.event.PanelDisplayedEvent;
+import rosa.scanvas.demo.website.client.event.PanelRequestEvent;
 import rosa.scanvas.model.client.Annotation;
 import rosa.scanvas.model.client.AnnotationList;
 import rosa.scanvas.model.client.Canvas;
@@ -30,8 +31,6 @@ import com.google.gwt.user.client.Window;
 
 public class CanvasPanelPresenter extends BasePanelPresenter {
     public interface Display extends BasePanelPresenter.Display {
-        //Label getLabel();
-
         DisplayAreaView getDisplayAreaWidget();
         
         Button getZoomInButton();
@@ -39,12 +38,6 @@ public class CanvasPanelPresenter extends BasePanelPresenter {
         Button getZoomOutButton();
         
         Button getResetButton();
-        
-//        void showDialogBox(String label, String text, boolean tei);
-        
-//        void hideDialogBox(String label, String text, boolean tei);
-        
-//        void selected(boolean is_selected);
     }
 
     private final Display display;
@@ -102,20 +95,21 @@ public class CanvasPanelPresenter extends BasePanelPresenter {
     	});
     }
     
+    @Override
+    protected void doDuplicatePanel() {
+    	DisplayArea area = display.getDisplayAreaWidget().area();
+    	
+    	PanelRequestEvent req = new PanelRequestEvent(
+				PanelRequestEvent.PanelAction.ADD, panelId(), null, area.zoomLevel(),
+				area.viewportBaseCenterX(), area.viewportBaseCenterY());
+		eventBus().fireEvent(req);
+    }
+    
     // TODO Can save display elements and operate on them for efficiency
     private void setAnnotationVisible(Annotation ann, boolean status) {
 
     	if (!AnnotationUtil.isSpecificResource(ann) &&
     			ann.body().isText()) {
-    		// nontargeted text annotations are not displayed on the canvas
-    		/*boolean tei = ann.body().format().endsWith("xml");
-    		
-    		if (status) {
-    			display.showDialogBox(ann.label(), ann.body().textContent(), tei);
-    		} else {
-    			display.hideDialogBox(ann.label(), ann.body().textContent(), tei);
-    		}*/
-    		
     		return;
     	}
 
@@ -151,10 +145,21 @@ public class CanvasPanelPresenter extends BasePanelPresenter {
         this.canvas = data.getCanvas();
         els.clear();
         
-        /*display.getLabel().setText(data.getManifest().label() 
-        		+ ": " + canvas.label());*/
         update();
-
+        
+        if (data.getZoomLevel() != -1) {
+        	display.getDisplayAreaWidget().area().setZoomLevel(
+        			display.getDisplayAreaWidget().area().numZoomLevels() 
+        			>= data.getZoomLevel() ? data.getZoomLevel() : 0);
+        }
+        
+        if (data.getPosition().length == 2 && data.getPosition()[0] != -111
+        		&& data.getPosition()[1] != -111) {
+        	display.getDisplayAreaWidget().area().setViewportBaseCenter(
+        			data.getPosition()[0], data.getPosition()[1]);
+        }
+        
+        
         // convert annotations into display elements
         for (AnnotationList list : data.getAnnotationLists()) {
         	for (Annotation ann : list) {
@@ -207,10 +212,5 @@ public class CanvasPanelPresenter extends BasePanelPresenter {
         area.setContent(els);
         da.display(area);
         da.lockDisplay(false);
-    }
-    
-    @Override
-    public void selected(boolean is_selected) {
-    	display.selected(is_selected);
     }
 }

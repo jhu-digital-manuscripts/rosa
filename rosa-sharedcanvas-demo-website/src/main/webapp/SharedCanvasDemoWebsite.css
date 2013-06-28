@@ -19,6 +19,7 @@
 	margin-top: 10px;
 	margin-right: 10px;
 	width: 40px;
+	height: 41px;
 	cursor: pointer;
 }
 
@@ -188,6 +189,7 @@
 	top: -4px;
 	left: -6px;
 	width: 33px;
+	height: 34px;
 }
 
 .Options .Swap {
@@ -246,7 +248,7 @@
 }
 
 .Loading {
-	
+	/* background-image: url('images/loading.gif'); */
 }
 
 .View .gwt-TabLayoutPanel .gwt-TabLayoutPanelTabs {
@@ -275,9 +277,6 @@
 
 .PageTurner .WebImage {
 	cursor: pointer;
-}
-
-.SidebarContainer {
 }
 
 .AppHeader {

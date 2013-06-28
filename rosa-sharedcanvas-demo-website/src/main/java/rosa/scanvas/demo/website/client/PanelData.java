@@ -24,6 +24,9 @@ public class PanelData {
     private Sequence sequence;
     private Canvas canvas;
     private List<AnnotationList> annotationLists;
+    
+    private int zoom_level;
+    private int[] position = new int[2];
 
     // TODO rethink this
     private List<Annotation> visibleAnnotations;
@@ -283,6 +286,10 @@ public class PanelData {
         visibleAnnotations = new ArrayList<Annotation>();
         imageAnnotations = new ArrayList<Annotation>();
         annotation_status = new HashSet<String>();
+        
+        zoom_level = -1;
+        position[0] = -111;
+        position[1] = -111;
     }
 
     public ManifestCollection getManifestCollection() {
@@ -347,5 +354,22 @@ public class PanelData {
     
     public boolean getAnnotationStatus(Annotation ann) {
     	return annotation_status.contains(ann.uri());
+    }
+    
+    public int getZoomLevel() {
+    	return zoom_level;
+    }
+    
+    public void setZoomLevel(int zoom_level) {
+    	this.zoom_level = zoom_level;
+    }
+    
+    public int[] getPosition() {
+    	return position;
+    }
+    
+    public void setPosition(int[] position) {
+    	this.position[0] = position.length > 0 ? position[0] : -111;
+    	this.position[1] = position.length > 1 ? position[1] : -111;
     }
 }

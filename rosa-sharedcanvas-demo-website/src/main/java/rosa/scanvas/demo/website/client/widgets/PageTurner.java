@@ -297,9 +297,9 @@ public class PageTurner extends Composite implements HasClickHandlers,
 
     public void resize(int page_width, int page_height) {
         this.page_width = page_width;
-        this.page_height = page_height - 10;
+        this.page_height = page_height - 15;
 
-        place_holder.setHeight(page_height+"px");
+        place_holder.setHeight( (page_height - 10) + "px");
         
         if (openings != null) {
             display(openings.get(position));
@@ -369,6 +369,9 @@ public class PageTurner extends Composite implements HasClickHandlers,
     	
     	verso_panel.add(verso_view);
     	recto_panel.add(recto_view);
+    	/*
+    	verso_panel.addStyleName("Loading");
+    	recto_panel.addStyleName("Loading");*/
     	
     	opening_data = new PanelData();
     	verso_els.clear();

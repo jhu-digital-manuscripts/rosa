@@ -1,18 +1,14 @@
 package rosa.scanvas.demo.website.client.view;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import rosa.scanvas.demo.website.client.Messages;
 import rosa.scanvas.demo.website.client.presenter.ManifestPanelPresenter;
 
 import com.google.gwt.cell.client.TextCell;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.cellview.client.CellList;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -79,13 +75,4 @@ public class ManifestView extends BasePanelView implements
         super.resize(width, height);
         top.setSize((width - 22) + "px", (height - 50) + "px");
     }
-/*    
-    @Override
-    public void selected(boolean is_selected) {
-    	if (is_selected) {
-    		top.addStyleName("PanelSelected");
-    	} else {
-    		top.removeStyleName("PanelSelected");
-    	}
-    }*/
 }

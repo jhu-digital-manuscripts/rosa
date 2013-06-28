@@ -7,8 +7,6 @@ import rosa.scanvas.demo.website.client.presenter.BasePanelPresenter;
 import rosa.scanvas.demo.website.client.widgets.AnnotationListWidget;
 import rosa.scanvas.demo.website.client.widgets.ManifestListWidget;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -23,7 +21,6 @@ import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -119,7 +116,6 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 	private final ToggleButton text_button;
 
 	private final PopupPanel text_popup;
-	//private final MovingPopupPanel options_popup;
 	private final PopupPanel meta_popup;
 	private final PopupPanel anno_popup;
 	private final PopupPanel options_popup;
@@ -134,7 +130,6 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 	private final PushButton move_up;
 	private final PushButton move_down;
 
-	//private final ScrolledTabLayoutPanel tab_panel;
 	private final StackLayoutPanel tab_panel;
 
 	public BasePanelView() {
@@ -362,7 +357,6 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 			public void onAttachOrDetach(AttachEvent event) {
 				if (event.isAttached()) {
 					options_popup.setWidth(135 + "px");
-					//options_popup.showRelativeTo(options_button);
 
 					options_popup.setPopupPosition(options_button.getAbsoluteLeft() 
 							+ options_button.getOffsetWidth()
@@ -552,15 +546,5 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 
 		tab_panel.setWidth((int) (width * 0.98) + "px");
 		tab_panel.setHeight((int) (height - 20) + "px");
-		//tab_panel.resize(width, height);
-	}
-
-	@Override
-	public void selected(boolean is_selected) {
-		/*if (is_selected) {
-    		top.addStyleName("PanelSelected");
-    	} else {
-    		top.removeStyleName("PanelSelected");
-    	}*/
 	}
 }

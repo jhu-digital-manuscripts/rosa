@@ -11,7 +11,6 @@ import com.google.gwt.event.dom.client.HasKeyUpHandlers;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Label;
@@ -33,7 +32,6 @@ public class HomeView extends BasePanelView implements HomePanelPresenter.Displa
     private final SingleSelectionModel<String> selection_model;
 
     public HomeView() {
-        //this.load_button = new Button("Load");
     	this.load_button = new Button(Messages.INSTANCE.load());
         this.user_textbox = new TextBox();
         this.is_col_checkbox = new CheckBox("Collection");
@@ -89,7 +87,6 @@ public class HomeView extends BasePanelView implements HomePanelPresenter.Displa
 
     @Override
     public void setData(List<String> names) {
-    	// TODO need to clear the list first?
     	cell_list.setRowCount(names.size(), true);
     	cell_list.setRowData(0, names);
     }

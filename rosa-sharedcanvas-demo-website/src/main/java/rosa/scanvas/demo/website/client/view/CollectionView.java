@@ -1,6 +1,5 @@
 package rosa.scanvas.demo.website.client.view;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import rosa.scanvas.demo.website.client.Messages;
@@ -87,13 +86,4 @@ public class CollectionView extends BasePanelView implements
         }
 
     }
-    
-/*    @Override
-    public void selected(boolean is_selected) {
-    	if (is_selected) {
-    		top.addStyleName("PanelSelected");
-    	} else {
-    		top.removeStyleName("PanelSelected");
-    	}
-    }*/
 }
