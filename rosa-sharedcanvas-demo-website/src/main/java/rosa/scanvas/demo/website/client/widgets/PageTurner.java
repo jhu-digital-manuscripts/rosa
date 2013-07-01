@@ -350,7 +350,8 @@ public class PageTurner extends Composite implements HasClickHandlers,
     			}
     			area.setContent(els);
     			
-    			view.display(area);
+    			view.setDisplayArea(area);
+    			view.display(/*area*/);
     			view.lockDisplay(true);
     			view.redraw();
     			

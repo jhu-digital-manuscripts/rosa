@@ -4,8 +4,10 @@ import java.util.List;
 
 import rosa.scanvas.demo.website.client.Messages;
 import rosa.scanvas.demo.website.client.presenter.ManifestCollectionPanelPresenter;
+import rosa.scanvas.demo.website.client.widgets.CellListResources;
 
 import com.google.gwt.cell.client.TextCell;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -26,12 +28,14 @@ public class CollectionView extends BasePanelView implements
     private final SingleSelectionModel<String> selection_model;
 
     public CollectionView() {
+    	CellList.Resources cell_res = GWT.create(CellListResources.class);
+    	
         main = new FlowPanel();
         top = new ScrollPanel();
         top.setStylePrimaryName("View");
         
         TextCell text_cell = new TextCell();
-        this.cell_list = new CellList<String>(text_cell);
+        this.cell_list = new CellList<String>(text_cell, cell_res);
         this.selection_model = new SingleSelectionModel<String>();
         
         top.add(cell_list);

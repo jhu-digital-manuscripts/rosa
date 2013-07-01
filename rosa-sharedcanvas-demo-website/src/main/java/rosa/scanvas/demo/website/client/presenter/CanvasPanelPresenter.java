@@ -44,6 +44,8 @@ public class CanvasPanelPresenter extends BasePanelPresenter {
     private Canvas canvas;
     private int width, height;
     
+    
+    
     private List<DisplayElement> els = new ArrayList<DisplayElement>();
 
     public CanvasPanelPresenter(Display display, HandlerManager eventBus, int panel_id) {
@@ -140,25 +142,27 @@ public class CanvasPanelPresenter extends BasePanelPresenter {
     }
 
     @Override
-    public void display(PanelData data) {
-    	super.display(data);
+    public void display(int width, int height, PanelData data) {
+    	super.display(width, height, data);
         this.canvas = data.getCanvas();
         els.clear();
         
-        update();
+        this.width = width - 22;
+        this.height = height - 70;
+        
+        DisplayArea area = new DisplayArea(canvas.width(), canvas.height(),
+                this.width, this.height);
         
         if (data.getZoomLevel() != -1) {
-        	display.getDisplayAreaWidget().area().setZoomLevel(
-        			display.getDisplayAreaWidget().area().numZoomLevels() 
+        	area.setZoomLevel(display.getDisplayAreaWidget().area().numZoomLevels() 
         			>= data.getZoomLevel() ? data.getZoomLevel() : 0);
         }
         
         if (data.getPosition().length == 2 && data.getPosition()[0] != -111
         		&& data.getPosition()[1] != -111) {
-        	display.getDisplayAreaWidget().area().setViewportBaseCenter(
-        			data.getPosition()[0], data.getPosition()[1]);
+        	area.setViewportBaseCenter(data.getPosition()[0],
+        			data.getPosition()[1]);
         }
-        
         
         // convert annotations into display elements
         for (AnnotationList list : data.getAnnotationLists()) {
@@ -170,7 +174,9 @@ public class CanvasPanelPresenter extends BasePanelPresenter {
         		}
         	}
         }
-        display.getDisplayAreaWidget().area().setContent(els);
+        area.setContent(els);
+        display.getDisplayAreaWidget().setDisplayArea(area);
+        display.getDisplayAreaWidget().lockDisplay(false);
         update();
         
         PanelDisplayedEvent event = new PanelDisplayedEvent(panelId(), data);
@@ -183,9 +189,9 @@ public class CanvasPanelPresenter extends BasePanelPresenter {
             return;
         }
         super.resize(width, height);
-
+        
         this.width = width - 22;
-        this.height = height/* - 25*/;
+        this.height = height - 70;
         
         update();
     }
@@ -195,22 +201,7 @@ public class CanvasPanelPresenter extends BasePanelPresenter {
             return;
         }
         
-        DisplayAreaView da = display.getDisplayAreaWidget();
-        DisplayArea area = new DisplayArea(canvas.width(), canvas.height(),
-                width, height-70);
-        // Copy the zoom level and center position of the old display area into
-        // the new display area, so the view does not reset on browser resize
-        DisplayArea old_area = da.area();
-        if (old_area != null) {
-	        if (old_area.zoomLevel() < area.numZoomLevels()) {
-	        	area.setZoomLevel(old_area.zoomLevel());
-	        }
-	        area.setViewportBaseCenter(old_area.viewportBaseCenterX(),
-	        		old_area.viewportBaseCenterY());
-    	}
-        
-        area.setContent(els);
-        da.display(area);
-        da.lockDisplay(false);
+        display.getDisplayAreaWidget().area().resizeViewport(width, height);
+        display.getDisplayAreaWidget().display();
     }
 }

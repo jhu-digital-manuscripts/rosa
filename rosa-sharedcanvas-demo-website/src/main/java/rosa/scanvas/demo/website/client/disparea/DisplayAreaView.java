@@ -76,6 +76,8 @@ public class DisplayAreaView extends Composite {
 		this.in_overview = false;
 		this.drag_from_overview = false;
 		
+		this.grab_overview = true;
+		
 		viewport.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -478,14 +480,21 @@ public class DisplayAreaView extends Composite {
 		dragging = false;
 	}
 
+	public void setDisplayArea(DisplayArea area) {
+		this.area = area;
+	}
+	
 	/**
 	 * Sets the display area, viewport size, and overview size
 	 * 
 	 * @param area
 	 */
-	public void display(DisplayArea area) {
-		this.area = area;
-
+	public void display(/*DisplayArea area*/) {
+//		this.area = area;
+		if (area == null) {
+			return;
+		}
+		
 		viewport.setPixelSize(area.viewportWidth(), area.viewportHeight());
 		viewport.setCoordinateSpaceWidth(area.viewportWidth());
 		viewport.setCoordinateSpaceHeight(area.viewportHeight());

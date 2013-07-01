@@ -36,7 +36,7 @@ public class MainView extends Composite implements MainPresenter.Display {
 		
 		DisplayArea area = new DisplayArea(width, height, vp_width, vp_height);
 		this.area_view = new DisplayAreaView();
-		this.area_view.display(area);
+		this.area_view.display();
 		this.area_view.lockDisplay(false);
 		
 		main.add(area_view);

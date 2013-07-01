@@ -65,6 +65,9 @@ public class SequencePanelPresenter extends BasePanelPresenter {
     
     private final double step;
     private double scale;
+    
+    private int panel_width;
+    private int panel_height;
 
     public SequencePanelPresenter(Display display, HandlerManager eventBus,
             int panel_id) {
@@ -373,7 +376,7 @@ public class SequencePanelPresenter extends BasePanelPresenter {
     		data.getAnnotationLists().addAll(opening.getAnnotationLists());
    		
     		// Update the titlebar with new annotations list
-    		SequencePanelPresenter.super.display(data);
+    		SequencePanelPresenter.super.display(panel_width, panel_height, data);
     	}
     };
     
@@ -403,8 +406,8 @@ public class SequencePanelPresenter extends BasePanelPresenter {
     }
 
     @Override
-    public void display(PanelData data) {
-        super.display(data);
+    public void display(int width, int height, PanelData data) {
+        super.display(width, height, data);
         this.data = data;
 
         thumb_browser_setup = false;
@@ -423,6 +426,8 @@ public class SequencePanelPresenter extends BasePanelPresenter {
     @Override
     public void resize(int width, int height) {
     	super.resize(width, height);
+    	this.panel_width = width;
+    	this.panel_height = height;
     	
         page_width = (width / 2) - 20;
         // TODO

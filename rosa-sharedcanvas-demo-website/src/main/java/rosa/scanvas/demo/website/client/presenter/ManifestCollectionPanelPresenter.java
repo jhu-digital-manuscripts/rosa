@@ -66,8 +66,8 @@ public class ManifestCollectionPanelPresenter extends BasePanelPresenter {
     }
 
     @Override
-    public void display(PanelData data) {
-    	super.display(data);
+    public void display(int width, int height, PanelData data) {
+    	super.display(width, height, data);
         this.data = data;
 
         ManifestCollection col = data.getManifestCollection();

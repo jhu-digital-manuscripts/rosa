@@ -58,26 +58,12 @@ public class ManifestListWidget extends Composite {
 		seq.add(new Label(Messages.INSTANCE.sequencePicker()));
 		seq.add(sequencePickerBox);
 	}
-
-	public FlowPanel getMainPanel() { return mainPanel; }
-	public DisclosurePanel getCollectionPanel() { return collectionPanel; }
-	public DisclosurePanel getManifestPanel() { return manifestPanel; }
-	public DisclosurePanel getSequencePanel() { return sequencePanel; }
-	public ListBox getSequencePickerBox() { return sequencePickerBox; }
 	
-	public void newCollectionLabel(String text, int row) {
-		collectionTable.setWidget(row, 1, new HTML(text));
+	public ListBox getSequencePickerBox() { 
+		return sequencePickerBox; 
 	}
 	
-	public void newManifestLabel(String text, int row) {
-		manifestTable.setWidget(row, 1, new HTML(text));
-	}
-	
-	public void newSequenceLabel(String text, int row) {
-		sequenceTable.setWidget(row, 1, new HTML(text));
-	}
-	
-	public void clearLabels() {
+	private void clearLabels() {
 		for (int i=0; i<collectionTable.getRowCount(); i++) {
 			collectionTable.setWidget(i, 1, null);
 		}
@@ -92,6 +78,8 @@ public class ManifestListWidget extends Composite {
 	
 	/**
 	 * Displays metadata
+	 * 
+	 * @param data
 	 */
 	public void setMetadata(PanelData data) {
 		if (data == null) {
@@ -101,7 +89,6 @@ public class ManifestListWidget extends Composite {
 			return;
 		}
 		int i = 0;
-		// TODO emit event when a new sequence is selected from 'sequence picker'
 		clearLabels();
 
 		ManifestCollection collection = data.getManifestCollection();
@@ -174,13 +161,4 @@ public class ManifestListWidget extends Composite {
 			sequencePanel.setVisible(false);
 		}
 	}
-	
-	public void hide() {
-		this.setVisible(false);
-	}
-	
-	public void show() {
-		this.setVisible(true);
-	}
-	
 }

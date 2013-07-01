@@ -253,7 +253,7 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     }
     
     @Override
-    public void display(PanelData data) {
+    public void display(int width, int height, PanelData data) {
     	this.data = data;
     	
     	display.getAnnotationsButton().setEnabled(true);

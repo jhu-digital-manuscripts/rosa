@@ -18,7 +18,7 @@ public interface PanelPresenter extends IsWidget {
      * @param height
      * @param data
      */
-    void display(PanelData data);
+    void display(int width, int height, PanelData data);
 
     /**
      * Set the pixel size of the view as specified.

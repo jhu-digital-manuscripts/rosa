@@ -4,8 +4,10 @@ import java.util.List;
 
 import rosa.scanvas.demo.website.client.Messages;
 import rosa.scanvas.demo.website.client.presenter.HomePanelPresenter;
+import rosa.scanvas.demo.website.client.widgets.CellListResources;
 
 import com.google.gwt.cell.client.TextCell;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyUpHandlers;
 import com.google.gwt.user.cellview.client.CellList;
@@ -32,16 +34,18 @@ public class HomeView extends BasePanelView implements HomePanelPresenter.Displa
     private final SingleSelectionModel<String> selection_model;
 
     public HomeView() {
+    	CellList.Resources cell_res = GWT.create(CellListResources.class); 
+    	
     	this.load_button = new Button(Messages.INSTANCE.load());
         this.user_textbox = new TextBox();
         this.is_col_checkbox = new CheckBox("Collection");
         
         TextCell text_cell = new TextCell();
-        this.cell_list = new CellList<String>(text_cell);
+        this.cell_list = new CellList<String>(text_cell, cell_res);
         this.selection_model = new SingleSelectionModel<String>();
         
         cell_list.addStyleName("CellList");
-        cell_list.setWidth(200 + "px");
+        cell_list.setWidth(250 + "px");
         cell_list.setSelectionModel(selection_model);
 
         main = new FlowPanel();

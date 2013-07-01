@@ -22,8 +22,6 @@ public class AnnotationListWidget extends Composite {
 	private FlexTable imageAnnoList = new FlexTable();
 	private FlexTable targetedTextAnnoList = new FlexTable();
 	
-	private TextBox searchBox = new TextBox();
-	
 	private Button showAnnoButton = new Button(Messages.INSTANCE.showAll());
 	private Button hideAnnoButton = new Button(Messages.INSTANCE.hideAll());
 	
@@ -58,26 +56,16 @@ public class AnnotationListWidget extends Composite {
 		targetedTextAnnoList.getColumnFormatter().addStyleName(0, "CheckboxColumn");
 	}
 
-	public FlowPanel getMainPanel() { return mainPanel; }
-	public FlowPanel getAnnoListPanel() { return annoListPanel; }
-	public FlowPanel getannoControlPanel() { return annoControlPanel; }
-	public TextBox getSearchBox() { return searchBox; }
 	public FlexTable getImageAnnoList() { return imageAnnoList; }
 	public FlexTable getTargetedTextAnnoList() { return targetedTextAnnoList; }
 	public Button getShowAnnoButton() { return showAnnoButton; }
 	public Button getHideAnnoButton() { return hideAnnoButton; }
 	
+	/**
+	 * Clear entries in all annotation lists
+	 */
 	public void clearLists() {
 		imageAnnoList.removeAllRows();
 		targetedTextAnnoList.removeAllRows();
 	}
-	
-	public void hide() {
-		this.hide();
-	}
-	
-	public void show() {
-		this.show();
-	}
-	
 }

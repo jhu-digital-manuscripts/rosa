@@ -202,7 +202,7 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
         main_content.add(panel.getPresenter());
         
         update_panel_sizes(Window.getClientWidth(), Window.getClientHeight());
-        panel.display(state);
+        panel.display(panel_width, panel_height, state);
     }
     
     /**
@@ -229,7 +229,7 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
     	panel.setViewportPosition(position);
     	
     	update_panel_sizes(Window.getClientWidth(), Window.getClientHeight());
-    	panel.display(state);
+    	panel.display(panel_width, panel_height, state);
     }
 
     /**
@@ -263,7 +263,7 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
 
         if (panel.getState().getView() == state.getView()) {
             // Update data and redisplay
-            panel.display(state);
+            panel.display(panel_width, panel_height, state);
         } else if (panel.getState().equals(state)) {
             // Nothing to do
         } else {
@@ -277,7 +277,7 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
             main_content.remove(index + 1);
 
             presenter.resize(panel_width, panel_height);
-            panel.display(state);
+            panel.display(panel_width, panel_height, state);
         }
     }
 
@@ -445,7 +445,7 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
     // TODO Be smart and only call resize when size changes...
     private void update_panel_sizes(int win_width, int win_height) {
         calculate_panel_size(win_width, win_height);
-
+        
         for (Panel panel : panels) {
             panel.getPresenter().resize(panel_width, panel_height);
         }

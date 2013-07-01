@@ -20,14 +20,18 @@ public class Panel {
 
     /**
      * Load the data needed by the presenter and update it.
+     * 
+     * @param state
+     * @param width
+     * @param height
      */
-    public void display(PanelState state) {
+    public void display(final int width, final int height, PanelState state) {
         this.state = state;
 
         AsyncCallback<PanelData> cb = new AsyncCallback<PanelData>() {
             @Override
             public void onSuccess(PanelData data) {
-                presenter.display(data);
+                presenter.display(width, height, data);
             }
 
             @Override
@@ -39,10 +43,6 @@ public class Panel {
 
         switch (state.getView()) {
         case CANVAS:
-            // TODO Actually have to update history stuff because need
-            // canvas, sequence, and manifest
-            /*PanelData.loadManifestSequenceAndAnnotationLists(
-                    state.getManifestUri(), state.getObjectUri(), data, cb);*/
         	PanelData.loadManifestSequenceCanvasAndAnnotationLists(
             		state.getManifestUri(), state.getObjectUri(), 
             		data, state.getCanvasIndex(), cb);

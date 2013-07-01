@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.user.client.Window;
+
 /**
  * Represents a rectangular area where elements can be drawn. Each element has a
  * unique id. Elements do not change size or position. A viewport in the area
@@ -65,7 +67,7 @@ public class DisplayArea implements Iterable<DisplayElement> {
     public void resizeViewport(int vp_width, int vp_height) {
         this.vp_width = vp_width;
         this.vp_height = vp_height;
-
+        
         this.zoom_levels = ZoomLevels.guess(base_width, base_height, vp_width,
                 vp_height);
 

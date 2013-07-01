@@ -9,6 +9,8 @@ import rosa.scanvas.demo.website.client.dynimg.WebImage;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.dom.client.ImageElement;
 
+import com.google.gwt.user.client.Window;
+
 public class MasterImageDrawable implements DisplayAreaDrawable {
     private final MasterImageDisplayElement el;
     
@@ -16,7 +18,8 @@ public class MasterImageDrawable implements DisplayAreaDrawable {
     private final Map<String, int[]> pending_draws;
     
     private WebImage[][][] tile_cache;
-    private DisplayArea last_area;
+    private int last_width;
+    private int last_height;
 
     public MasterImageDrawable(MasterImageDisplayElement el) {
         this.el = el;
@@ -25,21 +28,21 @@ public class MasterImageDrawable implements DisplayAreaDrawable {
 
     @Override
     public void draw(final Context2d context, final DisplayArea area, final OnDrawnCallback cb) {
-    	if (area != last_area) {
-            last_area = area;
-            tile_cache = new WebImage[area.numZoomLevels()][][];
-        }
+    	if (area.viewportWidth() != last_width 
+    			|| area.viewportHeight() != last_height) {
+    		last_width = area.viewportWidth();
+    		last_height = area.viewportHeight();
+    		
+    		tile_cache = new WebImage[area.numZoomLevels()][][];
+    	}
 
         pending_draws.clear();
 
         WebImage[][] tiles = tile_cache[area.zoomLevel()];
 
-        final double zoom = area.zoom();
+        double zoom = area.zoom();
         int width = (int) (el.baseWidth() * zoom);
         int height = (int) (el.baseHeight() * zoom);
-        
-        /*loading.setWidth(width);
-        loading.setHeight(height);*/
 
         if (tiles == null) {
             tiles = el.imageServer().renderToTiles(el.masterImage(), width, height);
@@ -50,7 +53,6 @@ public class MasterImageDrawable implements DisplayAreaDrawable {
         int vp_top = area.viewportTop();
         int vp_right = vp_left + area.viewportWidth();
         int vp_bottom = vp_top + area.viewportHeight();
-
         
         // On load draw the image if it has not been cancelled.
         

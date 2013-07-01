@@ -53,9 +53,8 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 
 				switch (event.getTypeInt()) {
 
-				// TODO OnScroll events are not previewable!
+				// OnScroll events are not previewable!
 				/*case Event.ONSCROLL:
-					// TODO worry about event target?
 					setPopupPosition(options_button.getAbsoluteLeft() 
 							+ options_button.getOffsetWidth()
 							- getOffsetWidth(), 
