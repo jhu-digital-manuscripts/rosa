@@ -37,6 +37,7 @@ import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
@@ -47,6 +48,8 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.HTMLTable.Cell;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 
 public class PageTurner extends Composite implements HasClickHandlers, 
@@ -62,10 +65,25 @@ public class PageTurner extends Composite implements HasClickHandlers,
     private final Grid display;
     private FlowPanel place_holder = new FlowPanel();
     private final FocusPanel focus;
+    
+    private final AbsolutePanel top;
+    private final FocusPanel verso;
+    private final FocusPanel recto;
+    private final Panel verso_panel;
+    private final Panel recto_panel;
+    
+    private final Button prev_button;
+    private final TextBox goto_textbox;
+    private final Button goto_button;
+    private final Button next_button;
+    
+    private final Button canvas_button;
 
     private int position;
     private List<Opening> openings;
     private int page_width, page_height;
+    
+    private Opening current_opening;
     
     private Sequence sequence;
     
@@ -88,24 +106,32 @@ public class PageTurner extends Composite implements HasClickHandlers,
         this.display = new Grid(2, 2);
         this.clicked_index = 0;
         
+        this.canvas_button = new Button();
+        canvas_button.setVisible(false);
+        
+        top = new AbsolutePanel();
+        verso = new FocusPanel();
+        recto = new FocusPanel();
+        
         this.verso_els = new ArrayList<DisplayElement>();
         this.recto_els = new ArrayList<DisplayElement>();
         this.verso_view = new DisplayAreaView();
         this.recto_view = new DisplayAreaView();
         
-        to_draw = new HashSet<Integer>();
+        this.verso_panel = new SimplePanel(verso_view);
+        this.recto_panel = new SimplePanel(recto_view);
+        
+        this.prev_button = new Button(Messages.INSTANCE.prev());
+        this.goto_textbox = new TextBox();
+        this.goto_button = new Button(Messages.INSTANCE.gotoButton());
+        this.next_button = new Button(Messages.INSTANCE.next());
+        
+        this.to_draw = new HashSet<Integer>();
 
         FlowPanel main = new FlowPanel();
-
         FlowPanel toolbar = new FlowPanel();
-        
         this.focus = new FocusPanel();
 
-        final Button prev_button = new Button(Messages.INSTANCE.prev());
-        final TextBox goto_textbox = new TextBox();
-        final Button goto_button = new Button(Messages.INSTANCE.gotoButton());
-        final Button next_button = new Button(Messages.INSTANCE.next());
-        
         prev_button.setEnabled(false);
 
         next_button.addClickHandler(new ClickHandler() {
@@ -201,7 +227,9 @@ public class PageTurner extends Composite implements HasClickHandlers,
                 
                 clicked_index = (cell.getCellIndex() == 0) ? 
                 		openings.get(position).getVersoIndex() :
-                	openings.get(position).getRectoIndex();
+                		openings.get(position).getRectoIndex();
+                		
+                canvas_button.click();
             }
         });
         
@@ -269,11 +297,15 @@ public class PageTurner extends Composite implements HasClickHandlers,
                 dragging = false;
             }
         });
-
+        
+        bind_canvas(verso_view, true);
+        bind_canvas(recto_view, false);
+        
         toolbar.add(prev_button);
         toolbar.add(next_button);
         toolbar.add(goto_textbox);
         toolbar.add(goto_button);
+        toolbar.add(canvas_button);
         toolbar.setStylePrimaryName("CanvasToolbar");
 
         focus.add(display);
@@ -281,8 +313,102 @@ public class PageTurner extends Composite implements HasClickHandlers,
         main.add(toolbar);
 
         main.setStylePrimaryName("PageTurner");
-
+        
         initWidget(main);
+    }
+    
+    private void bind_canvas(final DisplayAreaView view, final boolean is_verso) {
+    	view.addClickHandler(new ClickHandler() {
+    		public void onClick(ClickEvent event) {
+    			if (!view.isLocked()) {
+	    			return;
+	    		}
+	    		
+	    		clicked_index = is_verso ? current_opening.getVersoIndex() 
+	    				: current_opening.getRectoIndex();
+	    		
+	    		canvas_button.click();
+    		}
+    	});
+    	
+    	view.addTouchStartHandler(new TouchStartHandler() {
+            public void onTouchStart(TouchStartEvent event) {
+                event.preventDefault();
+                event.stopPropagation();
+                
+                if (event.getTouches().length() != 1
+                		|| !view.isLocked()) {
+                    return;
+                }
+
+                Touch touch = event.getTouches().get(0);
+
+                dragging = false;
+                drag_may_start = true;
+
+                drag_x = touch.getClientX();
+                drag_y = touch.getClientY();
+            }
+        });
+
+    	view.addTouchMoveHandler(new TouchMoveHandler() {
+            public void onTouchMove(TouchMoveEvent event) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                if (!view.isLocked()) {
+                	return;
+                }
+                
+                if (event.getTouches().length() != 1) {
+                    drag_may_start = false;
+                    dragging = false;
+                    return;
+                }
+
+                if (drag_may_start) {
+                    dragging = true;
+                }
+            }
+        });
+
+    	view.addTouchEndHandler(new TouchEndHandler() {
+            public void onTouchEnd(TouchEndEvent event) {
+                event.preventDefault();
+
+                if (!view.isLocked()) {
+                	return;
+                }
+                
+                if (dragging && event.getChangedTouches().length() == 1) {
+                    Touch touch = event.getChangedTouches().get(0);
+
+                    int dx = drag_x - touch.getClientX();
+                    int dy = drag_y - touch.getClientY();
+
+                    if (Math.abs(dy) < MAX_SWIPE_Y
+                            && Math.abs(dx) > MIN_SWIPE_X) {
+                        if (dx > 0) {
+                        	next_button.click();
+                        } else {
+                        	prev_button.click();
+                        }
+                    }
+                } else if (!dragging && event.getChangedTouches().length() == 1) {
+                	clicked_index = is_verso ? current_opening.getVersoIndex()
+            				: current_opening.getRectoIndex();
+            		
+            		canvas_button.click();
+                }
+            }
+        });
+
+    	view.addTouchCancelHandler(new TouchCancelHandler() {
+            public void onTouchCancel(TouchCancelEvent event) {
+                drag_may_start = false;
+                dragging = false;
+            }
+        });
     }
 
     public void setOpenings(Sequence sequence, List<Opening> openings,
@@ -351,7 +477,7 @@ public class PageTurner extends Composite implements HasClickHandlers,
     			area.setContent(els);
     			
     			view.setDisplayArea(area);
-    			view.display(/*area*/);
+    			view.display();
     			view.lockDisplay(true);
     			view.redraw();
     			
@@ -365,14 +491,7 @@ public class PageTurner extends Composite implements HasClickHandlers,
     }
     
     private void display(final Opening opening) {
-    	FocusPanel verso_panel = new FocusPanel();
-    	FocusPanel recto_panel = new FocusPanel();
-    	
-    	verso_panel.add(verso_view);
-    	recto_panel.add(recto_view);
-    	/*
-    	verso_panel.addStyleName("Loading");
-    	recto_panel.addStyleName("Loading");*/
+    	this.current_opening = opening;
     	
     	opening_data = new PanelData();
     	verso_els.clear();
@@ -383,14 +502,6 @@ public class PageTurner extends Composite implements HasClickHandlers,
     	} else {
     		asDisplayArea(opening.getVersoIndex(), verso_view, verso_els);
     		display.setWidget(0, 0, verso_panel);
-    		
-    		verso_panel.addTouchEndHandler(new TouchEndHandler() {
-            	public void onTouchEnd(TouchEndEvent event) {
-            		if (!dragging && event.getChangedTouches().length() == 1) {
-            			clicked_index = opening.getVersoIndex();
-            		}
-            	}
-            });
     	}
     	
     	if (opening.getVersoLabel() != null) {
@@ -404,14 +515,6 @@ public class PageTurner extends Composite implements HasClickHandlers,
     	} else {
     		asDisplayArea(opening.getRectoIndex(), recto_view, recto_els);
     		display.setWidget(0, 1, recto_panel);
-    		
-    		recto_panel.addTouchEndHandler(new TouchEndHandler() {
-            	public void onTouchEnd(TouchEndEvent event) {
-            		if (!dragging && event.getChangedTouches().length() == 1) {
-            			clicked_index = opening.getRectoIndex();
-            		}
-            	}
-            });
     	}
     	
     	if (opening.getRectoLabel() != null) {
@@ -465,12 +568,12 @@ public class PageTurner extends Composite implements HasClickHandlers,
 
     @Override
     public HandlerRegistration addClickHandler(ClickHandler handler) {
-        return display.addClickHandler(handler);
+    	return canvas_button.addClickHandler(handler);
     }
     
     @Override
     public HandlerRegistration addTouchEndHandler(TouchEndHandler handler) {
-    	return focus.addTouchEndHandler(handler);
+    	return canvas_button.addTouchEndHandler(handler);
     }
     
     /**
@@ -502,7 +605,6 @@ public class PageTurner extends Composite implements HasClickHandlers,
     			return i;
     		}
     	}
-    	
     	
     	return -1;
     }

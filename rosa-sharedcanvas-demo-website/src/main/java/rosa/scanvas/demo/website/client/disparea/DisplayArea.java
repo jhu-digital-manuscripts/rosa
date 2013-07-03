@@ -78,6 +78,7 @@ public class DisplayArea implements Iterable<DisplayElement> {
         } else {
             setZoomLevel(zoom_levels.size() - 1);
         }
+        
     }
 
     public int viewportBaseCenterX() {

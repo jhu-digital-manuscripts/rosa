@@ -3,14 +3,14 @@
 }
 
 .cellListOddItem {
-	font-decoration: underline;
+	text-decoration: underline;
 	background: #ECECEC;
 	padding: 2px 6px;
 	cursor: pointer;
 }
 
 .cellListEvenItem {
-	font-decoration: underline;
+	text-decoration: underline;
 	padding: 2px 6px;
 	cursor:pointer;
 }

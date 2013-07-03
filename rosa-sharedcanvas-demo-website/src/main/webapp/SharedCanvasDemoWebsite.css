@@ -98,6 +98,11 @@
 .PanelToolbar {
   margin-top: 1em;
 }
+
+.CellListScroll {
+	border: 1px solid rgb(145, 145, 145);
+}
+
 /* ------ Home Panel ------ */
 
 .CellList {

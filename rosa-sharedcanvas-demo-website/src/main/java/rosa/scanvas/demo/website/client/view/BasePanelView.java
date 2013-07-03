@@ -51,6 +51,9 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 			// Hook the popup panel's event preview.
 			if (!event.isCanceled()) {
 
+				EventTarget target = event.getNativeEvent().getEventTarget();
+				Element parent_element = parent_button.getElement();
+				
 				switch (event.getTypeInt()) {
 
 				// OnScroll events are not previewable!
@@ -84,9 +87,15 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 					
 				case Event.ONMOUSEDOWN:
 					// Check to see if the target is the current popup
-					EventTarget target = event.getNativeEvent().getEventTarget();
-					Element parent_element = parent_button.getElement();
-					 
+					if (parent_element.isOrHasChild(Element.as(target))) {
+						event.cancel();
+						hide();
+						return;
+					}
+					super.onPreviewNativeEvent(event);
+					return;
+					
+				case Event.ONTOUCHSTART:
 					if (parent_element.isOrHasChild(Element.as(target))) {
 						event.cancel();
 						hide();

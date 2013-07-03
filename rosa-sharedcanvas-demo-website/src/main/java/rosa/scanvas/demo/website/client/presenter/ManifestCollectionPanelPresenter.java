@@ -61,11 +61,6 @@ public class ManifestCollectionPanelPresenter extends BasePanelPresenter {
     }
 
     @Override
-    public Widget asWidget() {
-        return display.asWidget();
-    }
-
-    @Override
     public void display(int width, int height, PanelData data) {
     	super.display(width, height, data);
         this.data = data;

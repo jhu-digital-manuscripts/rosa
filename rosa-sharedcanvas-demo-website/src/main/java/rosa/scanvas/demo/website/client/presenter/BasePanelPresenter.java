@@ -23,6 +23,8 @@ import rosa.scanvas.model.client.Sequence;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -232,6 +234,22 @@ public abstract class BasePanelPresenter implements PanelPresenter {
         		event_bus.fireEvent(move);
         	}
         });
+        
+        display.getMetaListWidget().addChangeHandlerToSequencePicker(
+        		new ChangeHandler() {
+        			public void onChange(ChangeEvent event) {
+        				if (!meta_list_ready) {
+	        				return;
+	        			}
+	        			String uri = display.getMetaListWidget().getSelectedSequence();
+	        			
+	        			PanelState state = new PanelState(PanelView.SEQUENCE, uri, 
+	        					data.getManifest().uri());
+	        			PanelRequestEvent req = new PanelRequestEvent(
+	        					PanelRequestEvent.PanelAction.CHANGE, panel_id, state);
+	        			event_bus.fireEvent(req);
+        			}
+        		});
     }
 
     public HandlerManager eventBus() {
@@ -531,7 +549,7 @@ public abstract class BasePanelPresenter implements PanelPresenter {
      * @param checkbox
      * @param ann
      */
-    public void bind_annotation_checkbox(CheckBox checkbox, Annotation ann) {
+    protected void bind_annotation_checkbox(CheckBox checkbox, Annotation ann) {
 		
     }
     

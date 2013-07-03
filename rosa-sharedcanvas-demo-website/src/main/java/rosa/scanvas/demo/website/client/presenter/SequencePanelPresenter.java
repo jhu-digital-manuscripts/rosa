@@ -128,7 +128,7 @@ public class SequencePanelPresenter extends BasePanelPresenter {
         });
         
         final ThumbnailBrowser browser = display.getThumbnailBrowser();
-        
+        // TODO be smarter about initial size and step size
         browser.getZoomInButton().addClickHandler(new ClickHandler() {
         	public void onClick(ClickEvent event) {
         		if (scale + step <= 1.0) {
@@ -181,8 +181,6 @@ public class SequencePanelPresenter extends BasePanelPresenter {
         Map<String, Annotation> targets = new HashMap<String, Annotation>();
 
         for (Annotation a : annotations) {
-            // TODO favor image annotations of the whole canvas
-
             for (AnnotationTarget at : a.targets()) {
                 if (!at.isSpecificResource()) {
                     targets.put(at.uri(), a);
@@ -236,7 +234,7 @@ public class SequencePanelPresenter extends BasePanelPresenter {
     	return result;
     }
     
-    private List<Thumbnail> construct_thumbs(Sequence sequence,
+/*    private List<Thumbnail> construct_thumbs(Sequence sequence,
             List<Annotation> annotations) {
         List<Thumbnail> result = new ArrayList<Thumbnail>();
 
@@ -256,7 +254,7 @@ public class SequencePanelPresenter extends BasePanelPresenter {
         }
         
         return result;
-    }
+    }*/
     
     /**
      * From the canvases and image annotations, construct openings for
@@ -381,7 +379,7 @@ public class SequencePanelPresenter extends BasePanelPresenter {
     };
     
     @Override
-    public void bind_annotation_checkbox(CheckBox checkbox, Annotation ann) {
+    protected void bind_annotation_checkbox(CheckBox checkbox, Annotation ann) {
     	display.getPageTurner().bindAnnotationCheckbox(checkbox, ann);
     }
     
@@ -430,7 +428,7 @@ public class SequencePanelPresenter extends BasePanelPresenter {
     	this.panel_height = height;
     	
         page_width = (width / 2) - 20;
-        // TODO
+        
         page_height = height - 132;
 
         thumb_size = page_width > page_height ? page_height : page_width;
@@ -438,8 +436,6 @@ public class SequencePanelPresenter extends BasePanelPresenter {
         display.getPageTurner().resize(page_width, page_height);
         
         display.getThumbnailBrowser().resize(width, height);
-
-        // TODO scale thumb size
 
         display.resize(width, height);
     }

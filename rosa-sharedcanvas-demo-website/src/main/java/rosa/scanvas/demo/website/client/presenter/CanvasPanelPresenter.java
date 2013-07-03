@@ -126,7 +126,7 @@ public class CanvasPanelPresenter extends BasePanelPresenter {
     }
     
     @Override
-    public void bind_annotation_checkbox(final CheckBox checkbox, final Annotation ann) {
+    protected void bind_annotation_checkbox(final CheckBox checkbox, final Annotation ann) {
     	checkbox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
     		public void onValueChange(ValueChangeEvent<Boolean> event) {
     			setAnnotationVisible(ann, event.getValue());
@@ -149,12 +149,12 @@ public class CanvasPanelPresenter extends BasePanelPresenter {
         
         this.width = width - 22;
         this.height = height - 70;
-        
+      
         DisplayArea area = new DisplayArea(canvas.width(), canvas.height(),
                 this.width, this.height);
         
         if (data.getZoomLevel() != -1) {
-        	area.setZoomLevel(display.getDisplayAreaWidget().area().numZoomLevels() 
+        	area.setZoomLevel(area.numZoomLevels() 
         			>= data.getZoomLevel() ? data.getZoomLevel() : 0);
         }
         

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.dom.client.CanvasElement;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Touch;
@@ -16,6 +17,11 @@ import com.google.gwt.event.dom.client.GestureEndEvent;
 import com.google.gwt.event.dom.client.GestureEndHandler;
 import com.google.gwt.event.dom.client.GestureStartEvent;
 import com.google.gwt.event.dom.client.GestureStartHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasTouchCancelHandlers;
+import com.google.gwt.event.dom.client.HasTouchEndHandlers;
+import com.google.gwt.event.dom.client.HasTouchMoveHandlers;
+import com.google.gwt.event.dom.client.HasTouchStartHandlers;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
@@ -39,7 +45,9 @@ import com.google.gwt.user.client.Window;
 /**
  * Display the viewport of a display area using a HTML 5 canvas.
  */
-public class DisplayAreaView extends Composite {
+public class DisplayAreaView extends Composite implements HasClickHandlers, HasTouchStartHandlers,
+		HasTouchEndHandlers, HasTouchMoveHandlers, HasTouchCancelHandlers {
+	
 	private static final int OVERVIEW_SIZE = 128;
 	
 	private final Canvas viewport;
@@ -469,6 +477,31 @@ public class DisplayAreaView extends Composite {
 		initWidget(viewport);
 	}
 
+	@Override
+	public HandlerRegistration addClickHandler(ClickHandler handler) {
+		return viewport.addClickHandler(handler);
+	}
+	
+	@Override
+	public HandlerRegistration addTouchCancelHandler(TouchCancelHandler handler) {
+		return viewport.addTouchCancelHandler(handler);
+	}
+	
+	@Override
+	public HandlerRegistration addTouchEndHandler(TouchEndHandler handler) {
+		return viewport.addTouchEndHandler(handler);
+	}
+	
+	@Override
+	public HandlerRegistration addTouchMoveHandler(TouchMoveHandler handler) {
+		return viewport.addTouchMoveHandler(handler);
+	}
+	
+	@Override
+	public HandlerRegistration addTouchStartHandler(TouchStartHandler handler) {
+		return viewport.addTouchStartHandler(handler);
+	}
+	
 	/**
 	 * Lock or unlock the display area pan/zoom controls
 	 * 
@@ -478,6 +511,13 @@ public class DisplayAreaView extends Composite {
 		locked = status;
 		drag_may_start = false;
 		dragging = false;
+	}
+	
+	/**
+	 * Returns TRUE if this display area view is locked
+	 */
+	public boolean isLocked() {
+		return locked;
 	}
 
 	public void setDisplayArea(DisplayArea area) {

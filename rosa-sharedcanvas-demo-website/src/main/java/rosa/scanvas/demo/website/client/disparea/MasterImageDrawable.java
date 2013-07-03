@@ -24,12 +24,14 @@ public class MasterImageDrawable implements DisplayAreaDrawable {
     public MasterImageDrawable(MasterImageDisplayElement el) {
         this.el = el;
         this.pending_draws = new HashMap<String, int[]>();
+        
+        this.last_width = 0;
+        this.last_height = 0;
     }
 
     @Override
     public void draw(final Context2d context, final DisplayArea area, final OnDrawnCallback cb) {
-    	if (area.viewportWidth() != last_width 
-    			|| area.viewportHeight() != last_height) {
+    	if (area.viewportWidth() != last_width || area.viewportHeight() != last_height) {
     		last_width = area.viewportWidth();
     		last_height = area.viewportHeight();
     		

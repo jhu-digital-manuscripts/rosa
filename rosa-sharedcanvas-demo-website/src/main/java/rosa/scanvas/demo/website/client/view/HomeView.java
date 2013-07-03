@@ -85,11 +85,6 @@ public class HomeView extends BasePanelView implements HomePanelPresenter.Displa
     }
 
     @Override
-    public Widget asWidget() {
-        return this;
-    }
-
-    @Override
     public void setData(List<String> names) {
     	cell_list.setRowCount(names.size(), true);
     	cell_list.setRowData(0, names);

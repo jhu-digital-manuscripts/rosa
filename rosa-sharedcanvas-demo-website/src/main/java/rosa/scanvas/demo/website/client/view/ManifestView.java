@@ -70,10 +70,6 @@ public class ManifestView extends BasePanelView implements
     	selection_model.addSelectionChangeHandler(handler);
     }
 
-    public Widget asWidget() {
-        return this;
-    }
-
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);

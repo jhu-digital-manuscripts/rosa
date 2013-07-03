@@ -68,11 +68,6 @@ public class ManifestPanelPresenter extends BasePanelPresenter {
     }
 
     @Override
-    public Widget asWidget() {
-        return display.asWidget();
-    }
-
-    @Override
     public void display(int width, int height, PanelData data) {
     	super.display(width, height, data);
     	this.data = data;
@@ -95,9 +90,4 @@ public class ManifestPanelPresenter extends BasePanelPresenter {
         PanelDisplayedEvent event = new PanelDisplayedEvent(panelId(), data);
         eventBus().fireEvent(event);
     }
-
-/*    @Override
-    public void resize(int width, int height) {
-        display.resize(width, height);
-    }*/
 }

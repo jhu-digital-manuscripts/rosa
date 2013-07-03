@@ -2,6 +2,8 @@ package rosa.scanvas.demo.website.client.widgets;
 
 import rosa.scanvas.demo.website.client.Messages;
 
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DisclosurePanel;
@@ -16,6 +18,8 @@ import rosa.scanvas.model.client.Manifest;
 import rosa.scanvas.model.client.ManifestCollection;
 import rosa.scanvas.model.client.Reference;
 import rosa.scanvas.model.client.Sequence;
+
+import com.google.gwt.user.client.Window;
 
 public class ManifestListWidget extends Composite {
 	
@@ -59,8 +63,17 @@ public class ManifestListWidget extends Composite {
 		seq.add(sequencePickerBox);
 	}
 	
-	public ListBox getSequencePickerBox() { 
-		return sequencePickerBox; 
+	public HandlerRegistration addChangeHandlerToSequencePicker(ChangeHandler handler) {
+		return sequencePickerBox.addChangeHandler(handler);
+	}
+	
+	/**
+	 * Returns the URI of the currently selected sequence
+	 */
+	public String getSelectedSequence() {
+		int index = sequencePickerBox.getSelectedIndex();
+		
+		return sequencePickerBox.getValue(index);
 	}
 	
 	private void clearLabels() {
