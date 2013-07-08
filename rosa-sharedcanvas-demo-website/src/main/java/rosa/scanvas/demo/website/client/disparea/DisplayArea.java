@@ -8,8 +8,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gwt.user.client.Window;
-
 /**
  * Represents a rectangular area where elements can be drawn. Each element has a
  * unique id. Elements do not change size or position. A viewport in the area
@@ -23,8 +21,8 @@ import com.google.gwt.user.client.Window;
  * There are three different dimensions being tracked by this DisplayArea. The
  * dimensions of the area itself (canvas), called the "base" dimensions. The
  * dimensions of the viewport in relation to the pixel dimensions of the
- * browser, called the "viewport" dimensions, which are constant. And the
- * dimensions of the viewport in relation to the display area itself (the base).
+ * browser, called the "viewport" dimensions. And the dimensions of the viewport 
+ * in relation to the display area itself (the base).
  * 
  */
 public class DisplayArea implements Iterable<DisplayElement> {

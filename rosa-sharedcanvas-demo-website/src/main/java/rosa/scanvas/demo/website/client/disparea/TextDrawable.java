@@ -21,7 +21,6 @@ public class TextDrawable implements DisplayAreaDrawable {
         context.scale(zoom, zoom);
 
         // outline
-
         int[][] coords = el.coordinates();
 
         context.beginPath();
@@ -46,10 +45,6 @@ public class TextDrawable implements DisplayAreaDrawable {
         context.setFont("bold 60px sans-serif");
         context.setTextBaseline("top");
         context.fillText(el.text(), el.baseLeft(), el.baseTop(), el.baseWidth());
-        
-        // ----------------------
-        // context.drawImage(el.getCanvasElement(), el.baseLeft(), el.baseTop());
-        // ----------------------
 
         context.restore();
         

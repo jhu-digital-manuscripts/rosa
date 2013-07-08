@@ -4,7 +4,10 @@ import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.canvas.dom.client.ImageData;
-import com.google.gwt.user.client.Window;
+
+/**
+ * A display element representing an arbitrary polygon.
+ */
 public class PolygonDisplayElement extends DisplayElement {
     private final int[][] coords;
     private final ImageData image_data;
@@ -42,6 +45,9 @@ public class PolygonDisplayElement extends DisplayElement {
         this.image_data = context.getImageData(0, 0, baseWidth(), baseHeight());
     }
 
+    /**
+     * Coordinates that define the bounding box of this display element.
+     */
     public int[][] coordinates() {
         return coords;
     }

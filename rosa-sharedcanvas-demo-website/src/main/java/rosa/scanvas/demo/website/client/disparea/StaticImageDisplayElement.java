@@ -1,8 +1,8 @@
 package rosa.scanvas.demo.website.client.disparea;
 
-import rosa.scanvas.demo.website.client.dynimg.ImageServer;
-import rosa.scanvas.demo.website.client.dynimg.MasterImage;
-
+/**
+ * A display element representing an image.
+ */
 public class StaticImageDisplayElement extends DisplayElement {
 	private final String uri;
 

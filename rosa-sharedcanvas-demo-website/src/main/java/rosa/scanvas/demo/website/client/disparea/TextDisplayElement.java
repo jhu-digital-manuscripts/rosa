@@ -4,10 +4,11 @@ import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.canvas.dom.client.ImageData;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.Window;
 
+/**
+ * A display element that represents a single line of text that can
+ * be drawn on a canvas.
+ */
 public class TextDisplayElement extends DisplayElement {
     private final String text;
     private final int[][] coords;
@@ -41,14 +42,15 @@ public class TextDisplayElement extends DisplayElement {
         context.closePath();
         
         this.image_data = context.getImageData(0, 0, width, height);
-        
-        //context.clearRect(0, 0, width, height);
     }
 
     public String text() {
         return text;
     }
 
+    /**
+     * (x, y) coordinates that define the bounding box of this display element.
+     */
     public int[][] coordinates() {
         return coords;
     }

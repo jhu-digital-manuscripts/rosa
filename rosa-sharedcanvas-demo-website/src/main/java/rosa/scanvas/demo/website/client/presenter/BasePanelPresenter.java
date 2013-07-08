@@ -104,8 +104,6 @@ public abstract class BasePanelPresenter implements PanelPresenter {
 	private boolean meta_list_ready;
 	private boolean text_list_ready;
 	private boolean default_image;
-	
-	//private TabLayoutPanel tab_panel;
     
     public BasePanelPresenter(Display display, HandlerManager event_bus,
             int panel_id) {
@@ -131,10 +129,6 @@ public abstract class BasePanelPresenter implements PanelPresenter {
         
         display.getAnnotationsButton().addClickHandler(new ClickHandler() {
         	public void onClick(ClickEvent event) {
-        		/*if (!anno_list_ready) {
-        			set_annotations_list();
-        		}*/
-        		
         		if (display.getAnnotationsButton().isDown()) {
         			display.getAnnotationsPopup().setVisible(false);
         			display.getAnnotationsPopup().setPopupPosition(0, 0);

@@ -385,24 +385,13 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 	
 	@Override
 	public Label addContextLabel(String text) {
+		// TODO make this more readable for longer context titles
 		if (context_bar.getWidgetCount() > 0) {
 			context_bar.add(new Label(Messages.INSTANCE.contextSeparator()));
 		}
 
 		Label context = new Label(text);
 		context_bar.add(context);
-		
-/*		int label_width = 9999;
-		int font_size = 20;
-		while (label_width >= context_bar.getOffsetWidth()) {
-			label_width = 0;
-			font_size -= 2;
-			for (Widget w : context_bar) {
-				w.getElement().getStyle().setFontSize(font_size, Style.Unit.PX);
-				label_width += w.getOffsetWidth();
-			}
-			Window.alert("Font size: " + font_size + "\nLabel width = " + label_width);
-		}*/
 
 		return context;
 	}

@@ -41,7 +41,6 @@ import com.google.gwt.event.dom.client.TouchMoveHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.Window;
 /**
  * Display the viewport of a display area using a HTML 5 canvas.
  */
@@ -132,23 +131,20 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 					click_x += area.viewportLeft();
 					click_y += area.viewportTop();
 					
+					for (DisplayElement el : area.findInViewport()) {
+						int el_x = (int) (click_x / area.zoom());
+						int el_y = (int) (click_y / area.zoom());
+	
+						if (el.contains(el_x, el_y) && el.isVisible()) {
+							el.doMouseClick(event.getRelativeX(viewport.getElement()),
+									event.getRelativeY(viewport.getElement()));
+						}
+					}
+					
 					area.setViewportCenter(click_x, click_y);
 					area.zoomIn();
 					redraw();
-				} 
-
-// --------- DisplayElement.contains(x, y) method testing -----------------------               
-/*				for (DisplayElement el : area.findInViewport()) {
-					int el_x = (int) (click_x / area.zoom());
-					int el_y = (int) (click_y / area.zoom());
-
-					if (!(el instanceof MasterImageDisplayElement)
-							&& el.contains(el_x, el_y)) {
-						Window.alert("Element " + el.id() + " contains point ("
-								+ click_x + ", " + click_y + ")");
-					}
-				}*/
-// -------------------------------------------------------------------------------
+				}
 			}
 		});
 
@@ -276,7 +272,6 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 			}
 		});
 
-		// TODO double tap to zoom out, use timeouts
 		viewport.addTouchStartHandler(new TouchStartHandler() {
 			public void onTouchStart(TouchStartEvent event) {
 				event.preventDefault();
@@ -300,8 +295,6 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 						|| y > viewport.getOffsetHeight()) {
 					return;
 				}
-				
-				//area.setViewportCenter(x, y);
 				
 				dragging = false;
 				in_overview = false;
@@ -525,12 +518,9 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 	}
 	
 	/**
-	 * Sets the display area, viewport size, and overview size
-	 * 
-	 * @param area
+	 * Sets the viewport size, and overview size
 	 */
-	public void display(/*DisplayArea area*/) {
-//		this.area = area;
+	public void display() {
 		if (area == null) {
 			return;
 		}
@@ -617,7 +607,7 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 
 		overview_context.clearRect(0, 0, width, height);
 		
-		// TODO the source values may need tweeking
+		// the source values may need tweeking
 		overview_context
 		.drawImage(viewport_context.getCanvas(),
 				area.viewportWidth() / 2 - area.width() / 2,

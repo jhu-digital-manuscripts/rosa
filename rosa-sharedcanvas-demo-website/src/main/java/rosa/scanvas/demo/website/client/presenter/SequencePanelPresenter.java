@@ -36,8 +36,6 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
-import com.google.gwt.user.client.Window;
-
 public class SequencePanelPresenter extends BasePanelPresenter {
     public interface Display extends BasePanelPresenter.Display {
         PageTurner getPageTurner();
@@ -233,28 +231,6 @@ public class SequencePanelPresenter extends BasePanelPresenter {
     	
     	return result;
     }
-    
-/*    private List<Thumbnail> construct_thumbs(Sequence sequence,
-            List<Annotation> annotations) {
-        List<Thumbnail> result = new ArrayList<Thumbnail>();
-
-        IIIFImageServer iiif_server = IIIFImageServer.instance();
-        Map<String, Annotation> targets = map_targets(annotations);
-        
-        for (int i = 0; i < sequence.size(); i++ ) {
-        	Canvas c = sequence.canvas(i);
-        	Annotation a = targets.get(c.uri());
-        	
-        	if (a != null) {
-        		MasterImage master = as_master_image(a, c);
-        		WebImage image = iiif_server.renderToSquare(master, thumb_size);
-        		Thumbnail thumb = new Thumbnail(image, a.label(), i);
-        		result.add(thumb);
-        	}
-        }
-        
-        return result;
-    }*/
     
     /**
      * From the canvases and image annotations, construct openings for

@@ -79,9 +79,4 @@ public class ManifestCollectionPanelPresenter extends BasePanelPresenter {
         PanelDisplayedEvent event = new PanelDisplayedEvent(panelId(), data);
         eventBus().fireEvent(event);
     }
-
-/*    @Override
-    public void resize(int width, int height) {
-        display.resize(width, height);
-    }*/
 }

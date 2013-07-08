@@ -3,6 +3,9 @@ package rosa.scanvas.demo.website.client.disparea;
 import rosa.scanvas.demo.website.client.dynimg.ImageServer;
 import rosa.scanvas.demo.website.client.dynimg.MasterImage;
 
+/**
+ * A DisplayElement representing an image that conforms the the IIIF standard.
+ */
 public class MasterImageDisplayElement extends DisplayElement {
     private final ImageServer server;
     private final MasterImage master;

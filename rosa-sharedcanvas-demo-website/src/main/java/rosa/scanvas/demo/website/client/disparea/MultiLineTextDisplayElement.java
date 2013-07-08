@@ -4,13 +4,16 @@ import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.canvas.dom.client.ImageData;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.Window;
 
 public class MultiLineTextDisplayElement extends DisplayElement {
     private final String text;
     private final int[][] coords;
     private final ImageData image_data;
+    
+    private PopupPanel popup;
     
     // Green
     private final CssColor color_fill = CssColor.make(0, 255, 0);
@@ -20,6 +23,11 @@ public class MultiLineTextDisplayElement extends DisplayElement {
         super(id, x, y, width, height);
         this.coords = coords;
         this.text = text;
+        
+        popup = new PopupPanel(true, false);
+        HTML content = new HTML(text);
+    	
+    	popup.setWidget(content);
         
      // Create a canvas containing the filled polygon with no border
         Canvas sub_canvas = Canvas.createIfSupported();
@@ -46,8 +54,39 @@ public class MultiLineTextDisplayElement extends DisplayElement {
         return text;
     }
 
+    /**
+     * Coordinates that define the bounding box of this display element.
+     */
     public int[][] coordinates() {
         return coords;
+    }
+    
+    @Override
+    public void doMouseClick(final int x, final int y) {
+    	popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+    		int left = x;
+    		int top = y;
+
+    		public void setPosition(int width, int height) {
+    			if (left + width > Window.getClientWidth()) {
+    				left = Window.getClientWidth() - width;
+    			}
+    			
+    			if (top + height > Window.getClientHeight()) {
+    				top = Window.getClientHeight() - height;
+    			}
+    			
+    			popup.setPopupPosition(left, top);
+    		}
+    	});
+    }
+    
+    /**
+     * Returns a short string to be displayed on the canvas.
+     */
+    public String firstLine() {
+    	// TODO
+    	return "Click Here";
     }
     
     /**

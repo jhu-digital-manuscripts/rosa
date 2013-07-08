@@ -44,10 +44,21 @@ public abstract class DisplayElement {
         return base_height;
     }
 
+    /**
+     * Returns the stacking order of this display element, or its drawing
+     * priority. A lower number stacking order will be drawn after, and 
+     * on top of, those elements with higher stacking order.
+     */
     public int stackingOrder() {
         return stack_order;
     }
 
+    /**
+     * Sets the drawing priority of this element. Lower numbers are drawn
+     * last, on top of elements with a higher order number.
+     * 
+     * @param order
+     */
     public void setStackingOrder(int order) {
         stack_order = order;
     }
@@ -61,6 +72,16 @@ public abstract class DisplayElement {
     }
 
     /**
+     * How a display element behaves when the mouse is clicked.
+     * 
+     * @param x
+     * @param y
+     */
+    public void doMouseClick(int x, int y) {
+    	
+    }
+    
+    /**
      * Must be overridden by non-rectangular elements.
      * 
      * @param x
@@ -72,6 +93,15 @@ public abstract class DisplayElement {
                 && y <= base_y + base_height;
     }
 
+    /**
+     * Returns TRUE if any part of this element is contained inside
+     * a specified rectangle.
+     * 
+     * @param rect_x
+     * @param rect_y
+     * @param rect_width
+     * @param rect_height
+     */
     public boolean inRectangle(int rect_x, int rect_y, int rect_width,
             int rect_height) {
         if (base_x + base_width < rect_x || base_x > rect_x + rect_width) {

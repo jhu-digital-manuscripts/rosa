@@ -19,8 +19,6 @@ import rosa.scanvas.model.client.ManifestCollection;
 import rosa.scanvas.model.client.Reference;
 import rosa.scanvas.model.client.Sequence;
 
-import com.google.gwt.user.client.Window;
-
 public class ManifestListWidget extends Composite {
 	
 	private FlowPanel mainPanel = new FlowPanel();

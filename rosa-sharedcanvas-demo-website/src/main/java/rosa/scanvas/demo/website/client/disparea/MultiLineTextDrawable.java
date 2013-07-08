@@ -1,24 +1,15 @@
 package rosa.scanvas.demo.website.client.disparea;
 
 import com.google.gwt.canvas.dom.client.Context2d;
-import com.google.gwt.user.client.ui.PopupPanel;
 
 /**
  * Multiple lines of text with a drawn polygon bounding box
  */
 public class MultiLineTextDrawable implements DisplayAreaDrawable {
-    private final TextDisplayElement el;
-    
-    private final PopupPanel popup;
-    
-    private boolean popup_ready;
+    private final MultiLineTextDisplayElement el;
 
     public MultiLineTextDrawable(MultiLineTextDisplayElement el) {
     	this.el = el;
-    	
-    	popup = new PopupPanel(true, false);
-    	
-    	popup_ready = false;
     }
 
     @Override
@@ -57,7 +48,6 @@ public class MultiLineTextDrawable implements DisplayAreaDrawable {
     	
     	context.restore();
     	
-    	popup_ready = true;
     	cb.onDrawn();
     }
     

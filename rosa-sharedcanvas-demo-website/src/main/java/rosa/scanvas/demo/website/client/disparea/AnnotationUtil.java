@@ -9,7 +9,6 @@ import rosa.scanvas.model.client.AnnotationSelector;
 import rosa.scanvas.model.client.AnnotationTarget;
 import rosa.scanvas.model.client.Canvas;
 
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.Window;
 
 /**
@@ -37,17 +36,28 @@ public class AnnotationUtil {
             AnnotationSelector selector = getSelector(ann);
 
             if (selector.isSvgSelector() && selector.hasTextContent()) {
-                String content = selector.textContent();
-                int[][] coords = findCoordinates(content);
+            	String text_content = body.textContent();
+                String sel_content = selector.textContent();
+                int[][] coords = findCoordinates(sel_content);
                 int[] bounds = findBounds(coords);
-
-
-                TextDisplayElement el = new TextDisplayElement(ann.uri(), bounds[0], bounds[1],
-                        bounds[2], bounds[3], body.textContent(), coords);
-                el.setStackingOrder(1);
-                el.setDrawable(new TextDrawable(el));
-                
-                return el;
+// TODO this needs to be more general, example: if a single line of text is too long to fit
+                if (text_content.contains("<p>") || text_content.contains("\n")
+                		|| text_content.contains("br>")) {
+                	MultiLineTextDisplayElement el = new MultiLineTextDisplayElement(
+                			ann.uri(), bounds[0], bounds[1], bounds[2], bounds[3],
+                			text_content, coords);
+                	el.setStackingOrder(1);
+                	el.setDrawable(new MultiLineTextDrawable(el));
+                	
+                	return el;
+                } else {
+                	TextDisplayElement el = new TextDisplayElement(ann.uri(), bounds[0], bounds[1],
+	                        bounds[2], bounds[3], text_content, coords);
+	                el.setStackingOrder(1);
+	                el.setDrawable(new TextDrawable(el));
+	                
+	                return el;
+                }
             }
         }
 
@@ -81,7 +91,7 @@ public class AnnotationUtil {
             return el;
         } else if (body.isImage() && isSpecificResource(ann)
         		&& body.conformsTo().equals("IIIF")) {
-        	
+        	// Targeted image annotations that conform to IIIF standard
         	AnnotationSelector selector = getSelector(ann);
         	if (selector.isSvgSelector() && selector.hasTextContent()) {
         		String content = selector.textContent();
@@ -98,7 +108,7 @@ public class AnnotationUtil {
         	
         } else if (body.isImage() && isSpecificResource(ann)
         		&& !body.conformsTo().equals("IIIF")) {
-        	
+        	// Targeted image annotations that do not comform to IIIF standard
         	AnnotationSelector selector = getSelector(ann);
         	if (selector.isSvgSelector() && selector.hasTextContent()) {
         		String content = selector.textContent();
@@ -217,12 +227,6 @@ public class AnnotationUtil {
             return target.hasSelector();
         }
         return null;
-    }
-
-    public static HTML nonTargetedText(Annotation ann) {
-    	HTML text = new HTML();
-    	
-    	return text;
     }
     
 }

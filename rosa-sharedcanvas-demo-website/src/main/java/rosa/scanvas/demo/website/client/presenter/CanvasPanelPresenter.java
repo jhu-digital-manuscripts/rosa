@@ -8,8 +8,6 @@ import rosa.scanvas.demo.website.client.disparea.AnnotationUtil;
 import rosa.scanvas.demo.website.client.disparea.DisplayArea;
 import rosa.scanvas.demo.website.client.disparea.DisplayAreaView;
 import rosa.scanvas.demo.website.client.disparea.DisplayElement;
-import rosa.scanvas.demo.website.client.event.AnnotationSelectionEvent;
-import rosa.scanvas.demo.website.client.event.AnnotationSelectionHandler;
 import rosa.scanvas.demo.website.client.event.PanelDisplayedEvent;
 import rosa.scanvas.demo.website.client.event.PanelRequestEvent;
 import rosa.scanvas.model.client.Annotation;
@@ -26,8 +24,6 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
-
-import com.google.gwt.user.client.Window;
 
 public class CanvasPanelPresenter extends BasePanelPresenter {
     public interface Display extends BasePanelPresenter.Display {
@@ -61,15 +57,6 @@ public class CanvasPanelPresenter extends BasePanelPresenter {
      * Bind event handlers to the event bus and the DOM
      */
     private void bind() {
-    	eventBus().addHandler(AnnotationSelectionEvent.TYPE, 
-    			new AnnotationSelectionHandler() {
-    		public void onSelection(AnnotationSelectionEvent event) {
-    			if (event.getPanel() == panelId()) {
-    				setAnnotationVisible(event.getAnnotation(), event.getStatus());
-    			}
-    		}
-    	});
-    	
     	display.getZoomInButton().addClickHandler(new ClickHandler() {
     		@Override
     		public void onClick(ClickEvent event) {
@@ -107,7 +94,6 @@ public class CanvasPanelPresenter extends BasePanelPresenter {
 		eventBus().fireEvent(req);
     }
     
-    // TODO Can save display elements and operate on them for efficiency
     private void setAnnotationVisible(Annotation ann, boolean status) {
 
     	if (!AnnotationUtil.isSpecificResource(ann) &&

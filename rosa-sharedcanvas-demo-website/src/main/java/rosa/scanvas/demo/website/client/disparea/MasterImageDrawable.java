@@ -9,8 +9,6 @@ import rosa.scanvas.demo.website.client.dynimg.WebImage;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.dom.client.ImageElement;
 
-import com.google.gwt.user.client.Window;
-
 public class MasterImageDrawable implements DisplayAreaDrawable {
     private final MasterImageDisplayElement el;
     
@@ -112,6 +110,7 @@ public class MasterImageDrawable implements DisplayAreaDrawable {
                     continue;
                 }
 
+                // Modify this to change what happens on tile loading.
                 context.save();
                 context.translate(-area.viewportLeft(), -area.viewportTop());
                 context.fillRect(tile_left, tile_top, tile.width(), tile.height());

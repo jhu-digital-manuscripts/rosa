@@ -27,6 +27,10 @@ public class Panel {
      */
     public void display(final int width, final int height, PanelState state) {
         this.state = state;
+        data.setManifestCollection(null);
+        data.setManifest(null);
+        data.setSequence(null);
+        data.setCanvas(null);
 
         AsyncCallback<PanelData> cb = new AsyncCallback<PanelData>() {
             @Override

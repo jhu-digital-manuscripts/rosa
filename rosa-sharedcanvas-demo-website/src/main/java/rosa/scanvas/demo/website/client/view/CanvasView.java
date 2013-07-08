@@ -6,10 +6,7 @@ import rosa.scanvas.demo.website.client.presenter.CanvasPanelPresenter;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.ScrollPanel;
 
 public class CanvasView extends BasePanelView implements CanvasPanelPresenter.Display {
 	
