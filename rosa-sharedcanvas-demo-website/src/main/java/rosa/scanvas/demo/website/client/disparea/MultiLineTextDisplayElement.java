@@ -10,6 +10,7 @@ import com.google.gwt.user.client.Window;
 
 public class MultiLineTextDisplayElement extends DisplayElement {
     private final String text;
+    private final String label;
     private final int[][] coords;
     private final ImageData image_data;
     
@@ -19,9 +20,10 @@ public class MultiLineTextDisplayElement extends DisplayElement {
     private final CssColor color_fill = CssColor.make(0, 255, 0);
 
     public MultiLineTextDisplayElement(String id, int x, int y, int width, int height,
-            String text, int[][] coords) {
+            String text, String label, int[][] coords) {
         super(id, x, y, width, height);
         this.coords = coords;
+        this.label = label;
         this.text = text;
         
         popup = new PopupPanel(true, false);
@@ -53,6 +55,10 @@ public class MultiLineTextDisplayElement extends DisplayElement {
     public String text() {
         return text;
     }
+    
+    public String label() {
+    	return label;
+    }
 
     /**
      * Coordinates that define the bounding box of this display element.
@@ -62,7 +68,7 @@ public class MultiLineTextDisplayElement extends DisplayElement {
     }
     
     @Override
-    public void doMouseClick(final int x, final int y) {
+    public boolean doElementAction(final int x, final int y) {
     	popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
     		int left = x;
     		int top = y;
@@ -79,14 +85,8 @@ public class MultiLineTextDisplayElement extends DisplayElement {
     			popup.setPopupPosition(left, top);
     		}
     	});
-    }
-    
-    /**
-     * Returns a short string to be displayed on the canvas.
-     */
-    public String firstLine() {
-    	// TODO
-    	return "Click Here";
+    	
+    	return true;
     }
     
     /**

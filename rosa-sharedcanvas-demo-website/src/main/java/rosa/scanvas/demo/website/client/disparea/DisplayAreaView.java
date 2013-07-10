@@ -127,6 +127,7 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 					area.setViewportCenter(click_x, click_y);
 					redraw();
 				} else {
+					boolean el_clicked = false;
 					// transform click broswer coordinates into canvas coordinates
 					click_x += area.viewportLeft();
 					click_y += area.viewportTop();
@@ -136,14 +137,16 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 						int el_y = (int) (click_y / area.zoom());
 	
 						if (el.contains(el_x, el_y) && el.isVisible()) {
-							el.doMouseClick(event.getRelativeX(viewport.getElement()),
+							el_clicked = el.doElementAction(event.getRelativeX(viewport.getElement()),
 									event.getRelativeY(viewport.getElement()));
 						}
 					}
 					
-					area.setViewportCenter(click_x, click_y);
-					area.zoomIn();
-					redraw();
+					if (!el_clicked) {
+						area.setViewportCenter(click_x, click_y);
+						area.zoomIn();
+						redraw();
+					}
 				}
 			}
 		});
@@ -390,9 +393,23 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 					touch_x += area.viewportLeft();
 					touch_y += area.viewportTop();
 					
-					area.setViewportCenter(touch_x, touch_y);
-					area.zoomIn();
-					redraw();
+					boolean el_clicked = false;
+					
+					for (DisplayElement el : area.findInViewport()) {
+						int el_x = (int) (touch_x / area.zoom());
+						int el_y = (int) (touch_y / area.zoom());
+	
+						if (el.contains(el_x, el_y) && el.isVisible()) {
+							el_clicked = el.doElementAction(touch.getRelativeX(viewport.getElement()),
+									touch.getRelativeY(viewport.getElement()));
+						}
+					}
+					
+					if (!el_clicked) {
+						area.setViewportCenter(touch_x, touch_y);
+						area.zoomIn();
+						redraw();
+					}
 				} else if (!dragging && !drag_from_overview && in_overview) {
 					touch_x = (touch_x - overview_x) * area.width()
 							/ overview.getCoordinateSpaceWidth();

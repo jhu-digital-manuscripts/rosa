@@ -87,7 +87,9 @@ public abstract class BasePanelPresenter implements PanelPresenter {
          * 
          * @param text
          */
-    	Label addContextLabel(String text);
+    	Label addContextTitle(String text);
+    	
+    	Label addContextLink(String text);
     	
     	void clearContextLabels();
 
@@ -477,9 +479,9 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     	display.clearContextLabels();
     	
     	if (collection != null) {
-    		Label context = display.addContextLabel(collection.label());
-    		
+    		//Label context = display.addContextLabel(collection.label());
     		if (manifest != null) {
+    			Label context = display.addContextLink(collection.label());
     			context.addStyleName("Link");
 	    		context.addClickHandler(new ClickHandler() {
 	    			public void onClick(ClickEvent event) {
@@ -491,13 +493,16 @@ public abstract class BasePanelPresenter implements PanelPresenter {
 		    			event_bus.fireEvent(req);
 	    			}
 	    		});
+    		} else {
+    			display.addContextTitle(collection.label());
     		}
     	}
     	
     	if (manifest != null) {
-    		Label context = display.addContextLabel(manifest.label());
+    		//Label context = display.addContextLabel(manifest.label());
     		
     		if (seq != null) {
+    			Label context = display.addContextLink(manifest.label());
     			context.addStyleName("Link");
 	    		context.addClickHandler(new ClickHandler() {
 	    			public void onClick(ClickEvent event) {
@@ -509,13 +514,16 @@ public abstract class BasePanelPresenter implements PanelPresenter {
 	    				event_bus.fireEvent(req);
 	    			}
 	    		});
+    		} else {
+    			display.addContextTitle(manifest.label());
     		}
     	}
     	
     	if (seq != null) {
-    		Label context = display.addContextLabel(seq.label());
+    		//Label context = display.addContextLabel(seq.label());
     		
     		if (canvas != null) {
+    			Label context = display.addContextLink(seq.label());
     			context.addStyleName("Link");
 	    		context.addClickHandler(new ClickHandler() {
 	    			public void onClick(ClickEvent event) {
@@ -527,11 +535,13 @@ public abstract class BasePanelPresenter implements PanelPresenter {
 	    				event_bus.fireEvent(req);
 	    			}
 	    		});
+    		} else {
+    			display.addContextTitle(seq.label());
     		}
     	}
     	
     	if (canvas != null) {
-    		Label context = display.addContextLabel(canvas.label());
+    		display.addContextTitle(canvas.label());
     	}
     }
     

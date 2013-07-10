@@ -44,7 +44,7 @@ public class MultiLineTextDrawable implements DisplayAreaDrawable {
     	context.setFillStyle("black");
     	context.setFont("bold 60px sans-serif");
     	context.setTextBaseline("top");
-    	context.fillText(el.firstLine(), el.baseLeft(), el.baseTop(), el.baseWidth());
+    	context.fillText(el.label() + "...", el.baseLeft(), el.baseTop(), el.baseWidth());
     	
     	context.restore();
     	

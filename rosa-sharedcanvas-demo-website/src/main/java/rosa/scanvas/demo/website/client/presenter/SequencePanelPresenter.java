@@ -405,7 +405,7 @@ public class SequencePanelPresenter extends BasePanelPresenter {
     	
         page_width = (width / 2) - 20;
         
-        page_height = height - 132;
+        page_height = height - 152;
 
         thumb_size = page_width > page_height ? page_height : page_width;
         

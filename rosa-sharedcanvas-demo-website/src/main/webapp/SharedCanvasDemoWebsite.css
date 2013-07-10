@@ -136,6 +136,25 @@
 	margin-right: 10px;
 }
 
+.ContextLinks {
+	float: left;
+	color: black;
+	font-size: 14px;
+}
+
+.ContextLinks .Link {
+	float: left;
+	margin-right: 8px;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.ContextLinks .gwt-Label {
+	float: left;
+	font-size: 14px;
+	margin-right: 10px;
+}
+
 .PanelTitleBar .gwt-ToggleButton {
 	float: left;
 	width: 20px;

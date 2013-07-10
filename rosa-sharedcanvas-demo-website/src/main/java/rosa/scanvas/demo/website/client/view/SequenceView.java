@@ -54,7 +54,7 @@ public class SequenceView extends BasePanelView implements
     @Override
     public void resize(int width, int height) {
     	super.resize(width, height);
-        tab_panel.setPixelSize(width - 22, height - 50);
+        tab_panel.setPixelSize(width - 22, height - 70);
     }
 
     @Override

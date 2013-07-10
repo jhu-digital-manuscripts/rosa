@@ -114,6 +114,7 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 	private final FlowPanel main;
 	private final FlowPanel title_bar;
 	private final FlowPanel context_bar;
+	private final FlowPanel context_links;
 
 	private AnnotationListWidget annoListWidget;
 	private ManifestListWidget metaListWidget;
@@ -144,9 +145,11 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 		main = new FlowPanel();
 		title_bar = new FlowPanel();
 		context_bar = new FlowPanel();
+		context_links = new FlowPanel();
 		main.setStylePrimaryName("PanelView");
 		title_bar.setStylePrimaryName("PanelTitleBar");
 		context_bar.setStylePrimaryName("ContextBar");
+		context_links.setStylePrimaryName("ContextLinks");
 		
 		tab_panel = new StackLayoutPanel(Style.Unit.PX);
 		tab_panel.setStylePrimaryName("StackLayoutPanel");
@@ -201,6 +204,7 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 		title_bar.add(anno_button);
 		title_bar.add(meta_button);
 		title_bar.add(options_button);
+		title_bar.add(context_links);
 
 		initWidget(main);
 
@@ -384,7 +388,7 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 	}
 	
 	@Override
-	public Label addContextLabel(String text) {
+	public Label addContextTitle(String text) {
 		// TODO make this more readable for longer context titles
 		if (context_bar.getWidgetCount() > 0) {
 			context_bar.add(new Label(Messages.INSTANCE.contextSeparator()));
@@ -397,8 +401,21 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 	}
 	
 	@Override
+	public Label addContextLink(String text) {
+		if (context_links.getWidgetCount() > 0) {
+			context_links.add(new Label(Messages.INSTANCE.contextSeparator()));
+		}
+		
+		Label context = new Label(text);
+		context_links.add(context);
+		
+		return context;
+	}
+	
+	@Override
 	public void clearContextLabels() {
 		context_bar.clear();
+		context_links.clear();
 	}
 
 	/**

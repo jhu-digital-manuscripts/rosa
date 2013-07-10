@@ -73,12 +73,13 @@ public abstract class DisplayElement {
 
     /**
      * How a display element behaves when the mouse is clicked.
+     * By default, no action is performed and FALSE is returned.
      * 
      * @param x
      * @param y
      */
-    public void doMouseClick(int x, int y) {
-    	
+    public boolean doElementAction(int x, int y) {
+    	return false;
     }
     
     /**

@@ -45,7 +45,7 @@ public class AnnotationUtil {
                 		|| text_content.contains("br>")) {
                 	MultiLineTextDisplayElement el = new MultiLineTextDisplayElement(
                 			ann.uri(), bounds[0], bounds[1], bounds[2], bounds[3],
-                			text_content, coords);
+                			text_content, ann.label(), coords);
                 	el.setStackingOrder(1);
                 	el.setDrawable(new MultiLineTextDrawable(el));
                 	

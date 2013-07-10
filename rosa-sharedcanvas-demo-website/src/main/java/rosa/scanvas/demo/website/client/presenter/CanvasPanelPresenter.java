@@ -134,7 +134,7 @@ public class CanvasPanelPresenter extends BasePanelPresenter {
         els.clear();
         
         this.width = width - 22;
-        this.height = height - 70;
+        this.height = height - 90;
       
         DisplayArea area = new DisplayArea(canvas.width(), canvas.height(),
                 this.width, this.height);
@@ -177,7 +177,7 @@ public class CanvasPanelPresenter extends BasePanelPresenter {
         super.resize(width, height);
         
         this.width = width - 22;
-        this.height = height - 70;
+        this.height = height - 90;
         
         update();
     }
