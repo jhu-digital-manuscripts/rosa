@@ -1176,6 +1176,8 @@ public class App implements EntryPoint {
                 reader_toolbar.setVisible(false);
                 page_turner_annotation.hide();
 
+                // TODO PROBABLY BUG HERE, should update based on mode... sidechoicelistener.onChange(null);
+
                 if (view.size() == 1) {
                     CodexImage img = view.get(0);
                     selectedImageIndex = book.findImage(img.label());
@@ -2096,7 +2098,7 @@ public class App implements EntryPoint {
             }
 
             addHtml(content,
-                    Resources.INSTANCE.narrativeSectionsHtml(),
+                    Resources.INSTANCE.collectionDataHtml(),
                     new Anchor(Labels.INSTANCE.download(), GWT
                             .getHostPageBaseURL() + DATA_PATH + name), coldata);
         }
