@@ -26,15 +26,18 @@ public interface Resources extends ClientBundle {
 
 	@Source("home.html")
 	public TextResource homeHtml();
+	
+	@Source("christine_de_pizan.html")
+	public ExternalTextResource christineDePizanHtml();
 
+	@Source("works.html")
+	public ExternalTextResource worksHtml();
+    
+	@Source("proper_names.html")
+    public ExternalTextResource properNamesHtml();
+    
 	@Source("partners.html")
 	public ExternalTextResource partnersHtml();
-
-	@Source("project_history.html")
-	public ExternalTextResource projectHistoryHtml();
-
-	@Source("rose_history.html")
-	public ExternalTextResource roseHistoryHtml();
 
 	@Source("terms_and_conditions.html")
 	public ExternalTextResource termsAndConditionsHtml();
@@ -42,21 +45,13 @@ public interface Resources extends ClientBundle {
 	@Source("contact.html")
 	public ExternalTextResource contactHtml();
 
-	@Source("donation.html")
-	public ExternalTextResource donationHtml();
-
-	@Source("rose_corpus.html")
-	public ExternalTextResource roseCorpusHtml();
-
 	@Source("illustration_titles.html")
 	public ExternalTextResource illustrationTitlesHtml();
 
 	@Source("character_names.html")
 	public ExternalTextResource characterNamesHtml();
 
-	@Source("narrative_sections.html")
-	public ExternalTextResource narrativeSectionsHtml();
-
 	@Source("collection_data.html")
 	public ExternalTextResource collectionDataHtml();
+	
 }

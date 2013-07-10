@@ -5,17 +5,17 @@
       xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 <url>
-  <loc>http://romandelarose.org/</loc>
+  <loc>http://christihnedepiazn.org/</loc>
   <changefreq>monthly</changefreq>
 </url>
 
 <url>
-  <loc>http://romandelarose.org/data/</loc>
+  <loc>http://christinedepizan.org/data/</loc>
   <changefreq>monthly</changefreq>
 </url>
 
 <url>
-  <loc>http://romandelarose.org/help/</loc>
+  <loc>http://christinedepizan.org/help/</loc>
   <changefreq>monthly</changefreq>
 </url>
 </urlset>

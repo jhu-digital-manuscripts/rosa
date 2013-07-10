@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
-import rosa.gwt.common.client.Action;
-import rosa.gwt.common.client.Analytics;
+
 import rosa.gwt.common.client.EmbeddedObjectViewer;
 import rosa.gwt.common.client.FSIService;
 import rosa.gwt.common.client.HttpGet;
@@ -96,10 +95,7 @@ import com.google.gwt.view.client.SingleSelectionModel;
 public class App implements EntryPoint {
     public static final String LC;
     private static final String DEFAULT_LC = "en";
-    private static final String DEFAULT_LC_NAME = "English";
-    private static final String FRENCH_LC = "fr";
-    private static final String FRENCH_LC_NAME = "Français";
-
+    
     static {
         String s = LocaleInfo.getCurrentLocale().getLocaleName();
         LC = s.equals("default") ? DEFAULT_LC : s;
@@ -115,11 +111,12 @@ public class App implements EntryPoint {
     private static final int MIN_BOOK_BROWSER_WIDTH = 400;
     private static final int MAX_BOOK_BROWSER_WIDTH = 600;
     private static final int VIEWPORT_RESIZE_INCREMENT = 100;
+    private static final String HELP_PATH = "/help/help_";
 
-    private static final String VIEW_CORPUS_URL = "http://spreadsheets.google.com/ccc?key=pqpY1IVVBy-A3ALgAzePRSA";
     private static final String BUG_SUBMIT_EMAIL = "contactus@romandelarose.org";
 
     private static final String SEARCH_BOOK_RESTRICT_KEY = "BOOK";
+    private static final String FSI_COLLECTION = "pizan";
 
     private final rosa.gwt.common.client.SearchServiceAsync searchservice = GWT
             .create(rosa.gwt.common.client.SearchService.class);
@@ -145,21 +142,7 @@ public class App implements EntryPoint {
 
     private DialogBox page_turner_annotation;
 
-    private void addSidebarLocaleSelector() {
-        String current = LC;
-
-        if (current.equals(DEFAULT_LC)) {
-            addSidebarItem(new Label(DEFAULT_LC_NAME));
-            addSidebarItem(new Anchor(FRENCH_LC_NAME, "App.html?locale="
-                    + FRENCH_LC + "#" + History.getToken()));
-        } else {
-            addSidebarItem(new Label(FRENCH_LC_NAME));
-            addSidebarItem(new Anchor(DEFAULT_LC_NAME, "App.html#"
-                    + History.getToken()));
-        }
-    }
-
-    public void browseBook(int image) {
+    private void browseBook(int image) {
         if (use_flash) {
             browseBookFSI(image);
         } else {
@@ -664,47 +647,27 @@ public class App implements EntryPoint {
         } else if (state == Action.VIEW_PARTNERS) {
             viewPage(Labels.INSTANCE.partners(),
                     Resources.INSTANCE.partnersHtml());
-        } else if (state == Action.VIEW_ROSE_HISTORY) {
-            viewPage(Labels.INSTANCE.roseHistory(),
-                    Resources.INSTANCE.roseHistoryHtml());
-        } else if (state == Action.VIEW_CORPUS) {
-            viewCorpus();
         } else if (state == Action.VIEW_ILLUSTRATION_TITLES) {
             viewIllustrationTitles();
         } else if (state == Action.VIEW_COLLECTION_DATA) {
             viewCollectionData();
         } else if (state == Action.VIEW_CHARACTER_NAMES) {
             viewCharacterNames();
-        } else if (state == Action.VIEW_DONATION) {
-            viewPage(Labels.INSTANCE.donation(),
-                    Resources.INSTANCE.donationHtml());
         } else if (state == Action.VIEW_TERMS) {
             viewPage(Labels.INSTANCE.termsAndConditions(),
                     Resources.INSTANCE.termsAndConditionsHtml());
         } else if (state == Action.VIEW_CONTACT) {
             viewPage(Labels.INSTANCE.contactUs(),
                     Resources.INSTANCE.contactHtml());
-        } else if (state == Action.VIEW_PROJECT_HISTORY) {
-            viewPage(Labels.INSTANCE.projectHistory(),
-                    Resources.INSTANCE.projectHistoryHtml());
-        } else if (state == Action.VIEW_BOOK_BIB) {
-            if (args.size() != 1) {
-                handleHistoryTokenError(token);
-                return;
-            }
-
-            String bookid = args.get(0);
-
-            if (col.findBookByID(bookid) == -1) {
-                handleHistoryTokenError(token);
-                return;
-            }
-
-            if (selectBook(bookid, token)) {
-                return;
-            } else {
-                viewBookBibliography();
-            }
+        } else if (state == Action.VIEW_PROPER_NAMES) {
+            viewPage("Proper names",
+                    Resources.INSTANCE.properNamesHtml());
+        } else if (state == Action.VIEW_WORKS) {
+            viewPage("Works",
+                    Resources.INSTANCE.worksHtml());
+        } else if (state == Action.VIEW_PIZAN) {
+            viewPage("Christine de Pizan",
+                    Resources.INSTANCE.christineDePizanHtml());
         } else if (state == Action.VIEW_BOOK) {
             if (args.size() != 1) {
                 handleHistoryTokenError(token);
@@ -858,6 +821,7 @@ public class App implements EntryPoint {
             return;
         }
 
+
         Analytics.track(state, book == null ? null : book.id(), args);
     }
 
@@ -930,7 +894,7 @@ public class App implements EntryPoint {
         headermenu = new MenuBar();
         headermenu.setAutoOpen(true);
         headermenu.setAnimationEnabled(true);
-        
+
         header.add(getImage("header-5.jpg", "Christine de Pizan Digital Scriptorium"));
         header.add(headermenu);        
                 
@@ -944,7 +908,7 @@ public class App implements EntryPoint {
         
         headermenu.addItem("Who is Christine de Pizan?", new ScheduledCommand() {
             public void execute() {
-                History.newItem(Action.HOME.toToken());
+                History.newItem(Action.VIEW_PIZAN.toToken());
             }
         });
         
@@ -956,19 +920,19 @@ public class App implements EntryPoint {
         
         headermenu.addItem("List of Works", new ScheduledCommand() {
             public void execute() {
-                History.newItem(Action.HOME.toToken());
+                History.newItem(Action.VIEW_WORKS.toToken());
             }
         });
         
         headermenu.addItem("Illustration Titles", new ScheduledCommand() {
             public void execute() {
-                History.newItem(Action.HOME.toToken());
+                History.newItem(Action.VIEW_ILLUSTRATION_TITLES.toToken());
             }
         });
         
         headermenu.addItem("Proper Names", new ScheduledCommand() {
             public void execute() {
-                History.newItem(Action.HOME.toToken());
+                History.newItem(Action.VIEW_PROPER_NAMES.toToken());
             }
         });
         
@@ -976,43 +940,19 @@ public class App implements EntryPoint {
 
         projectmenu.addItem("Partners", new ScheduledCommand() {
             public void execute() {
-                History.newItem(Action.HOME.toToken());
-            }
-        });
-        
-        projectmenu.addItem("Project history", new ScheduledCommand() {
-            public void execute() {
-                History.newItem(Action.HOME.toToken());
-            }
-        });
-        
-        projectmenu.addItem("Partners", new ScheduledCommand() {
-            public void execute() {
-                History.newItem(Action.HOME.toToken());
+                History.newItem(Action.VIEW_PARTNERS.toToken());
             }
         });
         
         projectmenu.addItem("Terms & Conditions", new ScheduledCommand() {
             public void execute() {
-                History.newItem(Action.HOME.toToken());
-            }
-        });
-        
-        projectmenu.addItem("Blog", new ScheduledCommand() {
-            public void execute() {
-                History.newItem(Action.HOME.toToken());
-            }
-        });
-        
-        projectmenu.addItem("Donations", new ScheduledCommand() {
-            public void execute() {
-                History.newItem(Action.HOME.toToken());
+                History.newItem(Action.VIEW_TERMS.toToken());
             }
         });
         
         projectmenu.addItem("Contact us", new ScheduledCommand() {
             public void execute() {
-                History.newItem(Action.HOME.toToken());
+                History.newItem(Action.VIEW_CONTACT.toToken());
             }
         });
         
@@ -1020,7 +960,9 @@ public class App implements EntryPoint {
         
         headermenu.addItem("Help", new ScheduledCommand() {
             public void execute() {
-                History.newItem(Action.HOME.toToken());
+                Util.popupWindowURL("help", 700, 600, HELP_PATH + LC + ".html",
+                        "toolbar=yes,menubar=no,scrollbars=yes,resizable=yes");
+                Analytics.trackEvent("Page", "view", "help");
             }
         });
                         
@@ -1068,7 +1010,7 @@ public class App implements EntryPoint {
         History.fireCurrentHistoryState();
     }
 
-    public boolean browserSupportsFlash() {
+    private boolean browserSupportsFlash() {
         String agent = Window.Navigator.getUserAgent();
 
         if (agent.contains("iPad") || agent.contains("iPhone")
@@ -1120,7 +1062,7 @@ public class App implements EntryPoint {
         toolbar.add(reader_button);
         toolbar.add(browser_button);
         
-        RoseBook rose_book = new RoseBook(book.imagesTable());
+        RoseBook rose_book = new RoseBook(FSI_COLLECTION, book.imagesTable());
         final CodexModel rose_book_model = rose_book.model();
         final CodexController rose_book_ctrl = new SimpleCodexController(
                 rose_book_model);
@@ -1776,12 +1718,6 @@ public class App implements EntryPoint {
                     Action.READ_BOOK.toToken(book.id()));
             addSidebarItem(Labels.INSTANCE.browseImages(),
                     Action.BROWSE_BOOK.toToken(book.id()));
-
-            if (!col.bookData(book.bookDataIndex(),
-                    Repository.Category.BIBLIOGRAPHY).equals("0")) {
-                addSidebarItem(Labels.INSTANCE.bibliography(),
-                        Action.VIEW_BOOK_BIB.toToken(book.id()));
-            }
         }
 
         addSidebarHeader(Labels.INSTANCE.selectBookBy());
@@ -1796,23 +1732,8 @@ public class App implements EntryPoint {
             addSidebarItem(d.display(), Action.SELECT_BOOK.toToken(d.name()));
         }
 
-        addSidebarHeader(Labels.INSTANCE.project());
-        addSidebarItem(createSidebarHyperlink(
-                Labels.INSTANCE.termsAndConditions(),
-                Action.VIEW_TERMS.toToken()));
-        addSidebarItem(createSidebarHyperlink(Labels.INSTANCE.partners(),
-                Action.VIEW_PARTNERS.toToken()));
-        addSidebarItem(createSidebarHyperlink(Labels.INSTANCE.projectHistory(),
-                Action.VIEW_PROJECT_HISTORY.toToken()));
-        addSidebarItem(createSidebarHyperlink(Labels.INSTANCE.donation(),
-                Action.VIEW_DONATION.toToken()));
-        addSidebarItem(new Anchor(Labels.INSTANCE.blog(),
-                "http://romandelarose.blogspot.com"));
-        addSidebarItem(createSidebarHyperlink(Labels.INSTANCE.contactUs(),
-                Action.VIEW_CONTACT.toToken()));
-
-        addSidebarHeader(Labels.INSTANCE.language());
-        addSidebarLocaleSelector();
+//        addSidebarHeader(Labels.INSTANCE.language());
+//        addSidebarLocaleSelector();
 
         // TODO translate
         addSidebarHeader("Features");
@@ -1834,7 +1755,7 @@ public class App implements EntryPoint {
     }
 
     private void initDisplay(String title, boolean displaytitleincontent) {
-        Window.setTitle("Roman de la Rose: " + title);
+        Window.setTitle("Christine de Pizan: " + title);
 
         content.clear();
 
@@ -1972,17 +1893,6 @@ public class App implements EntryPoint {
         content.add(w);
     }
 
-    private void viewCorpus() {
-        book = null;
-        initDisplay(Labels.INSTANCE.roseCorpus(), true);
-
-        addHtml(content,
-                Resources.INSTANCE.roseCorpusHtml(),
-                new Anchor(Labels.INSTANCE.viewInGoogleDocs(), VIEW_CORPUS_URL),
-                new HTML(
-                        "<iframe width='100%' height='600px' frameborder='0' src='https://spreadsheets0.google.com/pub?hl=en&hl=en&key=0AsygG-3xkhMdcHFwWTFJVlZCeS1BM0FMZ0F6ZVBSU0E&single=true&gid=0&output=html&widget=true'></iframe>"));
-    }
-
     private void viewCollectionData() {
         book = null;
         initDisplay(Labels.INSTANCE.collectionData(), true);
@@ -2017,9 +1927,9 @@ public class App implements EntryPoint {
             if (LC.equals("fr")) {
                 name = "collection_data_fr.csv";
             }
-
+            
             addHtml(content,
-                    Resources.INSTANCE.narrativeSectionsHtml(),
+                    Resources.INSTANCE.collectionDataHtml(),
                     new Anchor(Labels.INSTANCE.download(), GWT
                             .getHostPageBaseURL() + DATA_PATH + name), coldata);
         }
@@ -2090,31 +2000,6 @@ public class App implements EntryPoint {
             }
         } else {
             addHtml(content, Resources.INSTANCE.characterNamesHtml(), charnames);
-        }
-    }
-
-    private void viewBookBibliography() {
-        initDisplay(Labels.INSTANCE.bibliography(), true);
-
-        if (book.bibliography() == null) {
-            loadingdialog.display();
-
-            String url = GWT.getHostPageBaseURL() + DATA_PATH
-                    + book.bibliographyPath();
-
-            HttpGet.request(url, new HttpGet.Callback<String>() {
-                public void failure(String error) {
-                    loadingdialog.error(error);
-                }
-
-                public void success(String data) {
-                    loadingdialog.hide();
-                    book.setBibliography(data);
-                    viewBookBibliography();
-                }
-            });
-        } else {
-            content.add(book.bibliography().display());
         }
     }
 }
