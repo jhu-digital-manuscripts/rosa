@@ -72,6 +72,8 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 	List<DisplayElement> draw_queue = new ArrayList<DisplayElement> ();
 
 	public DisplayAreaView() {
+		this.area = new DisplayArea(0, 0, 0, 0);
+		
 		this.viewport = Canvas.createIfSupported();
 		this.overview = Canvas.createIfSupported();
 		this.viewport_context = viewport.getContext2d();
@@ -187,6 +189,8 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 								/ overview.getCoordinateSpaceHeight();
 						
 						area.setViewportCenter(x, y);
+					} else {
+						in_overview = false;
 					}
 				} else {
 					drag_may_start = false;

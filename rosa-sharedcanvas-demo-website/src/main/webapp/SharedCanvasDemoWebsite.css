@@ -103,6 +103,12 @@
 	border: 1px solid rgb(145, 145, 145);
 }
 
+.HidePanel {
+	background-color: rgb(135, 135, 135);
+	opacity: 0.5;
+	border: 3px solid rgb(135, 135, 135);
+}
+
 /* ------ Home Panel ------ */
 
 .CellList {
@@ -187,9 +193,14 @@
 .Options .gwt-Label {
 	border-top: 1px solid black;
 	width: 120px;
-	margin: 5px 0px;
+	/* margin: 5px 0px; */
+	padding: 5px 0px;
 	cursor: pointer;
 	float: left;
+}
+
+.Options .gwt-Label:hover {
+	background-color: rgb(235, 235, 235);
 }
 
 .Options .gwt-Button {
@@ -221,11 +232,8 @@
 	float: left;
 }
 
-.Options .Text {
-	width: 66px;
-	text-align: center;
-	cursor: default;
-	float: left;
+.Options .Swap:hover {
+	background-color: 
 }
 
 .PopupPanel {
@@ -320,7 +328,7 @@
 	text-decoration: none;
 	font-weight: bold;
 	font-size: 125%;
-	color: rgb(10, 10, 255);
+	color: black;
 }
 
 .ManifestList .gwt-DisclosurePanel .gwt-HTML {

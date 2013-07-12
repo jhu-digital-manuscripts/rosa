@@ -65,10 +65,7 @@ public class PageTurner extends Composite implements HasClickHandlers,
     private final Grid display;
     private FlowPanel place_holder = new FlowPanel();
     private final FocusPanel focus;
-    
-    private final AbsolutePanel top;
-    private final FocusPanel verso;
-    private final FocusPanel recto;
+
     private final Panel verso_panel;
     private final Panel recto_panel;
     
@@ -108,10 +105,6 @@ public class PageTurner extends Composite implements HasClickHandlers,
         
         this.canvas_button = new Button();
         canvas_button.setVisible(false);
-        
-        top = new AbsolutePanel();
-        verso = new FocusPanel();
-        recto = new FocusPanel();
         
         this.verso_els = new ArrayList<DisplayElement>();
         this.recto_els = new ArrayList<DisplayElement>();
@@ -317,6 +310,13 @@ public class PageTurner extends Composite implements HasClickHandlers,
         initWidget(main);
     }
     
+    /**
+     * Adds DOM event handlers to the DisplayAreaView of a page of an opening.
+     * These handlers are used to redirect the user to the detailed canvas view.
+     * 
+     * @param view
+     * @param is_verso
+     */
     private void bind_canvas(final DisplayAreaView view, final boolean is_verso) {
     	view.addClickHandler(new ClickHandler() {
     		public void onClick(ClickEvent event) {
@@ -411,6 +411,15 @@ public class PageTurner extends Composite implements HasClickHandlers,
         });
     }
 
+    /**
+     * Sets the openings. Each opening consists of a verso and/or a recto page.
+     * 
+     * @param sequence
+     * @param openings
+     * @param page_width
+     * @param page_height
+     * @param cb
+     */
     public void setOpenings(Sequence sequence, List<Opening> openings,
     		int page_width, int page_height, NewOpeningCallback cb) {
         this.position = 0;
@@ -425,7 +434,7 @@ public class PageTurner extends Composite implements HasClickHandlers,
         this.page_width = page_width;
         this.page_height = page_height - 15;
 
-        place_holder.setHeight( (page_height - 10) + "px");
+        place_holder.setHeight( (page_height - 20) + "px");
         
         if (openings != null) {
             display(openings.get(position));
@@ -439,8 +448,6 @@ public class PageTurner extends Composite implements HasClickHandlers,
     		final DisplayAreaView view, final ArrayList<DisplayElement> els) {
     	PanelData canvas_data = new PanelData();
     	canvas_data.setCanvas(sequence.canvas(canvas_index));
-    	
-    	to_draw.add(canvas_index);
     	
     	final double aspect = (double)canvas_data.getCanvas().width() 
     			/ canvas_data.getCanvas().height();
@@ -459,10 +466,10 @@ public class PageTurner extends Composite implements HasClickHandlers,
     		
     		@Override
     		public void onSuccess(PanelData result) {
-    			to_draw.remove(canvas_index);
-    			
-    			DisplayArea area = new DisplayArea(result.getCanvas().width(),
-    					result.getCanvas().height(), img_width, img_height);
+    			DisplayArea area = view.area();
+
+    			area.setBaseSize(result.getCanvas().width(), result.getCanvas().height());
+    			area.resizeViewport(img_width, img_height);
     			
     			// Convert all annotations to DisplayElements
     			for (AnnotationList al : result.getAnnotationLists()) {
@@ -476,13 +483,13 @@ public class PageTurner extends Composite implements HasClickHandlers,
     			}
     			area.setContent(els);
     			
-    			view.setDisplayArea(area);
-    			view.display();
     			view.lockDisplay(true);
-    			view.redraw();
+    			view.display();
     			
     			opening_data.getAnnotationLists().addAll(result.getAnnotationLists());
     			opening_data.setCanvas(result.getCanvas());
+
+    			to_draw.remove(canvas_index);
     			if (to_draw.isEmpty()) {
     				cb.onNewOpening(opening_data);
     			}
@@ -492,16 +499,24 @@ public class PageTurner extends Composite implements HasClickHandlers,
     
     private void display(final Opening opening) {
     	this.current_opening = opening;
-    	
+
     	opening_data = new PanelData();
     	verso_els.clear();
     	recto_els.clear();
     	
-    	if (opening.getVerso() == null) {
-    		display.setWidget(0, 0, place_holder);
-    	} else {
+    	// Ensure that if both pages exist, add them to the to_draw queue
+    	if (opening.getVerso() != null) {
+    		to_draw.add(opening.getVersoIndex());
+    	}
+    	if (opening.getRecto() != null) {
+    		to_draw.add(opening.getRectoIndex());
+    	}
+    	
+    	if (opening.getVerso() != null) {
     		asDisplayArea(opening.getVersoIndex(), verso_view, verso_els);
     		display.setWidget(0, 0, verso_panel);
+    	} else {
+    		display.setWidget(0, 0, place_holder);
     	}
     	
     	if (opening.getVersoLabel() != null) {
@@ -510,11 +525,11 @@ public class PageTurner extends Composite implements HasClickHandlers,
     		display.setWidget(1, 0, new Label());
     	}
     	
-    	if (opening.getRecto() == null) {
-    		display.setWidget(0, 1, place_holder);
-    	} else {
+    	if (opening.getRecto() != null) {
     		asDisplayArea(opening.getRectoIndex(), recto_view, recto_els);
     		display.setWidget(0, 1, recto_panel);
+    	} else {
+    		display.setWidget(0, 1, place_holder);
     	}
     	
     	if (opening.getRectoLabel() != null) {

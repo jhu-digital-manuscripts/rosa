@@ -59,6 +59,8 @@ public class ThumbnailBrowser extends Composite {
     
     /**
      * Set the thumbnails to display.
+     * 
+     * @param thumbs
      */
     public void setThumbnails(List<Thumbnail> thumbs) {
         content.clear();

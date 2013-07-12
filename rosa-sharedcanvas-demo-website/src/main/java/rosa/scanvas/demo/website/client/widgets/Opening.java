@@ -2,6 +2,10 @@ package rosa.scanvas.demo.website.client.widgets;
 
 import rosa.scanvas.demo.website.client.dynimg.MasterImage;
 
+/**
+ * Represents one opening of a manuscript, consisting of a verso
+ * and/or a recto pages.
+ */
 public class Opening {
     private MasterImage verso;
     private String verso_label;

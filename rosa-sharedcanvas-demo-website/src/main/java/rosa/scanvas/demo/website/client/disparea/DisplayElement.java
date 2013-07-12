@@ -67,6 +67,9 @@ public abstract class DisplayElement {
         return visible;
     }
 
+    /**
+     * Sets the visibility of this display element. TRUE is visible.
+     */
     public void setVisible(boolean status) {
         visible = status;
     }

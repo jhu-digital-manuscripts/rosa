@@ -54,7 +54,9 @@ public interface Messages extends Constants {
 	
 	public String optionsHeader();
 	
-	public String move();
+	public String moveUp();
+	
+	public String moveDown();
 	
 	public String contextSeparator();
 	

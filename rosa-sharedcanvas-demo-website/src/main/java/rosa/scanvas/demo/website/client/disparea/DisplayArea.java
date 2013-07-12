@@ -26,7 +26,7 @@ import java.util.Map;
  * 
  */
 public class DisplayArea implements Iterable<DisplayElement> {
-    private final int base_width, base_height;
+    private int base_width, base_height;
     private int vp_width, vp_height;
 
     // DisplayElement id -> DisplayElement
@@ -79,6 +79,20 @@ public class DisplayArea implements Iterable<DisplayElement> {
         
     }
 
+    /**
+     * Set the base width and height of this display area.
+     * 
+     * @param base_width
+     * @param base_height
+     */
+    public void setBaseSize(int base_width, int base_height) {
+    	this.base_width = base_width;
+    	this.base_height = base_height;
+    	
+    	this.vp_base_center_x = base_width / 2;
+    	this.vp_base_center_y = base_height / 2;
+    }
+    
     public int viewportBaseCenterX() {
         return vp_base_center_x;
     }

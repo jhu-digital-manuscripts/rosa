@@ -40,8 +40,6 @@ public class CanvasPanelPresenter extends BasePanelPresenter {
     private Canvas canvas;
     private int width, height;
     
-    
-    
     private List<DisplayElement> els = new ArrayList<DisplayElement>();
 
     public CanvasPanelPresenter(Display display, HandlerManager eventBus, int panel_id) {
@@ -133,11 +131,15 @@ public class CanvasPanelPresenter extends BasePanelPresenter {
         this.canvas = data.getCanvas();
         els.clear();
         
-        this.width = width - 22;
-        this.height = height - 90;
-      
-        DisplayArea area = new DisplayArea(canvas.width(), canvas.height(),
-                this.width, this.height);
+        if (!isResized()) {
+        	this.width = width;
+        	this.height = height;
+        }
+
+        DisplayArea area = display.getDisplayAreaWidget().area();
+        area.setBaseSize(canvas.width(), canvas.height());
+        display.getDisplayAreaWidget().area().resizeViewport(width - 22, 
+        		height - 70 - display.getContextHeight());
         
         if (data.getZoomLevel() != -1) {
         	area.setZoomLevel(area.numZoomLevels() 
@@ -176,8 +178,8 @@ public class CanvasPanelPresenter extends BasePanelPresenter {
         }
         super.resize(width, height);
         
-        this.width = width - 22;
-        this.height = height - 90;
+        this.width = width;
+        this.height = height;
         
         update();
     }
@@ -187,7 +189,8 @@ public class CanvasPanelPresenter extends BasePanelPresenter {
             return;
         }
         
-        display.getDisplayAreaWidget().area().resizeViewport(width, height);
+        display.getDisplayAreaWidget().area().resizeViewport(width - 22, 
+        		height - 70 - display.getContextHeight());
         display.getDisplayAreaWidget().display();
     }
 }

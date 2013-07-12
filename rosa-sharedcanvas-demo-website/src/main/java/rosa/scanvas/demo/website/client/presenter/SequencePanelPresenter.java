@@ -36,6 +36,8 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
+import com.google.gwt.user.client.Window;
+
 public class SequencePanelPresenter extends BasePanelPresenter {
     public interface Display extends BasePanelPresenter.Display {
         PageTurner getPageTurner();
@@ -99,6 +101,7 @@ public class SequencePanelPresenter extends BasePanelPresenter {
                             }
                         } else if (tab == 1) {
                             if (!thumb_browser_setup) {
+                            	scale = 0.4;
                                 setup_thumb_browser();
                             }
                         }
@@ -344,7 +347,6 @@ public class SequencePanelPresenter extends BasePanelPresenter {
     PageTurner.NewOpeningCallback opening_cb = new PageTurner.NewOpeningCallback() {
     	@Override
     	public void onNewOpening(PanelData opening) {
-    		
     		data.setCanvas(opening.getCanvas());
     		data.getAnnotationLists().clear();
     		data.getAnnotationLists().addAll(opening.getAnnotationLists());
@@ -368,6 +370,8 @@ public class SequencePanelPresenter extends BasePanelPresenter {
     private void setup_thumb_browser() {
     	List<Thumbnail> thumbs = construct_thumbs_from_openings();
         display.getThumbnailBrowser().setThumbnails(thumbs);
+        display.getThumbnailBrowser().resize(panel_width, panel_height
+        		- display.getContextHeight());
         bindThumbnails(thumbs);
         thumb_browser_setup = true;
     }
@@ -383,6 +387,15 @@ public class SequencePanelPresenter extends BasePanelPresenter {
     public void display(int width, int height, PanelData data) {
         super.display(width, height, data);
         this.data = data;
+        
+        if (!isResized()) {
+        	this.panel_width = width;
+        	this.panel_height = height;
+        }
+        
+        page_width = (panel_width / 2) - 20;
+        page_height = panel_height - 132 - display.getContextHeight();
+        thumb_size = page_width > page_height ? page_height : page_width;
 
         thumb_browser_setup = false;
         page_turner_setup = false;
@@ -393,6 +406,7 @@ public class SequencePanelPresenter extends BasePanelPresenter {
             setup_thumb_browser();
         }
         
+        display.resize(panel_width, panel_height);
         PanelDisplayedEvent event = new PanelDisplayedEvent(panelId(), data);
         eventBus().fireEvent(event);
     }
@@ -404,14 +418,12 @@ public class SequencePanelPresenter extends BasePanelPresenter {
     	this.panel_height = height;
     	
         page_width = (width / 2) - 20;
-        
-        page_height = height - 152;
+        page_height = height - 132 - display.getContextHeight();
 
         thumb_size = page_width > page_height ? page_height : page_width;
         
         display.getPageTurner().resize(page_width, page_height);
-        
-        display.getThumbnailBrowser().resize(width, height);
+        display.getThumbnailBrowser().resize(width, height - display.getContextHeight());
 
         display.resize(width, height);
     }

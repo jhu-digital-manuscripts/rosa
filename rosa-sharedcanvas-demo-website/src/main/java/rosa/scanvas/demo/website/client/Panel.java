@@ -31,6 +31,8 @@ public class Panel {
         data.setManifest(null);
         data.setSequence(null);
         data.setCanvas(null);
+        
+        presenter.hideContent(width, height);
 
         AsyncCallback<PanelData> cb = new AsyncCallback<PanelData>() {
             @Override

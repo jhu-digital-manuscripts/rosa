@@ -92,6 +92,12 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     	Label addContextLink(String text);
     	
     	void clearContextLabels();
+    	
+    	int getContextHeight();
+    	
+    	void hideContent(int width, int height);
+    	
+    	void showContent();
 
         void resize(int width, int height);
     }
@@ -102,6 +108,7 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     
     private PanelData data;
     
+    private boolean is_resized;
     private boolean anno_list_ready;
 	private boolean meta_list_ready;
 	private boolean text_list_ready;
@@ -189,12 +196,14 @@ public abstract class BasePanelPresenter implements PanelPresenter {
         
         display.getDuplicateButton().addClickHandler(new ClickHandler() {
         	public void onClick(ClickEvent event) {
+        		display.getOptionsPopup().hide();
         		doDuplicatePanel();
         	}
         });
         
         display.getDuplicateLabel().addClickHandler(new ClickHandler() {
         	public void onClick(ClickEvent event) {
+        		display.getOptionsPopup().hide();
         		doDuplicatePanel();
         	}
         });
@@ -270,19 +279,22 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     public void display(int width, int height, PanelData data) {
     	this.data = data;
     	
-    	display.getAnnotationsButton().setEnabled(true);
-    	display.getMetadataButton().setEnabled(true);
-    	display.getTextAnnotationsButton().setEnabled(true);
+    	display.getAnnotationsButton().setEnabled(false);
+    	display.getMetadataButton().setEnabled(false);
+    	display.getTextAnnotationsButton().setEnabled(false);
+    	display.getOptionsButton().setEnabled(true);
     	
     	anno_list_ready = false;
 		meta_list_ready = false;
 		text_list_ready = false;
 		default_image = false;
     	
+		display.showContent();
+		
     	if (data == null) {
-    		display.getAnnotationsButton().setEnabled(false);
+    		/*display.getAnnotationsButton().setEnabled(false);
     		display.getMetadataButton().setEnabled(false);
-    		display.getTextAnnotationsButton().setEnabled(false);
+    		display.getTextAnnotationsButton().setEnabled(false);*/
     		return;
     	}
     	
@@ -463,7 +475,7 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     			}
     		}
     	}
-    	
+
     	text_list_ready = true;
     }
     
@@ -493,6 +505,7 @@ public abstract class BasePanelPresenter implements PanelPresenter {
 		    			event_bus.fireEvent(req);
 	    			}
 	    		});
+	    		display.getMetadataButton().setEnabled(true);
     		} else {
     			display.addContextTitle(collection.label());
     		}
@@ -514,6 +527,7 @@ public abstract class BasePanelPresenter implements PanelPresenter {
 	    				event_bus.fireEvent(req);
 	    			}
 	    		});
+	    		display.getMetadataButton().setEnabled(true);
     		} else {
     			display.addContextTitle(manifest.label());
     		}
@@ -535,6 +549,7 @@ public abstract class BasePanelPresenter implements PanelPresenter {
 	    				event_bus.fireEvent(req);
 	    			}
 	    		});
+	    		display.getMetadataButton().setEnabled(true);
     		} else {
     			display.addContextTitle(seq.label());
     		}
@@ -542,6 +557,8 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     	
     	if (canvas != null) {
     		display.addContextTitle(canvas.label());
+    		display.getAnnotationsButton().setEnabled(true);
+    		display.getTextAnnotationsButton().setEnabled(true);
     	}
     }
     
@@ -582,9 +599,22 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     public Widget asWidget() {
         return display.asWidget();
     }
+    
+    @Override
+    public void hideContent(int width, int height) {
+    	display.hideContent(width, height);
+    }
+    
+    /**
+     * Has the resize method been called?
+     */
+    public boolean isResized() {
+    	return is_resized;
+    }
 
     @Override
     public void resize(int width, int height) {
         display.resize(width, height);
+        is_resized = true;
     }
 }

@@ -27,4 +27,6 @@ public interface PanelPresenter extends IsWidget {
      * @param height
      */
     void resize(int width, int height);
+    
+    void hideContent(int width, int height);
 }

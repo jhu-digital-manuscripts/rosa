@@ -21,6 +21,7 @@ import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -110,7 +111,6 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 	}
 
 
-
 	private final FlowPanel main;
 	private final FlowPanel title_bar;
 	private final FlowPanel context_bar;
@@ -128,10 +128,14 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 	private final PopupPanel meta_popup;
 	private final PopupPanel anno_popup;
 	private final PopupPanel options_popup;
+	private final PopupPanel hide_all;
 
+	private final HTML hide_all_child;
+	
 	private final Label close;
 	private final Label swap_h;
 	private final Label dupl;
+	private final Label text_header;
 	
 	private final PushButton close_button;
 	private final PushButton swap_h_button;
@@ -140,7 +144,7 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 	private final PushButton move_down;
 
 	private final StackLayoutPanel tab_panel;
-
+	
 	public BasePanelView() {
 		main = new FlowPanel();
 		title_bar = new FlowPanel();
@@ -178,10 +182,20 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 		meta_button.addStyleName("MetadataButton");
 		text_button.addStyleName("TextAnnotationsButton");
 		
+		options_button.setEnabled(false);
+		anno_button.setEnabled(false);
+		meta_button.setEnabled(false);
+		text_button.setEnabled(false);
+		
 		text_popup = new MovingPopupPanel(text_button, true, false);
 		meta_popup = new MovingPopupPanel(meta_button, true, false);
 		anno_popup = new MovingPopupPanel(anno_button, true, false);
 		options_popup = new MovingPopupPanel(options_button, true, false);
+		hide_all = new PopupPanel(false, false);
+		
+		hide_all.setStylePrimaryName("HidePanel");
+		hide_all_child = new HTML("<i>Loading...</i>");
+		hide_all.setWidget(hide_all_child);
 
 		text_popup.setStylePrimaryName("PopupPanel");
 		meta_popup.setStylePrimaryName("PopupPanel");
@@ -191,6 +205,8 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 		close = new Label(Messages.INSTANCE.close());
 		swap_h = new Label(Messages.INSTANCE.swap());
 		dupl = new Label(Messages.INSTANCE.duplicate());
+		text_header = new Label(Messages.INSTANCE.textHeader());
+		text_header.addStyleName("TitleHeader");
 		
 		close_button = new PushButton(new Image("icons/close.png"));
 		swap_h_button = new PushButton(new Image("icons/swap lr.png"));
@@ -207,7 +223,7 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 		title_bar.add(context_links);
 
 		initWidget(main);
-
+		
 		setup_options();
 		setup_annotations_list();
 		setup_meta_list();
@@ -292,14 +308,11 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 	private void setup_text_annotations() {
 		FlowPanel main = new FlowPanel();
 
-		Label header = new Label(Messages.INSTANCE.textHeader());
-		header.addStyleName("TitleHeader");
-
-		main.add(header);
+		main.add(text_header);
 		main.add(tab_panel);
 
 		text_popup.setWidget(main);
-
+		
 		text_popup.addAttachHandler(new AttachEvent.Handler() {
 			public void onAttachOrDetach(AttachEvent event) {
 				if (event.isAttached()) {
@@ -309,6 +322,9 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 							text_button.getAbsoluteTop() 
 							+ text_button.getOffsetHeight());
 					text_popup.setVisible(true);
+					
+					tab_panel.setHeight((text_popup.getOffsetHeight()
+							- text_header.getOffsetHeight() - 16) + "px");
 				}
 			}
 		});
@@ -327,13 +343,19 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 		Label header = new Label(Messages.INSTANCE.optionsHeader());
 		header.addStyleName("TitleHeader");
 
-		FlowPanel swap_v = new FlowPanel();
-		Label move = new Label(Messages.INSTANCE.move());
-		move.addStyleName("Text");
+		FlowPanel swap_up = new FlowPanel();
+		Label move = new Label(Messages.INSTANCE.moveUp());
+		move.addStyleName("Swap");
 
-		swap_v.add(move_down);
-		swap_v.add(move);
-		swap_v.add(move_up);
+		swap_up.add(move_up);
+		swap_up.add(move);
+		
+		FlowPanel swap_down = new FlowPanel();
+		Label move_d = new Label(Messages.INSTANCE.moveDown());
+		move_d.addStyleName("Swap");
+		
+		swap_down.add(move_down);
+		swap_down.add(move_d);
 		
 		FlowPanel close_panel = new FlowPanel();
 		close_panel.add(close_button);
@@ -350,13 +372,14 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 		swap_h_panel.add(swap_h);
 		swap_h.addStyleName("Swap");
 
-		Grid options_grid = new Grid(4,1);
+		Grid options_grid = new Grid(5,1);
 
 		options_grid.addStyleName("Options");
 		options_grid.setWidget(0, 0, dupl_panel);
 		options_grid.setWidget(1, 0, swap_h_panel);
-		options_grid.setWidget(2, 0, swap_v);
-		options_grid.setWidget(3, 0, close_panel);
+		options_grid.setWidget(2, 0, swap_up);
+		options_grid.setWidget(3, 0, swap_down);
+		options_grid.setWidget(4, 0, close_panel);
 
 		for (int i = 0; i < options_grid.getRowCount(); i++) {
 			options_grid.getWidget(i, 0).addStyleName("OptionsRow");
@@ -521,10 +544,34 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 	public Widget asWidget() {
 		return this;
 	}
+	
+	@Override
+	public int getContextHeight() {
+		return context_links.getOffsetHeight();
+	}
+	
+	@Override
+	public void hideContent(int width, int height) {
+/*		hide_all.setPopupPosition(main.getAbsoluteLeft(), 
+				main.getAbsoluteTop()<70?70:main.getAbsoluteTop());
+		hide_all.show();
+		hide_all.setWidth(width + "px");
+		hide_all.setHeight(height + "px");*/
+	}
+	
+	@Override
+	public void showContent() {
+/*		hide_all.hide();*/
+	}
 
 	@Override
 	public void resize(int width, int height) {
 		setPixelSize(width, height);
+		
+/*		hide_all.setPopupPosition(main.getAbsoluteLeft(),
+				main.getAbsoluteTop()<70?70:main.getAbsoluteTop());
+		hide_all.setWidth(width + "px");
+		hide_all.setHeight(height + "px");*/
 
 		context_bar.setWidth(width - text_button.getOffsetWidth()
 				- meta_button.getOffsetWidth() - anno_button.getOffsetWidth()
@@ -541,7 +588,7 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 		options_popup.setPopupPosition((right - options_popup.getOffsetWidth()), popup_top);
 
 		width = (int) (width * 0.50);
-		height = (int) (height - options_button.getOffsetHeight() - 15);
+		height = height - options_button.getOffsetHeight() - 15;
 
 		if (text_popup.getWidget() != null) {
 			text_popup.getWidget().setWidth(width + "px");
@@ -559,6 +606,6 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 		}
 
 		tab_panel.setWidth((int) (width * 0.98) + "px");
-		tab_panel.setHeight((int) (height - 20) + "px");
+		tab_panel.setHeight((height - text_header.getOffsetHeight()) + "px");
 	}
 }
