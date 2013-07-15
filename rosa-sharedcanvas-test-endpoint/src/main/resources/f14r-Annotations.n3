@@ -16,15 +16,88 @@
 				ore:describes <${baseUrl}f14rAnnotations> ;
 				a ore:ResourceMap .
 <${baseUrl}f14rAnnotations> sc:forCanvas <${baseUrl}Canv-f14r> ;
-			ore:aggregates <${baseUrl}TxtAnnof14raln1> ,
+			ore:aggregates <${prefix}IllusAnno-f14r> ,
+				<${prefix}ImgAnno-f14r-illus1> ,
+				<${prefix}ImgAnno-f14r> ,
+				<${baseUrl}TxtAnnof14raln1> ,
 				<${baseUrl}TxtAnnof14raln2> ,
+				<${baseUrl}TxtAnnof14raln3> ,
+				<${baseUrl}TxtAnnof14raln4> ,
+				<${baseUrl}TxtAnnof14raln5> ,
+				<${baseUrl}TxtAnnof14raln6> ,
+				<${baseUrl}TxtAnnof14raln7> ,
+				<${baseUrl}TxtAnnof14raln8> ,
+				<${baseUrl}TxtAnnof14raln9> ,
+				<${baseUrl}TxtAnnof14raln10> ,
+				<${baseUrl}TxtAnnof14raln11> ,
+				<${baseUrl}TxtAnnof14raln12> ,
+				<${baseUrl}TxtAnnof14raln13> ,
+				<${baseUrl}TxtAnnof14raln14> ,
+				<${baseUrl}TxtAnnof14raln15> ,
+				<${baseUrl}TxtAnnof14raln16> ,
+				<${baseUrl}TxtAnnof14raln17> ,
+				<${baseUrl}TxtAnnof14raln18> ,
+				<${baseUrl}TxtAnnof14raln19> ,
+				<${baseUrl}TxtAnnof14raln20> ,
+				<${baseUrl}TxtAnnof14raln21> ,
+				<${baseUrl}TxtAnnof14raln22> ,
+				<${baseUrl}TxtAnnof14raln23> ,
+				<${baseUrl}TxtAnnof14raln24> ,
+				<${baseUrl}TxtAnnof14raln25> ,
+				<${baseUrl}TxtAnnof14raln26> ,
+				<${baseUrl}TxtAnnof14raln27> ,
+				<${baseUrl}TxtAnnof14raln28> ,
+				<${baseUrl}TxtAnnof14raln29> ,
+				<${baseUrl}TxtAnnof14raln30> ,
+				<${baseUrl}TxtAnnof14raln31> ,
 				<${baseUrl}TxtAnnof14rbln1> ,
 				<${baseUrl}TxtAnnof14rbln2> ,
-				<${prefix}IllusAnno-f14r> ,
-				<${prefix}ImgAnno-f14r-illus1> ,
-				<${prefix}ImgAnno-f14r> ;
+				<${baseUrl}TxtAnnof14rbln3> ,
+				<${baseUrl}TxtAnnof14rbln4> ,
+				<${baseUrl}TxtAnnof14rbln5> ,
+				<${baseUrl}TxtAnnof14rbln6> ,
+				<${baseUrl}TxtAnnof14rbln7> ,
+				<${baseUrl}TxtAnnof14rbln8> ,
+				<${baseUrl}TxtAnnof14rbln9> ,
+				<${baseUrl}TxtAnnof14rbln10> ,
+				<${baseUrl}TxtAnnof14rbln11> ,
+				<${baseUrl}TxtAnnof14rbln12> ,
+				<${baseUrl}TxtAnnof14rbln13> ,
+				<${baseUrl}TxtAnnof14rbln14> ,
+				<${baseUrl}TxtAnnof14rbln15> ,
+				<${baseUrl}TxtAnnof14rbln16> ,
+				<${baseUrl}TxtAnnof14rbln17> ,
+				<${baseUrl}TxtAnnof14rbln18> ,
+				<${baseUrl}TxtAnnof14rbln19> ,
+				<${baseUrl}TxtAnnof14rbln20> ,
+				<${baseUrl}TxtAnnof14rbln21> ,
+				<${baseUrl}TxtAnnof14rbln22> ,
+				<${baseUrl}TxtAnnof14rbln23> ,
+				<${baseUrl}TxtAnnof14rbln24> ,
+				<${baseUrl}TxtAnnof14rbln25> ,
+				<${baseUrl}TxtAnnof14rbln26> ,
+				<${baseUrl}TxtAnnof14rbln27> ,
+				<${baseUrl}TxtAnnof14rbln28> ,
+				<${baseUrl}TxtAnnof14rbln29> ,
+				<${baseUrl}TxtAnnof14rbln30> ,
+				<${baseUrl}TxtAnnof14rbln31> ,
+				<${baseUrl}TxtAnnof14rbln32> ,
+				<${baseUrl}TxtAnnof14rbln33> ,
+				<${baseUrl}TxtAnnof14rbln34> ,
+				<${baseUrl}TxtAnnof14rbln35> ,
+				<${baseUrl}TxtAnnof14rbln36> ,
+				<${baseUrl}TxtAnnof14rbln37> ,
+				<${baseUrl}TxtAnnof14rbln38> ,
+				<${baseUrl}TxtAnnof14rbln39> ,
+				<${baseUrl}TxtAnnof14rbln40> ,
+				<${baseUrl}TxtAnnof14rbln41> ,
+				<${baseUrl}TxtAnnof14rbln42> ,
+				<${baseUrl}TxtAnnof14rbln43> ,
+				<${baseUrl}TxtAnnof14rbln44> ,
+				<${baseUrl}RightsAnno> ,
+				<${baseUrl}f14r-IllusTextAnno> ;
 				ore:isDescribedBy <${baseUrl}canvas/14r/annotations> ;
-				sc:hasOrder ( <${prefix}IllusAnno-f14r> <${prefix}ImgAnno-f14r> <${prefix}ImgAnno-f14r-illus1> <${baseUrl}TxtAnnof14raln1> <${baseUrl}TxtAnnof14raln2> <${baseUrl}TxtAnnof14rbln1> <${baseUrl}TxtAnnof14rbln2> ) ;
+				sc:hasOrder ( <${prefix}IllusAnno-f14r> <${prefix}ImgAnno-f14r> <${prefix}ImgAnno-f14r-illus1> <${baseUrl}TxtAnnof14raln1> <${baseUrl}TxtAnnof14raln2> <${baseUrl}TxtAnnof14raln3> <${baseUrl}TxtAnnof14raln4> <${baseUrl}TxtAnnof14raln5> <${baseUrl}TxtAnnof14raln6> <${baseUrl}TxtAnnof14raln7> <${baseUrl}TxtAnnof14raln8> <${baseUrl}TxtAnnof14raln9> <${baseUrl}TxtAnnof14raln10> <${baseUrl}TxtAnnof14raln11> <${baseUrl}TxtAnnof14raln12> <${baseUrl}TxtAnnof14raln13> <${baseUrl}TxtAnnof14raln14> <${baseUrl}TxtAnnof14raln15> <${baseUrl}TxtAnnof14raln16> <${baseUrl}TxtAnnof14raln17> <${baseUrl}TxtAnnof14raln18> <${baseUrl}TxtAnnof14raln19> <${baseUrl}TxtAnnof14raln20> <${baseUrl}TxtAnnof14raln21> <${baseUrl}TxtAnnof14raln22> <${baseUrl}TxtAnnof14raln23> <${baseUrl}TxtAnnof14raln24> <${baseUrl}TxtAnnof14raln25> <${baseUrl}TxtAnnof14raln26> <${baseUrl}TxtAnnof14raln27> <${baseUrl}TxtAnnof14raln28> <${baseUrl}TxtAnnof14raln29> <${baseUrl}TxtAnnof14raln30> <${baseUrl}TxtAnnof14raln31> <${baseUrl}TxtAnnof14rbln1> <${baseUrl}TxtAnnof14rbln2> <${baseUrl}TxtAnnof14rbln3> <${baseUrl}TxtAnnof14rbln4> <${baseUrl}TxtAnnof14rbln5> <${baseUrl}TxtAnnof14rbln6> <${baseUrl}TxtAnnof14rbln7> <${baseUrl}TxtAnnof14rbln8> <${baseUrl}TxtAnnof14rbln9> <${baseUrl}TxtAnnof14rbln10> <${baseUrl}TxtAnnof14rbln11> <${baseUrl}TxtAnnof14rbln12> <${baseUrl}TxtAnnof14rbln13> <${baseUrl}TxtAnnof14rbln14> <${baseUrl}TxtAnnof14rbln15> <${baseUrl}TxtAnnof14rbln16> <${baseUrl}TxtAnnof14rbln17> <${baseUrl}TxtAnnof14rbln18> <${baseUrl}TxtAnnof14rbln19> <${baseUrl}TxtAnnof14rbln20> <${baseUrl}TxtAnnof14rbln21> <${baseUrl}TxtAnnof14rbln22> <${baseUrl}TxtAnnof14rbln23> <${baseUrl}TxtAnnof14rbln24> <${baseUrl}TxtAnnof14rbln25> <${baseUrl}TxtAnnof14rbln26> <${baseUrl}TxtAnnof14rbln27> <${baseUrl}TxtAnnof14rbln28> <${baseUrl}TxtAnnof14rbln29> <${baseUrl}TxtAnnof14rbln30> <${baseUrl}TxtAnnof14rbln31> <${baseUrl}TxtAnnof14rbln32> <${baseUrl}TxtAnnof14rbln33> <${baseUrl}TxtAnnof14rbln34> <${baseUrl}TxtAnnof14rbln35> <${baseUrl}TxtAnnof14rbln36> <${baseUrl}TxtAnnof14rbln37> <${baseUrl}TxtAnnof14rbln38> <${baseUrl}TxtAnnof14rbln39> <${baseUrl}TxtAnnof14rbln40> <${baseUrl}TxtAnnof14rbln41> <${baseUrl}TxtAnnof14rbln42> <${baseUrl}TxtAnnof14rbln43> <${baseUrl}TxtAnnof14rbln44> <${baseUrl}RightsAnno> <${baseUrl}f14r-IllusTextAnno> ) ;
 				a sc:AnnotationList, ore:Aggregation .
 				
 <${baseUrl}Canv-f14r>		a sc:Canvas .
@@ -99,9 +172,9 @@
 				dc:language "en" ;
 				cnt:characterEncoding "utf-8" ;
 				cnt:chars """Illustration title: Amors and L’Amans Embrace 
-					Character depicted: L'Amans, Amors 
-					Costume: Houpellande 
-					Landscape: Ground and sky """ .
+Character depicted: L'Amans, Amors 
+Costume: Houpellande 
+Landscape: Ground and sky """ .
 				
 <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.014r.tif/full/300,/0/native.jpg>		a dctypes:Image ;
 				dc:format "image/jpeg" ;
@@ -134,3 +207,1165 @@
 				dc:language "fr" ;
 				cnt:characterEncoding "utf-8" ;
 				cnt:chars "Li felon plain de fausseté" .
+				
+				
+				
+<${baseUrl}TxtAnnof14raln3>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 3" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln3> ;
+				oa:hasBody <${baseUrl}Txtf14raln3> .
+<${baseUrl}SubCanv-f14raln3> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln3> .
+<${baseUrl}SvgSelf14raln3>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='416,776 1458,743 1459,824 421,855'/>" .
+<${baseUrl}Txtf14raln3>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Et me beseras en la bouche," .
+				
+<${baseUrl}TxtAnnof14raln4>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 4" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln4> ;
+				oa:hasBody <${baseUrl}Txtf14raln4> .
+<${baseUrl}SubCanv-f14raln4> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln4> .	
+<${baseUrl}SvgSelf14raln4>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='421,855 1460,824 1462,906 423,934'/>" .
+<${baseUrl}Txtf14raln4>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "A cui nulz homs villains ne touche." .				
+
+<${baseUrl}TxtAnnof14raln5>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 5" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln5> ;
+				oa:hasBody <${baseUrl}Txtf14raln5> .
+<${baseUrl}SubCanv-f14raln5> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln5> .
+<${baseUrl}SvgSelf14raln5>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='423,934 1462,906 1462,987 416,1013'/>" .	
+<${baseUrl}Txtf14raln5>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Je n'i laisse mie touchier " .				
+
+<${baseUrl}TxtAnnof14raln6>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 6" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln6> ;
+				oa:hasBody <${baseUrl}Txtf14raln6> .	
+<${baseUrl}SubCanv-f14raln6> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln6> .
+<${baseUrl}SvgSelf14raln6>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='416,1013 1462,987 1462,1066 414,1089'/>" .	
+<${baseUrl}Txtf14raln6>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Chascun villain, chascun bouchier" .
+				
+<${baseUrl}TxtAnnof14raln7>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 7" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln7> ;
+				oa:hasBody <${baseUrl}Txtf14raln7> .
+<${baseUrl}SubCanv-f14raln7> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln7> .
+<${baseUrl}SvgSelf14raln7>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='414,1089 1462,1066 1464,1148 415,1169'/>" .
+<${baseUrl}Txtf14raln7>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Ains doit estre courtois et frans " .				
+				
+<${baseUrl}TxtAnnof14raln8>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 8" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln8> ;
+				oa:hasBody <${baseUrl}Txtf14raln8> .
+<${baseUrl}SubCanv-f14raln8> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln8> .
+<${baseUrl}SvgSelf14raln8>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='415,1169 1464,1148 1465,1233 417,1254'/>" .	
+<${baseUrl}Txtf14raln8>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Cil de cui tel servise prans." .
+				
+<${baseUrl}TxtAnnof14raln9>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 9" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln9> ;
+				oa:hasBody <${baseUrl}Txtf14raln9> .
+<${baseUrl}SubCanv-f14raln9> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln9> .
+<${baseUrl}SvgSelf14raln9>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='417,1254 1465,1233 1465,1315 419,1334'/>" .
+<${baseUrl}Txtf14raln9>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Sanz faille il y a paine et fais" .				
+				
+<${baseUrl}TxtAnnof14raln10>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 10" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln10> ;
+				oa:hasBody <${baseUrl}Txtf14raln10> .
+<${baseUrl}SubCanv-f14raln10> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln10> .
+<${baseUrl}SvgSelf14raln10>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='419,1334 1465,1315 1465,1390 421,1414'/>" .
+<${baseUrl}Txtf14raln10>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "A moy servir, mais je te fais" .				
+				
+<${baseUrl}TxtAnnof14raln11>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 11" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln11> ;
+				oa:hasBody <${baseUrl}Txtf14raln11> .
+<${baseUrl}SubCanv-f14raln11> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln11> .
+<${baseUrl}SvgSelf14raln11>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='421,1414 1465,1390 1465,1474 424,1498'/>" .
+<${baseUrl}Txtf14raln11>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Honneur moult grant, et si dois estre" .
+				
+<${baseUrl}TxtAnnof14raln12>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 12" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln12> ;
+				oa:hasBody <${baseUrl}Txtf14raln12> .
+<${baseUrl}SubCanv-f14raln12> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln12> .
+<${baseUrl}SvgSelf14raln12>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='424,1498 1465,1474 1466,1561 423,1582'/>" .
+<${baseUrl}Txtf14raln12>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Moult liez quant tu as si bon maistre" .
+				
+<${baseUrl}TxtAnnof14raln13>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 13" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln13> ;
+				oa:hasBody <${baseUrl}Txtf14raln13> .
+<${baseUrl}SubCanv-f14raln13> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln13> .
+<${baseUrl}SvgSelf14raln13>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='423,1582 1466,1561 1467,1640 422,1659'/>" .
+<${baseUrl}Txtf14raln13>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Et seigneur de si grant renom" .
+				
+<${baseUrl}TxtAnnof14raln14>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 14" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln14> ;
+				oa:hasBody <${baseUrl}Txtf14raln14> .
+<${baseUrl}SubCanv-f14raln14> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln14> .
+<${baseUrl}SvgSelf14raln14>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='422,1659 1467,1640 1470,1724 423,1741'/>" .
+<${baseUrl}Txtf14raln14>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Qu'Amours porte le gonfenon" .
+				
+<${baseUrl}TxtAnnof14raln15>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 15" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln15> ;
+				oa:hasBody <${baseUrl}Txtf14raln15> .
+<${baseUrl}SubCanv-f14raln15> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln15> .
+<${baseUrl}SvgSelf14raln15>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='423,1741 1470,1724 1471,1802 424,1820'/>" .
+<${baseUrl}Txtf14raln15>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "De Courtoisie et la baniere," .
+				
+<${baseUrl}TxtAnnof14raln16>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 16" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln16> ;
+				oa:hasBody <${baseUrl}Txtf14raln16> .
+<${baseUrl}SubCanv-f14raln16> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln16> .
+<${baseUrl}SvgSelf14raln16>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='424,1820 1471,1802 1469,1883 428,1901'/>" .
+<${baseUrl}Txtf14raln16>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Et si est de telle maniere," .
+				
+<${baseUrl}TxtAnnof14raln17>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 17" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln17> ;
+				oa:hasBody <${baseUrl}Txtf14raln17> .
+<${baseUrl}SubCanv-f14raln17> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln17> .
+<${baseUrl}SvgSelf14raln17>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='428,1901 1469,1883 1469,1964 432,1986'/>" .
+<${baseUrl}Txtf14raln17>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Si doulz si frans et si gentis" .
+				
+<${baseUrl}TxtAnnof14raln18>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 18" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln18> ;
+				oa:hasBody <${baseUrl}Txtf14raln18> .
+<${baseUrl}SubCanv-f14raln18> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln18> .
+<${baseUrl}SvgSelf14raln18>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='432,1986 1469,1964 1468,2046 432,2064'/>" .
+<${baseUrl}Txtf14raln18>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Car quiconques est ententis" .
+				
+<${baseUrl}TxtAnnof14raln19>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 19" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln19> ;
+				oa:hasBody <${baseUrl}Txtf14raln19> .
+<${baseUrl}SubCanv-f14raln19> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln19> .
+<${baseUrl}SvgSelf14raln19>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='432,2064 1468,2046 1468,2127 428,2141'/>" .
+<${baseUrl}Txtf14raln19>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "A lui servir et honnourer," .
+				
+<${baseUrl}TxtAnnof14raln20>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 20" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln20> ;
+				oa:hasBody <${baseUrl}Txtf14raln20> .
+<${baseUrl}SubCanv-f14raln20> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln20> .
+<${baseUrl}SvgSelf14raln20>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='428,2141 1468,2127 1470,2207 427,2219'/>" .
+<${baseUrl}Txtf14raln20>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Il ne peut en lui demourer" .
+				
+<${baseUrl}TxtAnnof14raln21>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 21" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln21> ;
+				oa:hasBody <${baseUrl}Txtf14raln21> .
+<${baseUrl}SubCanv-f14raln21> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln21> .
+<${baseUrl}SvgSelf14raln21>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='427,2219 1470,2207 1472,2287 424,2301'/>" .
+<${baseUrl}Txtf14raln21>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Villenie ne mesprison " .
+				
+<${baseUrl}TxtAnnof14raln22>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 22" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln22> ;
+				oa:hasBody <${baseUrl}Txtf14raln22> .
+<${baseUrl}SubCanv-f14raln22> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln22> .
+<${baseUrl}SvgSelf14raln22>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='424,2301 1472,2287 1473,2366 424,2381'/>" .
+<${baseUrl}Txtf14raln22>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Ne nulle mauvaise aprison." .
+				
+<${baseUrl}TxtAnnof14raln23>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 23" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln23> ;
+				oa:hasBody <${baseUrl}Txtf14raln23> .
+<${baseUrl}SubCanv-f14raln23> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln23> .
+<${baseUrl}SvgSelf14raln23>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='424,2381 1473,2366 1473,2450 428,2464'/>" .
+<${baseUrl}Txtf14raln23>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "L'Amant" .
+				
+<${baseUrl}TxtAnnof14raln24>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 24" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln24> ;
+				oa:hasBody <${baseUrl}Txtf14raln24> .
+<${baseUrl}SubCanv-f14raln24> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln24> .
+<${baseUrl}SvgSelf14raln24>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='442,3497 1486,3485 1490,3565 678,3575 678,3735 451,3735'/>" .
+<${baseUrl}Txtf14raln24>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Atant devis ses homs mais jointes," .
+				
+<${baseUrl}TxtAnnof14raln25>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 25" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln25> ;
+				oa:hasBody <${baseUrl}Txtf14raln25> .
+<${baseUrl}SubCanv-f14raln25> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln25> .
+<${baseUrl}SvgSelf14raln25>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='678,3575 1490,3565 1492,3644 678,3657'/>" .
+<${baseUrl}Txtf14raln25>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Et sachiez que moult me fis cointes" .
+				
+<${baseUrl}TxtAnnof14raln26>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 26" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln26> ;
+				oa:hasBody <${baseUrl}Txtf14raln26> .
+<${baseUrl}SubCanv-f14raln26> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln26> .
+<${baseUrl}SvgSelf14raln26>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='678,3657 1492,3644 1497,3718 678,3735'/>" .
+<${baseUrl}Txtf14raln26>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Quant sa bouche baisa la moye." .
+				
+<${baseUrl}TxtAnnof14raln27>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 27" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln27> ;
+				oa:hasBody <${baseUrl}Txtf14raln27> .
+<${baseUrl}SubCanv-f14raln27> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln27> .
+<${baseUrl}SvgSelf14raln27>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='451,3735 1497,3718 1499,3801 449,3819'/>" .
+<${baseUrl}Txtf14raln27>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Ce fu dont j'oy la greigneur joye. " .
+				
+<${baseUrl}TxtAnnof14raln28>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 28" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln28> ;
+				oa:hasBody <${baseUrl}Txtf14raln28> .
+<${baseUrl}SubCanv-f14raln28> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln28> .
+<${baseUrl}SvgSelf14raln28>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='449,3819 1499,3801 1500,3882 449,3897'/>" .
+<${baseUrl}Txtf14raln28>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Il m'a requis lores ostages." .
+				
+<${baseUrl}TxtAnnof14raln29>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 29" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln29> ;
+				oa:hasBody <${baseUrl}Txtf14raln29> .
+<${baseUrl}SubCanv-f14raln29> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln29> .
+<${baseUrl}SvgSelf14raln29>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='449,3897 1500,3882 1501,3962 453,3980'/>" .
+<${baseUrl}Txtf14raln29>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Amours 	" .
+				
+<${baseUrl}TxtAnnof14raln30>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 30" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln30> ;
+				oa:hasBody <${baseUrl}Txtf14raln30> .
+<${baseUrl}SubCanv-f14raln30> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln30> .
+<${baseUrl}SvgSelf14raln30>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='453,3980 1501,3962 1503,4042 456,4059'/>" .
+<${baseUrl}Txtf14raln30>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Amis, dist il, j'ay mains hommages" .
+				
+<${baseUrl}TxtAnnof14raln31>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column A, Line 31" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14raln31> ;
+				oa:hasBody <${baseUrl}Txtf14raln31> .
+<${baseUrl}SubCanv-f14raln31> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14raln31> .
+<${baseUrl}SvgSelf14raln31>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='456,4059 1503,4042 1505,4126 455,4139'/>" .
+<${baseUrl}Txtf14raln31>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Et d'uns et d'autres receuz	" .
+				
+				
+				
+				
+<${baseUrl}TxtAnnof14rbln3>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 3" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln3> ;
+				oa:hasBody <${baseUrl}Txtf14rbln3> .
+<${baseUrl}SubCanv-f14rbln3> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln3> .
+<${baseUrl}SvgSelf14rbln3>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1703,739 2752,717 2752,798 1705,821'/>" .
+<${baseUrl}Txtf14rbln3>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "M'ont par maintes fois bareté," .
+				
+<${baseUrl}TxtAnnof14rbln4>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 4" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln4> ;
+				oa:hasBody <${baseUrl}Txtf14rbln4> .
+<${baseUrl}SubCanv-f14rbln4> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln4> .	
+<${baseUrl}SvgSelf14rbln4>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1705,821 2752,798 2752,880 1705,903'/>" .
+<${baseUrl}Txtf14rbln4>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Dont j'ay oye mainte noise. " .				
+
+<${baseUrl}TxtAnnof14rbln5>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 5" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln5> ;
+				oa:hasBody <${baseUrl}Txtf14rbln5> .
+<${baseUrl}SubCanv-f14rbln5> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln5> .
+<${baseUrl}SvgSelf14rbln5>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1705,903 2752,880 2753,964 1705,984'/>" .	
+<${baseUrl}Txtf14rbln5>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Mais ils savront com il m'en poise." .				
+
+<${baseUrl}TxtAnnof14rbln6>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 6" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln6> ;
+				oa:hasBody <${baseUrl}Txtf14rbln6> .	
+<${baseUrl}SubCanv-f14rbln6> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln6> .
+<${baseUrl}SvgSelf14rbln6>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1705,984 2753,964 2754,1042 1705,1062'/>" .	
+<${baseUrl}Txtf14rbln6>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Se j'en puis nul en mon droit prendre," .
+				
+<${baseUrl}TxtAnnof14rbln7>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 7" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln7> ;
+				oa:hasBody <${baseUrl}Txtf14rbln7> .
+<${baseUrl}SubCanv-f14rbln7> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln7> .
+<${baseUrl}SvgSelf14rbln7>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1705,1062 2754,1042 2755,1124 1704,1145'/>" .
+<${baseUrl}Txtf14rbln7>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Je leur vouldray chierement vendre." .				
+				
+<${baseUrl}TxtAnnof14rbln8>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 8" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln8> ;
+				oa:hasBody <${baseUrl}Txtf14rbln8> .
+<${baseUrl}SubCanv-f14rbln8> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln8> .
+<${baseUrl}SvgSelf14rbln8>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1704,1145 2755,1124 2756,1209 1705,1229'/>" .	
+<${baseUrl}Txtf14rbln8>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Or vueil je, pour ce que je t'ains," .
+				
+<${baseUrl}TxtAnnof14rbln9>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 9" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln9> ;
+				oa:hasBody <${baseUrl}Txtf14rbln9> .
+<${baseUrl}SubCanv-f14rbln9> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln9> .
+<${baseUrl}SvgSelf14rbln9>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1705,1229 2756,1209 2757,1293 1705,1310'/>" .
+<${baseUrl}Txtf14rbln9>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Estre de toy si bien certains" .				
+				
+<${baseUrl}TxtAnnof14rbln10>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 10" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln10> ;
+				oa:hasBody <${baseUrl}Txtf14rbln10> .
+<${baseUrl}SubCanv-f14rbln10> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln10> .
+<${baseUrl}SvgSelf14rbln10>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1705,1310 2757,1293 2758,1371 1704,1390'/>" .
+<${baseUrl}Txtf14rbln10>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Et vueil si a moy lier" .				
+				
+<${baseUrl}TxtAnnof14rbln11>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 11" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln11> ;
+				oa:hasBody <${baseUrl}Txtf14rbln11> .
+<${baseUrl}SubCanv-f14rbln11> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln11> .
+<${baseUrl}SvgSelf14rbln11>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1704,1390 2758,1371 2758,1460 1705,1474'/>" .
+<${baseUrl}Txtf14rbln11>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Que tu ne me puisse nier" .
+				
+<${baseUrl}TxtAnnof14rbln12>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 12" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln12> ;
+				oa:hasBody <${baseUrl}Txtf14rbln12> .
+<${baseUrl}SubCanv-f14rbln12> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln12> .
+<${baseUrl}SvgSelf14rbln12>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1705,1474 2758,1460 2758,1545 1704,1559'/>" .
+<${baseUrl}Txtf14rbln12>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Ne promesse ne couvenant," .
+				
+<${baseUrl}TxtAnnof14rbln13>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 13" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln13> ;
+				oa:hasBody <${baseUrl}Txtf14rbln13> .
+<${baseUrl}SubCanv-f14rbln13> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln13> .
+<${baseUrl}SvgSelf14rbln13>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1704,1559 2758,1545 2759,1621 1704,1637'/>" .
+<${baseUrl}Txtf14rbln13>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Ne faire nul desavenant." .
+				
+<${baseUrl}TxtAnnof14rbln14>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 14" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln14> ;
+				oa:hasBody <${baseUrl}Txtf14rbln14> .
+<${baseUrl}SubCanv-f14rbln14> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln14> .
+<${baseUrl}SvgSelf14rbln14>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1704,1637 2759,1621 2759,1703 1704,1721'/>" .
+<${baseUrl}Txtf14rbln14>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Pechié seroit se tu trichoies," .
+				
+<${baseUrl}TxtAnnof14rbln15>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 15" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln15> ;
+				oa:hasBody <${baseUrl}Txtf14rbln15> .
+<${baseUrl}SubCanv-f14rbln15> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln15> .
+<${baseUrl}SvgSelf14rbln15>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1704,1721 2759,1703 2761,1783 1706,1800'/>" .
+<${baseUrl}Txtf14rbln15>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Qu'il m'est avis que preudom soyes." .
+				
+<${baseUrl}TxtAnnof14rbln16>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 16" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln16> ;
+				oa:hasBody <${baseUrl}Txtf14rbln16> .
+<${baseUrl}SubCanv-f14rbln16> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln16> .
+<${baseUrl}SvgSelf14rbln16>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1706,1800 2761,1783 2762,1865 1703,1881'/>" .
+<${baseUrl}Txtf14rbln16>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "L'Amant" .
+				
+<${baseUrl}TxtAnnof14rbln17>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 17" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln17> ;
+				oa:hasBody <${baseUrl}Txtf14rbln17> .
+<${baseUrl}SubCanv-f14rbln17> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln17> .
+<${baseUrl}SvgSelf14rbln17>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1703,1881 2762,1865 2763,1949 1894,1957 1894,2040 1703,2040'/>" .
+<${baseUrl}Txtf14rbln17>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Sire, diz je, or m'entendez." .
+				
+<${baseUrl}TxtAnnof14rbln18>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 18" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln18> ;
+				oa:hasBody <${baseUrl}Txtf14rbln18> .
+<${baseUrl}SubCanv-f14rbln18> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln18> .
+<${baseUrl}SvgSelf14rbln18>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1894,1957 2763,1949 2764,2028 1894,2040'/>" .
+<${baseUrl}Txtf14rbln18>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Ne scay pour quoy vous demandez" .
+				
+<${baseUrl}TxtAnnof14rbln19>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 19" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln19> ;
+				oa:hasBody <${baseUrl}Txtf14rbln19> .
+<${baseUrl}SubCanv-f14rbln19> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln19> .
+<${baseUrl}SvgSelf14rbln19>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1703,2040 2764,2028 2765,2109 1701,2125'/>" .
+<${baseUrl}Txtf14rbln19>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "De moy pleges ne seurté." .
+				
+<${baseUrl}TxtAnnof14rbln20>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 20" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln20> ;
+				oa:hasBody <${baseUrl}Txtf14rbln20> .
+<${baseUrl}SubCanv-f14rbln20> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln20> .
+<${baseUrl}SvgSelf14rbln20>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1701,2125 2765,2109 2765,2188 1702,2205'/>" .
+<${baseUrl}Txtf14rbln20>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Vous savez bien de verité " .
+				
+<${baseUrl}TxtAnnof14rbln21>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 21" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln21> ;
+				oa:hasBody <${baseUrl}Txtf14rbln21> .
+<${baseUrl}SubCanv-f14rbln21> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln21> .
+<${baseUrl}SvgSelf14rbln21>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1702,2205 2765,2188 2763,2267 1705,2283'/>" .
+<${baseUrl}Txtf14rbln21>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Que mon cuer m'avez si toloit" .
+				
+<${baseUrl}TxtAnnof14rbln22>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 22" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln22> ;
+				oa:hasBody <${baseUrl}Txtf14rbln22> .
+<${baseUrl}SubCanv-f14rbln22> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln22> .
+<${baseUrl}SvgSelf14rbln22>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1705,2283 2763,2267 2764,2347 1703,2364'/>" .
+<${baseUrl}Txtf14rbln22>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Et si surpris que, s'il vouloit," .
+				
+<${baseUrl}TxtAnnof14rbln23>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 23" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln23> ;
+				oa:hasBody <${baseUrl}Txtf14rbln23> .
+<${baseUrl}SubCanv-f14rbln23> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln23> .
+<${baseUrl}SvgSelf14rbln23>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1703,2364 2764,2347 2764,2429 1700,2442'/>" .
+<${baseUrl}Txtf14rbln23>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Ne puet il rien faire pour moy," .
+				
+<${baseUrl}TxtAnnof14rbln24>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 24" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln24> ;
+				oa:hasBody <${baseUrl}Txtf14rbln24> .
+<${baseUrl}SubCanv-f14rbln24> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln24> .
+<${baseUrl}SvgSelf14rbln24>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1700,2442 2764,2429 2765,2509 1700,2521'/>" .
+<${baseUrl}Txtf14rbln24>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Se ce n'estoit par vostre ottroy." .
+				
+<${baseUrl}TxtAnnof14rbln25>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 25" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln25> ;
+				oa:hasBody <${baseUrl}Txtf14rbln25> .
+<${baseUrl}SubCanv-f14rbln25> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln25> .
+<${baseUrl}SvgSelf14rbln25>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1700,2521 2765,2509 2765,2595 1700,2606'/>" .
+<${baseUrl}Txtf14rbln25>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Li cuers est vostre, non pas miens," .
+				
+<${baseUrl}TxtAnnof14rbln26>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 26" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln26> ;
+				oa:hasBody <${baseUrl}Txtf14rbln26> .
+<${baseUrl}SubCanv-f14rbln26> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln26> .
+<${baseUrl}SvgSelf14rbln26>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1700,2606 2765,2595 2766,2672 1700,2686'/>" .
+<${baseUrl}Txtf14rbln26>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Car il convient soit maulx ou biens," .
+				
+<${baseUrl}TxtAnnof14rbln27>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 27" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln27> ;
+				oa:hasBody <${baseUrl}Txtf14rbln27> .
+<${baseUrl}SubCanv-f14rbln27> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln27> .
+<${baseUrl}SvgSelf14rbln27>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1700,2686 2766,2672 2767,2751 1700,2764'/>" .
+<${baseUrl}Txtf14rbln27>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Que je face vostre plaisir," .
+				
+<${baseUrl}TxtAnnof14rbln28>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 28" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln28> ;
+				oa:hasBody <${baseUrl}Txtf14rbln28> .
+<${baseUrl}SubCanv-f14rbln28> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln28> .
+<${baseUrl}SvgSelf14rbln28>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1700,2764 2767,2751 2769,2831 1701,2846'/>" .
+<${baseUrl}Txtf14rbln28>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Nulz ne vous en puet dessaisir." .
+				
+<${baseUrl}TxtAnnof14rbln29>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 29" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln29> ;
+				oa:hasBody <${baseUrl}Txtf14rbln29> .
+<${baseUrl}SubCanv-f14rbln29> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln29> .
+<${baseUrl}SvgSelf14rbln29>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1701,2846 2769,2831 2770,2910 1700,2925'/>" .
+<${baseUrl}Txtf14rbln29>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Tel garnison y avez mise" .
+				
+<${baseUrl}TxtAnnof14rbln30>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 30" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln30> ;
+				oa:hasBody <${baseUrl}Txtf14rbln30> .
+<${baseUrl}SubCanv-f14rbln30> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln30> .
+<${baseUrl}SvgSelf14rbln30>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1700,2925 2770,2910 2769,2994 1699,3007'/>" .
+<${baseUrl}Txtf14rbln30>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Qui moult le guerroye et justice" .
+				
+<${baseUrl}TxtAnnof14rbln31>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 31" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln31> ;
+				oa:hasBody <${baseUrl}Txtf14rbln31> .
+<${baseUrl}SubCanv-f14rbln31> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln31> .
+<${baseUrl}SvgSelf14rbln31>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1699,3007 2769,2994 2771,3073 1701,3087'/>" .
+<${baseUrl}Txtf14rbln31>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Et non pour quant se rien doubtez," .
+				
+<${baseUrl}TxtAnnof14rbln32>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 32" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln32> ;
+				oa:hasBody <${baseUrl}Txtf14rbln32> .
+<${baseUrl}SubCanv-f14rbln32> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln32> .
+<${baseUrl}SvgSelf14rbln32>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1701,3087 2771,3073 2771,3152 1704,3164'/>" .
+<${baseUrl}Txtf14rbln32>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Faites y clef, si l'aportez," .
+				
+<${baseUrl}TxtAnnof14rbln33>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 33" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln33> ;
+				oa:hasBody <${baseUrl}Txtf14rbln33> .
+<${baseUrl}SubCanv-f14rbln33> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln33> .
+<${baseUrl}SvgSelf14rbln33>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1704,3164 2771,3152 2774,3234 1706,3242'/>" .
+<${baseUrl}Txtf14rbln33>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Et la clef clef soit en lieu d'ostages." .
+				
+<${baseUrl}TxtAnnof14rbln34>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 34" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln34> ;
+				oa:hasBody <${baseUrl}Txtf14rbln34> .
+<${baseUrl}SubCanv-f14rbln34> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln34> .
+<${baseUrl}SvgSelf14rbln34>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1706,3242 2774,3234 2775,3313 1705,3321'/>" .
+<${baseUrl}Txtf14rbln34>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Amours" .
+				
+<${baseUrl}TxtAnnof14rbln35>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 35" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln35> ;
+				oa:hasBody <${baseUrl}Txtf14rbln35> .
+<${baseUrl}SubCanv-f14rbln35> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln35> .
+<${baseUrl}SvgSelf14rbln35>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1705,3321 2775,3313 2779,3390 1705,3399'/>" .
+<${baseUrl}Txtf14rbln35>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Par mon chief, tu diz comme sages," .
+				
+<${baseUrl}TxtAnnof14rbln36>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 36" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln36> ;
+				oa:hasBody <${baseUrl}Txtf14rbln36> .
+<${baseUrl}SubCanv-f14rbln36> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln36> .
+<${baseUrl}SvgSelf14rbln36>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1705,3399 2779,3390 2781,3465 1706,3477'/>" .
+<${baseUrl}Txtf14rbln36>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Respont Amours, je m'y accors." .
+				
+<${baseUrl}TxtAnnof14rbln37>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 37" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln37> ;
+				oa:hasBody <${baseUrl}Txtf14rbln37> .
+<${baseUrl}SubCanv-f14rbln37> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln37> .
+<${baseUrl}SvgSelf14rbln37>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1706,3477 2781,3465 2783,3552 1710,3562'/>" .
+<${baseUrl}Txtf14rbln37>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Il est assez sire du corps " .
+				
+<${baseUrl}TxtAnnof14rbln38>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 38" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln38> ;
+				oa:hasBody <${baseUrl}Txtf14rbln38> .
+<${baseUrl}SubCanv-f14rbln38> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln38> .
+<${baseUrl}SvgSelf14rbln38>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1710,3562 2783,3552 2784,3628 1713,3640'/>" .
+<${baseUrl}Txtf14rbln38>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Qui a le cuer en sa commande." .
+				
+<${baseUrl}TxtAnnof14rbln39>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 39" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln39> ;
+				oa:hasBody <${baseUrl}Txtf14rbln39> .
+<${baseUrl}SubCanv-f14rbln39> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln39> .
+<${baseUrl}SvgSelf14rbln39>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1713,3640 2784,3628 2785,3705 1715,3716'/>" .
+<${baseUrl}Txtf14rbln39>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Moult est folz qui plus en demande." .
+				
+<${baseUrl}TxtAnnof14rbln40>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 40" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln40> ;
+				oa:hasBody <${baseUrl}Txtf14rbln40> .
+<${baseUrl}SubCanv-f14rbln40> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln40> .
+<${baseUrl}SvgSelf14rbln40>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1715,3716 2785,3705 2787,3787 1716,3795'/>" .
+<${baseUrl}Txtf14rbln40>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "L'Amant" .
+				
+<${baseUrl}TxtAnnof14rbln41>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 41" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln41> ;
+				oa:hasBody <${baseUrl}Txtf14rbln41> .
+<${baseUrl}SubCanv-f14rbln41> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln41> .
+<${baseUrl}SvgSelf14rbln41>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1716,3795 2787,3787 2788,3868 1717,3877'/>" .
+<${baseUrl}Txtf14rbln41>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Lors a de s'aumosniere traitte" .
+				
+<${baseUrl}TxtAnnof14rbln42>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 42" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln42> ;
+				oa:hasBody <${baseUrl}Txtf14rbln42> .
+<${baseUrl}SubCanv-f14rbln42> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln42> .
+<${baseUrl}SvgSelf14rbln42>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1717,3877 2788,3868 2789,3953 1718,3960'/>" .
+<${baseUrl}Txtf14rbln42>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Une petite clef bien faitte," .
+				
+<${baseUrl}TxtAnnof14rbln43>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 43" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln43> ;
+				oa:hasBody <${baseUrl}Txtf14rbln43> .
+<${baseUrl}SubCanv-f14rbln43> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln43> .
+<${baseUrl}SvgSelf14rbln43>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1718,3960 2789,3953 2790,4030 1719,4039'/>" .
+<${baseUrl}Txtf14rbln43>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Qui fu de fin or esmeré." .
+				
+<${baseUrl}TxtAnnof14rbln44>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Transcription: Column B, Line 44" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14rbln44> ;
+				oa:hasBody <${baseUrl}Txtf14rbln44> .
+<${baseUrl}SubCanv-f14rbln44> a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14rbln44> .
+<${baseUrl}SvgSelf14rbln44>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='1719,4039 2790,4030 2791,4120 1719,4123'/>" .
+<${baseUrl}Txtf14rbln44>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/plain" ;
+				dc:language "fr" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "Amours" .
+				
+<${baseUrl}RightsAnno>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Rights" ;
+				oa:hasTarget <${baseUrl}SubCanv-f14r-lowerright> ;
+				oa:hasBody <${baseUrl}RightsTxt> .
+<${baseUrl}SubCanv-f14r-lowerright>	a oa:SpecificResource ;
+				oa:hasSource <${baseUrl}Canv-f14r> ;
+				oa:hasSelector <${baseUrl}SvgSelf14r-rights> .
+<${baseUrl}SvgSelf14r-rights>	a oa:SvgSelector, cnt:ContentAsText ;
+				cnt:chars "<Svg:poly points='3283,5210 3600,5210 3600,5306 3283,5306'/>" .
+<${baseUrl}RightsTxt>	a dctypes:Text, cnt:ContentAsText ;
+				dc:format "text/html" ;
+				cnt:characterEncoding "utf-8" ;
+				cnt:chars "<p> Courtesy of the J. Paul Getty Museum, Los Angeles. </p> <p> For permission to reproduce images, please contact <a href=\"http://www.getty.edu/legal/image_request.html\">Rights and Reproductions</a>, Registrar's Office, The J.Paul Getty Museum. </p>" .
+				
+<${baseUrl}f14r-IllusTextAnno>	a oa:Annotation ;
+				oa:motivatedBy oa:describing ;
+				rdfs:label "Illustration description" ;
+				oa:hasTarget <${prefix}SubCanv-f14r-illus1> ;
+				oa:hasBody <${prefix}IllusText-f14r> .
