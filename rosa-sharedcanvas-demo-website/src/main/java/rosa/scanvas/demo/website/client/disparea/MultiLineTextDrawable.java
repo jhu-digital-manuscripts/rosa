@@ -7,9 +7,11 @@ import com.google.gwt.canvas.dom.client.Context2d;
  */
 public class MultiLineTextDrawable implements DisplayAreaDrawable {
     private final MultiLineTextDisplayElement el;
+    private final int step;
 
     public MultiLineTextDrawable(MultiLineTextDisplayElement el) {
     	this.el = el;
+    	step = 65;
     }
 
     @Override
@@ -44,13 +46,47 @@ public class MultiLineTextDrawable implements DisplayAreaDrawable {
     	context.setFillStyle("black");
     	context.setFont("bold 60px sans-serif");
     	context.setTextBaseline("top");
-    	context.fillText(el.label() + "...", el.baseLeft(), el.baseTop(), el.baseWidth());
     	
+    	if (el.text().contains("<") && el.text().contains(">")) {
+    		context.fillText(el.label() + "...", el.baseLeft(), el.baseTop(), el.baseWidth());
+    		el.neverShowPopup(false);
+    	} else {
+    		String[] words = el.text().split(" ");
+    		String line = "";
+    		
+    		int y = el.baseTop();
+    		
+    		for (int i = 0; i < words.length; i++) {
+    			/*if (y + step > el.baseTop() + el.baseHeight()) {
+    				context.restore();
+    				el.neverShowPopup(false);
+    				cb.onDrawn();
+    				return;
+    			}*/
+    			
+    			String test_line = line + words[i] + " ";
+    			
+    			if (context.measureText(test_line).getWidth() > el.baseWidth() && i > 0
+    					|| words[i].contains("\n")) {
+    				context.fillText(line, el.baseLeft(), y);
+    				y += step;
+    				line = words[i] + " ";
+    				
+    				if (y + step > el.baseTop() + el.baseHeight()) {
+        				context.restore();
+        				el.neverShowPopup(false);
+        				cb.onDrawn();
+        				return;
+        			}
+    			} else {
+    				line = test_line;
+    			}
+    		}
+    		context.fillText(line, el.baseLeft(), y);
+    		el.neverShowPopup(true);
+    	}
     	context.restore();
     	
     	cb.onDrawn();
     }
-    
-    
-
 }

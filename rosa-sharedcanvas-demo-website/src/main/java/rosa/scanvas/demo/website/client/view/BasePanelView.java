@@ -130,7 +130,7 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 	private final PopupPanel options_popup;
 	private final PopupPanel hide_all;
 
-	private final HTML hide_all_child;
+	//private final HTML hide_all_child;
 	
 	private final Label close;
 	private final Label swap_h;
@@ -193,10 +193,6 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 		options_popup = new MovingPopupPanel(options_button, true, false);
 		hide_all = new PopupPanel(false, false);
 		
-		hide_all.setStylePrimaryName("HidePanel");
-		hide_all_child = new HTML("<i>Loading...</i>");
-		hide_all.setWidget(hide_all_child);
-
 		text_popup.setStylePrimaryName("PopupPanel");
 		meta_popup.setStylePrimaryName("PopupPanel");
 		anno_popup.setStylePrimaryName("PopupPanel");
@@ -228,6 +224,11 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 		setup_annotations_list();
 		setup_meta_list();
 		setup_text_annotations();
+		
+		hide_all.setStylePrimaryName("HidePanel");
+		//hide_all_child = new HTML("<i>Loading...</i>");
+		Image hide_all_child = new Image("images/loading.gif");
+		hide_all.setWidget(hide_all_child);
 
 		this.addAttachHandler(new AttachEvent.Handler() {
 			public void onAttachOrDetach(AttachEvent event) {
@@ -552,26 +553,24 @@ public class BasePanelView extends Composite implements BasePanelPresenter.Displ
 	
 	@Override
 	public void hideContent(int width, int height) {
-/*		hide_all.setPopupPosition(main.getAbsoluteLeft(), 
-				main.getAbsoluteTop()<70?70:main.getAbsoluteTop());
+		hide_all.setPopupPosition(this.getAbsoluteLeft(), this.getAbsoluteTop());
 		hide_all.show();
 		hide_all.setWidth(width + "px");
-		hide_all.setHeight(height + "px");*/
+		hide_all.setHeight(height + "px");
 	}
 	
 	@Override
 	public void showContent() {
-/*		hide_all.hide();*/
+		hide_all.hide();
 	}
 
 	@Override
 	public void resize(int width, int height) {
 		setPixelSize(width, height);
 		
-/*		hide_all.setPopupPosition(main.getAbsoluteLeft(),
-				main.getAbsoluteTop()<70?70:main.getAbsoluteTop());
+		hide_all.setPopupPosition(this.getAbsoluteLeft(), this.getAbsoluteTop());
 		hide_all.setWidth(width + "px");
-		hide_all.setHeight(height + "px");*/
+		hide_all.setHeight(height + "px");
 
 		context_bar.setWidth(width - text_button.getOffsetWidth()
 				- meta_button.getOffsetWidth() - anno_button.getOffsetWidth()

@@ -15,6 +15,7 @@ public class MultiLineTextDisplayElement extends DisplayElement {
     private final ImageData image_data;
     
     private PopupPanel popup;
+    private boolean never_show;
     
     // Green
     private final CssColor color_fill = CssColor.make(0, 255, 0);
@@ -29,6 +30,8 @@ public class MultiLineTextDisplayElement extends DisplayElement {
         popup = new PopupPanel(true, false);
         HTML content = new HTML(text);
     	
+        popup.setStylePrimaryName("PopupPanel");
+        popup.addStyleName("AnnotationPopup");
     	popup.setWidget(content);
         
      // Create a canvas containing the filled polygon with no border
@@ -56,6 +59,9 @@ public class MultiLineTextDisplayElement extends DisplayElement {
         return text;
     }
     
+    /**
+     * Returns a label that will be displayed on the canvas.
+     */
     public String label() {
     	return label;
     }
@@ -69,6 +75,10 @@ public class MultiLineTextDisplayElement extends DisplayElement {
     
     @Override
     public boolean doElementAction(final int x, final int y) {
+    	if (never_show) {
+    		return false;
+    	}
+    	
     	popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
     		int left = x;
     		int top = y;
@@ -87,6 +97,16 @@ public class MultiLineTextDisplayElement extends DisplayElement {
     	});
     	
     	return true;
+    }
+    
+    /**
+     * Sets whether or not the annotation popup is able to be shown.
+     * If set to TRUE, the popup will not be displayed.
+     * 
+     * @param status
+     */
+    public void neverShowPopup(boolean status) {
+    	never_show = status;
     }
     
     /**

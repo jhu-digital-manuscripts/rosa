@@ -9,6 +9,8 @@ import rosa.scanvas.model.client.AnnotationSelector;
 import rosa.scanvas.model.client.AnnotationTarget;
 import rosa.scanvas.model.client.Canvas;
 
+//import com.google.gwt.canvas.client.Canvas;
+import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.user.client.Window;
 
 /**
@@ -40,9 +42,10 @@ public class AnnotationUtil {
                 String sel_content = selector.textContent();
                 int[][] coords = findCoordinates(sel_content);
                 int[] bounds = findBounds(coords);
-// TODO this needs to be more general, example: if a single line of text is too long to fit
-                if (text_content.contains("<p>") || text_content.contains("\n")
-                		|| text_content.contains("br>")) {
+
+                if (is_text_too_long(text_content, bounds[2]) ||
+                		(text_content.contains("<") && text_content.contains(">"))) {
+                	
                 	MultiLineTextDisplayElement el = new MultiLineTextDisplayElement(
                 			ann.uri(), bounds[0], bounds[1], bounds[2], bounds[3],
                 			text_content, ann.label(), coords);
@@ -64,6 +67,25 @@ public class AnnotationUtil {
         return null;
     }
 
+    /**
+     * Is the given text too long to fit inside the specified width?
+     * Returns TRUE if the rendered text will be too long for the
+     * specified width.
+     * 
+     * @param text
+     * @param width
+     */
+    private static boolean is_text_too_long(String text, int width) {
+    	com.google.gwt.canvas.client.Canvas canvas = 
+    			com.google.gwt.canvas.client.Canvas.createIfSupported();
+    	canvas.setCoordinateSpaceWidth(width);
+    	
+    	Context2d context = canvas.getContext2d();
+    	context.setFont("bold 48px sans-serif");
+
+    	return width < (int) (context.measureText(text).getWidth());
+    }
+    
     /**
      * Creates DisplayElements for annotations that have images as the 
      * annotation body.

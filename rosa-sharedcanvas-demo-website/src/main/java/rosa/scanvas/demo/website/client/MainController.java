@@ -22,6 +22,8 @@ import rosa.scanvas.demo.website.client.view.CollectionView;
 import rosa.scanvas.demo.website.client.view.HomeView;
 import rosa.scanvas.demo.website.client.view.ManifestView;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -39,8 +41,6 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
-
-import com.google.gwt.user.client.Window;
 
 public class MainController implements ValueChangeHandler<String>, IsWidget {
 	private static final int SIDEBAR_WIDTH = 275;
@@ -513,13 +513,18 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
      * Called when the application starts running
      */
     public void go() {
-        if (History.getToken().isEmpty()) {
-            PanelRequestEvent event = new PanelRequestEvent(
-                    PanelRequestEvent.PanelAction.ADD, new PanelState());
-            event_bus.fireEvent(event);
-        } else {
-            History.fireCurrentHistoryState();
-        }
+    	Scheduler.get().scheduleDeferred(new ScheduledCommand() {    
+    		@Override
+    		public void execute() {
+    			if (History.getToken().isEmpty()) {
+    				PanelRequestEvent event = new PanelRequestEvent(
+    						PanelRequestEvent.PanelAction.ADD, new PanelState());
+    				event_bus.fireEvent(event);
+    			} else {
+    				History.fireCurrentHistoryState();
+    			}
+    		}
+    	});
     }
 
     @Override

@@ -292,9 +292,6 @@ public abstract class BasePanelPresenter implements PanelPresenter {
 		display.showContent();
 		
     	if (data == null) {
-    		/*display.getAnnotationsButton().setEnabled(false);
-    		display.getMetadataButton().setEnabled(false);
-    		display.getTextAnnotationsButton().setEnabled(false);*/
     		return;
     	}
     	

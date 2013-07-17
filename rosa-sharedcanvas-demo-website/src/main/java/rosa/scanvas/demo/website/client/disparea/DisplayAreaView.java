@@ -130,6 +130,7 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 					redraw();
 				} else {
 					boolean el_clicked = false;
+					
 					// transform click broswer coordinates into canvas coordinates
 					click_x += area.viewportLeft();
 					click_y += area.viewportTop();
@@ -139,8 +140,8 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 						int el_y = (int) (click_y / area.zoom());
 	
 						if (el.contains(el_x, el_y) && el.isVisible()) {
-							el_clicked = el.doElementAction(event.getRelativeX(viewport.getElement()),
-									event.getRelativeY(viewport.getElement()));
+							el_clicked = el.doElementAction(event.getClientX(),
+									event.getClientY());
 						}
 					}
 					
@@ -404,8 +405,8 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 						int el_y = (int) (touch_y / area.zoom());
 	
 						if (el.contains(el_x, el_y) && el.isVisible()) {
-							el_clicked = el.doElementAction(touch.getRelativeX(viewport.getElement()),
-									touch.getRelativeY(viewport.getElement()));
+							el_clicked = el.doElementAction(touch.getClientX(),
+									touch.getClientY());
 						}
 					}
 					
