@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -21,6 +22,10 @@ import de.dfki.km.json.jsonld.impl.JenaJSONLDSerializer;
 
 public class M3Servlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
+
+    private static final int MAX_CACHE_SIZE = 100;
+    // Request URI -> output
+    private static final Map<String, byte[]> cache = new ConcurrentHashMap<String, byte[]>();
 
     private RoseCollection col;
 
@@ -64,8 +69,10 @@ public class M3Servlet extends HttpServlet {
         }
     }
 
-    private void write(Model model, ResultFormat fmt, OutputStream os)
-            throws IOException {
+    // TODO Eventually cache all output methods
+
+    private void write(Model model, ResultFormat fmt, OutputStream os,
+            String cache_key) throws IOException {
         if (fmt == ResultFormat.XML) {
             model.getWriter("RDF/XML-ABBREV").write(model, os, null);
         } else if (fmt == ResultFormat.JAVASCRIPT || fmt == ResultFormat.JSON) {
@@ -97,12 +104,20 @@ public class M3Servlet extends HttpServlet {
                 opts.optimize = true;
                 opts.graph = true;
                 opts.useRdfType = true;
-                
+
                 // Must compact to turn into a graph and use context
                 json = JSONLD.compact(json, context, opts);
-                
-                String output = JSONUtils.toPrettyString(json);
-                os.write(output.getBytes("UTF-8"));
+
+                // JSONUtils.toPrettyString(json);
+
+                byte[] output = JSONUtils.toString(json).getBytes("UTF-8");
+                os.write(output);
+
+                if (cache.size() > MAX_CACHE_SIZE) {
+                    cache.clear();
+                }
+
+                cache.put(cache_key, output);
             } catch (JSONLDProcessingError e) {
                 throw new RuntimeException("JSON LD error", e);
             }
@@ -139,25 +154,12 @@ public class M3Servlet extends HttpServlet {
         }
     }
 
-    public void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
-        ResultFormat fmt = ResultFormat.find(req);
-
-        if (fmt == null) {
-            resp.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE,
-                    "Unknown response format requested");
-            return;
-        }
-
-        resp.setContentType(fmt.mimeType());
-        resp.setCharacterEncoding("UTF-8");
-
+    private Model createModel(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
         String bookid = getResource(req);
         String type = null;
 
         ResourceMap resmap = new ResourceMap();
-        OutputStream os = resp.getOutputStream();
         Model model;
 
         String url = req.getRequestURL().toString();
@@ -181,7 +183,7 @@ public class M3Servlet extends HttpServlet {
             if (book == null) {
                 resp.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE,
                         "Unknown book requested: " + bookid);
-                return;
+                return null;
             } else {
                 if (type == null) {
                     model = resmap.modelManifest(url, book);
@@ -204,7 +206,7 @@ public class M3Servlet extends HttpServlet {
                     if (start >= end) {
                         resp.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE,
                                 "Unknown resource map requested: " + type);
-                        return;
+                        return null;
                     }
 
                     String image_frag = type.substring(start, end);
@@ -213,10 +215,31 @@ public class M3Servlet extends HttpServlet {
                 } else {
                     resp.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE,
                             "Unknown resource map requested: " + type);
-                    return;
+                    return null;
                 }
             }
         }
+
+        return model;
+    }
+
+    public void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        ResultFormat fmt = ResultFormat.find(req);
+
+        if (fmt == null) {
+            resp.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE,
+                    "Unknown response format requested");
+            return;
+        }
+
+        resp.setContentType(fmt.mimeType());
+
+        String cache_key = req.getRequestURL().toString() + fmt.name();
+
+        byte[] cache_output = cache.get(cache_key);
+
+        OutputStream os = resp.getOutputStream();
 
         String jsoncallback = req.getParameter("callback");
 
@@ -226,7 +249,15 @@ public class M3Servlet extends HttpServlet {
             os.write('(');
         }
 
-        write(model, fmt, os);
+        if (cache_output == null) {
+            Model model = createModel(req, resp);
+
+            if (model != null) {
+                write(model, fmt, os, cache_key);
+            }
+        } else {
+            os.write(cache_output);
+        }
 
         if ((fmt == ResultFormat.JSON || fmt == ResultFormat.JAVASCRIPT)
                 && jsoncallback != null) {

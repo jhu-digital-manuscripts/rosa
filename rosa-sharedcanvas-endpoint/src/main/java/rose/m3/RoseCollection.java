@@ -55,7 +55,7 @@ public class RoseCollection {
         }
         
 
-        // TODO prefer cropped...
+        // TODO Do cropped
 
         public ImageList retrieveImageList() throws IOException {
             InputStream is = new URL(imagesUrl()).openStream();
@@ -348,20 +348,42 @@ public class RoseCollection {
             return result;
         }
 
-        public String descriptions(int illus) {
+        public String folio(int illus) {
+            return value(illus, Column.FOLIO);
+        }
+        
+        public String descriptionHtml(int illus) {
             StringBuilder sb = new StringBuilder();
 
-            sb.append(value(illus, Column.TITLES));
-            sb.append(" ");
-            sb.append(value(illus, Column.CHARACTERS));
-            sb.append(" ");
-            sb.append(value(illus, Column.COSTUME));
-            sb.append(" ");
-            sb.append(value(illus, Column.LANDSCAPE));
+            sb.append("<dl>");
+            add(sb, illus, "Titles", Column.TITLES);
+            add(sb, illus, "Characters", Column.CHARACTERS);
+            add(sb, illus, "Costume", Column.COSTUME);
+            add(sb, illus, "Initials", Column.INITIALS);
+            add(sb, illus, "Landscape", Column.LANDSCAPE);
+            add(sb, illus, "Text", Column.TEXTUAL_ELEMENTS);
+            add(sb, illus, "Other", Column.OTHER);
+            sb.append("</dl>");
 
             return sb.toString();
         }
+        
+        private void add(StringBuilder sb, int illus, String name, Column col) {
+            String value = value(illus, col);
+            
+            if (!value.isEmpty()) {
+                sb.append("<dt>" + name + "</dt>");
+                
+                // TODO Do real escaping!!
+                value = value.replaceAll("<", "&lt;");
+                value = value.replaceAll(">", "&gt;");
+
+                sb.append("<dd>" + value + "</dd>");
+            }
+        }
+
     }
+    
 
     public static boolean isPaginatedImage(String image) {
         String s = image.substring(image.indexOf('.') + 1);

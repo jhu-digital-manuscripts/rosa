@@ -373,21 +373,17 @@ public class ResourceMap {
 
         List<Resource> result = new ArrayList<Resource>();
 
-        int num = 1;
-
         for (int illus : tagging.findIllusIndexes(image)) {
             String uri = get_illustration_annotation_uri(book, image_id, illus);
-            String text = tagging.descriptions(illus);
-            String label = "Illustration " + num;
+            String html = tagging.descriptionHtml(illus);
+            String label = "Illustration " + tagging.folio(illus);
 
-            Resource a = add_text_annotation(uri, canvas_uri, text,
-                    "text/plain", label);
+            Resource a = add_text_annotation(uri, canvas_uri, html,
+                    "text/html", label);
 
             if (a != null) {
                 result.add(a);
             }
-
-            num++;
         }
 
         return result;
