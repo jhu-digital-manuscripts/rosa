@@ -1,7 +1,8 @@
 package rosa.scanvas.demo.website.client.presenter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import rosa.scanvas.demo.website.client.PanelData;
@@ -14,67 +15,62 @@ import rosa.scanvas.model.client.ManifestCollection;
 import rosa.scanvas.model.client.Reference;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
 
 public class ManifestCollectionPanelPresenter extends BasePanelPresenter {
-    private PanelData data;
 
     public interface Display extends BasePanelPresenter.Display {
-    	void setCollection(List<String> col, String title);
-        
+        void setCollection(List<Reference<Manifest>> col, String title);
+
         void addSelectionChangeEventHandler(SelectionChangeEvent.Handler handler);
-        
-        String getSelectedManifest();
+
+        Reference<Manifest> getSelectedManifest();
     }
 
     private final Display display;
-    private final HashMap<String, String> manifests;
 
     public ManifestCollectionPanelPresenter(Display display,
             HandlerManager eventBus, int panel_id) {
-    	super(display, eventBus, panel_id);
+        super(display, eventBus, panel_id);
         this.display = display;
-        
-        this.manifests = new HashMap<String, String>();
 
         bind();
     }
 
     private void bind() {
-    	display.addSelectionChangeEventHandler(new SelectionChangeEvent.Handler() {
-    		public void onSelectionChange(SelectionChangeEvent event) {
-    			String selected = display.getSelectedManifest();
-    			
-    			if (selected == null) {
-    				return;
-    			}
-    			
-    			PanelState state = new PanelState(PanelView.MANIFEST,
-    					manifests.get(selected));
-    			PanelRequestEvent req = new PanelRequestEvent(
-    					PanelRequestEvent.PanelAction.CHANGE, panelId(),
-    					state);
-    			eventBus().fireEvent(req);
-    		}
-    	});
+        display.addSelectionChangeEventHandler(new SelectionChangeEvent.Handler() {
+            public void onSelectionChange(SelectionChangeEvent event) {
+                Reference<Manifest> sel = display.getSelectedManifest();
+
+                if (sel == null) {
+                    return;
+                }
+
+                PanelState state = new PanelState(PanelView.MANIFEST, sel.uri());
+                PanelRequestEvent req = new PanelRequestEvent(
+                        PanelRequestEvent.PanelAction.CHANGE, panelId(), state);
+                eventBus().fireEvent(req);
+            }
+        });
     }
 
     @Override
     public void display(int width, int height, PanelData data) {
-    	super.display(width, height, data);
-        this.data = data;
+        super.display(width, height, data);
 
         ManifestCollection col = data.getManifestCollection();
-        String title = col.label() == null ? "Unknown collection" : col.label();
+        String title = col.label() == null ? "Unknown" : col.label();
+
+        List<Reference<Manifest>> manifests = col.manifests();
         
-        List<String> labels = new ArrayList<String>();
-        for (Reference<Manifest> ref : col.manifests()) {
-        	labels.add(ref.label());
-        	manifests.put(ref.label(), ref.uri());
-        }
-        
-        display.setCollection(labels, title);
+        Collections.sort(manifests, new Comparator<Reference<Manifest>>() {
+            @Override
+            public int compare(Reference<Manifest> r1, Reference<Manifest> r2) {
+                return r1.label().compareTo(r2.label());
+            }
+        });
+
+        display.setCollection(manifests, title);
 
         PanelDisplayedEvent event = new PanelDisplayedEvent(panelId(), data);
         eventBus().fireEvent(event);
