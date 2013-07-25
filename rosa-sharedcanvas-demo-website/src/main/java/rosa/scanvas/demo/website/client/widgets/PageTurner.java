@@ -421,7 +421,7 @@ public class PageTurner extends Composite implements HasClickHandlers,
      * @param cb
      */
     public void setOpenings(Sequence sequence, List<Opening> openings,
-    		int page_width, int page_height, NewOpeningCallback cb) {
+    		final int page_width, final int page_height, NewOpeningCallback cb) {
         this.position = 0;
         this.openings = openings;
         this.sequence = sequence;

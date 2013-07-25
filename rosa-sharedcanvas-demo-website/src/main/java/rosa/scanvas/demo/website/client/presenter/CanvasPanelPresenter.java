@@ -58,9 +58,9 @@ public class CanvasPanelPresenter extends BasePanelPresenter {
     	display.getZoomInButton().addClickHandler(new ClickHandler() {
     		@Override
     		public void onClick(ClickEvent event) {
-    			DisplayAreaView view = display.getDisplayAreaWidget();
-    			view.area().zoomIn();
-    			view.redraw();
+    			int old_width = display.getDisplayAreaWidget().area().viewportBaseWidth();
+    			display.getDisplayAreaWidget().area().zoomIn();
+    			display.getDisplayAreaWidget().animatedRedraw(old_width);
     		}
     	});
     	
@@ -68,8 +68,10 @@ public class CanvasPanelPresenter extends BasePanelPresenter {
     		@Override
     		public void onClick(ClickEvent event) {
     			DisplayAreaView view = display.getDisplayAreaWidget();
+    			int old_width = view.area().viewportBaseWidth();
     			view.area().zoomOut();
-    			view.redraw();
+    			//view.redraw();
+    			display.getDisplayAreaWidget().animatedRedraw(old_width);
     		}
     	});
     	

@@ -3,6 +3,7 @@ package rosa.scanvas.demo.website.client.disparea;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.animation.client.Animation;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -40,7 +41,10 @@ import com.google.gwt.event.dom.client.TouchMoveEvent;
 import com.google.gwt.event.dom.client.TouchMoveHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
+
+import com.google.gwt.user.client.Window;
 /**
  * Display the viewport of a display area using a HTML 5 canvas.
  */
@@ -70,6 +74,13 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 	
 	private int draw_index = 0;
 	List<DisplayElement> draw_queue = new ArrayList<DisplayElement> ();
+	
+	private Timer gesture_timer;
+	private double gesture_scale;
+	private boolean gesture_zoom;
+	
+	private int overview_left;
+	private int overview_top;
 
 	public DisplayAreaView() {
 		this.area = new DisplayArea(0, 0, 0, 0);
@@ -86,6 +97,26 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 		this.drag_from_overview = false;
 		
 		this.grab_overview = true;
+		
+		gesture_scale = 1.0;
+		gesture_zoom = false;
+		gesture_timer = new Timer() {
+			public void run() {
+				if (gesture_zoom) {
+					int old_width = area.viewportBaseWidth();
+					
+					if (gesture_scale > 1.0) {
+						if (area.zoomIn()) {
+							animatedRedraw(old_width);
+						}
+					} else {
+						if (area.zoomOut()) {
+							animatedRedraw(old_width);
+						}
+					}
+				}
+			}
+		};
 		
 		viewport.addClickHandler(new ClickHandler() {
 			@Override
@@ -119,16 +150,8 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 					return;
 				}
 				
-				if (click_x > overview_x && click_y > overview_y) {
-					// If click is in overview, transform to overview coordinates
-					click_x = (click_x - overview_x) * area.width()
-							/ overview.getCoordinateSpaceWidth();
-					click_y = (click_y - overview_y) * area.height()
-							/ overview.getCoordinateSpaceHeight();
-					
-					area.setViewportCenter(click_x, click_y);
-					redraw();
-				} else {
+				// Clicks in the overview are handled by mouse down/up handlers
+				if (click_x < overview_x || click_y < overview_y) {
 					boolean el_clicked = false;
 					
 					// transform click broswer coordinates into canvas coordinates
@@ -146,9 +169,13 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 					}
 					
 					if (!el_clicked) {
+						int old_width = area.viewportBaseWidth();
+						
 						area.setViewportCenter(click_x, click_y);
 						area.zoomIn();
-						redraw();
+						animatedRedraw(old_width, 
+								event.getRelativeX(viewport.getElement()), 
+								event.getRelativeY(viewport.getElement()));
 					}
 				}
 			}
@@ -183,6 +210,8 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 					
 					if (x > overview_x && y > overview_y) {
 						in_overview = true;
+						overview_left = area.viewportLeft();
+						overview_top = area.viewportTop();
 						
 						x = (x - overview_x) * area.width()
 								/ overview.getCoordinateSpaceWidth();
@@ -196,6 +225,28 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 				} else {
 					drag_may_start = false;
 				}
+			}
+		});
+		
+		viewport.addMouseUpHandler(new MouseUpHandler() {
+			public void onMouseUp(MouseUpEvent event) {
+				if (in_overview && !dragging) {
+					// If click is in overview, transform to overview coordinates
+					double overview_scale = (double) overview.getCoordinateSpaceWidth() / 
+							area.width();
+					
+					int click_x = event.getRelativeX(viewport.getElement());
+					int click_y = event.getRelativeY(viewport.getElement());
+					
+					click_x = (int) ((click_x - overview_x) / overview_scale);
+					click_y = (int) ((click_y - overview_y) / overview_scale);
+					
+					area.setViewportCenter(click_x, click_y);
+					animatedRedraw(area.viewportBaseWidth(),
+							click_x - overview_left, 
+							click_y - overview_top);
+				}
+				
 			}
 		});
 
@@ -268,18 +319,19 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 
 				int v = event.getNativeEvent().getMouseWheelVelocityY();
 
+				int old_width = area.viewportBaseWidth();
 				if (v < 0) {
 					if (area.zoomIn()) {
-						redraw();
+						animatedRedraw(old_width);
 					}
 				} else {
 					if (area.zoomOut()) {
-						redraw();
+						animatedRedraw(old_width);
 					}
 				}
 			}
 		});
-
+		
 		viewport.addTouchStartHandler(new TouchStartHandler() {
 			public void onTouchStart(TouchStartEvent event) {
 				event.preventDefault();
@@ -308,6 +360,7 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 				in_overview = false;
 				drag_may_start = true;
 				drag_from_overview = false;
+				gesture_zoom = false;
 				
 				canvas_drag_x = touch.getClientX();
 				canvas_drag_y = touch.getClientY();
@@ -315,6 +368,9 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 				if (x > overview_x && y > overview_y) {
 					in_overview = true;
 					drag_may_start = false;
+					
+					overview_left = area.viewportLeft();
+					overview_top = area.viewportTop();
 					
 					x = (x - overview_x) * area.width()
 							/ overview.getCoordinateSpaceWidth();
@@ -332,6 +388,10 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 				event.stopPropagation();
 
 				if (locked) {
+					return;
+				}
+				
+				if (event.getTouches().length() != 1) {
 					return;
 				}
 				
@@ -377,7 +437,8 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 				event.preventDefault();
 				event.stopPropagation();
 
-				if (locked || event.getChangedTouches().length() != 1) {
+				if (locked || event.getChangedTouches().length() != 1
+						|| gesture_zoom) {
 					drag_from_overview = false;
 					drag_may_start = false;
 					in_overview = false;
@@ -412,8 +473,13 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 					
 					if (!el_clicked) {
 						area.setViewportCenter(touch_x, touch_y);
+						int old_width = area.viewportBaseWidth();
+						
 						area.zoomIn();
-						redraw();
+						animatedRedraw(old_width,
+								touch.getRelativeX(viewport.getElement()),
+								touch.getRelativeY(viewport.getElement()));
+						//redraw();
 					}
 				} else if (!dragging && !drag_from_overview && in_overview) {
 					touch_x = (touch_x - overview_x) * area.width()
@@ -422,7 +488,10 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 							/ overview.getCoordinateSpaceHeight();
 					
 					area.setViewportCenter(touch_x, touch_y);
-					redraw();
+					
+					animatedRedraw(area.viewportBaseWidth(),
+							touch_x - overview_left, 
+							touch_y - overview_top);
 				}
 				
 				drag_from_overview = false;
@@ -440,9 +509,11 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 				if (locked) {
 					return;
 				}
-
+				
 				drag_may_start = false;
 				dragging = false;
+				
+				gesture_timer.scheduleRepeating(250);
 			}
 		});
 
@@ -457,18 +528,9 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 
 				drag_may_start = false;
 				dragging = false;
-
-				double scale = event.getScale();
-
-				if (scale > 1.0) {
-					if (area.zoomIn()) {
-						redraw();
-					}
-				} else {
-					if (area.zoomOut()) {
-						redraw();
-					}
-				}
+				
+				gesture_scale = event.getScale();
+				gesture_zoom = true;
 			}
 		});
 
@@ -479,6 +541,9 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 
 				drag_may_start = false;
 				dragging = false;
+				
+				gesture_timer.cancel();
+				gesture_scale = 1.0;
 			}
 		});
 
@@ -667,7 +732,7 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 				draw_queue.add(el);
 			}
 		}
-	
+		
 		// draw the first element in the list
 		if (draw_queue != null && draw_queue.size() > 0) {
 			DisplayElement el = draw_queue.get(draw_index++);
@@ -681,13 +746,49 @@ public class DisplayAreaView extends Composite implements HasClickHandlers, HasT
 		return area;
 	}
 
+	AnimationCallback cb = new AnimationCallback() {
+		public void onAnimationComplete() {
+			DisplayAreaView.this.redraw();
+		}
+	};
+	
+	/**
+	 * Redraw the canvas with HTML5 animation
+	 * 
+	 * @param old_width
+	 * 			width of viewport in base coordinates before any zoom operations
+	 * @param center
+	 * 			optional (x, y) center coordinates. Coordinates are relative to the
+	 * 			HTML5 canvas in the broswer.
+	 */
+	public void animatedRedraw(int old_width, int... center) {
+		CanvasElement canv = viewport_context.getCanvas();
+		
+		int x = center.length == 2 ? center[0] : 
+			canv.getWidth() / 2;
+		int y = center.length == 2 ? center[1] : 
+			canv.getHeight() / 2;
+		
+		Animation anim = new ZoomAnimation(viewport_context, canv,
+				cb, old_width, area.viewportBaseWidth(), x, y);
+		anim.run(300);
+	}
+	
 	/**
 	 * Reset the display position to the display area center and zoom level 0.
 	 */
 	public void resetDisplay() {
+		int old_width = area.viewportBaseWidth();
+		
+		double zoom = area.zoom();
+		int left = area.viewportLeft();
+		int top = area.viewportTop();
+		
 		area.setZoomLevel(0);
 		area.setViewportBaseCenter(area.baseWidth() / 2, area.baseHeight() / 2);
-		redraw();
+		
+		//redraw();
+		animatedRedraw(old_width, area.width() / 2 - left, area.height() / 2 - top);
 	}
 
 	public void pan(int canvas_dx, int canvas_dy) {
