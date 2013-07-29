@@ -24,8 +24,9 @@ public class SequenceView extends BasePanelView implements
 
         this.thumb_browser = new ThumbnailBrowser();
         this.page_turner = new PageTurner();
-        this.tab_panel = new TabLayoutPanel(20, Unit.PX);
+        this.tab_panel = new TabLayoutPanel(2, Unit.EM);
 
+        tab_panel.setStylePrimaryName("SequenceViewTabPanel");
         tab_panel.add(page_turner, Messages.INSTANCE.pageTurner());
         tab_panel.add(thumb_browser, Messages.INSTANCE.thumbnailBrowser());
         main.add(tab_panel);

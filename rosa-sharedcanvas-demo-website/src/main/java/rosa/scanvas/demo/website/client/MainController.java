@@ -111,13 +111,13 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
     private void bind() {
         History.addValueChangeHandler(this);
 
-        Window.addResizeHandler(new ResizeHandler() {
-            public void onResize(ResizeEvent event) {
-                doResize(event.getWidth(), event.getHeight());
-            }
-        });
+//        Window.addResizeHandler(new ResizeHandler() {
+//            public void onResize(ResizeEvent event) {
+//                doResize(event.getWidth(), event.getHeight());
+//            }
+//        });
 
-        /*Window.addResizeHandler(new ResizeHandler() {
+        Window.addResizeHandler(new ResizeHandler() {
             int width = Window.getClientWidth();
             int height = Window.getClientHeight();
 
@@ -132,7 +132,7 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
                     doResize(width, height);
                 }
             }
-        });*/
+        });
 
         event_bus.addHandler(PanelRequestEvent.TYPE,
                 new PanelRequestEventHandler() {

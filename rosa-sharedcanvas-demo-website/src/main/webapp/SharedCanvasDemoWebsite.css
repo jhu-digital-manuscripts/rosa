@@ -136,10 +136,12 @@
 	cursor: pointer;
 }
 
+/* Label on left */
 .ContextBar .gwt-Label {
 	float: left;
 	font-size: 16px;
-	margin-right: 10px;
+	margin-left: 60px;
+	margin-top: 5px;
 }
 
 .ContextLinks {
@@ -283,29 +285,33 @@
 	/* background-image: url('images/loading.gif'); */
 }
 
-.View .gwt-TabLayoutPanel .gwt-TabLayoutPanelTabs {
-	width: 100%;
+.SequenceViewTabPanel .gwt-TabLayoutPanelTab {
+  background-color: rgb(168, 142, 140);
+  margin-right: 5px;
+  cursor: pointer;
+  padding: 1px;
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 3px;
+  font-weight: bold;
 }
 
-.View .gwt-TabLayoutPanel .gwt-TabLayoutPanelTab {
-	background-color: rgb(168, 142, 140);
-	margin-left: 0px;
-	padding: 3px 10px;
-	font-size: larger;
+.SequenceViewTabPanel .gwt-TabLayoutPanelTabs {
+ 
 }
 
-.View .gwt-TabLayoutPanel .gwt-TabLayoutPanelTab-selected {
-	background-color: rgb(114, 70, 66);
+.SequenceViewTabPanel .gwt-TabLayoutPanelTab-selected {
+    cursor: default;
 }
 
-.View .gwt-TabLayoutPanel .gwt-TabLayoutPanelContent {
-	padding: 6px;
-	border: 3px solid rgb(114, 70, 66);
+.SequenceViewTabPanel .gwt-TabLayoutPanelContent {
+    padding-top: 5px;
 }
 
-.View .gwt-TabLayoutPanel .gwt-TabLayoutPanelContentContainer {
-	border-width: 0px;
+.SequenceViewTabPanel .gwt-TabLayoutPanelContentContainer {
+    border: 0px;
 }
+
 
 .PageTurner .WebImage {
 	cursor: pointer;
