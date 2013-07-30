@@ -160,7 +160,8 @@ public class CanvasPanelPresenter extends BasePanelPresenter {
         		DisplayElement el = AnnotationUtil.annotationToDisplayElement(
         				ann, this.canvas);
         		if (el != null) {
-        			els.add(el);
+                    el.setVisible(data.getAnnotationStatus(ann));
+        			els.add(el);        			
         		}
         	}
         }

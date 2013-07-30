@@ -372,13 +372,15 @@ public abstract class BasePanelPresenter implements PanelPresenter {
 
                     if (!default_image
                             && !AnnotationUtil.isSpecificResource(anno)) {
-                        Scheduler.get().scheduleDeferred(
-                                new ScheduledCommand() {
-                                    @Override
-                                    public void execute() {
-                                        checkbox.setValue(true, true);
-                                    }
-                                });
+                        data.setAnnotationStatus(anno, true);
+                        
+//                        Scheduler.get().scheduleDeferred(
+//                                new ScheduledCommand() {
+//                                    @Override
+//                                    public void execute() {
+//                                        checkbox.setValue(true, true);
+//                                    }
+//                                });
 
                         default_image = true;
                     }
@@ -404,6 +406,8 @@ public abstract class BasePanelPresenter implements PanelPresenter {
                 }
 
                 checkbox.setValue(data.getAnnotationStatus(anno), false);
+                
+                
                 bind_annotation_checkbox(checkbox, anno);
             }
         }

@@ -52,6 +52,8 @@ public class WebImage extends FocusWidget {
     }-*/;
 
     private void invokeCallback() {
+        viewable = true;
+
         if (callback != null) {
             callback.onLoad(this);
         }
@@ -76,7 +78,6 @@ public class WebImage extends FocusWidget {
     public void makeViewable(OnLoadCallback cb) {
         if (!viewable) {
             callback = cb;
-            viewable = true;
             img.setSrc(url);
         }
     }

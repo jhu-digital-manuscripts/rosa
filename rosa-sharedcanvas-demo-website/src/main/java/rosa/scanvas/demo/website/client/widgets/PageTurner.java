@@ -12,9 +12,9 @@ import rosa.scanvas.demo.website.client.disparea.DisplayAreaView;
 import rosa.scanvas.demo.website.client.disparea.DisplayElement;
 import rosa.scanvas.model.client.Annotation;
 import rosa.scanvas.model.client.AnnotationList;
-import rosa.scanvas.model.client.Canvas;
 import rosa.scanvas.model.client.Sequence;
 
+import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -32,21 +32,16 @@ import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-
-import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.HTMLTable.Cell;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -477,6 +472,11 @@ public class PageTurner extends Composite implements HasClickHandlers,
     					DisplayElement el = AnnotationUtil.annotationToDisplayElement(
     							ann, result.getCanvas());
     					if (el != null) {
+    					    if (!AnnotationUtil.isSpecificResource(ann)) {
+    					        result.setAnnotationStatus(ann, true);
+    					        el.setVisible(true);
+    					    }
+    					    
     						els.add(el);
     					}
     				}

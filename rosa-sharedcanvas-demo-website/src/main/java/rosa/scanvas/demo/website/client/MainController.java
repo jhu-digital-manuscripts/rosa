@@ -215,7 +215,6 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
     	int panel_id = next_panel_id++;
     	
     	PanelState old_state = panels.get(index).getState();
-    	PanelData old_data = panels.get(index).getData();
     	
     	PanelState state = new PanelState(old_state.getView(), old_state.getObjectUri(),
     			old_state.getManifestUri(), old_state.getCanvasIndex());

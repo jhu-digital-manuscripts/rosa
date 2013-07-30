@@ -316,4 +316,13 @@ public class DisplayArea implements Iterable<DisplayElement> {
 
         return false;
     }
+
+    /**
+     * @param id
+     * @return whether or not the area contains a DisplayElement with the given id
+     */
+            
+    public boolean contains(String id) {
+        return content_map.containsKey(id);
+    }
 }
