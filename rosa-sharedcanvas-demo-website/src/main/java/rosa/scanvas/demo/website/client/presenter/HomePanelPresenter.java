@@ -19,8 +19,6 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
 
 /**
@@ -47,15 +45,20 @@ public class HomePanelPresenter extends BasePanelPresenter {
     private static final List<String> col_titles;
     private static final HashMap<String, String> collections;
 
+    // TODO FIX!! Map is wrong way!!
+    // TODO test the user stuff 
+    
     static {
         col_titles = new ArrayList<String>();
         col_titles.add("Roman de la Rose Digital library");
+        col_titles.add("Chistine de Pizan Digital Scriptorium");
         col_titles.add("Test data");
         
         collections = new HashMap<String, String>();
         collections.put("Roman de la Rose Digital library",
         		"http://rosetest.library.jhu.edu/sc");
         collections.put("Test data", "http://rosetest.library.jhu.edu/sctest");
+        collections.put("Chistine de Pizan Digital Scriptorium", "http://pizan-test.library.jhu.edu/sc");
     }
 
     private final Display display;
