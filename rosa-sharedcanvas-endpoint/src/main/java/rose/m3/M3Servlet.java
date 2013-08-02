@@ -2,6 +2,8 @@ package rose.m3;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,11 +29,11 @@ public class M3Servlet extends HttpServlet {
     // Request URI -> output
     private static final Map<String, byte[]> cache = new ConcurrentHashMap<String, byte[]>();
 
-    private RoseCollection col;
+    private RosaCollection col;
 
     public enum ResultFormat {
-        XML("application/xml"), JSON("application/json"), JAVASCRIPT(
-                "text/javascript"), N3("application/n3");
+        XML("application/xml"), JSON("application/json"), JAVASCRIPT("text/javascript"), N3(
+                "application/n3");
 
         private final String mimetype;
 
@@ -71,8 +73,8 @@ public class M3Servlet extends HttpServlet {
 
     // TODO Eventually cache all output methods
 
-    private void write(Model model, ResultFormat fmt, OutputStream os,
-            String cache_key) throws IOException {
+    private void write(Model model, ResultFormat fmt, OutputStream os, String cache_key)
+            throws IOException {
         if (fmt == ResultFormat.XML) {
             model.getWriter("RDF/XML-ABBREV").write(model, os, null);
         } else if (fmt == ResultFormat.JAVASCRIPT || fmt == ResultFormat.JSON) {
@@ -91,8 +93,7 @@ public class M3Servlet extends HttpServlet {
                 context.put("cnt", "http://www.w3.org/2011/content#");
                 context.put("dcterms", "http://purl.org/dc/terms/");
                 context.put("dc", "http://purl.org/dc/elements/1.1/");
-                context.put("rdf",
-                        "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+                context.put("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
                 context.put("rdfs", "http://www.w3.org/2000/01/rdf-schema#");
                 context.put("xsd", "http://www.w3.org/2001/XMLSchema#");
 
@@ -148,14 +149,41 @@ public class M3Servlet extends HttpServlet {
 
     public void init(ServletConfig config) throws ServletException {
         try {
-            col = new RoseCollection();
+            String data_url = config.getInitParameter("rosa.data.url");
+
+            if (data_url == null) {
+                throw new ServletException("Required init param rosa.data.url not set.");
+            }
+
+            if (!data_url.endsWith("/")) {
+                data_url += "/";
+            }
+
+            try {
+                new URL(data_url);
+            } catch (MalformedURLException e) {
+                throw new ServletException("Init param rosa.data.url must be a URL.", e);
+            }
+
+            String fsi_name = config.getInitParameter("rosa.fsi.name");
+
+            if (fsi_name == null) {
+                throw new ServletException("Required init param rosa.fsi.name not set.");
+            }
+            
+            String col_name = config.getInitParameter("rosa.col.name");
+
+            if (col_name == null) {
+                throw new ServletException("Required init param rosa.col.name not set.");
+            }
+
+            col = new RosaCollection(data_url, fsi_name, col_name);
         } catch (IOException e) {
             throw new ServletException(e);
         }
     }
 
-    private Model createModel(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
+    private Model createModel(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String bookid = getResource(req);
         String type = null;
 
@@ -178,11 +206,11 @@ public class M3Servlet extends HttpServlet {
                 bookid = bookid.substring(0, i);
             }
 
-            RoseCollection.Book book = col.findBook(bookid);
+            RosaCollection.Book book = col.findBook(bookid);
 
             if (book == null) {
-                resp.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE,
-                        "Unknown book requested: " + bookid);
+                resp.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE, "Unknown book requested: "
+                        + bookid);
                 return null;
             } else {
                 if (type == null) {
@@ -194,12 +222,10 @@ public class M3Servlet extends HttpServlet {
                 } else if (type.equals("annotations/transcription")) {
                     model = resmap.modelTranscriptionAnnotations(url, book);
                 } else if (type.equals("annotations/illustration")) {
-                    model = resmap.modelIllustrationDescriptionAnnotations(url,
-                            book);
+                    model = resmap.modelIllustrationDescriptionAnnotations(url, book);
                 } else if (type.equals("annotations/image")) {
                     model = resmap.modelImageAnnotations(url, book);
-                } else if (type.startsWith("canvas/")
-                        && type.endsWith("/annotations")) {
+                } else if (type.startsWith("canvas/") && type.endsWith("/annotations")) {
                     int start = type.indexOf("canvas/") + "canvas/".length();
                     int end = type.indexOf("/annotations");
 
@@ -210,8 +236,7 @@ public class M3Servlet extends HttpServlet {
                     }
 
                     String image_frag = type.substring(start, end);
-                    model = resmap.modelAllAnnotationsOfCanvas(url, book,
-                            image_frag);
+                    model = resmap.modelAllAnnotationsOfCanvas(url, book, image_frag);
                 } else {
                     resp.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE,
                             "Unknown resource map requested: " + type);
@@ -223,8 +248,8 @@ public class M3Servlet extends HttpServlet {
         return model;
     }
 
-    public void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+            IOException {
         ResultFormat fmt = ResultFormat.find(req);
 
         if (fmt == null) {
@@ -243,8 +268,7 @@ public class M3Servlet extends HttpServlet {
 
         String jsoncallback = req.getParameter("callback");
 
-        if ((fmt == ResultFormat.JSON || fmt == ResultFormat.JAVASCRIPT)
-                && jsoncallback != null) {
+        if ((fmt == ResultFormat.JSON || fmt == ResultFormat.JAVASCRIPT) && jsoncallback != null) {
             os.write(jsoncallback.getBytes("UTF-8"));
             os.write('(');
         }
@@ -259,8 +283,7 @@ public class M3Servlet extends HttpServlet {
             os.write(cache_output);
         }
 
-        if ((fmt == ResultFormat.JSON || fmt == ResultFormat.JAVASCRIPT)
-                && jsoncallback != null) {
+        if ((fmt == ResultFormat.JSON || fmt == ResultFormat.JAVASCRIPT) && jsoncallback != null) {
             os.write(')');
         }
 

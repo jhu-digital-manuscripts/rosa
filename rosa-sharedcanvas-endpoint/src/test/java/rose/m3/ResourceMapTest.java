@@ -16,11 +16,11 @@ import com.hp.hpl.jena.rdf.model.Model;
 
 public class ResourceMapTest {
     private ResourceMap resmap;
-    private RoseCollection col;
+    private RosaCollection col;
 
     @Before
     public void setup() throws IOException {
-        col = new RoseCollection();
+        col = new RosaCollection("http://romandelarose.org/data/", "rose", "roman de la rose");
         resmap = new ResourceMap();
     }
 

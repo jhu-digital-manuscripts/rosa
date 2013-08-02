@@ -12,3 +12,6 @@ add a 'callback' parameter. Otherwise set an 'Accept' header to
 'application/xml', 'application/json', 'text/javascript', or 'application/n3'.
 The default is xml output. The json output is a hack.
 
+When building set the maven property 'rosa.data.url' to the data url for
+your manuscript site. For example, http://romandelarose.org/data.
+It will be substituted into the web.xml.

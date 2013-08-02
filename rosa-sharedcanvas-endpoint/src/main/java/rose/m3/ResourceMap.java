@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import rose.m3.RoseCollection.Book;
-import rose.m3.RoseCollection.ImageList;
-import rose.m3.RoseCollection.ImageTagging;
+import rose.m3.RosaCollection.Book;
+import rose.m3.RosaCollection.ImageList;
+import rose.m3.RosaCollection.ImageTagging;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -197,13 +197,13 @@ public class ResourceMap {
         return agg;
     }
 
-    public Model modelCollection(String service_url, RoseCollection col) {
+    public Model modelCollection(String service_url, RosaCollection col) {
         Resource agg = add_resource_map_and_aggregation(service_url);
 
         agg.addProperty(RDFS.label, col.name());
 
         for (int i = 0; i < col.size(); i++) {
-            RoseCollection.Book b = col.getBook(i);
+            RosaCollection.Book b = col.getBook(i);
             Resource manifest = model
                     .createResource(service_url + "/" + b.id());
             manifest.addProperty(RDF.type, manifest_type);
@@ -216,23 +216,23 @@ public class ResourceMap {
     }
 
     private String get_canvas_uri(Book book, String image_id) {
-        return book.dataUrl() + RoseCollection.shortImageName(image_id)
+        return book.dataUrl() + RosaCollection.shortImageName(image_id)
                 + "#canvas";
     }
 
     private String get_illustration_annotation_uri(Book book, String image_id,
             int which) {
-        return book.dataUrl() + RoseCollection.shortImageName(image_id)
+        return book.dataUrl() + RosaCollection.shortImageName(image_id)
                 + "#annotation;illustration;" + which;
     }
 
     private String get_transcription_annotation_uri(Book book, String image_id) {
-        return book.dataUrl() + RoseCollection.shortImageName(image_id)
+        return book.dataUrl() + RosaCollection.shortImageName(image_id)
                 + "#annotation;transcription";
     }
 
     private String get_image_annotation_uri(Book book, String image_id) {
-        return book.dataUrl() + RoseCollection.shortImageName(image_id)
+        return book.dataUrl() + RosaCollection.shortImageName(image_id)
                 + "#image";
     }
 
@@ -251,7 +251,7 @@ public class ResourceMap {
             canvas.addProperty(RDF.type, canvas_type);
 
             canvas.addLiteral(RDFS.label,
-                    RoseCollection.shortImageName(image_id));
+                    RosaCollection.shortImageName(image_id));
 
             if (images.missing(i)) {
                 // TODO What default?
@@ -263,7 +263,7 @@ public class ResourceMap {
             }
 
             String annotation_url = service_url.replace("/sequence", "/canvas/"
-                    + RoseCollection.shortImageName(image_id) + "/annotations");
+                    + RosaCollection.shortImageName(image_id) + "/annotations");
             canvas.addProperty(has_annotations,
                     model.createResource(annotation_url));
 
@@ -480,7 +480,7 @@ public class ResourceMap {
         image_annotation.addProperty(RDF.type, annotation_type);
         image_annotation.addProperty(motivated_by, painting_motivation);
         image_annotation.addProperty(RDFS.label,
-                RoseCollection.shortImageName(image_id));
+                RosaCollection.shortImageName(image_id));
 
         Resource canvas = model.createResource(canvas_uri);
         canvas.addProperty(RDF.type, canvas_type);
