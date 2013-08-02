@@ -5,8 +5,6 @@ import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.dom.client.CanvasElement;
 
-import com.google.gwt.user.client.Window;
-
 public class ZoomAnimation extends Animation {
 	
 	private final Context2d context;
@@ -25,7 +23,7 @@ public class ZoomAnimation extends Animation {
 	private final double scale;
 	
 	/**
-	 * Animate zoom in on the HTML5 canvas, after the DisplayArea has zoomed in.
+	 * Animate zoom and tranlate on the HTML5 canvas, after the DisplayArea has zoomed in.
 	 * 
 	 * @param context
 	 * @param canvas_img

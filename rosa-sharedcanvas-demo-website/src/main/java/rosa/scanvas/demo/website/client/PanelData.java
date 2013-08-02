@@ -14,7 +14,6 @@ import rosa.scanvas.model.client.Sequence;
 import rosa.scanvas.model.client.SharedCanvas;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.Window;
 /**
  * A container holding data operated on by a panel view.
  */
@@ -28,8 +27,6 @@ public class PanelData {
     private int zoom_level;
     private int[] position = new int[2];
 
-    // TODO rethink this
-    private List<Annotation> visibleAnnotations;
     private HashSet<String> annotation_status;
     private List<Annotation> imageAnnotations;
 
@@ -283,13 +280,37 @@ public class PanelData {
 
     public PanelData() {
         annotationLists = new ArrayList<AnnotationList>();
-        visibleAnnotations = new ArrayList<Annotation>();
         imageAnnotations = new ArrayList<Annotation>();
         annotation_status = new HashSet<String>();
         
         zoom_level = -1;
-        position[0] = -111;
-        position[1] = -111;
+        position[0] = -1;
+        position[1] = -1;
+    }
+    
+    public PanelData(PanelData data) {
+    	collection = data.getManifestCollection();
+    	manifest = data.getManifest();
+    	sequence = data.getSequence();
+    	canvas = data.getCanvas();
+    	
+    	annotationLists = new ArrayList<AnnotationList>();
+    	imageAnnotations = new ArrayList<Annotation>();
+    	annotation_status = new HashSet<String>();
+    	
+    	annotationLists.addAll(data.getAnnotationLists());
+    	imageAnnotations.addAll(data.getImageAnnotations());
+    	
+    	for (AnnotationList al : annotationLists) {
+    		for (Annotation ann : al) {
+    			if (data.getAnnotationStatus(ann)) {
+    				setAnnotationStatus(ann, true);
+    			}
+    		}
+    	}
+    	
+    	zoom_level = data.getZoomLevel();
+    	position = data.getPosition();
     }
 
     public ManifestCollection getManifestCollection() {
@@ -308,7 +329,6 @@ public class PanelData {
         this.manifest = manifest;
 
         annotationLists.clear();
-        visibleAnnotations.clear();
         imageAnnotations.clear();
         annotation_status.clear();
     }
@@ -331,10 +351,6 @@ public class PanelData {
 
     public List<AnnotationList> getAnnotationLists() {
         return annotationLists;
-    }
-
-    public List<Annotation> getVisibleAnnotations() {
-        return visibleAnnotations;
     }
     
     /**

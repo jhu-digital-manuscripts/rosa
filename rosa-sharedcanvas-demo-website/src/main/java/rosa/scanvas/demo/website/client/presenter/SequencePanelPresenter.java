@@ -53,10 +53,6 @@ public class SequencePanelPresenter extends BasePanelPresenter {
     private int page_width, page_height;
     private int thumb_size;
     private int tab;
-    private int frontmatter_pastedown;
-    private int endmatter_pastedown;
-    private int before_frontmatter;
-    private int after_endmatter;
     boolean thumb_browser_setup;
     boolean page_turner_setup;
 
@@ -83,11 +79,6 @@ public class SequencePanelPresenter extends BasePanelPresenter {
         
         this.thumb_browser_setup = false;
         this.page_turner_setup = false;
-        
-        this.frontmatter_pastedown = 0;
-        this.endmatter_pastedown = 0;
-        this.before_frontmatter = 0;
-        this.after_endmatter = 0;
 
         display.getTabPanelSelector().addSelectionHandler(
                 new SelectionHandler<Integer>() {
@@ -250,94 +241,59 @@ public class SequencePanelPresenter extends BasePanelPresenter {
     	Map<String, Annotation> targets = map_targets(annotations);
     	int seq_size = sequence.size();
     	
-    	frontmatter_pastedown = 0;
-    	endmatter_pastedown = seq_size;
+        int frontmatter_pastedown = 0;
+        int endmatter_pastedown = seq_size;
     	
-    	// Find pastedown positions in the sequence
+        // Does this book have pastedown pages? This is used to determine openings
+        // vs single images.
     	for (int i = 0; i < seq_size; i++) {
-    		Canvas canvas = sequence.canvas(i);
-    		Annotation ann = targets.get(canvas.uri());
+    		Canvas c = sequence.canvas(i);
+    		Annotation a = targets.get(c.uri());
     		
-    		if (ann != null) {
-    			if (ann.label().toLowerCase().equals("frontmatter.pastedown")) {
-    				frontmatter_pastedown = i;
-    			}
-    			
-    			if (ann.label().toLowerCase().equals("endmatter.pastedown")) {
-    				endmatter_pastedown = i;
-    			}
+    		if (a == null) {
+    			continue;
     		}
+    		
+    		if (a.label().toLowerCase().equals("frontmatter.pastedown")) {
+				frontmatter_pastedown = i;
+			} else if (a.label().toLowerCase().equals("endmatter.pastedown")) {
+				endmatter_pastedown = i;
+			}
     	}
     	
-    	// Grab any single images before frontmatter pastedown
-    	for (int i = 0; i < frontmatter_pastedown; i++) {
-    		Canvas canvas = sequence.canvas(i);
-    		Annotation ann = targets.get(canvas.uri());
-    		
-    		MasterImage verso = null;
-    		String verso_label = null;
-    		
-    		if (ann != null) {
-    			verso = as_master_image(ann, canvas);
-    			verso_label = ann.label();
-    			
-    			before_frontmatter++;
-    			openings.add(new Opening(verso, verso_label, i, null, null, 0));
-    		}
-    	}
-    	
-    	// Grab openings between front/end - matter pastedowns
-    	for (int i = frontmatter_pastedown; i < endmatter_pastedown;) {
-            Canvas c1 = sequence.canvas(i++);
-            Canvas c2 = i + 1 < seq_size ? sequence.canvas(i++) : null;
-
-            Annotation a1 = targets.get(c1.uri());
-            Annotation a2 = c2 == null ? null : targets.get(c2.uri());
-
-            MasterImage verso = null;
-            String verso_label = null;
-            int verso_index = 0;
-            MasterImage recto = null;
-            String recto_label = null;
-            int recto_index = 0;
-
-            if (a1 != null) {
-                verso = as_master_image(a1, c1);
-                verso_label = a1.label();
-                verso_index = i - 1;
-            }
-
-            if (a2 != null) {
-                recto = as_master_image(a2, c2);
-                recto_label = a2.label();
-                recto_index = i - 1;
-                
-                verso_index -= 1;
-            }
-            
-            openings.add(new Opening(verso, verso_label, verso_index, 
+    	// Create openings. Single images are treated as an opening with
+    	// no recto.
+    	for (int i = 0; i < seq_size; i++) {
+        	Canvas c1 = sequence.canvas(i);
+        	Annotation a1 = targets.get(c1.uri());
+        	
+        	if (a1 == null) {
+        		continue;
+        	}
+        	
+        	MasterImage verso = as_master_image(a1, c1);
+        	MasterImage recto = null;
+        	String verso_label = a1.label();
+        	String recto_label = null;
+        	int verso_index = i;
+        	int recto_index = 0;
+        	
+        	if (i >= frontmatter_pastedown && i <= endmatter_pastedown
+        			&& !verso_label.toLowerCase().endsWith("r")) {
+        		Canvas c2 = i + 1 < seq_size ? sequence.canvas(++i) : null;
+        		Annotation a2 = c2 == null ? null : targets.get(c2.uri());
+        		
+        		if (a2 != null) {
+        			recto = as_master_image(a2, c2);
+                    recto_label = a2.label();
+                    recto_index = i;
+        		}
+        	}
+        	openings.add(new Opening(verso, verso_label, verso_index, 
             		recto, recto_label, recto_index));
         }
     	
-    	// Grab any single images after endmatter pastedown
-    	for (int i = endmatter_pastedown + 1; i < seq_size; i++) {
-    		Canvas canvas = sequence.canvas(i);
-    		Annotation ann = targets.get(canvas.uri());
-    		
-    		MasterImage verso = null;
-    		String verso_label = null;
-    		
-    		if (ann != null) {
-    			verso = as_master_image(ann, canvas);
-    			verso_label = ann.label();
-    			
-    			after_endmatter++;
-    			openings.add(new Opening(verso, verso_label, i, null, null, 0));
-    		}
-    	}
-    	
     	return openings;
-    	
     }
 
     /**
@@ -351,7 +307,6 @@ public class SequencePanelPresenter extends BasePanelPresenter {
     		data.getAnnotationLists().clear();
     		data.getAnnotationLists().addAll(opening.getAnnotationLists());
    		
-    		// Update the titlebar with new annotations list
     		SequencePanelPresenter.super.display(panel_width, panel_height, data);
     	}
     };

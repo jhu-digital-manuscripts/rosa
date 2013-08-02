@@ -2,10 +2,6 @@ package rosa.scanvas.demo.website.client.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
-/**
- * Represents a request to add a panel, remove a panel, or change the view of a
- * panel.
- */
 public class PanelMoveEvent extends GwtEvent<PanelMoveEventHandler> {
     public static Type<PanelMoveEventHandler> TYPE = new Type<PanelMoveEventHandler>();
 

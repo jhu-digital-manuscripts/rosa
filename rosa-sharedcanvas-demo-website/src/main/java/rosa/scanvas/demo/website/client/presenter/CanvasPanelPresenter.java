@@ -25,6 +25,8 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
+import com.google.gwt.user.client.Window;
+
 public class CanvasPanelPresenter extends BasePanelPresenter {
     public interface Display extends BasePanelPresenter.Display {
         DisplayAreaView getDisplayAreaWidget();
@@ -70,7 +72,6 @@ public class CanvasPanelPresenter extends BasePanelPresenter {
     			DisplayAreaView view = display.getDisplayAreaWidget();
     			int old_width = view.area().viewportBaseWidth();
     			view.area().zoomOut();
-    			//view.redraw();
     			display.getDisplayAreaWidget().animatedRedraw(old_width);
     		}
     	});
@@ -132,24 +133,27 @@ public class CanvasPanelPresenter extends BasePanelPresenter {
     	super.display(width, height, data);
         this.canvas = data.getCanvas();
         els.clear();
-        
+      
         if (!isResized()) {
         	this.width = width;
         	this.height = height;
         }
 
-        DisplayArea area = display.getDisplayAreaWidget().area();
-        area.setBaseSize(canvas.width(), canvas.height());
-        display.getDisplayAreaWidget().area().resizeViewport(width - 22, 
-        		height - 70 - display.getContextHeight());
+        DisplayAreaView view = display.getDisplayAreaWidget();
         
+        DisplayArea area = view.area();
+        area.setBaseSize(canvas.width(), canvas.height());
+        area.resizeViewport(this.width - 22, 
+        		this.height - 70 - display.getContextHeight());
+        
+        // Set position and zoom level of viewport, if possible
         if (data.getZoomLevel() != -1) {
         	area.setZoomLevel(area.numZoomLevels() 
         			>= data.getZoomLevel() ? data.getZoomLevel() : 0);
         }
         
-        if (data.getPosition().length == 2 && data.getPosition()[0] != -111
-        		&& data.getPosition()[1] != -111) {
+        if (data.getPosition().length == 2 && data.getPosition()[0] != -1
+        		&& data.getPosition()[1] != -1) {
         	area.setViewportBaseCenter(data.getPosition()[0],
         			data.getPosition()[1]);
         }
@@ -166,10 +170,10 @@ public class CanvasPanelPresenter extends BasePanelPresenter {
         	}
         }
         area.setContent(els);
-        display.getDisplayAreaWidget().setDisplayArea(area);
-        display.getDisplayAreaWidget().lockDisplay(false);
-        update();
         
+        view.lockDisplay(false);
+        view.display();
+      
         PanelDisplayedEvent event = new PanelDisplayedEvent(panelId(), data);
         eventBus().fireEvent(event);
     }
@@ -180,20 +184,11 @@ public class CanvasPanelPresenter extends BasePanelPresenter {
             return;
         }
         super.resize(width, height);
-        
+
         this.width = width;
         this.height = height;
-        
-        update();
-    }
 
-    private void update() {
-        if (canvas == null || width < 0 || height < 0) {
-            return;
-        }
-        
-        display.getDisplayAreaWidget().area().resizeViewport(width - 22, 
+        display.getDisplayAreaWidget().resize(width - 22, 
         		height - 70 - display.getContextHeight());
-        display.getDisplayAreaWidget().display();
     }
 }

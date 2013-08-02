@@ -222,7 +222,6 @@ public class BasePanelView extends Composite implements
         setup_text_annotations();
 
         hide_all.setStylePrimaryName("HidePanel");
-        // hide_all_child = new HTML("<i>Loading...</i>");
         Image hide_all_child = new Image("images/loading.gif");
         hide_all.setWidget(hide_all_child);
 
@@ -410,7 +409,6 @@ public class BasePanelView extends Composite implements
 
     @Override
     public Label addContextTitle(String text) {
-        // TODO make this more readable for longer context titles
         if (context_bar.getWidgetCount() > 0) {
             context_bar.add(new Label(Messages.INSTANCE.contextSeparator()));
         }

@@ -79,9 +79,17 @@ public class Panel {
     public PanelState getState() {
         return state;
     }
+    
+    public void setState(PanelState state) {
+    	this.state = state;
+    }
 
     public PanelData getData() {
         return data;
+    }
+    
+    public void setData(PanelData data) {
+    	this.data = data;
     }
     
     public void setCanvasZoomLevel(int zoom_level) {

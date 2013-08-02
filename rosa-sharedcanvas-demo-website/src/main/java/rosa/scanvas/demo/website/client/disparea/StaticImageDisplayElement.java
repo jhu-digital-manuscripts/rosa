@@ -1,7 +1,8 @@
 package rosa.scanvas.demo.website.client.disparea;
 
 /**
- * A display element representing an image.
+ * A display element representing a image. This image may or may not be
+ * IIIF compliant.
  */
 public class StaticImageDisplayElement extends DisplayElement {
 	private final String uri;

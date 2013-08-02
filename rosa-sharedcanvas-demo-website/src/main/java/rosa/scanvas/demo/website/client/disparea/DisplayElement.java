@@ -46,16 +46,14 @@ public abstract class DisplayElement {
 
     /**
      * Returns the stacking order of this display element, or its drawing
-     * priority. A lower number stacking order will be drawn after, and 
-     * on top of, those elements with higher stacking order.
+     * priority.
      */
     public int stackingOrder() {
         return stack_order;
     }
 
     /**
-     * Sets the drawing priority of this element. Lower numbers are drawn
-     * last, on top of elements with a higher order number.
+     * Sets the drawing priority of this element.
      * 
      * @param order
      */

@@ -67,7 +67,7 @@ public class ThumbnailBrowser extends Composite {
 
         for (int i = 0; i < thumbs.size(); ) {
         	Thumbnail thumb1 = thumbs.get(i++);
-        	Thumbnail thumb2 = i + 1 < thumbs.size() ? thumbs.get(i++) : null;
+        	Thumbnail thumb2 = i < thumbs.size() ? thumbs.get(i++) : null;
         	
         	FlowPanel opening_panel = new FlowPanel();
         	opening_panel.addStyleName("Opening");
@@ -96,8 +96,6 @@ public class ThumbnailBrowser extends Composite {
     }
 
     private void displayVisibleThumbs() {
-        int left = container.getAbsoluteLeft();
-        int right = left + container.getOffsetWidth();
         int top = container.getAbsoluteTop();
         int bottom = top + container.getOffsetHeight();
 
@@ -108,11 +106,11 @@ public class ThumbnailBrowser extends Composite {
         for (int i = 0, n = content.getWidgetCount(); i < n; i++) {
         	FlowPanel opening = (FlowPanel) content.getWidget(i);
         	
-        	int opening_left = opening.getAbsoluteLeft();
         	int opening_top = opening.getAbsoluteTop();
   	
-        	if (opening_left >= left && opening_top >= top 
-        			&& opening_left < right && opening_top < bottom) {
+        	// Make sure all visible thumbnails are visible, along with
+        	// any thumbnails above.
+        	if (opening_top < bottom) {
         		int widgets = opening.getWidgetCount();
         		
         		Thumbnail thumb_v = widgets > 0 ? 

@@ -43,7 +43,6 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class MainController implements ValueChangeHandler<String>, IsWidget {
-	private static final int SIDEBAR_WIDTH = 275;
 	private static final int HEADER_HEIGHT = 60;
 	
     private static int next_panel_id = 0;
@@ -213,22 +212,27 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
     private void duplicate_panel(int old_panel_id, int zoom_level, int[] position) {
     	int index = find_panel_index(old_panel_id);
     	int panel_id = next_panel_id++;
-    	
+
     	PanelState old_state = panels.get(index).getState();
-    	
+
     	PanelState state = new PanelState(old_state.getView(), old_state.getObjectUri(),
     			old_state.getManifestUri(), old_state.getCanvasIndex());
+    	PanelData new_data = new PanelData(panels.get(index).getData());
+
     	Panel panel = new Panel(create_panel_presenter(state.getView(), panel_id),
     			panel_id);
     	
     	panels.add(panel);
     	main_content.add(panel.getPresenter());
     	
-    	panel.setCanvasZoomLevel(zoom_level);
-    	panel.setViewportPosition(position);
+    	new_data.setZoomLevel(zoom_level);
+    	new_data.setPosition(position);
     	
     	update_panel_sizes(Window.getClientWidth(), Window.getClientHeight());
-    	panel.display(panel_width, panel_height, state);
+
+    	panel.setState(state);
+    	panel.setData(new_data);
+    	panel.getPresenter().display(panel_width, panel_height, new_data);
     }
 
     /**
@@ -381,12 +385,11 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
             if (i < panels.size()) {
                 Panel old_panel = panels.get(i);
                 PanelRequestEvent req = new PanelRequestEvent(
-                        PanelRequestEvent.PanelAction.CHANGE,
-                        old_panel.getId(), panel_state);
+                        PanelAction.CHANGE, old_panel.getId(), panel_state);
                 event_bus.fireEvent(req);
             } else {
                 PanelRequestEvent req = new PanelRequestEvent(
-                        PanelRequestEvent.PanelAction.ADD, panel_state);
+                        PanelAction.ADD, panel_state);
                 event_bus.fireEvent(req);
             }
         }
@@ -396,7 +399,7 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
         for (int i = panel_states.size(); i < old_size; i++) {
         	Panel old_panel = panels.get(panel_states.size());
         	PanelRequestEvent req = new PanelRequestEvent(
-        			PanelRequestEvent.PanelAction.REMOVE, old_panel.getId());
+        			PanelAction.REMOVE, old_panel.getId());
         	event_bus.fireEvent(req);
         }
     }
@@ -408,7 +411,7 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
             count = 1;
         }
 
-        panel_width = (win_width/* - SIDEBAR_WIDTH*/) - 40;
+        panel_width = (win_width) - 40;
         panel_height = (win_height - HEADER_HEIGHT) - 28;
 
         if (count > 1) {
@@ -420,9 +423,6 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
                 panel_height -= 15;
             }
         }
-
-        // panel_width -= count * 10;
-        // panel_height -= count * 5;
 
         if (panel_width < 300) {
             panel_width = 300;

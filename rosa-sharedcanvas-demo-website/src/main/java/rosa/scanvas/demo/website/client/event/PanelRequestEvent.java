@@ -22,7 +22,7 @@ public class PanelRequestEvent extends GwtEvent<PanelRequestEventHandler> {
     private final int[] position = new int[2];
 
     public PanelRequestEvent(PanelAction action, int panel_id) {
-        this(action, panel_id, null, -1, -112, -112);
+        this(action, panel_id, null, -1, -1, -1);
     }
 
     public PanelRequestEvent(PanelAction action, PanelState state) {
@@ -40,8 +40,8 @@ public class PanelRequestEvent extends GwtEvent<PanelRequestEventHandler> {
         this.state = state;
         this.zoom_level = zoom_level;
         
-        this.position[0] = position.length > 0 ? position[0] : -111;
-        this.position[1] = position.length > 1 ? position[1] : -111;
+        this.position[0] = position.length > 0 ? position[0] : -1;
+        this.position[1] = position.length > 1 ? position[1] : -1;
     }
 
     public PanelAction getAction() {

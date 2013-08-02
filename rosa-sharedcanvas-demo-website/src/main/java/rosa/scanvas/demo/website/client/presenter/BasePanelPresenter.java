@@ -42,8 +42,6 @@ import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 
-import com.google.gwt.user.client.Window;
-
 public abstract class BasePanelPresenter implements PanelPresenter {
     public interface Display extends IsWidget {
         ToggleButton getOptionsButton();
@@ -180,55 +178,39 @@ public abstract class BasePanelPresenter implements PanelPresenter {
             }
         });
 
-        display.getCloseButton().addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                display.getOptionsPopup().hide();
-
-                PanelRequestEvent req = new PanelRequestEvent(
-                        PanelRequestEvent.PanelAction.REMOVE, panel_id);
-                event_bus.fireEvent(req);
-            }
-        });
-
-        display.getCloseLabel().addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                display.getOptionsPopup().hide();
-
-                PanelRequestEvent req = new PanelRequestEvent(
-                        PanelRequestEvent.PanelAction.REMOVE, panel_id);
-                event_bus.fireEvent(req);
-            }
-        });
-
-        display.getDuplicateButton().addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                display.getOptionsPopup().hide();
-                doDuplicatePanel();
-            }
-        });
-
-        display.getDuplicateLabel().addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                display.getOptionsPopup().hide();
-                doDuplicatePanel();
-            }
-        });
-
-        display.getSwapHorizontalButton().addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                PanelMoveEvent move = new PanelMoveEvent(
-                        PanelMoveEvent.PanelDirection.HORIZONTAL, panel_id);
-                event_bus.fireEvent(move);
-            }
-        });
-
-        display.getSwapHorizontalLabel().addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                PanelMoveEvent move = new PanelMoveEvent(
-                        PanelMoveEvent.PanelDirection.HORIZONTAL, panel_id);
-                event_bus.fireEvent(move);
-            }
-        });
+        ClickHandler close = new ClickHandler() {
+        	public void onClick(ClickEvent event) {
+        		display.getOptionsPopup().hide();
+        		
+        		PanelRequestEvent req = new PanelRequestEvent(
+        				PanelRequestEvent.PanelAction.REMOVE, panel_id);
+        		event_bus.fireEvent(req);
+        	}
+        };
+        
+        display.getCloseButton().addClickHandler(close);
+        display.getCloseLabel().addClickHandler(close);
+        
+        ClickHandler duplicate = new ClickHandler() {
+        	public void onClick(ClickEvent event) {
+        		display.getOptionsPopup().hide();
+        		doDuplicatePanel();
+        	}
+        };
+        
+        display.getDuplicateButton().addClickHandler(duplicate);
+        display.getDuplicateLabel().addClickHandler(duplicate);
+        
+        ClickHandler swap_handler = new ClickHandler() {
+        	public void onClick(ClickEvent event) {
+        		PanelMoveEvent move = new PanelMoveEvent(
+        				PanelMoveEvent.PanelDirection.HORIZONTAL, panel_id);
+        		event_bus.fireEvent(move);
+        	}
+        };
+        
+        display.getSwapHorizontalButton().addClickHandler(swap_handler);
+        display.getSwapHorizontalLabel().addClickHandler(swap_handler);
 
         ClickHandler move_up = new ClickHandler() {
             public void onClick(ClickEvent event) {
@@ -284,9 +266,9 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     public PanelData data() {
         return data;
     }
-
+    
     protected void doDuplicatePanel() {
-        PanelRequestEvent req = new PanelRequestEvent(
+    	PanelRequestEvent req = new PanelRequestEvent(
                 PanelRequestEvent.PanelAction.ADD, panel_id);
         event_bus.fireEvent(req);
     }
@@ -306,7 +288,8 @@ public abstract class BasePanelPresenter implements PanelPresenter {
         default_image = false;
 
         display.showContent();
-
+        
+        // Data will be null in the event of a HOME panel
         if (data == null) {
             return;
         }
@@ -373,15 +356,6 @@ public abstract class BasePanelPresenter implements PanelPresenter {
                     if (!default_image
                             && !AnnotationUtil.isSpecificResource(anno)) {
                         data.setAnnotationStatus(anno, true);
-                        
-//                        Scheduler.get().scheduleDeferred(
-//                                new ScheduledCommand() {
-//                                    @Override
-//                                    public void execute() {
-//                                        checkbox.setValue(true, true);
-//                                    }
-//                                });
-
                         default_image = true;
                     }
 
@@ -406,8 +380,6 @@ public abstract class BasePanelPresenter implements PanelPresenter {
                 }
 
                 checkbox.setValue(data.getAnnotationStatus(anno), false);
-                
-                
                 bind_annotation_checkbox(checkbox, anno);
             }
         }
@@ -516,7 +488,6 @@ public abstract class BasePanelPresenter implements PanelPresenter {
         display.clearContextLabels();
 
         if (collection != null) {
-            // Label context = display.addContextLabel(collection.label());
             if (manifest != null) {
                 Label context = display.addContextLink(collection.label());
                 context.addStyleName("Link");
@@ -537,8 +508,6 @@ public abstract class BasePanelPresenter implements PanelPresenter {
         }
 
         if (manifest != null) {
-            // Label context = display.addContextLabel(manifest.label());
-
             if (seq != null) {
                 Label context = display.addContextLink(manifest.label());
                 context.addStyleName("Link");
@@ -559,8 +528,6 @@ public abstract class BasePanelPresenter implements PanelPresenter {
         }
 
         if (seq != null) {
-            // Label context = display.addContextLabel(seq.label());
-
             if (canvas != null) {
                 Label context = display.addContextLink(seq.label());
                 context.addStyleName("Link");
@@ -632,7 +599,7 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     }
 
     /**
-     * Has the resize method been called?
+     * Has the resize method been called since the panel was created?
      */
     public boolean isResized() {
         return is_resized;

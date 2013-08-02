@@ -57,13 +57,6 @@ public class MultiLineTextDrawable implements DisplayAreaDrawable {
     		int y = el.baseTop();
     		
     		for (int i = 0; i < words.length; i++) {
-    			/*if (y + step > el.baseTop() + el.baseHeight()) {
-    				context.restore();
-    				el.neverShowPopup(false);
-    				cb.onDrawn();
-    				return;
-    			}*/
-    			
     			String test_line = line + words[i] + " ";
     			
     			if (context.measureText(test_line).getWidth() > el.baseWidth() && i > 0

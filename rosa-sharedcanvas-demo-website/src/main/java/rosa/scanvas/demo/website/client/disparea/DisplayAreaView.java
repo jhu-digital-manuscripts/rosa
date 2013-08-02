@@ -58,9 +58,9 @@ public class DisplayAreaView extends Composite implements HasClickHandlers,
     private final Context2d overview_context;
     private DisplayArea area;
 
-//    private int current_zoom_level;
-//    private int current_base_center_x;
-//    private int current_base_center_y;
+    private int current_zoom_level;
+    private int current_base_center_x;
+    private int current_base_center_y;
 
     private boolean locked;
     private boolean drag_may_start;
@@ -600,9 +600,9 @@ public class DisplayAreaView extends Composite implements HasClickHandlers,
         return locked;
     }
 
-    public void setDisplayArea(DisplayArea area) {
+/*    public void setDisplayArea(DisplayArea area) {
         this.area = area;
-    }
+    }*/
 
     /**
      * Sets the viewport size, and overview size
@@ -629,14 +629,17 @@ public class DisplayAreaView extends Composite implements HasClickHandlers,
         grab_overview = true;
 
         // save zoom level and center position of new display area
-        //current_zoom_level = area.zoomLevel();
-        //current_base_center_x = area.viewportBaseCenterX();
-        //current_base_center_y = area.viewportBaseCenterY();
+        current_zoom_level = area.zoomLevel();
+        current_base_center_x = area.viewportBaseCenterX();
+        current_base_center_y = area.viewportBaseCenterY();
         // set zoom level to 0 and recenter display area in order
         // to grab overview
         //resetDisplay();
+
+       	area.setZoomLevel(0);
+       	area.setViewportBaseCenter(area.baseWidth() / 2, area.baseHeight() / 2);
         
-        redraw();
+       	redraw();
     }
 
     /**
@@ -682,10 +685,15 @@ public class DisplayAreaView extends Composite implements HasClickHandlers,
         overview_context.stroke();
         overview_context.closePath();
 
-        // change zoom level and center position back to correct values
-        //area.setZoomLevel(current_zoom_level);
-        //area.setViewportBaseCenter(current_base_center_x, current_base_center_y);
-        // redraw();
+        // change zoom level and center position back to correct values, if necessary
+        if (area.zoomLevel() != current_zoom_level
+        		|| area.viewportBaseCenterX() != current_base_center_x
+        		|| area.viewportBaseCenterY() != current_base_center_y) {
+        	area.setZoomLevel(current_zoom_level);
+        	area.setViewportBaseCenter(current_base_center_x, current_base_center_y);
+        	redraw();
+        }
+        
     }
 
     /**
@@ -700,7 +708,7 @@ public class DisplayAreaView extends Composite implements HasClickHandlers,
         // Chain together callbacks to iterate over draw list
 
         final List<DisplayElement> draw_list = area.findInViewport();
-
+        
         DisplayAreaDrawable.OnDrawnCallback cb = new DisplayAreaDrawable.OnDrawnCallback() {
             int id = redraw_id;
             int index = 0;
@@ -717,7 +725,7 @@ public class DisplayAreaView extends Composite implements HasClickHandlers,
 
                 while (index < draw_list.size()) {
                     DisplayElement el = draw_list.get(index++);
-
+                    
                     if (area.contains(el.id()) && el.isVisible()) {
                         next = el;
                         break;
@@ -738,7 +746,34 @@ public class DisplayAreaView extends Composite implements HasClickHandlers,
             }
         };
 
-        cb.onDrawn();
+        if (!draw_list.isEmpty()) {
+        	cb.onDrawn();
+        }
+    }
+    
+    /**
+     * Resize the HTML5 canvas
+     * 
+     * @param width
+     * @param height
+     */
+    public void resize(int width, int height) {
+    	// Change the size of the DisplayArea
+    	area.resizeViewport(width, height);
+    	
+    	// Change the size of the HTML5 canvas
+    	viewport.setPixelSize(area.viewportWidth(), area.viewportHeight());
+        viewport.setCoordinateSpaceWidth(area.viewportWidth());
+        viewport.setCoordinateSpaceHeight(area.viewportHeight());
+        
+        // Re-find the location of the overview in the canvas
+        int overview_width = OVERVIEW_SIZE;
+        int overview_height = (overview_width * area.baseHeight())
+                / area.baseWidth();
+        overview_x = area.viewportWidth() - overview_width;
+        overview_y = area.viewportHeight() - overview_height;
+        
+        redraw();
     }
 
     public DisplayArea area() {
