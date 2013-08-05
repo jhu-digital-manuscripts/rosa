@@ -102,7 +102,7 @@ public class App implements EntryPoint {
     }
 
     // TODO move all of this to properties file, take advantage of lc
-    // TODO put in Config.properties
+    // TODO put in Config.properties with fsi constants
 
     private static final int MAX_SEARCH_RESULTS = 20;
     private static final String DATA_PATH = "data/";
@@ -1015,7 +1015,7 @@ public class App implements EntryPoint {
         toolbar.add(reader_button);
         toolbar.add(browser_button);
         
-        RoseBook rose_book = new RoseBook(book.imagesTable());
+        RoseBook rose_book = new RoseBook("rose", book.imagesTable());
         final CodexModel rose_book_model = rose_book.model();
         final CodexController rose_book_ctrl = new SimpleCodexController(
                 rose_book_model);
