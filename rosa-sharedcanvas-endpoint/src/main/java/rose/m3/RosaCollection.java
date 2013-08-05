@@ -17,15 +17,13 @@ import java.util.List;
  * TODO caching
  * */
 
-public class RoseCollection {
-    // TODO auth issues
-    // private static final String ROSE_DATA_URL =
-    // "http://rosetest.library.jhu.edu/data/";
-    private static final String ROSE_DATA_URL = "http://romandelarose.org/data/";
+public class RosaCollection {
     private static final String BOOKS_EN_CSV = "books.csv";
 
     private final CSVSpreadSheet table;
     private final String data_url;
+    private final String fsi_name;
+    private final String name;
 
     private enum Column {
         ID, REPOSITORY, SHELFMARK, COMMON_NAME, LOCATION, DATE, ORIGIN, TYPE, NUM_ILLUSTRATIONS, NUM_FOLIOS, TRANSCRIPTION, ILLUSTRATION_TAGGING, NARRATIVE_TAGGING, BIBLIOGRAPHY;
@@ -187,7 +185,7 @@ public class RoseCollection {
             String image = image(i);
             String bookid = image.substring(0, image.indexOf('.'));
 
-            return "http://fsiserver.library.jhu.edu/server?type=image&source=rose/"
+            return "http://fsiserver.library.jhu.edu/server?type=image&source=" + fsi_name + "/"
                     + bookid + "/" + image;
         }
 
@@ -195,7 +193,7 @@ public class RoseCollection {
             String image = image(i);
             String bookid = image.substring(0, image.indexOf('.'));
 
-            return "http://rosetest.library.jhu.edu/iiif/rose%2F" + bookid
+            return "http://rosetest.library.jhu.edu/iiif/" + fsi_name + "%2F" + bookid
                     + "%2F" + image + "/full/300,/0/native.jpg";
         }
 
@@ -390,16 +388,21 @@ public class RoseCollection {
         return s.matches("\\d+\\.tif");
     }
 
-    public RoseCollection(CSVSpreadSheet table, String data_url) {
+    public RosaCollection(CSVSpreadSheet table, String data_url, String fsi_prefix, String name) {
         this.table = table;
         this.data_url = data_url;
+        this.fsi_name = fsi_prefix;
+        this.name = name;
     }
 
-    public RoseCollection() throws IOException {
-        InputStream is = new URL(ROSE_DATA_URL + BOOKS_EN_CSV).openStream();
+    public RosaCollection(String data_url, String fsi_prefix, String name) throws IOException {
+        InputStream is = new URL(data_url + BOOKS_EN_CSV).openStream();
         this.table = new CSVSpreadSheet(new InputStreamReader(is, "UTF-8"));
-        this.data_url = ROSE_DATA_URL;
         is.close();
+        
+        this.data_url = data_url;
+        this.fsi_name = fsi_prefix;
+        this.name = name;
     }
 
     public Book findBook(String id) {
@@ -426,7 +429,7 @@ public class RoseCollection {
         return data_url;
     }
 
-    public String name() {
-        return "Roman de la Rose Digital Library";
+    public String name() {        
+        return name;
     }
 }
