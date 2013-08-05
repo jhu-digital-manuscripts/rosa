@@ -10,6 +10,9 @@ import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 
+/**
+ * View that displays a Shared Canvas sequence.
+ */
 public class SequenceView extends BasePanelView implements
         SequencePanelPresenter.Display {
 

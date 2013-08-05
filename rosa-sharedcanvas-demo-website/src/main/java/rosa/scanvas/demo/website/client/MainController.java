@@ -191,6 +191,7 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
      * Add a new panel with a specified state.
      * 
      * @param state
+     * 			The intended state of the new panel
      */
     private void add_panel(PanelState state) {
         int panel_id = next_panel_id++;
@@ -394,7 +395,7 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
             }
         }
   
-        // if any old panels still exist, remove them
+        // If any old panels still exist, remove them
         int old_size = panels.size();
         for (int i = panel_states.size(); i < old_size; i++) {
         	Panel old_panel = panels.get(panel_states.size());
@@ -441,7 +442,6 @@ public class MainController implements ValueChangeHandler<String>, IsWidget {
         }
     }
 
-    // TODO Be smart and only call resize when size changes...
     private void update_panel_sizes(int win_width, int win_height) {
         calculate_panel_size(win_width, win_height);
         

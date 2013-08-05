@@ -47,6 +47,10 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 
+/**
+ * This widget diplays one or two canvases at a time. It emulates the 
+ * opening of a book.
+ */
 public class PageTurner extends Composite implements HasClickHandlers, 
 		HasTouchEndHandlers {
 	
@@ -85,8 +89,6 @@ public class PageTurner extends Composite implements HasClickHandlers,
     private boolean drag_may_start;
     private int drag_x, drag_y;
     
-    private ArrayList<DisplayElement> verso_els;
-    private ArrayList<DisplayElement> recto_els;
     private DisplayAreaView verso_view;
     private DisplayAreaView recto_view;
     private NewOpeningCallback cb;
@@ -101,8 +103,6 @@ public class PageTurner extends Composite implements HasClickHandlers,
         this.canvas_button = new Button();
         canvas_button.setVisible(false);
         
-        this.verso_els = new ArrayList<DisplayElement>();
-        this.recto_els = new ArrayList<DisplayElement>();
         this.verso_view = new DisplayAreaView();
         this.recto_view = new DisplayAreaView();
         
@@ -310,7 +310,9 @@ public class PageTurner extends Composite implements HasClickHandlers,
      * These handlers are used to redirect the user to the detailed canvas view.
      * 
      * @param view
+     * 			The particular view widget for a page
      * @param is_verso
+     * 			Is this the left (verso) page?
      */
     private void bind_canvas(final DisplayAreaView view, final boolean is_verso) {
     	view.addClickHandler(new ClickHandler() {
@@ -410,10 +412,15 @@ public class PageTurner extends Composite implements HasClickHandlers,
      * Sets the openings. Each opening consists of a verso and/or a recto page.
      * 
      * @param sequence
+     * 			The sequence of pages
      * @param openings
+     * 			The list containing the openings to be displayed
      * @param page_width
+     * 			The initial width of each page in the page turner
      * @param page_height
+     * 			The initial height of each page in the page turner
      * @param cb
+     * 			Callback that is called when a page is turned
      */
     public void setOpenings(Sequence sequence, List<Opening> openings,
     		final int page_width, final int page_height, NewOpeningCallback cb) {
@@ -425,6 +432,14 @@ public class PageTurner extends Composite implements HasClickHandlers,
         resize(page_width, page_height);
     }
 
+    /**
+     * Resize the page turner.
+     * 
+     * @param page_width
+     * 			The new width of each page in the page turner
+     * @param page_height
+     * 			The new height of each page in the page turner
+     */
     public void resize(int page_width, int page_height) {
         this.page_width = page_width;
         this.page_height = page_height - 15;
@@ -438,9 +453,13 @@ public class PageTurner extends Composite implements HasClickHandlers,
     
     /**
      * Displays the contents of a page on a DisplayAreaView
+     * 
+     * @param canvas_index
+     * 			The index of the canvas to be displayed in the current sequence.
+     * @param view
+     * 			The display widget onto which the canvas will be displayed.
      */
-    private void asDisplayArea(final int canvas_index, 
-    		final DisplayAreaView view, final ArrayList<DisplayElement> els) {
+    private void asDisplayArea(final int canvas_index, final DisplayAreaView view) {
     	PanelData canvas_data = new PanelData();
     	canvas_data.setCanvas(sequence.canvas(canvas_index));
     	
@@ -462,6 +481,7 @@ public class PageTurner extends Composite implements HasClickHandlers,
     		@Override
     		public void onSuccess(PanelData result) {
     			DisplayArea area = view.area();
+    			List<DisplayElement> els = new ArrayList<DisplayElement>();
 
     			area.setBaseSize(result.getCanvas().width(), result.getCanvas().height());
     			area.resizeViewport(img_width, img_height);
@@ -501,8 +521,6 @@ public class PageTurner extends Composite implements HasClickHandlers,
     	this.current_opening = opening;
 
     	opening_data = new PanelData();
-    	verso_els.clear();
-    	recto_els.clear();
     	
     	// Ensure that if both pages exist, add them to the to_draw queue
     	if (opening.getVerso() != null) {
@@ -513,7 +531,7 @@ public class PageTurner extends Composite implements HasClickHandlers,
     	}
     	
     	if (opening.getVerso() != null) {
-    		asDisplayArea(opening.getVersoIndex(), verso_view, verso_els);
+    		asDisplayArea(opening.getVersoIndex(), verso_view);
     		display.setWidget(0, 0, verso_panel);
     	} else {
     		display.setWidget(0, 0, place_holder);
@@ -526,7 +544,7 @@ public class PageTurner extends Composite implements HasClickHandlers,
     	}
     	
     	if (opening.getRecto() != null) {
-    		asDisplayArea(opening.getRectoIndex(), recto_view, recto_els);
+    		asDisplayArea(opening.getRectoIndex(), recto_view);
     		display.setWidget(0, 1, recto_panel);
     	} else {
     		display.setWidget(0, 1, place_holder);

@@ -128,8 +128,6 @@ public abstract class BasePanelPresenter implements PanelPresenter {
     }
 
     private void bind() {
-        // When one button is clicked, untoggle all other buttons and hide
-        // all other menus
         display.getOptionsButton().addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 if (display.getOptionsButton().isDown()) {

@@ -8,6 +8,9 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
 
+/**
+ * A view that displays a single page in detail. Capable of zooming and panning.
+ */
 public class CanvasView extends BasePanelView implements CanvasPanelPresenter.Display {
 	
 	private final Panel main;

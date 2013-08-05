@@ -18,6 +18,9 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 
+/**
+ * View that displays a Shared Canvas manifest.
+ */
 public class ManifestView extends BasePanelView implements
         ManifestPanelPresenter.Display {
 	

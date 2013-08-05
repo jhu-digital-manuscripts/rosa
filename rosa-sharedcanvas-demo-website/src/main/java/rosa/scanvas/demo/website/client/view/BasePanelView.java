@@ -29,52 +29,31 @@ import com.google.gwt.user.client.ui.Widget;
 public class BasePanelView extends Composite implements
         BasePanelPresenter.Display {
 
-    private class MovingPopupPanel extends PopupPanel {
-
+	/**
+	 * Popup panel that previews click and touch events to prevent
+	 * default behavior when the associated parent button is clicked
+	 * while the panel is visible.
+	 */
+    private class AutohidePopupPanel extends PopupPanel {
         private Widget parent_button;
 
-        public MovingPopupPanel(Widget parent_button, boolean autohide,
-                boolean modal) {
-            super(autohide, modal);
+        public AutohidePopupPanel(Widget parent_button, boolean modal) {
+            super(true, modal);
             this.parent_button = parent_button;
             setPreviewingAllNativeEvents(true);
         }
 
         @Override
         protected void onPreviewNativeEvent(NativePreviewEvent event) {
-            // Hook the popup panel's event preview.
             if (!event.isCanceled()) {
-
                 EventTarget target = event.getNativeEvent().getEventTarget();
                 Element parent_element = parent_button.getElement();
 
                 switch (event.getTypeInt()) {
 
-                // OnScroll events are not previewable!
-                /*
-                 * case Event.ONSCROLL:
-                 * setPopupPosition(options_button.getAbsoluteLeft() +
-                 * options_button.getOffsetWidth() - getOffsetWidth(),
-                 * options_button.getAbsoluteTop() +
-                 * options_button.getOffsetHeight()); return;
-                 * 
-                 * case Event.ONMOUSEWHEEL: final int left =
-                 * options_button.getAbsoluteLeft() +
-                 * options_button.getOffsetWidth() - getOffsetWidth(); final int
-                 * top = options_button.getAbsoluteTop() +
-                 * options_button.getOffsetHeight();
-                 * 
-                 * if (top + getOffsetHeight() > Window.getClientHeight()) {
-                 * return; }
-                 * 
-                 * Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                 * 
-                 * @Override public void execute() { setPopupPosition(left,
-                 * top); } });
-                 * 
-                 * return;
-                 */
-
+                // OnScroll events are not previewable! The popup panel cannot
+                // move with scroll events using this method.
+                
                 case Event.ONMOUSEDOWN:
                     // Check to see if the target is the current popup
                     if (parent_element.isOrHasChild(Element.as(target))) {
@@ -117,8 +96,6 @@ public class BasePanelView extends Composite implements
     private final PopupPanel anno_popup;
     private final PopupPanel options_popup;
     private final PopupPanel hide_all;
-
-    // private final HTML hide_all_child;
 
     private final Label close;
     private final Label swap_h;
@@ -177,10 +154,10 @@ public class BasePanelView extends Composite implements
         meta_button.setEnabled(false);
         text_button.setEnabled(false);
 
-        text_popup = new MovingPopupPanel(text_button, true, false);
-        meta_popup = new MovingPopupPanel(meta_button, true, false);
-        anno_popup = new MovingPopupPanel(anno_button, true, false);
-        options_popup = new MovingPopupPanel(options_button, true, false);
+        text_popup = new AutohidePopupPanel(text_button, false);
+        meta_popup = new AutohidePopupPanel(meta_button, false);
+        anno_popup = new AutohidePopupPanel(anno_button, false);
+        options_popup = new AutohidePopupPanel(options_button, false);
         hide_all = new PopupPanel(false, false);
 
         text_popup.setStylePrimaryName("PopupPanel");

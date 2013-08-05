@@ -19,6 +19,9 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 
+/**
+ * View that displays a Shared Canvas manifest collection.
+ */
 public class CollectionView extends BasePanelView implements
         ManifestCollectionPanelPresenter.Display {
 

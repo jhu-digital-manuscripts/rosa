@@ -586,6 +586,7 @@ public class DisplayAreaView extends Composite implements HasClickHandlers,
      * Lock or unlock the display area pan/zoom controls
      * 
      * @param status
+     * 			TRUE locks the display
      */
     public void lockDisplay(boolean status) {
         locked = status;
@@ -599,10 +600,6 @@ public class DisplayAreaView extends Composite implements HasClickHandlers,
     public boolean isLocked() {
         return locked;
     }
-
-/*    public void setDisplayArea(DisplayArea area) {
-        this.area = area;
-    }*/
 
     /**
      * Sets the viewport size, and overview size
@@ -628,14 +625,13 @@ public class DisplayAreaView extends Composite implements HasClickHandlers,
         overview_y = area.viewportHeight() - overview_height;
         grab_overview = true;
 
-        // save zoom level and center position of new display area
+        // Save zoom level and center position of new display area
         current_zoom_level = area.zoomLevel();
         current_base_center_x = area.viewportBaseCenterX();
         current_base_center_y = area.viewportBaseCenterY();
-        // set zoom level to 0 and recenter display area in order
+        
+        // Set zoom level to 0 and recenter display area in order
         // to grab overview
-        //resetDisplay();
-
        	area.setZoomLevel(0);
        	area.setViewportBaseCenter(area.baseWidth() / 2, area.baseHeight() / 2);
         
@@ -706,6 +702,7 @@ public class DisplayAreaView extends Composite implements HasClickHandlers,
                 area.viewportHeight());
 
         // Chain together callbacks to iterate over draw list
+        // This is done because drawing order matters.
 
         final List<DisplayElement> draw_list = area.findInViewport();
         
@@ -752,10 +749,12 @@ public class DisplayAreaView extends Composite implements HasClickHandlers,
     }
     
     /**
-     * Resize the HTML5 canvas
+     * Resize the HTML5 canvas.
      * 
      * @param width
+     * 			New width of the HTML5 canvas in px.
      * @param height
+     * 			New height of the HTML5 canvas in px.
      */
     public void resize(int width, int height) {
     	// Change the size of the DisplayArea
@@ -808,7 +807,8 @@ public class DisplayAreaView extends Composite implements HasClickHandlers,
     }
 
     /**
-     * Reset the display position to the display area center and zoom level 0.
+     * Reset the display position to the display area center and zoom level 0
+     * with an animation.
      */
     public void resetDisplay() {
         int old_width = area.viewportBaseWidth();

@@ -10,7 +10,8 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Label;
 
 /**
- * Widget holding a thumbnail and an associated label
+ * Widget holding a thumbnail and an associated label. The image is not loaded
+ * until the makeViewable() method is called.
  */
 public class Thumbnail extends Composite implements HasClickHandlers {
     private final Grid grid;
@@ -29,6 +30,9 @@ public class Thumbnail extends Composite implements HasClickHandlers {
         initWidget(grid);
     }
 
+    /**
+     * Load and display the image.
+     */
     public void makeViewable() {
         image.makeViewable();
     }
