@@ -24,6 +24,5 @@
     <module>pizan-website</module>
     <module>rosa-sharedcanvas-demo-website</module>
     <module>rosa-sharedcanvas-model</module>
-    <module>rosa-sharedcanvas-viewer</module>
   </modules>
 </project>
