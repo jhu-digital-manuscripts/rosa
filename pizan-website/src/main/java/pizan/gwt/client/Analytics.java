@@ -83,11 +83,6 @@ public class Analytics {
 			actionname = "view";
 			label = "char names";
 			break;
-		case VIEW_COLLECTION_DATA:
-			category = "Page";
-			actionname = "view";
-			label = "collection data";
-			break;
 		case VIEW_CONTACT:
 			category = "Page";
 			actionname = "view";

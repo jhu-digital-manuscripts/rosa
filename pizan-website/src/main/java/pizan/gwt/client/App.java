@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
-
 import rosa.gwt.common.client.EmbeddedObjectViewer;
 import rosa.gwt.common.client.FSIService;
 import rosa.gwt.common.client.HttpGet;
@@ -22,7 +21,6 @@ import rosa.gwt.common.client.codexview.RoseBook;
 import rosa.gwt.common.client.codexview.SimpleCodexController;
 import rosa.gwt.common.client.data.Book;
 import rosa.gwt.common.client.data.CharacterNamesTable;
-import rosa.gwt.common.client.data.CollectionDataTable;
 import rosa.gwt.common.client.data.IllustrationTitlesTable;
 import rosa.gwt.common.client.data.ImageTagging;
 import rosa.gwt.common.client.data.Repository;
@@ -117,7 +115,6 @@ public class App implements EntryPoint {
     private static final String BUG_SUBMIT_EMAIL = "contactus@romandelarose.org";
 
     private static final String SEARCH_BOOK_RESTRICT_KEY = "BOOK";
-    private static final String FSI_COLLECTION = "pizan";
 
     private final rosa.gwt.common.client.SearchServiceAsync searchservice = GWT
             .create(rosa.gwt.common.client.SearchService.class);
@@ -132,7 +129,6 @@ public class App implements EntryPoint {
     private int selectedImageIndex = -1; // currently selected image of book
 
     // Loaded on demand
-    private CollectionDataTable coldata = null;
     private IllustrationTitlesTable illustitles = null;
     private CharacterNamesTable charnames = null;
     private String[][] charnames_variants = null;
@@ -650,8 +646,6 @@ public class App implements EntryPoint {
                     Resources.INSTANCE.partnersHtml());
         } else if (state == Action.VIEW_ILLUSTRATION_TITLES) {
             viewIllustrationTitles();
-        } else if (state == Action.VIEW_COLLECTION_DATA) {
-            viewCollectionData();
         } else if (state == Action.VIEW_CHARACTER_NAMES) {
             viewCharacterNames();
         } else if (state == Action.VIEW_TERMS) {
@@ -913,12 +907,6 @@ public class App implements EntryPoint {
             }
         });
         
-        headermenu.addItem("Collection", new ScheduledCommand() {
-            public void execute() {
-                History.newItem(Action.HOME.toToken());
-            }
-        });
-        
         headermenu.addItem("List of Works", new ScheduledCommand() {
             public void execute() {
                 History.newItem(Action.VIEW_WORKS.toToken());
@@ -1063,7 +1051,7 @@ public class App implements EntryPoint {
         toolbar.add(reader_button);
         toolbar.add(browser_button);
         
-        RoseBook rose_book = new RoseBook(FSI_COLLECTION, book.imagesTable());
+        RoseBook rose_book = new RoseBook(PIZAN_FSI_SHARE, book.imagesTable());
         final CodexModel rose_book_model = rose_book.model();
         final CodexController rose_book_ctrl = new SimpleCodexController(
                 rose_book_model);
@@ -1892,48 +1880,6 @@ public class App implements EntryPoint {
         w.setStylePrimaryName("Home");
         w.setWordWrap(true);
         content.add(w);
-    }
-
-    private void viewCollectionData() {
-        book = null;
-        initDisplay(Labels.INSTANCE.collectionData(), true);
-
-        if (coldata == null) {
-            loadingdialog.display();
-
-            try {
-                Resources.INSTANCE.collectionDataTable().getText(
-                        new ResourceCallback<TextResource>() {
-                            public void onSuccess(TextResource resource) {
-                                loadingdialog.hide();
-                                coldata = new CollectionDataTable(resource
-                                        .getText());
-                                viewCollectionData();
-                            }
-
-                            public void onError(ResourceException e) {
-                                loadingdialog.hide();
-                                reportInternalError(
-                                        "Failed to load external resource", e);
-                            }
-                        });
-            } catch (ResourceException e) {
-                loadingdialog.hide();
-                reportInternalError("Failed to load external resource", e);
-            }
-        } else {
-            // Hack to make spreadsheet downloadable
-            String name = "collection_data.csv";
-
-            if (LC.equals("fr")) {
-                name = "collection_data_fr.csv";
-            }
-            
-            addHtml(content,
-                    Resources.INSTANCE.collectionDataHtml(),
-                    new Anchor(Labels.INSTANCE.download(), GWT
-                            .getHostPageBaseURL() + DATA_PATH + name), coldata);
-        }
     }
 
     private void viewIllustrationTitles() {

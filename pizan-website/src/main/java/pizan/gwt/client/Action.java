@@ -12,7 +12,7 @@ public enum Action {
     HOME("home"), SEARCH("search"), BROWSE_BOOK("browse"), SELECT_BOOK("select"), READ_BOOK(
             "read"), VIEW_BOOK("book"), VIEW_PARTNERS("partners"), VIEW_PIZAN(
             "pizan"), VIEW_CONTACT("contact"), VIEW_WORKS(
-            "works"), VIEW_TERMS("terms"), VIEW_COLLECTION_DATA("data"), VIEW_CHARACTER_NAMES(
+            "works"), VIEW_TERMS("terms"), VIEW_CHARACTER_NAMES(
             "chars"), VIEW_ILLUSTRATION_TITLES("illustrations"), VIEW_PROPER_NAMES("names");
 
     private final String prefix;
