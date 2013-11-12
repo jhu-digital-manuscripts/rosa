@@ -7,6 +7,10 @@ import java.util.NoSuchElementException;
 
 import org.apache.commons.io.input.BOMInputStream;
 
+import com.github.jsonldjava.core.JSONLD;
+import com.github.jsonldjava.core.JSONLDProcessingError;
+import com.github.jsonldjava.impl.JenaRDFParser;
+import com.github.jsonldjava.utils.JSONUtils;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.NodeIterator;
@@ -15,11 +19,6 @@ import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.vocabulary.RDFS;
-
-import de.dfki.km.json.JSONUtils;
-import de.dfki.km.json.jsonld.JSONLD;
-import de.dfki.km.json.jsonld.JSONLDProcessingError;
-import de.dfki.km.json.jsonld.impl.JenaJSONLDSerializer;
 
 public class JsonldJenaUtils {
 	
@@ -192,10 +191,9 @@ public class JsonldJenaUtils {
 	 */
 	public static void writeJsonldFromModel(Model model, OutputStream out) 
 			throws IOException {
-		JenaJSONLDSerializer serializer = new JenaJSONLDSerializer();
 		
 		try {
-			Object json = JSONLD.fromRDF(model, serializer);
+			Object json = JSONLD.fromRDF(model, new JenaRDFParser());
 			String output = JSONUtils.toPrettyString(json);
 			
 			out.write(output.getBytes("UTF-8"));

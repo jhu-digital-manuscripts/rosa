@@ -30,6 +30,7 @@
 			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>com.hp.hpl.jena</groupId>
 			<artifactId>jena</artifactId>
@@ -42,15 +43,17 @@
 		    <version>2.4</version>
 		    <scope>compile</scope>
 		</dependency>
+
 		<dependency>
-			<groupId>dfki.km.json</groupId>
-			<artifactId>jsonld-java</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+		  <groupId>com.github.jsonld-java</groupId>
+		  <artifactId>jsonld-java-jena</artifactId>
+		  <version>0.2</version>
 		</dependency>
+		
 		<dependency>
-		    <groupId>dfki.km.json</groupId>
-		    <artifactId>jsonld-java-jena</artifactId>
-		    <version>1.0.0-SNAPSHOT</version>
+		  <groupId>com.github.jsonld-java</groupId>
+		  <artifactId>jsonld-java</artifactId>
+		  <version>0.2</version>
 		</dependency>
 	</dependencies>
 	

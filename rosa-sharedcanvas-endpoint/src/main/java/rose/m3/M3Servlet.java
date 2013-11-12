@@ -14,13 +14,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.github.jsonldjava.core.JSONLD;
+import com.github.jsonldjava.core.JSONLDProcessingError;
+import com.github.jsonldjava.core.Options;
+import com.github.jsonldjava.impl.JenaRDFParser;
+import com.github.jsonldjava.utils.JSONUtils;
 import com.hp.hpl.jena.rdf.model.Model;
-
-import de.dfki.km.json.JSONUtils;
-import de.dfki.km.json.jsonld.JSONLD;
-import de.dfki.km.json.jsonld.JSONLDProcessingError;
-import de.dfki.km.json.jsonld.JSONLDProcessor.Options;
-import de.dfki.km.json.jsonld.impl.JenaJSONLDSerializer;
 
 public class M3Servlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -78,9 +77,8 @@ public class M3Servlet extends HttpServlet {
         if (fmt == ResultFormat.XML) {
             model.getWriter("RDF/XML-ABBREV").write(model, os, null);
         } else if (fmt == ResultFormat.JAVASCRIPT || fmt == ResultFormat.JSON) {
-            JenaJSONLDSerializer serializer = new JenaJSONLDSerializer();
             try {
-                Object json = JSONLD.fromRDF(model, serializer);
+                Object json = JSONLD.fromRDF(model, new JenaRDFParser());
 
                 Map<String, Object> context = new HashMap<String, Object>();
 
@@ -102,7 +100,6 @@ public class M3Servlet extends HttpServlet {
                 context.put("rose.sc", "http://rosetest.library.jhu.edu/sc/");
 
                 Options opts = new Options();
-                opts.optimize = true;
                 opts.graph = true;
                 opts.useRdfType = true;
 
