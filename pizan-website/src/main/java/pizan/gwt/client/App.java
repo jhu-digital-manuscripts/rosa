@@ -104,6 +104,7 @@ public class App implements EntryPoint {
     // TODO move all of this to properties file, take advantage of lc
     // TODO put in Config.properties
 
+    private static final String PIZAN_FSI_SHARE = "pizan";
     private static final int MAX_SEARCH_RESULTS = 20;
     private static final String DATA_PATH = "data/";
     private static final int MIN_BOOK_READER_WIDTH = 600;
@@ -283,12 +284,12 @@ public class App implements EntryPoint {
 
             if (m.loc.contains(".")) {
                 bookid = Book.bookIDFromImage(m.loc);
-                thumbhtml = FSIService.embedStaticImage(m.loc + ".tif", 64, 64);
+                thumbhtml = FSIService.embedStaticImage(PIZAN_FSI_SHARE, m.loc + ".tif", 64, 64);
                 imagename = m.loc.substring(m.loc.indexOf('.') + 1);
             } else {
                 bookid = m.loc;
                 imagename = null;
-                thumbhtml = FSIService.embedStaticImage(m.loc
+                thumbhtml = FSIService.embedStaticImage(PIZAN_FSI_SHARE, m.loc
                         + ".binding.frontcover.tif", 64, 64);
             }
 

@@ -96,6 +96,7 @@ public class App implements EntryPoint {
     private static final String FRENCH_LC = "fr";
     private static final String FRENCH_LC_NAME = "Français";
 
+
     static {
         String s = LocaleInfo.getCurrentLocale().getLocaleName();
         LC = s.equals("default") ? DEFAULT_LC : s;
@@ -104,6 +105,7 @@ public class App implements EntryPoint {
     // TODO move all of this to properties file, take advantage of lc
     // TODO put in Config.properties with fsi constants
 
+    private static final String ROSE_FSI_SHARE = "rose";
     private static final int MAX_SEARCH_RESULTS = 20;
     private static final String DATA_PATH = "data/";
     private static final String HELP_PATH = "/help/help_";
@@ -298,12 +300,12 @@ public class App implements EntryPoint {
 
             if (m.loc.contains(".")) {
                 bookid = Book.bookIDFromImage(m.loc);
-                thumbhtml = FSIService.embedStaticImage(m.loc + ".tif", 64, 64);
+                thumbhtml = FSIService.embedStaticImage(ROSE_FSI_SHARE, m.loc + ".tif", 64, 64);
                 imagename = m.loc.substring(m.loc.indexOf('.') + 1);
             } else {
                 bookid = m.loc;
                 imagename = null;
-                thumbhtml = FSIService.embedStaticImage(m.loc
+                thumbhtml = FSIService.embedStaticImage(ROSE_FSI_SHARE, m.loc
                         + ".binding.frontcover.tif", 64, 64);
             }
 
