@@ -20,8 +20,6 @@ import rosa.gwt.common.client.codexview.CodexView.Mode;
 import rosa.gwt.common.client.codexview.RoseBook;
 import rosa.gwt.common.client.codexview.SimpleCodexController;
 import rosa.gwt.common.client.data.Book;
-import rosa.gwt.common.client.data.CharacterNamesTable;
-import rosa.gwt.common.client.data.IllustrationTitlesTable;
 import rosa.gwt.common.client.data.ImageTagging;
 import rosa.gwt.common.client.data.Repository;
 import rosa.gwt.common.client.dynimg.FsiImageServer;
@@ -89,11 +87,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 
-
 public class App implements EntryPoint {
     public static final String LC;
     private static final String DEFAULT_LC = "en";
-    
+
     static {
         String s = LocaleInfo.getCurrentLocale().getLocaleName();
         LC = s.equals("default") ? DEFAULT_LC : s;
@@ -129,9 +126,7 @@ public class App implements EntryPoint {
     private int selectedImageIndex = -1; // currently selected image of book
 
     // Loaded on demand
-    private IllustrationTitlesTable illustitles = null;
-    private CharacterNamesTable charnames = null;
-    private String[][] charnames_variants = null;
+    private String[][] charnames_variants = new String[][] {};
 
     private LoadingDialog loadingdialog = new LoadingDialog();
 
@@ -148,21 +143,18 @@ public class App implements EntryPoint {
     }
 
     private void browseBookFSI(int image) {
-        String title = Labels.INSTANCE.browseImages() + ": "
-                + col.fullBookName(book.bookDataIndex());
+        String title = Labels.INSTANCE.browseImages() + ": " + col.fullBookName(book.bookDataIndex());
         initDisplay(title, true);
 
         updateSelectedImage(image);
 
         EmbeddedObjectViewer.DisplayCallback cb = new EmbeddedObjectViewer.DisplayCallback() {
             public String display(String width, String height) {
-                return FSIService.embedFSIShowcase(book.id(),
-                        translateBookIndexToShowcaseIndex(selectedImageIndex),
-						   width, height, LC);
+                return FSIService.embedFSIShowcase(book.id(), translateBookIndexToShowcaseIndex(selectedImageIndex),
+                        width, height, LC);
             }
         };
-        EmbeddedObjectViewer viewer = new EmbeddedObjectViewer(cb,
-                VIEWPORT_RESIZE_INCREMENT, MIN_BOOK_BROWSER_WIDTH,
+        EmbeddedObjectViewer viewer = new EmbeddedObjectViewer(cb, VIEWPORT_RESIZE_INCREMENT, MIN_BOOK_BROWSER_WIDTH,
                 MAX_BOOK_BROWSER_WIDTH, 4.0 / 3.0, title);
 
         InsertPanel toolbar = viewer.toolbar();
@@ -177,22 +169,20 @@ public class App implements EntryPoint {
                     int image = book.guessImage(gobox.getText());
 
                     if (image != -1) {
-                        FSIService
-                                .fsishowcaseSelectImage(translateBookIndexToShowcaseIndex(image));
+                        FSIService.fsishowcaseSelectImage(translateBookIndexToShowcaseIndex(image));
                     }
                 }
             }
         });
 
-        FSIService
-                .setupFSIShowcaseCallback(new FSIService.FSIShowcaseCallback() {
-                    public void imageSelected(int index) {
-                        selectedImageIndex = index;
-                        String image = book.imageName(selectedImageIndex);
-                        image = Book.shortImageName(image);
-                        gobox.setText(image);
-                    }
-                });
+        FSIService.setupFSIShowcaseCallback(new FSIService.FSIShowcaseCallback() {
+            public void imageSelected(int index) {
+                selectedImageIndex = index;
+                String image = book.imageName(selectedImageIndex);
+                image = Book.shortImageName(image);
+                gobox.setText(image);
+            }
+        });
 
         content.add(viewer);
         content.add(new HTML(book.imagePermissionStatement()));
@@ -216,8 +206,7 @@ public class App implements EntryPoint {
         return i;
     }
 
-    private Panel createSearchResultsNav(int page, int numpages,
-            String tokenqueryprefix) {
+    private Panel createSearchResultsNav(int page, int numpages, String tokenqueryprefix) {
         HorizontalPanel nav = new HorizontalPanel();
         nav.setStylePrimaryName("ResultsNav");
         nav.setSpacing(2);
@@ -225,8 +214,7 @@ public class App implements EntryPoint {
         if (numpages > 1) {
             if (page > 0) {
                 int offset = (page - 1) * MAX_SEARCH_RESULTS;
-                Hyperlink h = new Hyperlink(Labels.INSTANCE.previous(),
-                        tokenqueryprefix + ';' + offset);
+                Hyperlink h = new Hyperlink(Labels.INSTANCE.previous(), tokenqueryprefix + ';' + offset);
                 nav.add(h);
             }
 
@@ -235,16 +223,14 @@ public class App implements EntryPoint {
                     nav.add(contentHeader("" + (i + 1)));
                 } else {
                     int offset = i * MAX_SEARCH_RESULTS;
-                    Hyperlink h = new Hyperlink("" + (i + 1), tokenqueryprefix
-                            + ';' + offset);
+                    Hyperlink h = new Hyperlink("" + (i + 1), tokenqueryprefix + ';' + offset);
                     nav.add(h);
                 }
             }
 
             if (page < numpages - 1) {
                 int offset = (page + 1) * MAX_SEARCH_RESULTS;
-                Hyperlink h = new Hyperlink(Labels.INSTANCE.next(),
-                        tokenqueryprefix + ';' + offset);
+                Hyperlink h = new Hyperlink(Labels.INSTANCE.next(), tokenqueryprefix + ';' + offset);
                 nav.add(h);
             }
         }
@@ -252,8 +238,7 @@ public class App implements EntryPoint {
         return nav;
     }
 
-    private void displaySearchResults(Panel panel, String tokenqueryprefix,
-            SearchResult result) {
+    private void displaySearchResults(Panel panel, String tokenqueryprefix, SearchResult result) {
         int numpages = result.total / MAX_SEARCH_RESULTS;
 
         if (result.total % MAX_SEARCH_RESULTS != 0) {
@@ -265,8 +250,7 @@ public class App implements EntryPoint {
         Panel nav = createSearchResultsNav(page, numpages, tokenqueryprefix);
         panel.add(nav);
 
-        Grid grid = new Grid((result.matches.length / 2)
-                + (result.matches.length % 2), 4);
+        Grid grid = new Grid((result.matches.length / 2) + (result.matches.length % 2), 4);
 
         for (int i = 0; i < result.matches.length; i++) {
             SearchMatch m = result.matches[i];
@@ -285,12 +269,10 @@ public class App implements EntryPoint {
             } else {
                 bookid = m.loc;
                 imagename = null;
-                thumbhtml = FSIService.embedStaticImage(PIZAN_FSI_SHARE, m.loc
-                        + ".binding.frontcover.tif", 64, 64);
+                thumbhtml = FSIService.embedStaticImage(PIZAN_FSI_SHARE, m.loc + ".binding.frontcover.tif", 64, 64);
             }
 
-            grid.setWidget(resultrow, resultcol, new Hyperlink(thumbhtml, true,
-                    Action.READ_BOOK.toToken(m.loc)));
+            grid.setWidget(resultrow, resultcol, new Hyperlink(thumbhtml, true, Action.READ_BOOK.toToken(m.loc)));
 
             FlowPanel desc = new FlowPanel();
             grid.setWidget(resultrow, resultcol + 1, desc);
@@ -298,8 +280,7 @@ public class App implements EntryPoint {
             String resultname = (imagename == null ? "" : imagename + ": ")
                     + col.fullBookName(col.findBookByID(bookid));
 
-            desc.add(new Anchor(resultname, "#"
-                    + Action.READ_BOOK.toToken(m.loc)));
+            desc.add(new Anchor(resultname, "#" + Action.READ_BOOK.toToken(m.loc)));
 
             StringBuilder context = new StringBuilder();
 
@@ -307,12 +288,10 @@ public class App implements EntryPoint {
                 String field = m.snippets.get(j++);
                 String snippet = m.snippets.get(j++);
 
-                Searcher.UserField uf = Searcher.UserField
-                        .findByLuceneField(field);
+                Searcher.UserField uf = Searcher.UserField.findByLuceneField(field);
                 field = uf == null ? field : uf.display;
 
-                context.append("<span class='ResultField'>" + field
-                        + ":</span>");
+                context.append("<span class='ResultField'>" + field + ":</span>");
                 context.append("<span class='ResultSnippet'> " + snippet);
                 if (j != m.snippets.size()) {
                     context.append(", ");
@@ -329,8 +308,7 @@ public class App implements EntryPoint {
 
     // Fills in values if non-null
 
-    private Widget createAdvancedSearchWidget(UserField[] userfields,
-            String[] userqueries, String[] restrictedbookids) {
+    private Widget createAdvancedSearchWidget(UserField[] userfields, String[] userqueries, String[] restrictedbookids) {
         Panel panel = new FlowPanel();
 
         Button search = new Button(Labels.INSTANCE.search());
@@ -352,8 +330,7 @@ public class App implements EntryPoint {
             public void onClick(ClickEvent event) {
                 // Build up search history token
 
-                String[] data = new String[(table.getRowCount() * 2) + 1
-                        + (chosenbooks.getItemCount() > 0 ? 2 : 0)];
+                String[] data = new String[(table.getRowCount() * 2) + 1 + (chosenbooks.getItemCount() > 0 ? 2 : 0)];
                 int dataindex = 0;
                 boolean emptyquery = true;
 
@@ -365,8 +342,7 @@ public class App implements EntryPoint {
 
                     if (sel != -1) {
                         String userquery = tb.getText().trim();
-                        String userfield = Searcher.UserField.values()[sel]
-                                .name();
+                        String userfield = Searcher.UserField.values()[sel].name();
 
                         if (userquery.isEmpty()) {
                             userfield = null;
@@ -421,8 +397,7 @@ public class App implements EntryPoint {
                     }
                 });
 
-                final Button remove = new Button(
-                        Labels.INSTANCE.removeSearchField());
+                final Button remove = new Button(Labels.INSTANCE.removeSearchField());
 
                 table.setWidget(row, 2, remove);
 
@@ -468,8 +443,7 @@ public class App implements EntryPoint {
 
         hp.add(chosenbooks);
         hp.add(clearbutton);
-        hp.setCellVerticalAlignment(clearbutton,
-                HasVerticalAlignment.ALIGN_BOTTOM);
+        hp.setCellVerticalAlignment(clearbutton, HasVerticalAlignment.ALIGN_BOTTOM);
 
         panel.add(availbooks);
         panel.add(hp);
@@ -488,8 +462,7 @@ public class App implements EntryPoint {
                     chosenbooks.setVisible(true);
                     clearbutton.setVisible(true);
 
-                    chosenbooks.addItem(availbooks.getItemText(sel),
-                            availbooks.getValue(sel));
+                    chosenbooks.addItem(availbooks.getItemText(sel), availbooks.getValue(sel));
                     availbooks.removeItem(sel);
                 }
             }
@@ -498,8 +471,7 @@ public class App implements EntryPoint {
         chosenbooks.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 int sel = chosenbooks.getSelectedIndex();
-                availbooks.addItem(chosenbooks.getItemText(sel),
-                        chosenbooks.getValue(sel));
+                availbooks.addItem(chosenbooks.getItemText(sel), chosenbooks.getValue(sel));
                 chosenbooks.removeItem(sel);
 
                 if (chosenbooks.getItemCount() == 0) {
@@ -518,8 +490,7 @@ public class App implements EntryPoint {
                 availbooks.addItem(Labels.INSTANCE.restrictByBook());
 
                 for (int i = 0; i < col.numBooks(); i++) {
-                    availbooks.addItem(col.fullBookName(i),
-                            col.bookData(i, Repository.Category.ID));
+                    availbooks.addItem(col.fullBookName(i), col.bookData(i, Repository.Category.ID));
                 }
             }
         };
@@ -565,8 +536,7 @@ public class App implements EntryPoint {
         top.add(querybox);
         top.add(search);
 
-        Hyperlink adv = new Hyperlink(Labels.INSTANCE.advancedSearch(),
-                Action.SEARCH.toToken());
+        Hyperlink adv = new Hyperlink(Labels.INSTANCE.advancedSearch(), Action.SEARCH.toToken());
         top.add(adv);
 
         search.addClickHandler(new ClickHandler() {
@@ -574,8 +544,7 @@ public class App implements EntryPoint {
                 String s = querybox.getText().trim();
 
                 if (s.length() > 0) {
-                    History.newItem(Action.SEARCH.toToken(
-                            Searcher.UserField.ALL.name(), s, "0"));
+                    History.newItem(Action.SEARCH.toToken(Searcher.UserField.ALL.name(), s, "0"));
                 }
             }
         });
@@ -586,8 +555,7 @@ public class App implements EntryPoint {
                     String s = querybox.getText().trim();
 
                     if (s.length() > 0) {
-                        History.newItem(Action.SEARCH.toToken(
-                                Searcher.UserField.ALL.name(), s, "0"));
+                        History.newItem(Action.SEARCH.toToken(Searcher.UserField.ALL.name(), s, "0"));
                     }
                 }
             }
@@ -642,27 +610,17 @@ public class App implements EntryPoint {
         if (state == Action.HOME) {
             viewHome();
         } else if (state == Action.VIEW_PARTNERS) {
-            viewPage(Labels.INSTANCE.partners(),
-                    Resources.INSTANCE.partnersHtml());
-        } else if (state == Action.VIEW_ILLUSTRATION_TITLES) {
-            viewIllustrationTitles();
-        } else if (state == Action.VIEW_CHARACTER_NAMES) {
-            viewCharacterNames();
+            viewPage(Labels.INSTANCE.partners(), Resources.INSTANCE.partnersHtml());
         } else if (state == Action.VIEW_TERMS) {
-            viewPage(Labels.INSTANCE.termsAndConditions(),
-                    Resources.INSTANCE.termsAndConditionsHtml());
+            viewPage(Labels.INSTANCE.termsAndConditions(), Resources.INSTANCE.termsAndConditionsHtml());
         } else if (state == Action.VIEW_CONTACT) {
-            viewPage(Labels.INSTANCE.contactUs(),
-                    Resources.INSTANCE.contactHtml());
+            viewPage(Labels.INSTANCE.contactUs(), Resources.INSTANCE.contactHtml());
         } else if (state == Action.VIEW_PROPER_NAMES) {
-            viewPage("Proper names",
-                    Resources.INSTANCE.properNamesHtml());
+            viewPage("Proper names", Resources.INSTANCE.properNamesHtml());
         } else if (state == Action.VIEW_WORKS) {
-            viewPage("Works",
-                    Resources.INSTANCE.worksHtml());
+            viewPage("Works", Resources.INSTANCE.worksHtml());
         } else if (state == Action.VIEW_PIZAN) {
-            viewPage("Christine de Pizan",
-                    Resources.INSTANCE.christineDePizanHtml());
+            viewPage("Christine de Pizan", Resources.INSTANCE.christineDePizanHtml());
         } else if (state == Action.VIEW_BOOK) {
             if (args.size() != 1) {
                 handleHistoryTokenError(token);
@@ -806,16 +764,13 @@ public class App implements EntryPoint {
                 }
             }
 
-            String searchtokenprefix = token.substring(0,
-                    token.lastIndexOf(';'));
+            String searchtokenprefix = token.substring(0, token.lastIndexOf(';'));
 
-            viewSearch(userfields, userqueries, bookrestrict, offset,
-                    searchtokenprefix);
+            viewSearch(userfields, userqueries, bookrestrict, offset, searchtokenprefix);
         } else {
             handleHistoryTokenError(token);
             return;
         }
-
 
         Analytics.track(state, book == null ? null : book.id(), args);
     }
@@ -835,8 +790,7 @@ public class App implements EntryPoint {
      * @param html
      * @param widgets
      */
-    private static void addHtml(final Panel panel, ExternalTextResource html,
-            final Widget... widgets) {
+    private static void addHtml(final Panel panel, ExternalTextResource html, final Widget... widgets) {
         try {
             html.getText(new ResourceCallback<TextResource>() {
                 public void onSuccess(TextResource resource) {
@@ -860,8 +814,7 @@ public class App implements EntryPoint {
         Window.alert("This is likely a bug. Please report to "
                 + BUG_SUBMIT_EMAIL
                 + ". Include your operating system and version, browser and version, url you were visiting, and what you did to trigger the problem. \nInternal error: "
-                + message + "\n" + e.getMessage()
-                + (e.getCause() == null ? "" : "\nCaused by: " + e.getCause()));
+                + message + "\n" + e.getMessage() + (e.getCause() == null ? "" : "\nCaused by: " + e.getCause()));
     }
 
     private static Image getImage(String name, String alt) {
@@ -885,46 +838,49 @@ public class App implements EntryPoint {
         DockLayoutPanel dock = new DockLayoutPanel(Unit.PX);
 
         FlowPanel header = new FlowPanel();
-        
+
         headermenu = new MenuBar();
         headermenu.setAutoOpen(true);
         headermenu.setAnimationEnabled(true);
 
-        header.add(getImage("header-5.jpg", "Christine de Pizan Digital Scriptorium"));
-        header.add(headermenu);        
-                
+        Image headerimg = getImage("header-5.jpg", "Christine de Pizan Digital Scriptorium");
+
+        headerimg.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                History.newItem(Action.HOME.toToken());
+            }
+        });
+
+        header.add(headerimg);
+        header.add(headermenu);
+
         // TODO labels
-        
+
         headermenu.addItem("Home", new ScheduledCommand() {
             public void execute() {
                 History.newItem(Action.HOME.toToken());
             }
         });
-        
+
         headermenu.addItem("Who is Christine de Pizan?", new ScheduledCommand() {
             public void execute() {
                 History.newItem(Action.VIEW_PIZAN.toToken());
             }
         });
-        
+
         headermenu.addItem("List of Works", new ScheduledCommand() {
             public void execute() {
                 History.newItem(Action.VIEW_WORKS.toToken());
             }
         });
-        
-        headermenu.addItem("Illustration Titles", new ScheduledCommand() {
-            public void execute() {
-                History.newItem(Action.VIEW_ILLUSTRATION_TITLES.toToken());
-            }
-        });
-        
+
         headermenu.addItem("Proper Names", new ScheduledCommand() {
             public void execute() {
                 History.newItem(Action.VIEW_PROPER_NAMES.toToken());
             }
         });
-        
+
         MenuBar projectmenu = new MenuBar(true);
 
         projectmenu.addItem("Partners", new ScheduledCommand() {
@@ -932,21 +888,21 @@ public class App implements EntryPoint {
                 History.newItem(Action.VIEW_PARTNERS.toToken());
             }
         });
-        
+
         projectmenu.addItem("Terms & Conditions", new ScheduledCommand() {
             public void execute() {
                 History.newItem(Action.VIEW_TERMS.toToken());
             }
         });
-        
+
         projectmenu.addItem("Contact us", new ScheduledCommand() {
             public void execute() {
                 History.newItem(Action.VIEW_CONTACT.toToken());
             }
         });
-        
+
         headermenu.addItem("Project", projectmenu);
-        
+
         headermenu.addItem("Help", new ScheduledCommand() {
             public void execute() {
                 Util.popupWindowURL("help", 700, 600, HELP_PATH + LC + ".html",
@@ -954,7 +910,7 @@ public class App implements EntryPoint {
                 Analytics.trackEvent("Page", "view", "help");
             }
         });
-                        
+
         content = new FlowPanel();
         sidebar = new FlowPanel();
 
@@ -967,19 +923,18 @@ public class App implements EntryPoint {
 
         dock.addNorth(header, 150);
         dock.addEast(new ScrollPanel(sidebar), 181);
-        
+
         ScrollPanel contentscroll = new ScrollPanel(content);
         contentscroll.setStylePrimaryName("MainContentScroll");
-        
+
         dock.add(contentscroll);
 
-        
         FlowPanel footer = new FlowPanel();
         footer.setStylePrimaryName("Footer");
         footer.add(createSearchWidget());
-        
+
         dock.addSouth(footer, 40);
-        
+
         RootLayoutPanel.get().add(dock);
 
         History.addValueChangeHandler(new ValueChangeHandler<String>() {
@@ -992,8 +947,7 @@ public class App implements EntryPoint {
         page_turner_annotation.setAnimationEnabled(true);
 
         searcher = new Searcher(searchservice);
-        col = new Repository(Util.parseCSVTable(Resources.INSTANCE
-                .bookBrowseTable().getText()));
+        col = new Repository(Util.parseCSVTable(Resources.INSTANCE.bookBrowseTable().getText()));
         use_flash = browserSupportsFlash();
 
         History.fireCurrentHistoryState();
@@ -1002,8 +956,7 @@ public class App implements EntryPoint {
     private boolean browserSupportsFlash() {
         String agent = Window.Navigator.getUserAgent();
 
-        if (agent.contains("iPad") || agent.contains("iPhone")
-                || agent.contains("iPod")) {
+        if (agent.contains("iPad") || agent.contains("iPhone") || agent.contains("iPod")) {
             return false;
         }
 
@@ -1032,8 +985,7 @@ public class App implements EntryPoint {
     }
 
     private void useBuiltinImageViewer(CodexView.Mode mode, int image) {
-        String title = Labels.INSTANCE.pageTurner() + ": "
-                + col.fullBookName(book.bookDataIndex());
+        String title = Labels.INSTANCE.pageTurner() + ": " + col.fullBookName(book.bookDataIndex());
         initDisplay(title, true);
 
         updateSelectedImage(image);
@@ -1041,33 +993,30 @@ public class App implements EntryPoint {
         Panel toolbar = new FlowPanel();
 
         final Panel reader_toolbar = new FlowPanel();
-        
+
         final TextBox gobox = new TextBox();
         gobox.setStylePrimaryName("GoTextBox");
 
         Button reader_button = new Button(Labels.INSTANCE.pageTurner());
         Button browser_button = new Button(Labels.INSTANCE.browseImages());
-        
+
         toolbar.add(reader_button);
         toolbar.add(browser_button);
-        
+
         RoseBook rose_book = new RoseBook(PIZAN_FSI_SHARE, book.imagesTable());
         final CodexModel rose_book_model = rose_book.model();
-        final CodexController rose_book_ctrl = new SimpleCodexController(
-                rose_book_model);
-        ImageServer img_server = new FsiImageServer(
-                "http://fsiserver.library.jhu.edu/server");
+        final CodexController rose_book_ctrl = new SimpleCodexController(rose_book_model);
+        ImageServer img_server = new FsiImageServer("http://fsiserver.library.jhu.edu/server");
 
         ScrollPanel content_scroll = (ScrollPanel) content.getParent();
 
-        final CodexView rose_book_view = new CodexView(img_server,
-                rose_book_model, rose_book_ctrl, content_scroll);
+        final CodexView rose_book_view = new CodexView(img_server, rose_book_model, rose_book_ctrl, content_scroll);
 
         Button next = new Button(Labels.INSTANCE.next());
         Button first = new Button(Labels.INSTANCE.first());
         Button last = new Button(Labels.INSTANCE.last());
         Button prev = new Button(Labels.INSTANCE.previous());
-                       
+
         next.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 rose_book_ctrl.gotoNextOpening();
@@ -1088,8 +1037,7 @@ public class App implements EntryPoint {
 
         last.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
-                rose_book_ctrl.gotoOpening(rose_book_model
-                        .opening(rose_book_model.numOpenings() - 1));
+                rose_book_ctrl.gotoOpening(rose_book_model.opening(rose_book_model.numOpenings() - 1));
             }
         });
 
@@ -1123,8 +1071,7 @@ public class App implements EntryPoint {
                         index /= 2;
 
                         if (index < rose_book_model.numOpenings()) {
-                            rose_book_ctrl.gotoOpening(rose_book_model
-                                    .opening(index));
+                            rose_book_ctrl.gotoOpening(rose_book_model.opening(index));
                         }
                     }
                 }
@@ -1136,57 +1083,44 @@ public class App implements EntryPoint {
 
         sidechoice.addItem(Labels.INSTANCE.show());
 
-        if (!col.bookData(book.bookDataIndex(),
-                Repository.Category.TRANSCRIPTION).equals(
-                Labels.INSTANCE.none())) {
+        if (!col.bookData(book.bookDataIndex(), Repository.Category.TRANSCRIPTION).equals(Labels.INSTANCE.none())) {
             sidechoice.addItem(Labels.INSTANCE.transcription());
-            sidechoice.addItem(Labels.INSTANCE.transcription() + " ["
-                    + Labels.INSTANCE.lecoy() + "]");
+            sidechoice.addItem(Labels.INSTANCE.transcription() + " [" + Labels.INSTANCE.lecoy() + "]");
         }
 
-        if (!col.bookData(book.bookDataIndex(),
-                Repository.Category.ILLUSTRATION_TAGGING).equals(
-                Labels.INSTANCE.none())) {
+        if (!col.bookData(book.bookDataIndex(), Repository.Category.ILLUSTRATION_TAGGING)
+                .equals(Labels.INSTANCE.none())) {
             sidechoice.addItem(Labels.INSTANCE.illustrationDescription());
         }
 
-        if (!col.bookData(book.bookDataIndex(),
-                Repository.Category.NARRATIVE_TAGGING).equals(
-                Labels.INSTANCE.none())) {
+        if (!col.bookData(book.bookDataIndex(), Repository.Category.NARRATIVE_TAGGING).equals(Labels.INSTANCE.none())) {
             sidechoice.addItem(Labels.INSTANCE.narrativeSections());
         }
 
         final ChangeHandler sidechoicelistener = new ChangeHandler() {
             public void onChange(ChangeEvent event) {
-                String choice = sidechoice.getItemText(sidechoice
-                        .getSelectedIndex());
+                String choice = sidechoice.getItemText(sidechoice.getSelectedIndex());
 
                 if (!page_turner_annotation.isShowing()) {
-                    page_turner_annotation.setPopupPosition(
-                            content.getAbsoluteLeft()
-                                    + rose_book_view.getUsedWidth() + 2,
-                            content.getAbsoluteTop());
+                    page_turner_annotation.setPopupPosition(content.getAbsoluteLeft() + rose_book_view.getUsedWidth()
+                            + 2, content.getAbsoluteTop());
                 }
 
                 if (choice.startsWith(Labels.INSTANCE.transcription())) {
                     boolean lecoy = choice.contains(Labels.INSTANCE.lecoy());
 
-                    page_turner_annotation.setText(Labels.INSTANCE
-                            .transcription());
+                    page_turner_annotation.setText(Labels.INSTANCE.transcription());
                     page_turner_annotation.setWidget(displayTranscription(lecoy));
                     page_turner_annotation.show();
 
                     Analytics.trackEvent("Book", "display-trans", book.id());
-                } else if (choice.equals(Labels.INSTANCE
-                        .illustrationDescription())) {
-                    page_turner_annotation.setText(Labels.INSTANCE
-                            .illustrationDescription());
+                } else if (choice.equals(Labels.INSTANCE.illustrationDescription())) {
+                    page_turner_annotation.setText(Labels.INSTANCE.illustrationDescription());
                     page_turner_annotation.clear();
                     displayIllustrationKeywordsOnRight(page_turner_annotation);
                     page_turner_annotation.show();
 
-                    Analytics.trackEvent("Book", "display-illus-tags",
-                            book.id());
+                    Analytics.trackEvent("Book", "display-illus-tags", book.id());
                 } else {
                     page_turner_annotation.hide();
                 }
@@ -1220,7 +1154,7 @@ public class App implements EntryPoint {
                 sidechoicelistener.onChange(null);
             }
         });
-                               
+
         content.add(toolbar);
         content.add(rose_book_view);
         content.add(reader_toolbar);
@@ -1240,12 +1174,10 @@ public class App implements EntryPoint {
             }
         } else if (mode == Mode.IMAGE_VIEWER) {
             if (selectedImageIndex < rose_book_model.numImages()) {
-                rose_book_ctrl.setView(rose_book_model
-                        .image(selectedImageIndex));
+                rose_book_ctrl.setView(rose_book_model.image(selectedImageIndex));
             } else {
-                rose_book_ctrl.setView(rose_book_model
-                        .nonOpeningImage(selectedImageIndex
-                                - rose_book_model.numImages()));
+                rose_book_ctrl
+                        .setView(rose_book_model.nonOpeningImage(selectedImageIndex - rose_book_model.numImages()));
             }
         }
 
@@ -1255,21 +1187,18 @@ public class App implements EntryPoint {
     // TODO stack layout panel for menu choices
 
     private void readBookFSIViewer(int image) {
-        String title = Labels.INSTANCE.pageTurner() + ": "
-                + col.fullBookName(book.bookDataIndex());
+        String title = Labels.INSTANCE.pageTurner() + ": " + col.fullBookName(book.bookDataIndex());
         initDisplay(title, true);
 
         updateSelectedImage(image);
 
         EmbeddedObjectViewer.DisplayCallback cb = new EmbeddedObjectViewer.DisplayCallback() {
             public String display(String width, String height) {
-                return FSIService.embedFSIPages(book.id(), selectedImageIndex,
-						width, height, LC);
+                return FSIService.embedFSIPages(book.id(), selectedImageIndex, width, height, LC);
             }
         };
 
-        EmbeddedObjectViewer viewer = new EmbeddedObjectViewer(cb,
-                VIEWPORT_RESIZE_INCREMENT, MIN_BOOK_READER_WIDTH,
+        EmbeddedObjectViewer viewer = new EmbeddedObjectViewer(cb, VIEWPORT_RESIZE_INCREMENT, MIN_BOOK_READER_WIDTH,
                 MAX_BOOK_READER_WIDTH, 3.0 / 4.0, title);
         InsertPanel toolbar = viewer.toolbar();
 
@@ -1298,23 +1227,17 @@ public class App implements EntryPoint {
 
         sidechoice.addItem(Labels.INSTANCE.show());
 
-        if (!col.bookData(book.bookDataIndex(),
-                Repository.Category.TRANSCRIPTION).equals(
-                Labels.INSTANCE.none())) {
+        if (!col.bookData(book.bookDataIndex(), Repository.Category.TRANSCRIPTION).equals(Labels.INSTANCE.none())) {
             sidechoice.addItem(Labels.INSTANCE.transcription());
-            sidechoice.addItem(Labels.INSTANCE.transcription() + " ["
-                    + Labels.INSTANCE.lecoy() + "]");
+            sidechoice.addItem(Labels.INSTANCE.transcription() + " [" + Labels.INSTANCE.lecoy() + "]");
         }
 
-        if (!col.bookData(book.bookDataIndex(),
-                Repository.Category.ILLUSTRATION_TAGGING).equals(
-                Labels.INSTANCE.none())) {
+        if (!col.bookData(book.bookDataIndex(), Repository.Category.ILLUSTRATION_TAGGING)
+                .equals(Labels.INSTANCE.none())) {
             sidechoice.addItem(Labels.INSTANCE.illustrationDescription());
         }
 
-        if (!col.bookData(book.bookDataIndex(),
-                Repository.Category.NARRATIVE_TAGGING).equals(
-                Labels.INSTANCE.none())) {
+        if (!col.bookData(book.bookDataIndex(), Repository.Category.NARRATIVE_TAGGING).equals(Labels.INSTANCE.none())) {
             sidechoice.addItem(Labels.INSTANCE.narrativeSections());
         }
 
@@ -1325,19 +1248,16 @@ public class App implements EntryPoint {
                     display.remove(1);
                 }
 
-                String choice = sidechoice.getItemText(sidechoice
-                        .getSelectedIndex());
+                String choice = sidechoice.getItemText(sidechoice.getSelectedIndex());
 
                 if (choice.startsWith(Labels.INSTANCE.transcription())) {
                     boolean lecoy = choice.contains(Labels.INSTANCE.lecoy());
-                    
+
                     display.add(displayTranscription(lecoy));
                     Analytics.trackEvent("Book", "display-trans", book.id());
-                } else if (choice.equals(Labels.INSTANCE
-                        .illustrationDescription())) {
+                } else if (choice.equals(Labels.INSTANCE.illustrationDescription())) {
                     displayIllustrationKeywordsOnRight(display);
-                    Analytics.trackEvent("Book", "display-illus-tags",
-                            book.id());
+                    Analytics.trackEvent("Book", "display-illus-tags", book.id());
                 }
             }
         };
@@ -1355,8 +1275,7 @@ public class App implements EntryPoint {
                     String image = Book.shortImageName(book.imageName(page));
 
                     if (page > 0) {
-                        String imagev = Book.shortImageName(book
-                                .imageName(page - 1));
+                        String imagev = Book.shortImageName(book.imageName(page - 1));
                         gobox.setText(imagev + ", " + image);
                     } else {
                         gobox.setText(image);
@@ -1368,10 +1287,8 @@ public class App implements EntryPoint {
             }
 
             public void imageInfo(String info) {
-                selectedImageIndex = FSIService
-                        .getImageIndexFromPagesInfo(info);
-                gobox.setText(Book.shortImageName(book
-                        .imageName(selectedImageIndex)));
+                selectedImageIndex = FSIService.getImageIndexFromPagesInfo(info);
+                gobox.setText(Book.shortImageName(book.imageName(selectedImageIndex)));
             }
         });
 
@@ -1402,13 +1319,11 @@ public class App implements EntryPoint {
         }
 
         if (recto != null) {
-            recto = Book.isFolioImage(recto) && !Book.isMissingImage(recto) ? recto
-                    : null;
+            recto = Book.isFolioImage(recto) && !Book.isMissingImage(recto) ? recto : null;
         }
 
         if (verso != null) {
-            verso = Book.isFolioImage(verso) && !Book.isMissingImage(verso) ? verso
-                    : null;
+            verso = Book.isFolioImage(verso) && !Book.isMissingImage(verso) ? verso : null;
         }
 
         String[] urls;
@@ -1418,31 +1333,24 @@ public class App implements EntryPoint {
             Label l = new Label(Labels.INSTANCE.transcriptionUnavailable());
             l.setStylePrimaryName("TranscriptionUnavailableError");
             container.add(l);
-            
+
             return container;
         } else if (recto == null) {
-            urls = new String[] { GWT.getHostPageBaseURL() + DATA_PATH
-                    + Book.transcriptionPath(verso) };
+            urls = new String[] { GWT.getHostPageBaseURL() + DATA_PATH + Book.transcriptionPath(verso) };
             imagenames = new String[] { Book.shortImageName(verso) };
         } else if (verso == null) {
-            urls = new String[] { GWT.getHostPageBaseURL() + DATA_PATH
-                    + Book.transcriptionPath(recto) };
+            urls = new String[] { GWT.getHostPageBaseURL() + DATA_PATH + Book.transcriptionPath(recto) };
             imagenames = new String[] { Book.shortImageName(recto) };
         } else {
-            urls = new String[] {
-                    GWT.getHostPageBaseURL() + DATA_PATH
-                            + Book.transcriptionPath(verso),
-                    GWT.getHostPageBaseURL() + DATA_PATH
-                            + Book.transcriptionPath(recto) };
-            imagenames = new String[] { Book.shortImageName(verso),
-                    Book.shortImageName(recto) };
+            urls = new String[] { GWT.getHostPageBaseURL() + DATA_PATH + Book.transcriptionPath(verso),
+                    GWT.getHostPageBaseURL() + DATA_PATH + Book.transcriptionPath(recto) };
+            imagenames = new String[] { Book.shortImageName(verso), Book.shortImageName(recto) };
         }
-        
+
         HttpGet.request(urls, new HttpGet.Callback<String[]>() {
             public void failure(String error) {
                 if (container.getWidgetCount() == 1) {
-                    Label l = new Label(Labels.INSTANCE
-                            .transcriptionUnavailable());
+                    Label l = new Label(Labels.INSTANCE.transcriptionUnavailable());
                     l.setStylePrimaryName("TranscriptionUnavailableError");
                     container.add(l);
                 }
@@ -1455,13 +1363,12 @@ public class App implements EntryPoint {
                     }
                 }
 
-                Widget trans = TranscriptionViewer.createTranscriptionViewer(
-                        results, imagenames, container.getOffsetHeight() - 50,
-                        lecoy);
+                Widget trans = TranscriptionViewer.createTranscriptionViewer(results, imagenames,
+                        container.getOffsetHeight() - 50, lecoy);
                 container.add(trans);
             }
         });
-        
+
         return container;
     }
 
@@ -1472,8 +1379,7 @@ public class App implements EntryPoint {
         ImageTagging illus = book.illustrations();
 
         if (illus == null) {
-            String illusurl = GWT.getHostPageBaseURL() + DATA_PATH
-                    + book.illustrationsPath();
+            String illusurl = GWT.getHostPageBaseURL() + DATA_PATH + book.illustrationsPath();
 
             loadingdialog.display();
 
@@ -1531,8 +1437,7 @@ public class App implements EntryPoint {
         List<Integer> indexes = illus.findImageIndexes(image);
 
         for (int i : indexes) {
-            String name = Book.shortImageName(book.imageName(image))
-                    + (indexes.size() > 1 ? " " + count++ : "");
+            String name = Book.shortImageName(book.imageName(image)) + (indexes.size() > 1 ? " " + count++ : "");
             tabpanel.add(new ScrollPanel(illus.displayImage(i)), name);
         }
     }
@@ -1568,16 +1473,15 @@ public class App implements EntryPoint {
         }
 
         private void addCloseButton(final boolean gohomeonclose) {
-            Button close = new Button(Labels.INSTANCE.close(),
-                    new ClickHandler() {
-                        public void onClick(ClickEvent event) {
-                            hide();
+            Button close = new Button(Labels.INSTANCE.close(), new ClickHandler() {
+                public void onClick(ClickEvent event) {
+                    hide();
 
-                            if (gohomeonclose) {
-                                History.newItem(Action.HOME.toToken());
-                            }
-                        }
-                    });
+                    if (gohomeonclose) {
+                        History.newItem(Action.HOME.toToken());
+                    }
+                }
+            });
 
             panel.add(close);
         }
@@ -1585,15 +1489,13 @@ public class App implements EntryPoint {
 
     // If search arguments are null, just displays search dialog
 
-    private void viewSearch(final Searcher.UserField[] userfields,
-            final String[] userqueries, final String[] restrictedbookids,
-            final int offset, final String searchtokenprefix) {
+    private void viewSearch(final Searcher.UserField[] userfields, final String[] userqueries,
+            final String[] restrictedbookids, final int offset, final String searchtokenprefix) {
         book = null;
 
         if (userfields == null || userqueries == null) {
             initDisplay(Labels.INSTANCE.search(), true);
-            content.add(createAdvancedSearchWidget(userfields, userqueries,
-                    restrictedbookids));
+            content.add(createAdvancedSearchWidget(userfields, userqueries, restrictedbookids));
             return;
         }
 
@@ -1601,54 +1503,22 @@ public class App implements EntryPoint {
 
         // Load character names as needed
 
-        if (charnames_variants == null) {
-            try {
-                Resources.INSTANCE.characterNamesTable().getText(
-                        new ResourceCallback<TextResource>() {
-                            public void onSuccess(TextResource resource) {
-                                loadingdialog.hide();
-
-                                charnames = new CharacterNamesTable(resource
-                                        .getText());
-                                charnames_variants = charnames
-                                        .asSearchVariants();
-
-                                viewSearch(userfields, userqueries,
-                                        restrictedbookids, offset,
-                                        searchtokenprefix);
-                            }
-
-                            public void onError(ResourceException e) {
-                                loadingdialog.hide();
-                                reportInternalError(
-                                        "Failed to load external resource", e);
-                            }
-                        });
-            } catch (ResourceException e) {
-                loadingdialog.hide();
-                reportInternalError("Failed to load external resource", e);
+        AsyncCallback<SearchResult> cb = new AsyncCallback<SearchResult>() {
+            public void onFailure(Throwable caught) {
+                loadingdialog.error(caught.getMessage());
             }
-        } else {
-            AsyncCallback<SearchResult> cb = new AsyncCallback<SearchResult>() {
-                public void onFailure(Throwable caught) {
-                    loadingdialog.error(caught.getMessage());
-                }
 
-                public void onSuccess(SearchResult result) {
-                    loadingdialog.hide();
-                    initDisplay(result.total + " " + Labels.INSTANCE.hits(),
-                            true);
+            public void onSuccess(SearchResult result) {
+                loadingdialog.hide();
+                initDisplay(result.total + " " + Labels.INSTANCE.hits(), true);
 
-                    content.add(createAdvancedSearchWidget(userfields,
-                            userqueries, restrictedbookids));
-                    displaySearchResults(content, searchtokenprefix, result);
-                }
-            };
+                content.add(createAdvancedSearchWidget(userfields, userqueries, restrictedbookids));
+                displaySearchResults(content, searchtokenprefix, result);
+            }
+        };
 
-            searcher.searchCollection(userfields, userqueries,
-                    restrictedbookids, offset, MAX_SEARCH_RESULTS,
-                    charnames_variants, cb);
-        }
+        searcher.searchCollection(userfields, userqueries, restrictedbookids, offset, MAX_SEARCH_RESULTS,
+                charnames_variants, cb);
     }
 
     /**
@@ -1701,19 +1571,15 @@ public class App implements EntryPoint {
 
         if (book != null) {
             addSidebarHeader(Labels.INSTANCE.book());
-            addSidebarItem(Labels.INSTANCE.description(),
-                    Action.VIEW_BOOK.toToken(book.id()));
-            addSidebarItem(Labels.INSTANCE.pageTurner(),
-                    Action.READ_BOOK.toToken(book.id()));
-            addSidebarItem(Labels.INSTANCE.browseImages(),
-                    Action.BROWSE_BOOK.toToken(book.id()));
+            addSidebarItem(Labels.INSTANCE.description(), Action.VIEW_BOOK.toToken(book.id()));
+            addSidebarItem(Labels.INSTANCE.pageTurner(), Action.READ_BOOK.toToken(book.id()));
+            addSidebarItem(Labels.INSTANCE.browseImages(), Action.BROWSE_BOOK.toToken(book.id()));
         }
 
         addSidebarHeader(Labels.INSTANCE.selectBookBy());
 
         for (Repository.Category d : Repository.Category.values()) {
-            if (d == Repository.Category.SHELFMARK
-                    || d == Repository.Category.ILLUSTRATION_TAGGING
+            if (d == Repository.Category.SHELFMARK || d == Repository.Category.ILLUSTRATION_TAGGING
                     || d == Repository.Category.NARRATIVE_TAGGING) {
                 continue;
             }
@@ -1721,8 +1587,8 @@ public class App implements EntryPoint {
             addSidebarItem(d.display(), Action.SELECT_BOOK.toToken(d.name()));
         }
 
-//        addSidebarHeader(Labels.INSTANCE.language());
-//        addSidebarLocaleSelector();
+        // addSidebarHeader(Labels.INSTANCE.language());
+        // addSidebarLocaleSelector();
 
         // TODO translate
         addSidebarHeader("Features");
@@ -1737,8 +1603,7 @@ public class App implements EntryPoint {
             }
         });
 
-        Label lastupdated = new Label(Labels.INSTANCE.updated() + ": "
-                + Util.appLastModified());
+        Label lastupdated = new Label(Labels.INSTANCE.updated() + ": " + Util.appLastModified());
         lastupdated.setStylePrimaryName("SidebarLastUpdated");
         sidebar.add(lastupdated);
     }
@@ -1779,13 +1644,11 @@ public class App implements EntryPoint {
         return w;
     }
 
-    private static Widget createBookPicker(final Repository col,
-            Repository.Category category) {
+    private static Widget createBookPicker(final Repository col, Repository.Category category) {
         final TreeMap<String, List<Integer>> entries = col.browse(category);
 
         Cell<String> datacell = new AbstractCell<String>() {
-            public void render(Cell.Context context, String value,
-                    SafeHtmlBuilder sb) {
+            public void render(Cell.Context context, String value, SafeHtmlBuilder sb) {
 
                 if (value != null) {
                     sb.appendEscaped(value);
@@ -1806,14 +1669,12 @@ public class App implements EntryPoint {
         datalist.setRowData(keys);
 
         Cell<Integer> booknamecell = new AbstractCell<Integer>() {
-            public void render(Cell.Context context, Integer bookid,
-                    SafeHtmlBuilder sb) {
+            public void render(Cell.Context context, Integer bookid, SafeHtmlBuilder sb) {
 
                 if (bookid != null) {
                     String id = col.bookData(bookid, Repository.Category.ID);
                     String fullname = col.fullBookName(bookid);
-                    String a = "<a href='#"
-                            + URL.encode(Action.VIEW_BOOK.toToken(id)) + "'>";
+                    String a = "<a href='#" + URL.encode(Action.VIEW_BOOK.toToken(id)) + "'>";
 
                     // TODO use template
                     sb.append(SafeHtmlUtils.fromTrustedString(a));
@@ -1829,16 +1690,15 @@ public class App implements EntryPoint {
         final SingleSelectionModel<String> datalistsel = new SingleSelectionModel<String>();
         datalist.setSelectionModel(datalistsel);
 
-        datalistsel
-                .addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-                    public void onSelectionChange(SelectionChangeEvent event) {
-                        String selected = datalistsel.getSelectedObject();
+        datalistsel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+            public void onSelectionChange(SelectionChangeEvent event) {
+                String selected = datalistsel.getSelectedObject();
 
-                        if (selected != null) {
-                            booklist.setRowData(entries.get(selected));
-                        }
-                    }
-                });
+                if (selected != null) {
+                    booklist.setRowData(entries.get(selected));
+                }
+            }
+        });
 
         SplitLayoutPanel split = new SplitLayoutPanel();
         split.setStylePrimaryName("BookPicker");
@@ -1862,8 +1722,7 @@ public class App implements EntryPoint {
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             public void execute() {
                 if (datalist.getVisibleItemCount() > 0) {
-                    datalist.getSelectionModel().setSelected(
-                            datalist.getVisibleItem(0), true);
+                    datalist.getSelectionModel().setSelected(datalist.getVisibleItem(0), true);
                     datalist.setFocus(true);
                 }
             }
@@ -1880,73 +1739,5 @@ public class App implements EntryPoint {
         w.setStylePrimaryName("Home");
         w.setWordWrap(true);
         content.add(w);
-    }
-
-    private void viewIllustrationTitles() {
-        book = null;
-        initDisplay(Labels.INSTANCE.illustrationTitles(), true);
-
-        if (illustitles == null) {
-            loadingdialog.display();
-
-            try {
-                Resources.INSTANCE.illustrationTitlesTable().getText(
-                        new ResourceCallback<TextResource>() {
-                            public void onSuccess(TextResource resource) {
-                                loadingdialog.hide();
-                                illustitles = new IllustrationTitlesTable(
-                                        resource.getText());
-                                viewIllustrationTitles();
-                            }
-
-                            public void onError(ResourceException e) {
-                                loadingdialog.hide();
-                                reportInternalError(
-                                        "Failed to load external resource", e);
-                            }
-                        });
-            } catch (ResourceException e) {
-                loadingdialog.hide();
-                reportInternalError("Failed to load external resource", e);
-            }
-        } else {
-            addHtml(content, Resources.INSTANCE.illustrationTitlesHtml(),
-                    illustitles);
-        }
-    }
-
-    private void viewCharacterNames() {
-        book = null;
-        initDisplay(Labels.INSTANCE.characterNames(), true);
-
-        if (charnames == null) {
-            loadingdialog.display();
-
-            try {
-                Resources.INSTANCE.characterNamesTable().getText(
-                        new ResourceCallback<TextResource>() {
-                            public void onSuccess(TextResource resource) {
-                                loadingdialog.hide();
-
-                                charnames = new CharacterNamesTable(resource
-                                        .getText());
-                                charnames_variants = charnames
-                                        .asSearchVariants();
-                                viewCharacterNames();
-                            }
-
-                            public void onError(ResourceException e) {
-                                loadingdialog.hide();
-                                reportInternalError(
-                                        "Failed to load external resource", e);
-                            }
-                        });
-            } catch (ResourceException e) {
-                loadingdialog.hide();
-                reportInternalError("Failed to load external resource", e);
-            }
-        } else {
-            addHtml(content, Resources.INSTANCE.characterNamesHtml(), charnames);
-        }
     }
 }
