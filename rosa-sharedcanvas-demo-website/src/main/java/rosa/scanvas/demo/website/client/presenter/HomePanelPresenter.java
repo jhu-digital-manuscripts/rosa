@@ -58,7 +58,7 @@ public class HomePanelPresenter extends BasePanelPresenter {
         collections.put("Roman de la Rose Digital library",
         		"http://rosetest.library.jhu.edu/sc");
         collections.put("Test data", "http://rosetest.library.jhu.edu/sctest");
-        collections.put("Chistine de Pizan Digital Scriptorium", "http://pizan-test.library.jhu.edu/sc");
+        collections.put("Chistine de Pizan Digital Scriptorium", "http://rosetest.library.jhu.edu/pizansc");
     }
 
     private final Display display;
