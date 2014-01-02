@@ -1603,9 +1603,9 @@ public class App implements EntryPoint {
             }
         });
 
-        Label lastupdated = new Label(Labels.INSTANCE.updated() + ": " + Util.appLastModified());
-        lastupdated.setStylePrimaryName("SidebarLastUpdated");
-        sidebar.add(lastupdated);
+        //Label lastupdated = new Label(Labels.INSTANCE.updated() + ": " + Util.appLastModified());
+        //lastupdated.setStylePrimaryName("SidebarLastUpdated");
+        //sidebar.add(lastupdated);
     }
 
     private void initDisplay(String title, boolean displaytitleincontent) {
