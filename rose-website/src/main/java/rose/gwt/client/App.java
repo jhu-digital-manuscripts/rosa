@@ -1873,11 +1873,6 @@ public class App implements EntryPoint {
                 History.fireCurrentHistoryState();
             }
         });
-
-        Label lastupdated = new Label(Labels.INSTANCE.updated() + ": "
-                + Util.appLastModified());
-        lastupdated.setStylePrimaryName("SidebarLastUpdated");
-        sidebar.add(lastupdated);
     }
 
     private void initDisplay(String title, boolean displaytitleincontent) {
