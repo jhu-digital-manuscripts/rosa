@@ -32,7 +32,7 @@
 				oa:motivatedBy sc:painting ;
 				rdfs:label "13v" ;
 				oa:hasTarget <${prefix}Canv-f13v> ;
-				oa:hasBody <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.013v.tif/full/300,/0/native.jpg> .
+				oa:hasBody <http://manuscriptlib.org/iiif/rose%2FLudwigXV7%2FLudwigXV7.013v.tif/full/300,/0/native.jpg> .
 				
 <${prefix}TxtAnno-f13v-c-ln1>	a oa:Annotation ;
 				oa:motivatedBy oa:describing ;
@@ -77,7 +77,7 @@
 <${prefix}SvgSel-f13v-d-ln2>	a oa:SvgSelector, cnt:ContentAsText ;
 				cnt:chars "<Svg:poly points='2433,658 3452,658 3449,733 2433,733'/>" .
 				
-<http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.013v.tif/full/300,/0/native.jpg>		a dctypes:Image ;
+<http://manuscriptlib.org/iiif/rose%2FLudwigXV7%2FLudwigXV7.013v.tif/full/300,/0/native.jpg>		a dctypes:Image ;
 				dc:format "image/jpeg" ;
 				dcterms:conformsTo "IIIF" ;
 				exif:height 5279 ;

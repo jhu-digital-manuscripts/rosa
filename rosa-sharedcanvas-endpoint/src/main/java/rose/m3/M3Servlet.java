@@ -97,8 +97,10 @@ public class M3Servlet extends HttpServlet {
 
                 // TODO Make this configurable
                 context.put("rose.data", "http://romandelarose.org/data/");
-                context.put("rose.sc", "http://rosetest.library.jhu.edu/sc/");
-
+                context.put("rose.sc", "http://manuscriptlib.org/rosesc");
+                context.put("pizan.data", "http://pizanmanuscripts.org/data/");
+                context.put("pizan.sc", "http://manuscriptlib.org/pizansc");
+                
                 Options opts = new Options();
                 opts.graph = true;
                 opts.useRdfType = true;

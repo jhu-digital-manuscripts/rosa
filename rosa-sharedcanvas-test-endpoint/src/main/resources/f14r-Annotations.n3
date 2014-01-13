@@ -112,12 +112,12 @@
 				oa:motivatedBy sc:painting ;
 				rdfs:label "14r" ;
 				oa:hasTarget <${prefix}Canv-f14r> ;
-				oa:hasBody <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.014r.tif/full/300,/0/native.jpg> .
+				oa:hasBody <http://manuscriptlib.org/iiif/rose%2FLudwigXV7%2FLudwigXV7.014r.tif/full/300,/0/native.jpg> .
 <${prefix}ImgAnno-f14r-illus1> a oa:Annotation ;
 				oa:motivatedBy sc:painting ;
 				rdfs:label "illustration 1" ;
 				oa:hasTarget <${prefix}SubCanv-f14r-illus1> ;
-				oa:hasBody <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.014r.tif/426,2438,1059,1042/1000,/0/grey.jpg> .
+				oa:hasBody <http://manuscriptlib.org/iiif/rose%2FLudwigXV7%2FLudwigXV7.014r.tif/426,2438,1059,1042/1000,/0/grey.jpg> .
 				
 <${baseUrl}TxtAnnof14raln1>	a oa:Annotation ;
 				oa:motivatedBy oa:describing ;
@@ -176,13 +176,13 @@ Character depicted: L'Amans, Amors
 Costume: Houpellande 
 Landscape: Ground and sky """ .
 				
-<http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.014r.tif/full/300,/0/native.jpg>		a dctypes:Image ;
+<http://manuscriptlib.org/iiif/rose%2FLudwigXV7%2FLudwigXV7.014r.tif/full/300,/0/native.jpg>		a dctypes:Image ;
 				dc:format "image/jpeg" ;
 				dcterms:conformsTo "IIIF" ;
 				exif:height 5429 ;
 				exif:width 3816 .
 				
-<http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.014r.tif/426,2438,1059,1042/1000,/0/grey.jpg> a dctypes:Image;
+<http://manuscriptlib.org/iiif/rose%2FLudwigXV7%2FLudwigXV7.014r.tif/426,2438,1059,1042/1000,/0/grey.jpg> a dctypes:Image;
 				dc:format "image/jpeg" ;
 				exif:height 1059 ;
 				exif:width 1042 .
