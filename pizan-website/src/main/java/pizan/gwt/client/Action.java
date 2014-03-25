@@ -1,7 +1,8 @@
 package pizan.gwt.client;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import rosa.gwt.common.client.Util;
 
 // TODO refactor this and analytics, don't use enum so extensible
 
@@ -12,8 +13,7 @@ public enum Action {
     HOME("home"), SEARCH("search"), BROWSE_BOOK("browse"), SELECT_BOOK("select"), READ_BOOK(
             "read"), VIEW_BOOK("book"), VIEW_PARTNERS("partners"), VIEW_PIZAN(
             "pizan"), VIEW_CONTACT("contact"), VIEW_WORKS(
-            "works"), VIEW_TERMS("terms"), VIEW_CHARACTER_NAMES(
-            "chars"), VIEW_ILLUSTRATION_TITLES("illustrations"), VIEW_PROPER_NAMES("names");
+            "works"), VIEW_TERMS("terms"), VIEW_PROPER_NAMES("names");
 
     private final String prefix;
 
@@ -29,67 +29,11 @@ public enum Action {
      */
 
     public String toToken(String... args) {
-        if (args.length == 0) {
-            return prefix;
-        }
-
-        StringBuilder sb = new StringBuilder(prefix);
-
-        // Escape ; with ;;
-
-        for (String arg : args) {
-            if (arg == null) {
-                continue;
-            }
-
-            sb.append(';');
-
-            if (arg.contains(";")) {
-                sb.append(arg.replaceAll(";", ";;"));
-            } else {
-                sb.append(arg);
-            }
-        }
-
-        return sb.toString();
+       return Util.toToken(prefix, args);
     }
 
     public static List<String> tokenArguments(String token) {
-        List<String> args = new ArrayList<String>(4);
-
-        StringBuilder arg = new StringBuilder();
-        boolean foundsemicolon = false;
-        int i = token.indexOf(';');
-
-        if (i == -1) {
-            return args;
-        }
-
-        for (i++; i < token.length(); i++) {
-            char c = token.charAt(i);
-
-            if (foundsemicolon) {
-                if (c != ';') {
-                    args.add(arg.toString());
-                    arg.setLength(0);
-                }
-
-                arg.append(c);
-                foundsemicolon = false;
-            } else {
-                if (c == ';') {
-                    foundsemicolon = true;
-                } else {
-                    arg.append(c);
-                }
-            }
-        }
-
-        if (arg.length() > 0) {
-            args.add(arg.toString());
-        }
-
-        return args;
+        return Util.parseTokenArguments(token);
     }
 
     /**

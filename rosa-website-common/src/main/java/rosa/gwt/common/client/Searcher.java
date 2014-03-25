@@ -16,6 +16,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  * Wraps SearchService in a user friendly abstraction. User fields and user
  * queries that are mapped to lucene fields and lucene queries.
  */
+
+// TODO Better to have a more user friendly query model and move the complexity server side. See bible historiale search service.
+
 public class Searcher {
     // FIXME: Awful hack
     public static String LC = "en";

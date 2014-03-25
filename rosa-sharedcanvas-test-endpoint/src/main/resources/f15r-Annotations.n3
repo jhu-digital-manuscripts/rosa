@@ -39,7 +39,7 @@
 				oa:motivatedBy sc:painting ;
 				rdfs:label "15r" ;
 				oa:hasTarget <${prefix}Canv-f15r> ;
-				oa:hasBody <http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.015r.tif/full/300,/0/native.jpg> .
+				oa:hasBody <http://manuscriptlib.org/iiif/rose%2FLudwigXV7%2FLudwigXV7.015r.tif/full/300,/0/native.jpg> .
 				
 <${prefix}TxtAnno-f15r-a-ln1>	a oa:Annotation ;
 				oa:motivatedBy oa:describing ;
@@ -93,7 +93,7 @@
 					Costume: Houpellandes; Objects: Scroll
 					Landscape: Ground and sky""" .
 				
-<http://rosetest.library.jhu.edu/iiif/rose%2FLudwigXV7%2FLudwigXV7.015r.tif/full/300,/0/native.jpg>		a dctypes:Image ;
+<http://manuscriptlib.org/iiif/rose%2FLudwigXV7%2FLudwigXV7.015r.tif/full/300,/0/native.jpg>		a dctypes:Image ;
 				dc:format "image/jpeg" ;
 				dcterms:conformsTo "IIIF" ;
 				exif:height 5260 ;

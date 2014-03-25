@@ -204,7 +204,7 @@ public class WebsiteFSIDerivative extends Derivative {
 		w.attribute("value", "FFF0AA");
 		w.emptyElement("ThumbSelectedFace");
 
-		String basepath = "rose/" + archive.id() + "/";
+		String basepath = site.fsiServerShare() + "/" + archive.id() + "/";
 
 		w.endElement("PLUGIN");
 

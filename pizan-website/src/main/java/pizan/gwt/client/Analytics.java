@@ -78,11 +78,6 @@ public class Analytics {
 			actionname = "view";
 			label = bookid;
 			break;
-		case VIEW_CHARACTER_NAMES:
-			category = "Page";
-			actionname = "view";
-			label = "char names";
-			break;
 		case VIEW_CONTACT:
 			category = "Page";
 			actionname = "view";
@@ -92,11 +87,6 @@ public class Analytics {
 			category = "Page";
 			actionname = "view";
 			label = "works";
-			break;
-		case VIEW_ILLUSTRATION_TITLES:
-			category = "Page";
-			actionname = "view";
-			label = "illus titles";
 			break;
 		case VIEW_PARTNERS:
 			category = "Page";

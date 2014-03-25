@@ -180,7 +180,7 @@ public class RosaCollection {
                     + ".xml";
         }
 
-        // TODO
+        // TODO Image servers should should be configured in pom
         public String displayUrl(int i) {
             String image = image(i);
             String bookid = image.substring(0, image.indexOf('.'));
@@ -193,7 +193,7 @@ public class RosaCollection {
             String image = image(i);
             String bookid = image.substring(0, image.indexOf('.'));
 
-            return "http://rosetest.library.jhu.edu/iiif/" + fsi_name + "%2F" + bookid
+            return "http://manuscriptlib.org/iiif/" + fsi_name + "%2F" + bookid
                     + "%2F" + image + "/full/300,/0/native.jpg";
         }
 

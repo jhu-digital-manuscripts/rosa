@@ -47,6 +47,7 @@ public class HomePanelPresenter extends BasePanelPresenter {
 
     // TODO FIX!! Map is wrong way!!
     // TODO test the user stuff 
+    // TODO Should be in a config file.
     
     static {
         col_titles = new ArrayList<String>();
@@ -56,9 +57,9 @@ public class HomePanelPresenter extends BasePanelPresenter {
         
         collections = new HashMap<String, String>();
         collections.put("Roman de la Rose Digital library",
-        		"http://rosetest.library.jhu.edu/sc");
-        collections.put("Test data", "http://rosetest.library.jhu.edu/sctest");
-        collections.put("Chistine de Pizan Digital Scriptorium", "http://pizan-test.library.jhu.edu/sc");
+        		"http://manuscriptlib.org/rosesc/");
+        collections.put("Test data", "http://manuscriptlib.org/testsc/");
+        collections.put("Chistine de Pizan Digital Scriptorium", "http://manuscriptlib.org/pizansc/");
     }
 
     private final Display display;

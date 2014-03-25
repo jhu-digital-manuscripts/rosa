@@ -44,6 +44,7 @@ a:active {
   font-size: larger;
   font-weight: bold;
   padding-left: 1em;
+  cursor: pointer;
 }
 
 .HeaderMenu td:active {
@@ -54,12 +55,9 @@ a:active {
   background-color: #FFFFFF;
 }
 
-.HeaderMenu td {
-  font-size: larger;
-}
-
 .HeaderProjectMenu {
   background-color: #FFFFFF;
+  cursor: pointer;
 }
 
 .HeaderProjectMenu td:active {
