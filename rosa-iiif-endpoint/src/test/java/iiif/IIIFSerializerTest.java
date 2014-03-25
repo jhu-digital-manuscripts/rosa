@@ -16,7 +16,7 @@ public class IIIFSerializerTest extends TestCase {
         info.setTileHeight(100);
         info.setTileWidth(200);
         
-        new IIIFSerializer().toXML(info, System.out);
+        new IIIFSerializer().toXML(info, System.out, "/bleh/");
     }
     
     public void testImageInfoJSON() throws Exception {
@@ -31,6 +31,6 @@ public class IIIFSerializerTest extends TestCase {
         info.setTileHeight(100);
         info.setTileWidth(200);
         
-        new IIIFSerializer().toJSON(info, System.out);
+        new IIIFSerializer().toJSON(info, System.out, "/blah/");
     }
 }

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
+import java.net.URLEncoder;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -21,7 +23,7 @@ import org.w3c.dom.Element;
 
 public class IIIFSerializer {
 
-    public void toXML(ImageInfo info, OutputStream os)
+    public void toXML(ImageInfo info, OutputStream os, String baseUri)
             throws ParserConfigurationException, TransformerException {
         DocumentBuilderFactory docFactory = DocumentBuilderFactory
                 .newInstance();
@@ -35,6 +37,14 @@ public class IIIFSerializer {
         Element id = doc.createElementNS(ns, "identifier");
         id.setTextContent(info.getId());
         root.appendChild(id);
+
+	Element atId = doc.createElementNS(ns, "@id");
+	atId.setTextContent(baseUri + URLEncoder.encode(info.getId()));
+	root.appendChild(atId);
+
+	Element atContext = doc.createElementNS(ns, "@context");
+        atId.setTextContent("http://library.stanford.edu/iiif/image-api/1.1/context.json");
+        root.appendChild(atContext);
 
         Element width = doc.createElementNS(ns, "width");
         width.setTextContent(info.getWidth() + "");
@@ -104,10 +114,11 @@ public class IIIFSerializer {
         transformer.transform(source, result);
     }
 
-    public void toJSON(ImageInfo info, OutputStream os) throws JSONException, IOException {
+    public void toJSON(ImageInfo info, OutputStream os, String baseUri) throws JSONException, IOException {
         JSONObject root = new JSONObject();
         
-        root.put("identifier", info.getId());
+	root.put("@context", "http://library.stanford.edu/iiif/image-api/1.1/context.json");
+        root.put("@id", baseUri + URLEncoder.encode(info.getId()));
         root.put("width", info.getWidth());
         root.put("height", info.getHeight());
         

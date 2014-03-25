@@ -117,6 +117,7 @@ public class IIIFServlet extends HttpServlet {
 
         String context = req.getContextPath();
         StringBuffer sb = req.getRequestURL();
+        String baseServletUri = req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort() + req.getServletPath() + req.getContextPath();
         int i = sb.indexOf(context);
 
         if (i == -1) {
@@ -139,7 +140,7 @@ public class IIIFServlet extends HttpServlet {
 
                     try {
                         if (inforeq.getFormat() == InfoFormat.XML) {
-                            serializer.toXML(info, os);
+                            serializer.toXML(info, os, baseServletUri);
                         } else if (inforeq.getFormat() == InfoFormat.JSON) {
                             String callback = req.getParameter("callback");
 
@@ -148,7 +149,7 @@ public class IIIFServlet extends HttpServlet {
                                 os.write('(');
                             }
 
-                            serializer.toJSON(info, os);
+                            serializer.toJSON(info, os, baseServletUri);
                             if (callback != null) {
                                 os.write(')');
                             }
