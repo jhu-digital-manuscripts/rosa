@@ -118,13 +118,13 @@ public class IIIFSerializer {
         JSONObject root = new JSONObject();
         
 	root.put("@context", "http://library.stanford.edu/iiif/image-api/1.1/context.json");
-//        root.put("@id", baseUri + "/" + URLEncoder.encode(info.getId()));
-        root.put("@id", baseUri + "/" + info.getId());
-	root.put("identifier", info.getId());
+        root.put("@id", baseUri + "/" + URLEncoder.encode(info.getId()));
+//        root.put("@id", baseUri + "/" + info.getId());
+//	root.put("identifier", info.getId());
 //	root.put("identifier", URLEncoder.encode(info.getId()));
         root.put("width", info.getWidth());
         root.put("height", info.getHeight());
-	root.put("profile", "http://library.stanford.edu/iiif/image-api/compliance.html#level1");
+	root.put("profile", "http://library.stanford.edu/iiif/image-api/1.1/compliance.html#level1");
         
         if (info.getTileWidth() > 0 && info.getTileHeight() > 0) {
             root.put("tile_width", info.getTileWidth());

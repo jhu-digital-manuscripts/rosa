@@ -111,7 +111,7 @@ public class IIIFServlet extends HttpServlet {
 
         resp.addHeader(
                 "Link",
-                "<http://library.stanford.edu/iiif/image-api/compliance.html#level0>;rel=\"profile\"");
+                "<http://library.stanford.edu/iiif/image-api/1.1/compliance.html#level1>;rel=\"profile\"");
 
         // Hack to get undecoded path;
 

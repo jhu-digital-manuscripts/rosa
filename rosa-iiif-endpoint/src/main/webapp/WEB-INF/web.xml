@@ -12,7 +12,7 @@
    <init-param>
       <param-name>fsi.url</param-name> 
       <!--param-value>http://fsiserver.library.jhu.edu/server</param-value-->
-      <param-value>http://10.238.232.40:5050/fsi/server</param-value> 
+      <param-value>http://10.238.232.40:5050/fsi/server</param-value>
     </init-param>
 
    <!-- Stanford IIIF validator requires certain name for test image. -->
@@ -21,9 +21,10 @@
       <param-value>test/f23dc590-8736-11e2-a400-0050569b3c3f.png</param-value> 
     </init-param>
    <init-param>
-      <param-name>alias.thingy</param-name> 
+      <param-name>alias.testimage</param-name> 
       <param-value>Stor/2013/11/01/05/4c770cb6-5ddc-4989-a111-b15d781e8d2a.jpg</param-value> 
     </init-param>
+   
   </servlet>
 
   <servlet-mapping>
