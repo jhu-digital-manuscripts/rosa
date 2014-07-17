@@ -103,6 +103,8 @@ public class FSIServer implements ImageServer {
             width = scale.getWidth();
             height = -1;
         } else if (scale.getType() == Size.Type.FULL) {
+            width = (int) ((right - left) * info.getWidth());
+            height = (int) ((bottom - top) * info.getHeight());
         } else if (scale.getType() == Size.Type.PERCENTAGE) {
             width = (int) ((right - left) * info.getWidth() * (scale
                     .getPercentage() / 100));

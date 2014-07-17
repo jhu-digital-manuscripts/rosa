@@ -12,7 +12,7 @@
    <init-param>
       <param-name>fsi.url</param-name> 
       <!--param-value>http://fsiserver.library.jhu.edu/server</param-value-->
-      <param-value>http://10.238.232.40:5050/fsi/server</param-value>
+      <param-value>http://localhost:5050/fsi/server</param-value>
     </init-param>
 
    <!-- Stanford IIIF validator requires certain name for test image. -->
