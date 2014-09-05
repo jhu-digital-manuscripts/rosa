@@ -930,8 +930,16 @@ public class App implements EntryPoint {
         FlowPanel header = new FlowPanel();
 
         header.add(getImage("banner_image1.gif", "banner"));
-        header.add(getImage("banner_text.jpg",
-                "Roman de la Rose Digital Library"));
+        Image banner = getImage("banner_text.jpg", "Roman de la Rose Digital Library");
+
+        banner.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                History.newItem(Action.HOME.toToken());
+            }
+        });
+        
+        header.add(banner);
         header.add(createSearchWidget());
 
         content = new FlowPanel();
