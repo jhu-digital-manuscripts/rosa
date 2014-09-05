@@ -36,6 +36,7 @@ public class MetadataDerivative extends Derivative {
 	private CharacterNames charnames = null;
 
 	public boolean check() {
+	    
 		boolean success = super.check();
 
 		if (!checkNarrativeSections()) {
@@ -43,7 +44,7 @@ public class MetadataDerivative extends Derivative {
 		}
 
 		if (!checkIllustrationTitles()) {
-			success = false;
+			success = false;		
 		}
 
 		if (!checkCharacterNames()) {
@@ -95,7 +96,7 @@ public class MetadataDerivative extends Derivative {
 		if (!checkImageTagging(archive)) {
 			success = false;
 		}
-
+		
 		if (!checkCroppingData(archive)) {
 			success = false;
 		}
@@ -115,7 +116,7 @@ public class MetadataDerivative extends Derivative {
 				.narrativeTaggingByHumanName()), archive, true, narscenes)) {
 			success = false;
 		}
-
+		
 		if (!checkNarrativeMapping(new File(archive.dir(), archive
 				.narrativeTaggingName()), archive, false, narscenes)) {
 			success = false;
@@ -171,8 +172,7 @@ public class MetadataDerivative extends Derivative {
 			Map<String, double[]> crop = archive.getCroppingData();
 
 			if (crop == null) {
-				//report.println("No crop data");
-				return false;
+				return true;
 			}
 
 			boolean success = true;
