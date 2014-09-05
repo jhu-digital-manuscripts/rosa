@@ -1142,12 +1142,14 @@ public class App implements EntryPoint {
                             content.getAbsoluteTop());
                 }
 
+                
                 if (choice.startsWith(Labels.INSTANCE.transcription())) {
                     boolean lecoy = choice.contains(Labels.INSTANCE.lecoy());
 
                     page_turner_annotation.setText(Labels.INSTANCE
                             .transcription());
-                    page_turner_annotation.setWidget(displayTranscription(lecoy));
+                    
+                    page_turner_annotation.setWidget(displayTranscription(lecoy));                    
                     page_turner_annotation.show();
 
                     Analytics.trackEvent("Book", "display-trans", book.id());
@@ -1186,11 +1188,10 @@ public class App implements EntryPoint {
                 reader_toolbar.setVisible(false);
                 page_turner_annotation.hide();
 
-                // TODO PROBABLY BUG HERE, should update based on mode... sidechoicelistener.onChange(null);
-
-                if (view.size() == 1) {
+                if (view.size() > 0) {
                     CodexImage img = view.get(0);
-                    selectedImageIndex = book.findImage(img.label());
+                    
+                    selectedImageIndex = rose_book_model.findOpeningImage(img.id());
                 }
             }
 

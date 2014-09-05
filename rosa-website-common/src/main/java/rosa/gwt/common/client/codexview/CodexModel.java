@@ -1,6 +1,9 @@
 package rosa.gwt.common.client.codexview;
 
 
+/**
+ * The model contains sequences of opening images, nonopening images, and openings.
+ */
 public interface CodexModel {
     int numImages();
     CodexImage image(int index);
@@ -8,7 +11,8 @@ public interface CodexModel {
     int numOpenings();
     CodexOpening opening(int index);
     
-    // TODO ugly
     int numNonOpeningImages();
     CodexImage nonOpeningImage(int index);
+    
+    int findOpeningImage(String id);
 }

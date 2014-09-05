@@ -201,6 +201,16 @@ public class RoseBook {
             public CodexImage nonOpeningImage(int index) {
                 return images[opening_end + index];
             }
+
+            public int findOpeningImage(String id) {
+                for (int i = 0; i < opening_end; i++) {
+                    if (images[i].id.equals(id)) {
+                        return i;
+                    }
+                }
+                
+                return -1;
+            }
         };
     }
 }
